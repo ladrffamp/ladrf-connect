@@ -4,47 +4,85 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LADRF Connect</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<link rel="stylesheet" href="styles.css">
+<title>Acompanhamento LADRF</title>
+
+<style>
+
+body{
+
+font-family:Arial;
+
+background:#f4f6f9;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+height:100vh;
+
+}
+
+.card{
+
+background:white;
+
+padding:35px;
+
+border-radius:20px;
+
+text-align:center;
+
+width:350px;
+
+box-shadow:0 5px 20px rgba(0,0,0,.15);
+
+}
+
+h1{
+
+color:#0B7A3B;
+
+}
+
+.status{
+
+font-size:25px;
+
+font-weight:bold;
+
+margin-top:20px;
+
+}
+
+</style>
 
 </head>
 
-
 <body>
-
-<header>
-LADRF CONNECT
-</header>
-
-
-<div class="container">
 
 
 <div class="card">
 
-<h2>Acompanhar atendimento</h2>
+<h1>LADRF CONNECT</h1>
+
+<h2 id="nome">
+Paciente
+</h2>
 
 
-<input 
-id="senha"
-placeholder="Digite sua senha"
->
+<div class="status" id="status">
 
-
-<button onclick="buscar()">
-Consultar
-</button>
-
-
-<div id="resultado">
+Carregando...
 
 </div>
 
 
-</div>
+<p id="maca"></p>
 
 
 </div>
