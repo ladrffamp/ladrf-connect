@@ -1,88 +1,85 @@
 import { auth, db } from "./firebase.js";
 
 import {
-onAuthStateChanged
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-doc,
-getDoc
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+onAuthStateChanged(auth, async (usuario) => {
 
-async function verificarPerfil(){
+  if (!usuario) {
+    window.location.href = "login.html";
+    return;
+  }
 
-onAuthStateChanged(auth, async (usuario)=>{
+  const documento = await getDoc(doc(db, "usuarios", usuario.uid));
 
+  if (!documento.exists()) {
 
-if(!usuario){
+    alert("Usuário sem perfil cadastrado.");
 
-window.location.href="login.html";
+    await signOut(auth);
 
-return;
+    window.location.href = "login.html";
 
-}
+    return;
 
+  }
 
-const ref = doc(
-db,
-"usuarios",
-usuario.uid
-);
+  const perfil = documento.data().perfil;
 
+  const pagina = window.location.pathname.split("/").pop();
 
-const dados = await getDoc(ref);
+  const regras = {
 
+    admin: [
+      "dashboard.html",
+      "cadastro.html",
+      "fila.html",
+      "macas.html",
+      "usuarios.html",
+      "relatorios.html",
+      "recepcao.html",
+      "painel.html"
+    ],
 
-if(!dados.exists()){
+    recepcao: [
+      "dashboard.html",
+      "cadastro.html",
+      "recepcao.html",
+      "painel.html"
+    ],
 
-alert("Usuário sem permissão cadastrada");
+    membro: [
+      "dashboard.html",
+      "fila.html",
+      "macas.html",
+      "painel.html"
+    ]
 
-return;
+  };
 
-}
+  if (!regras[perfil]) {
 
+    alert("Perfil inválido.");
 
-const perfil = dados.data().perfil;
+    window.location.href = "login.html";
 
+    return;
 
-console.log("Acesso:", perfil);
+  }
 
+  if (!regras[perfil].includes(pagina)) {
 
-// Esconde funções conforme perfil
+    alert("Você não possui permissão para acessar esta página.");
 
+    window.location.href = "dashboard.html";
 
-if(perfil === "recepcao"){
-
-document
-.querySelectorAll(".admin")
-.forEach(item=>{
-
-item.style.display="none";
+  }
 
 });
-
-}
-
-
-
-if(perfil === "fisioterapeuta"){
-
-document
-.querySelectorAll(".cadastro")
-.forEach(item=>{
-
-item.style.display="none";
-
-});
-
-}
-
-
-});
-
-
-}
-
-
-verificarPerfil();
