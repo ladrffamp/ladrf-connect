@@ -6,19 +6,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Atendimento - LADRF Connect</title>
-
+<title>Atendimento LADRF Connect</title>
 
 <style>
 
 body{
-
 font-family:Arial,sans-serif;
 background:#f4f6f9;
 padding:30px;
-
 }
-
 
 .container{
 
@@ -31,23 +27,18 @@ box-shadow:0 5px 20px rgba(0,0,0,.1);
 
 }
 
-
 h1,h2{
-
 color:#0B7A3B;
-
 }
-
 
 .info{
 
-background:#f1f1f1;
-padding:15px;
+background:#eeeeee;
+padding:20px;
 border-radius:10px;
-margin-top:15px;
+margin-top:20px;
 
 }
-
 
 textarea{
 
@@ -60,7 +51,6 @@ border:1px solid #ccc;
 
 }
 
-
 button{
 
 width:100%;
@@ -71,24 +61,14 @@ color:white;
 border:none;
 border-radius:8px;
 font-size:16px;
+
 cursor:pointer;
 
 }
 
-
-#semPaciente{
-
-display:none;
-color:#777;
-
-}
-
-
 </style>
 
-
 </head>
-
 
 
 <body>
@@ -102,14 +82,13 @@ Atendimento LADRF
 </h1>
 
 
-
-<div id="pacienteArea">
-
-
 <div class="info">
 
+
 <h2 id="nome">
-Carregando...
+
+Carregando paciente...
+
 </h2>
 
 
@@ -121,10 +100,9 @@ Carregando...
 </div>
 
 
-
-<label>
+<h3>
 Observações
-</label>
+</h3>
 
 
 <textarea id="observacoes"
@@ -133,9 +111,9 @@ placeholder="Digite observações do atendimento">
 
 
 
-<label>
+<h3>
 Conduta realizada
-</label>
+</h3>
 
 
 <textarea id="conduta"
@@ -153,19 +131,6 @@ Salvar Atendimento
 
 
 </div>
-
-
-
-<h3 id="semPaciente">
-
-Nenhum paciente em atendimento.
-
-</h3>
-
-
-
-</div>
-
 
 
 
