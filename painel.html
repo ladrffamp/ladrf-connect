@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>Painel LADRF</title>
+
+<style>
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial;
+
+}
+
+body{
+
+background:#111;
+
+color:white;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+padding:40px;
+
+}
+
+h1{
+
+font-size:55px;
+
+margin-bottom:40px;
+
+color:#00d26a;
+
+}
+
+.chamado{
+
+width:90%;
+
+background:#222;
+
+border-radius:20px;
+
+padding:40px;
+
+text-align:center;
+
+margin-bottom:40px;
+
+}
+
+.nome{
+
+font-size:65px;
+
+font-weight:bold;
+
+margin:25px;
+
+}
+
+.maca{
+
+font-size:40px;
+
+color:#00d26a;
+
+}
+
+.proximos{
+
+width:90%;
+
+background:#222;
+
+padding:30px;
+
+border-radius:20px;
+
+}
+
+.proximos h2{
+
+margin-bottom:20px;
+
+}
+
+.proximos ul{
+
+list-style:none;
+
+}
+
+.proximos li{
+
+padding:15px;
+
+font-size:28px;
+
+border-bottom:1px solid #444;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>LADRF CONNECT</h1>
+
+<div class="chamado">
+
+<h2>Paciente em Atendimento</h2>
+
+<div
+class="nome"
+id="nome">
+
+Nenhum
+
+</div>
+
+<div
+class="maca"
+id="maca">
+
+-
+
+</div>
+
+</div>
+
+<div class="proximos">
+
+<h2>Fila de Espera</h2>
+
+<ul id="fila">
+
+</ul>
+
+</div>
+
+<script
+type="module"
+src="painel.js">
+
+</script>
+
+</body>
+
+</html>
