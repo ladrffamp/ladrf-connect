@@ -1,18 +1,14 @@
 import { auth, db } from "./firebase.js";
 
 import {
-
 onAuthStateChanged,
 signOut
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 import {
-
 doc,
 getDoc
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -22,17 +18,15 @@ onAuthStateChanged(auth, async (usuario)=>{
 
 if(!usuario){
 
-
 window.location.href="login.html";
 
 return;
-
 
 }
 
 
 
-const perfilRef = doc(
+const usuarioRef = doc(
 
 db,
 
@@ -44,21 +38,18 @@ usuario.uid
 
 
 
-const perfilDoc = await getDoc(perfilRef);
+const usuarioDoc = await getDoc(usuarioRef);
 
 
 
-if(!perfilDoc.exists()){
+if(!usuarioDoc.exists()){
 
 
 alert("Usuário sem perfil cadastrado.");
 
-
 await signOut(auth);
 
-
 window.location.href="login.html";
-
 
 return;
 
@@ -67,13 +58,11 @@ return;
 
 
 
-const perfil = perfilDoc.data().perfil;
+const perfil = usuarioDoc.data().perfil;
 
 
 
-const pagina =
-
-window.location.pathname.split("/").pop();
+const pagina = window.location.pathname.split("/").pop();
 
 
 
@@ -85,7 +74,6 @@ const permissoes = {
 
 
 admin:[
-
 
 "dashboard.html",
 
@@ -103,8 +91,9 @@ admin:[
 
 "painel.html",
 
-"atendimento.html"
+"atendimento.html",
 
+"historico.html"
 
 ],
 
@@ -113,7 +102,6 @@ admin:[
 
 
 recepcao:[
-
 
 "dashboard.html",
 
@@ -125,16 +113,13 @@ recepcao:[
 
 "painel.html"
 
-
 ],
 
 
 
 
 
-
 membro:[
-
 
 "dashboard.html",
 
@@ -144,8 +129,9 @@ membro:[
 
 "painel.html",
 
-"atendimento.html"
+"atendimento.html",
 
+"historico.html"
 
 ]
 
@@ -160,14 +146,11 @@ membro:[
 if(!permissoes[perfil]){
 
 
-alert("Perfil inválido.");
-
+alert("Perfil não configurado.");
 
 await signOut(auth);
 
-
 window.location.href="login.html";
-
 
 return;
 
@@ -181,17 +164,10 @@ return;
 if(!permissoes[perfil].includes(pagina)){
 
 
-
-alert(
-
-"Você não possui permissão para acessar esta página."
-
-);
-
+alert("Você não possui permissão para acessar esta página.");
 
 
 window.location.href="dashboard.html";
-
 
 
 }
