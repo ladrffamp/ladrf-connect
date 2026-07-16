@@ -26,17 +26,10 @@ const dados =
 document.getElementById("dados");
 
 
-const semPaciente =
-document.getElementById("semPaciente");
 
 
 
-
-
-// Buscar paciente em atendimento
-
-
-const busca = query(
+const consulta = query(
 
 collection(db,"pacientes"),
 
@@ -46,16 +39,17 @@ where("status","==","Em atendimento")
 
 
 
-onSnapshot(busca,(snapshot)=>{
+
+
+onSnapshot(consulta,(snapshot)=>{
+
 
 
 if(snapshot.empty){
 
+nome.innerHTML="Nenhum paciente em atendimento";
 
-document.getElementById("pacienteArea").style.display="none";
-
-semPaciente.style.display="block";
-
+dados.innerHTML="";
 
 return;
 
@@ -63,14 +57,14 @@ return;
 
 
 
-snapshot.forEach((documento)=>{
+snapshot.forEach((doc)=>{
 
 
 pacienteAtual={
 
-id:documento.id,
+id:doc.id,
 
-...documento.data()
+...doc.data()
 
 };
 
@@ -83,18 +77,23 @@ pacienteAtual.nome;
 
 dados.innerHTML = `
 
+
 Modalidade:
 <b>${pacienteAtual.modalidade || "-"}</b>
 
 <br><br>
 
+
 Queixa:
 <b>${pacienteAtual.queixa || "-"}</b>
 
+
 <br><br>
+
 
 Maca:
 <b>${pacienteAtual.maca}</b>
+
 
 `;
 
@@ -118,13 +117,12 @@ window.salvarAtendimento = async function(){
 
 if(!pacienteAtual){
 
-
-alert("Nenhum paciente selecionado.");
+alert("Nenhum paciente em atendimento");
 
 return;
 
-
 }
+
 
 
 
@@ -161,12 +159,12 @@ pacienteAtual.nome,
 
 modalidade:
 
-pacienteAtual.modalidade,
+pacienteAtual.modalidade || "",
 
 
 queixa:
 
-pacienteAtual.queixa,
+pacienteAtual.queixa || "",
 
 
 maca:
@@ -201,18 +199,13 @@ Timestamp.now()
 
 
 
-alert(
-
-"Atendimento salvo com sucesso!"
-
-);
+alert("Atendimento salvo!");
 
 
 
 document.getElementById("observacoes").value="";
 
 document.getElementById("conduta").value="";
-
 
 
 }
