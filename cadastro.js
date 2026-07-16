@@ -3,22 +3,75 @@ import { db } from "./firebase.js";
 import {
 collection,
 addDoc,
+getDocs,
 Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+// Gera código único do atendimento
+
+async function gerarCodigo(){
+
+const pacientes = await getDocs(
+collection(db,"pacientes")
+);
+
+const numero = pacientes.size + 1;
+
+return "LADRF-" + String(numero).padStart(4,"0");
+
+}
+
+
+
 window.cadastrar = async function(){
 
-const paciente={
 
-nome:document.getElementById("nome").value,
+const nome =
+document.getElementById("nome").value;
 
-idade:document.getElementById("idade").value,
+const idade =
+document.getElementById("idade").value;
 
-whatsapp:document.getElementById("whatsapp").value,
+const whatsapp =
+document.getElementById("whatsapp").value;
 
-modalidade:document.getElementById("modalidade").value,
+const modalidade =
+document.getElementById("modalidade").value;
 
-queixa:document.getElementById("queixa").value,
+const queixa =
+document.getElementById("queixa").value;
+
+
+
+if(!nome){
+
+alert("Digite o nome do paciente");
+
+return;
+
+}
+
+
+
+const codigo =
+await gerarCodigo();
+
+
+
+const paciente = {
+
+nome:nome,
+
+idade:idade,
+
+whatsapp:whatsapp,
+
+modalidade:modalidade,
+
+queixa:queixa,
+
+codigoAtendimento:codigo,
 
 status:"Aguardando",
 
@@ -28,7 +81,7 @@ criadoEm:Timestamp.now()
 
 };
 
-try{
+
 
 await addDoc(
 
@@ -38,17 +91,90 @@ paciente
 
 );
 
-alert("Paciente cadastrado com sucesso!");
 
-document.getElementById("nome").value="";
-document.getElementById("idade").value="";
-document.getElementById("whatsapp").value="";
-document.getElementById("queixa").value="";
 
-}catch(error){
+const link =
 
-alert(error.message);
+"https://ladrffamp.github.io/ladrf-connect/paciente.html?codigo="
+
++ codigo;
+
+
+
+mostrarQRCode(link,codigo);
+
+
+
+alert(
+
+"Paciente cadastrado!\nCódigo: "
+
++ codigo
+
+);
+
+
+
+};
+
+
+
+// Criar QR Code na tela
+
+function mostrarQRCode(link,codigo){
+
+
+let area =
+document.getElementById("qrcode");
+
+
+if(!area){
+
+area=document.createElement("div");
+
+area.id="qrcode";
+
+document.body.appendChild(area);
 
 }
+
+
+area.innerHTML=
+
+`
+
+<h3>
+
+Código do atendimento:
+
+<br>
+
+${codigo}
+
+</h3>
+
+<br>
+
+<div id="qr"></div>
+
+`;
+
+
+
+new QRCode(
+
+document.getElementById("qr"),
+
+{
+
+text:link,
+
+width:200,
+
+height:200
+
+}
+
+);
 
 }
