@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LADRF Connect</title>
+
+<style>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f4f4;
+  padding: 20px;
+}
+
+.container {
+  max-width: 400px;
+  margin: auto;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+}
+
+h1 {
+  text-align: center;
+  color: #1b5e20;
+}
+
+input, select, button {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background: #1b5e20;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>LADRF Connect</h1>
+
+<h3>Cadastro de paciente</h3>
+
+<input id="nome" placeholder="Nome completo">
+
+<input id="whatsapp" placeholder="WhatsApp">
+
+<select id="modalidade">
+<option>CrossFit</option>
+<option>Beach Tennis</option>
+<option>Futevôlei</option>
+<option>Outro</option>
+</select>
+
+<input id="queixa" placeholder="Queixa principal">
+
+<button onclick="cadastrar()">
+Entrar na fila
+</button>
+
+</div>
+
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import { collection, addDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+window.cadastrar = async function(){
+
+const paciente = {
+
+nome: document.getElementById("nome").value,
+
+whatsapp: document.getElementById("whatsapp").value,
+
+modalidade: document.getElementById("modalidade").value,
+
+queixa: document.getElementById("queixa").value,
+
+status: "Aguardando",
+
+horario: new Date()
+
+};
+
+
+await addDoc(collection(db,"pacientes"), paciente);
+
+
+alert("Paciente colocado na fila!");
+
+};
+
+</script>
+
+</body>
+</html>
