@@ -1,91 +1,125 @@
 import { db } from "./firebase.js";
 
+
 import {
+
 collection,
-query,
-where,
 onSnapshot,
 doc,
 updateDoc
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const painel = document.getElementById("macas");
 
-function carregar(){
 
-const q = query(
-collection(db,"pacientes"),
-where("status","==","Chamado")
-);
+const area =
+document.getElementById("macas");
 
-onSnapshot(q,(snapshot)=>{
 
-let html="";
 
-for(let i=1;i<=4;i++){
+onSnapshot(
 
-const paciente = snapshot.docs.find(
-d => d.data().maca === `Maca ${i}`
-);
+collection(db,"macas"),
 
-if(paciente){
+(snapshot)=>{
 
-const dados = paciente.data();
 
-html += `
+area.innerHTML="";
 
-<div class="card">
 
-<h2>🔴 Maca ${i}</h2>
+snapshot.forEach((documento)=>{
 
-<p><b>${dados.senha}</b></p>
 
-<p>${dados.nome}</p>
+const maca =
+documento.data();
 
-<p>${dados.modalidade}</p>
 
-<button onclick="finalizar('${paciente.id}')">
+const id =
+documento.id;
 
-Finalizar Atendimento
+
+
+area.innerHTML += `
+
+
+<div class="maca ${maca.status==="Livre" ? "livre":"ocupada"}">
+
+
+<h2>
+
+Maca ${maca.numero}
+
+</h2>
+
+
+<h3>
+
+${maca.status}
+
+</h3>
+
+
+<p>
+
+${maca.paciente || "Disponível"}
+
+</p>
+
+
+${
+
+maca.status==="Ocupada"
+
+?
+
+`
+
+<br>
+
+<button onclick="liberar('${id}')">
+
+Liberar Maca
 
 </button>
 
-</div>
+`
 
-`;
+:
 
-}else{
+""
 
-html += `
+}
 
-<div class="card">
-
-<h2>🟢 Maca ${i}</h2>
-
-<p>Livre</p>
 
 </div>
 
+
 `;
 
-}
 
-}
-
-painel.innerHTML = html;
 
 });
 
-}
-
-window.finalizar = async function(id){
-
-await updateDoc(doc(db,"pacientes",id),{
-
-status:"Finalizado"
 
 });
 
+
+window.liberar = async function(id){
+
+
+await updateDoc(
+
+doc(db,"macas",id),
+
+{
+
+status:"Livre",
+
+paciente:""
+
 }
 
-carregar();
+);
+
+
+}
