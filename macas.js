@@ -1,74 +1,41 @@
 import { db } from "./firebase.js";
 
 import {
-
 collection,
 onSnapshot,
 doc,
-updateDoc
-
+updateDoc,
+query,
+where,
+getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 
 const area = document.getElementById("macas");
 
 
-
-let pacientes = {};
-
-
-// Buscar pacientes
-
-onSnapshot(
-
-collection(db,"pacientes"),
-
-(snapshot)=>{
+let listaMacas = [];
 
 
-pacientes={};
+
+// Carregar macas
+
+onSnapshot(collection(db,"macas"),(snapshot)=>{
+
+
+listaMacas=[];
 
 
 snapshot.forEach((documento)=>{
 
 
-pacientes[documento.id]=documento.data();
+listaMacas.push({
 
+id: documento.id,
+
+...documento.data()
 
 });
-
-
-mostrarMacas();
-
-}
-
-);
-
-
-
-// Buscar macas
-
-onSnapshot(
-
-collection(db,"macas"),
-
-(snapshot)=>{
-
-
-window.listaMacas={};
-
-
-snapshot.forEach((documento)=>{
-
-
-window.listaMacas[documento.id]={
-
-...documento.data(),
-
-id:documento.id
-
-};
 
 
 });
@@ -77,9 +44,7 @@ id:documento.id
 mostrarMacas();
 
 
-}
-
-);
+});
 
 
 
@@ -88,155 +53,99 @@ mostrarMacas();
 function mostrarMacas(){
 
 
-if(!window.listaMacas) return;
-
-
-
 area.innerHTML="";
 
 
 
-Object.values(window.listaMacas).forEach((maca)=>{
-
-
-
-let botao="";
-
+listaMacas.forEach((maca)=>{
 
 
 if(maca.status==="Ocupada"){
 
 
+area.innerHTML += `
 
-botao=
 
-`
+<div class="maca ocupada">
 
+
+<h2>
+Maca ${maca.numero}
+</h2>
+
+
+<h3>
+🔴 Ocupada
+</h3>
+
+
+<p>
+Paciente:
 <br>
+<b>${maca.paciente}</b>
+</p>
 
-<button onclick="finalizar('${maca.id}')">
+
+<button onclick="finalizarAtendimento('${maca.id}','${maca.paciente}')">
 
 Finalizar Atendimento
 
 </button>
 
+
+</div>
+
+
 `;
 
 
 
-}
+}else{
 
 
+area.innerHTML += `
 
-area.innerHTML +=
 
-
-`
-
-<div class="maca ${maca.status==="Livre" ? "livre":"ocupada"}">
+<div class="maca livre">
 
 
 <h2>
-
 Maca ${maca.numero}
-
 </h2>
 
 
 <h3>
-
-${maca.status}
-
+🟢 Livre
 </h3>
 
 
 <p>
-
-${maca.paciente || "Disponível"}
-
+Disponível
 </p>
-
-
-${botao}
 
 
 </div>
 
+
 `;
 
-
-
-});
-
-
-}
-
-
-
-
-
-
-window.finalizar = async function(idMaca){
-
-
-
-const maca =
-window.listaMacas[idMaca];
-
-
-
-if(!maca.paciente){
-
-alert("Paciente não encontrado");
-
-return;
-
-}
-
-
-
-// localizar paciente
-
-let idPaciente=null;
-
-
-
-Object.entries(pacientes).forEach(([id,p])=>{
-
-
-if(p.nome===maca.paciente){
-
-idPaciente=id;
-
 }
 
 
 });
 
 
-
-
-if(idPaciente){
-
-
-
-await updateDoc(
-
-doc(db,"pacientes",idPaciente),
-
-{
-
-status:"Finalizado"
-
-}
-
-);
-
-
 }
 
 
 
+
+
+window.finalizarAtendimento = async function(idMaca,nomePaciente){
+
+
+
+// libera a maca
 
 await updateDoc(
 
@@ -254,11 +163,43 @@ paciente:""
 
 
 
-alert(
+// finaliza paciente
 
-"Atendimento finalizado e maca liberada."
+const buscaPaciente = query(
+
+collection(db,"pacientes"),
+
+where("nome","==",nomePaciente)
 
 );
+
+
+
+const resultado = await getDocs(buscaPaciente);
+
+
+
+resultado.forEach(async(documento)=>{
+
+
+await updateDoc(
+
+doc(db,"pacientes",documento.id),
+
+{
+
+status:"Finalizado"
+
+}
+
+);
+
+
+});
+
+
+
+alert("Atendimento finalizado com sucesso!");
 
 
 
