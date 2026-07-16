@@ -2,66 +2,28 @@
 <html lang="pt-BR">
 
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>LADRF Connect</title>
 
-<style>
-
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f4f4;
-  padding: 20px;
-}
-
-.container {
-  max-width: 400px;
-  margin: auto;
-  background: white;
-  padding: 25px;
-  border-radius: 15px;
-}
-
-h1 {
-  text-align: center;
-  color: #1b5e20;
-}
-
-input, select, button {
-
-  width: 100%;
-  padding: 12px;
-  margin-top: 10px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-
-}
-
-button {
-
-  background: #1b5e20;
-  color: white;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-
-}
-
-</style>
+<link rel="stylesheet" href="styles.css">
 
 </head>
 
-
 <body>
+
+<header>
+LADRF CONNECT
+</header>
 
 
 <div class="container">
 
-<h1>LADRF Connect</h1>
+<div class="card">
 
-<h3>Cadastro de paciente</h3>
+<h2>Cadastro de Paciente</h2>
 
 
 <input id="nome" placeholder="Nome completo">
@@ -87,84 +49,18 @@ button {
 
 
 <button onclick="cadastrar()">
+
 Entrar na fila
+
 </button>
 
 
 </div>
 
+</div>
 
 
 <script type="module" src="./cadastro.js"></script>
-
-import { db } from "./firebase.js";
-
-
-import { 
-collection, 
-addDoc 
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-
-window.cadastrar = async function(){
-
-
-const paciente = {
-
-nome: document.getElementById("nome").value,
-
-whatsapp: document.getElementById("whatsapp").value,
-
-modalidade: document.getElementById("modalidade").value,
-
-queixa: document.getElementById("queixa").value,
-
-status: "Aguardando",
-
-horario: new Date()
-
-};
-
-
-
-try {
-
-
-await addDoc(
-collection(db,"pacientes"),
-paciente
-);
-
-
-alert("Paciente colocado na fila!");
-
-
-
-document.getElementById("nome").value = "";
-
-document.getElementById("whatsapp").value = "";
-
-document.getElementById("queixa").value = "";
-
-
-
-} catch(error) {
-
-
-alert("Erro: " + error.message);
-
-console.log(error);
-
-
-}
-
-
-
-};
-
-
-</script>
 
 
 </body>
