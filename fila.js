@@ -1,112 +1,78 @@
 import { db } from "./firebase.js";
 
 import {
-  collection,
-  onSnapshot,
-  query,
-  orderBy,
-  doc,
-  updateDoc
+
+collection,
+
+onSnapshot,
+
+doc,
+
+updateDoc
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-const lista = document.getElementById("lista");
-const contador = document.getElementById("contador");
+const lista=document.getElementById("lista");
 
 
-const fila = query(
-  collection(db, "pacientes"),
-  orderBy("horario", "asc")
-);
+onSnapshot(collection(db,"pacientes"),(snapshot)=>{
+
+lista.innerHTML="";
 
 
+snapshot.forEach((documento)=>{
 
-onSnapshot(fila, (snapshot) => {
+const paciente=documento.data();
 
-  lista.innerHTML = "";
+const id=documento.id;
 
-  let aguardando = 0;
+lista.innerHTML+=`
 
+<tr>
 
-  snapshot.forEach((item) => {
+<td>${paciente.nome}</td>
 
-    const paciente = item.data();
+<td>${paciente.modalidade}</td>
 
+<td>${paciente.status}</td>
 
-    if(paciente.status === "Aguardando"){
+<td>${paciente.maca || "-"}</td>
 
-      aguardando++;
+<td>
 
+<button
+class="chamar"
+onclick="chamar('${id}')">
 
-      lista.innerHTML += `
+Chamar
 
-      <div class="paciente">
+</button>
 
-        <h2>${paciente.senha}</h2>
+<button
+class="finalizar"
+onclick="finalizar('${id}')">
 
-        <p><b>${paciente.nome}</b></p>
+Finalizar
 
-        <p>${paciente.modalidade}</p>
+</button>
 
-        <p>Queixa: ${paciente.queixa}</p>
+</td>
 
-        <p>Status: ${paciente.status}</p>
+</tr>
 
+`;
 
-        <select id="maca-${item.id}">
-
-          <option value="Maca 1">
-          Maca 1
-          </option>
-
-          <option value="Maca 2">
-          Maca 2
-          </option>
-
-          <option value="Maca 3">
-          Maca 3
-          </option>
-
-          <option value="Maca 4">
-          Maca 4
-          </option>
-
-        </select>
-
-
-        <button onclick="chamar('${item.id}')">
-
-        CHAMAR
-
-        </button>
-
-
-      </div>
-
-      `;
-
-    }
-
-
-  });
-
-
-  contador.innerHTML =
-  `🟡 ${aguardando} paciente(s) aguardando`;
-
+});
 
 });
 
 
+window.chamar=async(id)=>{
 
+const maca=prompt("Número da maca:");
 
-window.chamar = async function(id){
-
-
-const maca = 
-document.getElementById(`maca-${id}`).value;
-
-
+if(!maca) return;
 
 await updateDoc(
 
@@ -114,7 +80,7 @@ doc(db,"pacientes",id),
 
 {
 
-status:"Chamado",
+status:"Em atendimento",
 
 maca:maca
 
@@ -122,10 +88,21 @@ maca:maca
 
 );
 
+}
 
-alert(
-"Paciente chamado para " + maca
+
+window.finalizar=async(id)=>{
+
+await updateDoc(
+
+doc(db,"pacientes",id),
+
+{
+
+status:"Finalizado"
+
+}
+
 );
-
 
 }
