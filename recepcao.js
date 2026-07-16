@@ -1,92 +1,77 @@
 import { db } from "./firebase.js";
 
 import {
+
 collection,
 onSnapshot,
 doc,
 updateDoc
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const fila = document.getElementById("fila");
-const macas = document.getElementById("macas");
+
+const fila =
+document.getElementById("fila");
+
+
+const macas =
+document.getElementById("macas");
+
+
+let pacientes = {};
 
 let listaMacas = {};
-let listaPacientes = {};
 
-
-// ===== CARREGA AS MACAS =====
-
-onSnapshot(collection(db,"macas"),(snapshot)=>{
-
-listaMacas = {};
-
-macas.innerHTML="";
-
-snapshot.forEach((documento)=>{
-
-const maca=documento.data();
-
-listaMacas[documento.id]=maca;
-
-macas.innerHTML+=`
-
-<div class="maca ${maca.status==="Livre"?"livre":"ocupada"}">
-
-<h3>Maca ${maca.numero}</h3>
-
-<p>${maca.status}</p>
-
-<p>${maca.paciente || "-"}</p>
-
-${
-maca.status==="Ocupada"
-?
-`<br>
-<button onclick="liberarMaca('${documento.id}')">
-Liberar
-</button>`
-:
-""
-}
-
-</div>
-
-`;
-
-});
-
-});
+let pacienteSelecionado = null;
 
 
 
-// ===== CARREGA FILA =====
+// ==========================
+// CARREGAR PACIENTES
+// ==========================
 
-onSnapshot(collection(db,"pacientes"),(snapshot)=>{
+
+onSnapshot(
+
+collection(db,"pacientes"),
+
+(snapshot)=>{
+
 
 fila.innerHTML="";
 
-listaPacientes={};
 
 snapshot.forEach((documento)=>{
 
-const paciente=documento.data();
 
-listaPacientes[documento.id]=paciente;
+const paciente =
+documento.data();
+
+
+pacientes[documento.id]=paciente;
+
+
 
 if(paciente.status==="Aguardando"){
 
-fila.innerHTML+=`
+
+fila.innerHTML += `
 
 <tr>
 
-<td>${paciente.nome}</td>
+<td>
+${paciente.nome}
+</td>
 
-<td>${paciente.modalidade}</td>
+
+<td>
+${paciente.modalidade || "-"}
+</td>
+
 
 <td>
 
-<button
-onclick="chamarPaciente('${documento.id}')">
+<button onclick="selecionarPaciente('${documento.id}')">
 
 Chamar
 
@@ -94,96 +79,224 @@ Chamar
 
 </td>
 
+
 </tr>
 
 `;
 
-}
-
-});
-
-});
-
-
-
-// ===== CHAMAR PACIENTE =====
-
-window.chamarPaciente = async(idPaciente)=>{
-
-const livres = Object.entries(listaMacas)
-
-.filter(([id,m])=>m.status==="Livre");
-
-if(livres.length===0){
-
-alert("Não existe maca livre.");
-
-return;
 
 }
 
-let texto="Escolha uma maca:\n\n";
 
-livres.forEach(([id,m])=>{
-
-texto+=`${m.numero} - Maca ${m.numero}\n`;
 
 });
 
-const escolha=prompt(texto);
 
-if(!escolha) return;
-
-const macaEscolhida=livres.find(([id,m])=>
-
-String(m.numero)===escolha
+}
 
 );
 
-if(!macaEscolhida){
 
-alert("Maca inválida.");
 
-return;
+// ==========================
+// CARREGAR MACAS
+// ==========================
+
+
+onSnapshot(
+
+collection(db,"macas"),
+
+(snapshot)=>{
+
+
+macas.innerHTML="";
+
+
+listaMacas={};
+
+
+snapshot.forEach((documento)=>{
+
+
+const maca =
+documento.data();
+
+
+listaMacas[documento.id]=maca;
+
+
+
+macas.innerHTML += `
+
+
+<button
+
+style="
+
+margin:10px;
+
+padding:20px;
+
+background:${maca.status==="Livre" ? "#4CAF50":"#E53935"};
+
+color:white;
+
+border:none;
+
+border-radius:10px;
+
+"
+
+onclick="escolherMaca('${documento.id}')"
+
+>
+
+Maca ${maca.numero}
+
+<br>
+
+${maca.status}
+
+</button>
+
+
+`;
+
+
+});
+
 
 }
 
-const idMaca=macaEscolhida[0];
+);
 
-const maca=macaEscolhida[1];
 
-const paciente=listaPacientes[idPaciente];
 
-await updateDoc(doc(db,"pacientes",idPaciente),{
+// ==========================
+// SELECIONAR PACIENTE
+// ==========================
 
-status:"Em atendimento",
 
-maca:maca.numero
+window.selecionarPaciente=function(id){
 
-});
 
-await updateDoc(doc(db,"macas",idMaca),{
+pacienteSelecionado=id;
 
-status:"Ocupada",
 
-paciente:paciente.nome
+alert(
 
-});
+"Paciente selecionado. Agora escolha uma maca livre."
+
+);
+
 
 };
 
 
 
-// ===== LIBERAR MACA =====
+// ==========================
+// ESCOLHER MACA
+// ==========================
 
-window.liberarMaca = async(idMaca)=>{
 
-await updateDoc(doc(db,"macas",idMaca),{
+window.escolherMaca=async function(idMaca){
 
-status:"Livre",
 
-paciente:""
 
-});
+if(!pacienteSelecionado){
+
+
+alert(
+
+"Primeiro selecione um paciente."
+
+);
+
+
+return;
+
+
+}
+
+
+
+const maca =
+listaMacas[idMaca];
+
+
+
+if(maca.status!=="Livre"){
+
+
+alert(
+
+"Esta maca está ocupada."
+
+);
+
+
+return;
+
+}
+
+
+
+const paciente =
+pacientes[pacienteSelecionado];
+
+
+
+// Atualiza paciente
+
+await updateDoc(
+
+doc(db,"pacientes",pacienteSelecionado),
+
+{
+
+
+status:"Em atendimento",
+
+maca:maca.numero
+
+
+}
+
+);
+
+
+
+// Atualiza maca
+
+await updateDoc(
+
+doc(db,"macas",idMaca),
+
+{
+
+
+status:"Ocupada",
+
+paciente:paciente.nome
+
+
+}
+
+);
+
+
+
+pacienteSelecionado=null;
+
+
+
+alert(
+
+"Paciente encaminhado para atendimento."
+
+);
+
+
 
 };
