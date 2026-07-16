@@ -1,117 +1,151 @@
 import { db } from "./firebase.js";
 
+
 import {
 
 collection,
-onSnapshot
+getDocs
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-const total = document.getElementById("total");
 
-const aguardando = document.getElementById("aguardando");
 
-const atendimento = document.getElementById("atendimento");
+const atendimentos = await getDocs(
 
-const finalizados = document.getElementById("finalizados");
+collection(db,"atendimentos")
 
-const modalidades = document.getElementById("modalidades");
+);
 
 
 
-onSnapshot(collection(db,"pacientes"),(snapshot)=>{
+let total = 0;
 
+let pacientes = [];
 
-let totalPacientes=0;
+let modalidades = {};
 
-let espera=0;
-
-let atendendo=0;
-
-let concluido=0;
-
-
-let listaModalidades={};
+let membros = {};
 
 
 
-snapshot.forEach((doc)=>{
 
 
-const paciente=doc.data();
+atendimentos.forEach((doc)=>{
 
 
-totalPacientes++;
+const dado = doc.data();
 
 
-if(paciente.status==="Aguardando"){
 
-espera++;
-
-}
+total++;
 
 
-if(paciente.status==="Em atendimento"){
 
-atendendo++;
+if(dado.paciente){
 
-}
-
-
-if(paciente.status==="Finalizado"){
-
-concluido++;
+pacientes.push(dado.paciente);
 
 }
 
 
 
-const modalidade =
-paciente.modalidade || "Não informado";
+if(dado.modalidade){
 
 
-if(!listaModalidades[modalidade]){
+modalidades[dado.modalidade] =
 
-listaModalidades[modalidade]=0;
+(modalidades[dado.modalidade] || 0)+1;
+
 
 }
 
 
-listaModalidades[modalidade]++;
+
+if(dado.membro){
+
+
+membros[dado.membro] =
+
+(membros[dado.membro] || 0)+1;
+
+
+}
+
 
 
 });
 
 
 
-total.innerHTML=totalPacientes;
 
-aguardando.innerHTML=espera;
 
-atendimento.innerHTML=atendendo;
-
-finalizados.innerHTML=concluido;
+document.getElementById("total").innerHTML = total;
 
 
 
-modalidades.innerHTML="";
+document.getElementById("pacientes").innerHTML =
+
+[...new Set(pacientes)].length;
 
 
-Object.entries(listaModalidades).forEach(([nome,quantidade])=>{
 
 
-modalidades.innerHTML += `
 
-<li>
 
-${nome}: ${quantidade} atendimento(s)
+let maiorModalidade="-";
 
-</li>
+let valorModalidade=0;
 
-`;
+
+
+Object.entries(modalidades).forEach(([nome,valor])=>{
+
+
+if(valor > valorModalidade){
+
+valorModalidade=valor;
+
+maiorModalidade=nome;
+
+}
+
 
 });
 
 
+
+document.getElementById("modalidade").innerHTML =
+
+maiorModalidade;
+
+
+
+
+
+
+let maiorMembro="-";
+
+let valorMembro=0;
+
+
+
+Object.entries(membros).forEach(([nome,valor])=>{
+
+
+if(valor > valorMembro){
+
+valorMembro=valor;
+
+maiorMembro=nome;
+
+}
+
+
 });
+
+
+
+document.getElementById("membro").innerHTML =
+
+maiorMembro;
