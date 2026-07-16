@@ -8,59 +8,70 @@
 
 <title>LADRF Connect</title>
 
-<link rel="stylesheet" href="styles.css">
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+background:white;
+padding:30px;
+border-radius:15px;
+text-align:center;
+}
+
+button{
+
+background:#1b5e20;
+color:white;
+border:none;
+padding:15px;
+border-radius:8px;
+cursor:pointer;
+
+}
+
+</style>
 
 </head>
 
-<body>
 
-<header>
-LADRF CONNECT
-</header>
+<body>
 
 
 <div class="container">
 
-<div class="card">
+<h1>LADRF Connect</h1>
 
-<h2>Cadastro de Paciente</h2>
-
-
-<input id="nome" placeholder="Nome completo">
+<p>Sistema de atendimento esportivo</p>
 
 
-<input id="whatsapp" placeholder="WhatsApp">
+<button onclick="entrar()">
 
-
-<select id="modalidade">
-
-<option value="CrossFit">CrossFit</option>
-
-<option value="Beach Tennis">Beach Tennis</option>
-
-<option value="Futevôlei">Futevôlei</option>
-
-<option value="Outro">Outro</option>
-
-</select>
-
-
-<input id="queixa" placeholder="Queixa principal">
-
-
-<button onclick="cadastrar()">
-
-Entrar na fila
+Entrar no sistema
 
 </button>
 
 
 </div>
 
-</div>
 
 
-<script type="module" src="./cadastro.js"></script>
+<script>
+
+function entrar(){
+
+window.location.href="login.html";
+
+}
+
+</script>
 
 
 </body>
