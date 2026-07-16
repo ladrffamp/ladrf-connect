@@ -1,75 +1,54 @@
 import { db } from "./firebase.js";
 
 import {
-  collection,
-  addDoc,
-  getDocs,
-  query,
-  orderBy
+collection,
+addDoc,
+Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 window.cadastrar = async function(){
 
-  const pacientes = collection(db,"pacientes");
+const paciente={
 
-  const lista = await getDocs(
-    query(pacientes, orderBy("horario"))
-  );
+nome:document.getElementById("nome").value,
 
+idade:document.getElementById("idade").value,
 
-  const senha = "LADRF-" + 
-  String(lista.size + 1).padStart(3,"0");
+whatsapp:document.getElementById("whatsapp").value,
 
+modalidade:document.getElementById("modalidade").value,
 
-  const paciente = {
+queixa:document.getElementById("queixa").value,
 
-    senha: senha,
+status:"Aguardando",
 
-    nome: document.getElementById("nome").value,
+maca:"",
 
-    whatsapp: document.getElementById("whatsapp").value,
-
-    modalidade: document.getElementById("modalidade").value,
-
-    queixa: document.getElementById("queixa").value,
-
-    status: "Aguardando",
-
-    maca: "",
-
-    horario: new Date()
-
-  };
-
-
-  try {
-
-
-    await addDoc(
-      pacientes,
-      paciente
-    );
-
-
-    alert(
-      "Paciente colocado na fila!\nSenha: " + senha
-    );
-
-
-    document.getElementById("nome").value="";
-    document.getElementById("whatsapp").value="";
-    document.getElementById("queixa").value="";
-
-
-  } catch(error){
-
-    alert(
-      "Erro: " + error.message
-    );
-
-    console.log(error);
-
-  }
+criadoEm:Timestamp.now()
 
 };
+
+try{
+
+await addDoc(
+
+collection(db,"pacientes"),
+
+paciente
+
+);
+
+alert("Paciente cadastrado com sucesso!");
+
+document.getElementById("nome").value="";
+document.getElementById("idade").value="";
+document.getElementById("whatsapp").value="";
+document.getElementById("queixa").value="";
+
+}catch(error){
+
+alert(error.message);
+
+}
+
+}
