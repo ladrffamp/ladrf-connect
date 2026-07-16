@@ -1,88 +1,98 @@
 import { db } from "./firebase.js";
 
 import {
-  collection,
-  query,
-  where,
-  getDocs,
-  doc,
-  onSnapshot
+collection,
+query,
+where,
+onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-window.buscar = async function () {
-
-  const senha = document.getElementById("senha").value.trim().toUpperCase();
-  const resultado = document.getElementById("resultado");
-
-  const consulta = query(
-    collection(db, "pacientes"),
-    where("senha", "==", senha)
-  );
-
-  const dados = await getDocs(consulta);
-
-  if (dados.empty) {
-    resultado.innerHTML = "<h3>Senha não encontrada.</h3>";
-    return;
-  }
-
-  const documento = dados.docs[0];
-
-  acompanhar(documento.id);
-
-};
+const nome = document.getElementById("nome");
+const status = document.getElementById("status");
+const maca = document.getElementById("maca");
 
 
-function acompanhar(id){
+// Pega o código vindo do QR Code
 
-  onSnapshot(doc(db,"pacientes",id), (docSnap)=>{
+const parametros = new URLSearchParams(window.location.search);
 
-    if(!docSnap.exists()) return;
+const codigo = parametros.get("codigo");
 
-    const paciente = docSnap.data();
 
-    let cor = "#f4b400";
-    let mensagem = "Aguardando atendimento";
+if(!codigo){
 
-    if(paciente.status === "Chamado"){
-      cor = "#0f9d58";
-      mensagem = `DIRIJA-SE À ${paciente.maca}`;
-    }
+nome.innerHTML="Código inválido";
 
-    if(paciente.status === "Finalizado"){
-      cor = "#4285F4";
-      mensagem = "Atendimento finalizado";
-    }
-
-    document.getElementById("resultado").innerHTML = `
-
-      <div style="
-      border:3px solid ${cor};
-      border-radius:15px;
-      padding:20px;
-      margin-top:20px;
-      text-align:center;
-      ">
-
-      <h2>${paciente.senha}</h2>
-
-      <h3>${paciente.nome}</h3>
-
-      <p><b>Modalidade:</b> ${paciente.modalidade}</p>
-
-      <p><b>Queixa:</b> ${paciente.queixa}</p>
-
-      <h2 style="color:${cor};">
-      ${paciente.status}
-      </h2>
-
-      <h3>${mensagem}</h3>
-
-      </div>
-
-    `;
-
-  });
+status.innerHTML="";
 
 }
+
+
+// Procura o paciente pelo código
+
+const buscaPaciente = query(
+
+collection(db,"pacientes"),
+
+where("codigoAtendimento","==",codigo)
+
+);
+
+
+
+onSnapshot(buscaPaciente,(snapshot)=>{
+
+
+if(snapshot.empty){
+
+nome.innerHTML="Paciente não encontrado";
+
+status.innerHTML="";
+
+return;
+
+}
+
+
+
+snapshot.forEach((documento)=>{
+
+
+const paciente=documento.data();
+
+
+
+nome.innerHTML=paciente.nome;
+
+
+
+if(paciente.status==="Aguardando"){
+
+status.innerHTML="🟡 Aguardando atendimento";
+
+}
+
+
+
+if(paciente.status==="Em atendimento"){
+
+status.innerHTML="🟢 Em atendimento";
+
+maca.innerHTML="Maca: "+paciente.maca;
+
+}
+
+
+
+if(paciente.status==="Finalizado"){
+
+status.innerHTML="✅ Atendimento finalizado";
+
+}
+
+
+
+});
+
+});
