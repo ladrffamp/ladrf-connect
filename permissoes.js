@@ -18,7 +18,7 @@ onAuthStateChanged(auth, async (usuario)=>{
 
 if(!usuario){
 
-window.location.href="login.html";
+window.location.href = "login.html";
 
 return;
 
@@ -72,8 +72,9 @@ const permissoes = {
 
 
 
-
 admin:[
+
+"index.html",
 
 "dashboard.html",
 
@@ -81,19 +82,17 @@ admin:[
 
 "fila.html",
 
-"macas.html",
-
 "recepcao.html",
 
-"usuarios.html",
-
-"relatorios.html",
-
-"painel.html",
+"macas.html",
 
 "atendimento.html",
 
-"historico.html"
+"historico.html",
+
+"usuarios.html",
+
+"relatorios.html"
 
 ],
 
@@ -102,6 +101,8 @@ admin:[
 
 
 recepcao:[
+
+"index.html",
 
 "dashboard.html",
 
@@ -121,13 +122,13 @@ recepcao:[
 
 membro:[
 
+"index.html",
+
 "dashboard.html",
 
 "fila.html",
 
 "macas.html",
-
-"painel.html",
 
 "atendimento.html",
 
@@ -146,7 +147,7 @@ membro:[
 if(!permissoes[perfil]){
 
 
-alert("Perfil não configurado.");
+alert("Perfil inválido.");
 
 await signOut(auth);
 
@@ -154,9 +155,7 @@ window.location.href="login.html";
 
 return;
 
-
 }
-
 
 
 
@@ -167,7 +166,7 @@ if(!permissoes[perfil].includes(pagina)){
 alert("Você não possui permissão para acessar esta página.");
 
 
-window.location.href="dashboard.html";
+window.location.href="index.html";
 
 
 }
