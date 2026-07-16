@@ -10,52 +10,34 @@
 
 <style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, sans-serif;
-}
-
 body{
-
+font-family:Arial,sans-serif;
 background:#f4f6f9;
 padding:30px;
-
 }
 
-
 .container{
-
 max-width:600px;
 margin:auto;
 background:white;
 padding:30px;
 border-radius:15px;
 box-shadow:0 5px 20px rgba(0,0,0,.1);
-
 }
-
 
 h1{
-
 color:#0B7A3B;
-margin-bottom:20px;
-
 }
 
-
-input, select, textarea{
+input,select,textarea{
 
 width:100%;
 padding:12px;
 margin-top:15px;
-border:1px solid #ccc;
 border-radius:8px;
-font-size:16px;
+border:1px solid #ccc;
 
 }
-
 
 textarea{
 
@@ -73,15 +55,7 @@ background:#0B7A3B;
 color:white;
 border:none;
 border-radius:8px;
-font-size:18px;
-cursor:pointer;
-
-}
-
-
-button:hover{
-
-background:#095f30;
+font-size:16px;
 
 }
 
@@ -95,7 +69,6 @@ text-align:center;
 
 
 </style>
-
 
 </head>
 
@@ -111,55 +84,33 @@ Cadastro de Paciente
 </h1>
 
 
-<input 
-id="nome"
-placeholder="Nome completo">
+<input id="nome" placeholder="Nome completo">
 
 
-<input 
-id="idade"
-type="number"
-placeholder="Idade">
+<input id="idade" placeholder="Idade" type="number">
 
 
-<input 
-id="whatsapp"
-placeholder="WhatsApp">
+<input id="whatsapp" placeholder="WhatsApp">
 
 
 <select id="modalidade">
 
-<option value="Futebol">
-Futebol
-</option>
+<option value="Futebol">Futebol</option>
 
-<option value="Vôlei">
-Vôlei
-</option>
+<option value="Vôlei">Vôlei</option>
 
-<option value="Futsal">
-Futsal
-</option>
+<option value="Futsal">Futsal</option>
 
-<option value="Cross Training">
-Cross Training
-</option>
+<option value="Cross Training">Cross Training</option>
 
-<option value="Corrida">
-Corrida
-</option>
+<option value="Corrida">Corrida</option>
 
-<option value="Outro">
-Outro
-</option>
+<option value="Outro">Outro</option>
 
 </select>
 
 
-<textarea
-id="queixa"
-placeholder="Queixa principal">
-</textarea>
+<textarea id="queixa" placeholder="Queixa principal"></textarea>
 
 
 <button onclick="cadastrar()">
@@ -169,9 +120,7 @@ Cadastrar Paciente
 </button>
 
 
-<div id="qrcode">
-
-</div>
+<div id="qrcode"></div>
 
 
 </div>
@@ -184,7 +133,6 @@ Cadastrar Paciente
 
 
 <script type="module" src="cadastro.js"></script>
-
 
 <script type="module" src="permissoes.js"></script>
 
