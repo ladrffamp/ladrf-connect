@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Histórico - LADRF Connect</title>
+
+<style>
+
+body{
+
+font-family:Arial,sans-serif;
+background:#f4f6f9;
+padding:30px;
+
+}
+
+
+.container{
+
+max-width:900px;
+margin:auto;
+
+}
+
+
+h1{
+
+color:#0B7A3B;
+
+}
+
+
+.card{
+
+background:white;
+padding:20px;
+margin-top:20px;
+border-radius:15px;
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+
+}
+
+
+input{
+
+width:100%;
+padding:12px;
+border-radius:8px;
+border:1px solid #ccc;
+
+}
+
+
+button{
+
+margin-top:15px;
+padding:12px 20px;
+background:#0B7A3B;
+color:white;
+border:none;
+border-radius:8px;
+cursor:pointer;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>
+Histórico de Atendimentos
+</h1>
+
+
+<input 
+id="busca"
+placeholder="Digite o nome do paciente">
+
+
+<button onclick="buscar()">
+
+Buscar
+
+</button>
+
+
+<div id="lista">
+
+</div>
+
+
+</div>
+
+
+
+<script type="module" src="historico.js"></script>
+
+<script type="module" src="permissoes.js"></script>
+
+
+</body>
+
+</html>
