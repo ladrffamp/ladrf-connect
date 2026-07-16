@@ -12,23 +12,22 @@ Timestamp
 
 
 
-// Criar código do atendimento
-
 async function gerarCodigo(){
 
 
-const pacientes = await getDocs(
+const dados = await getDocs(
 collection(db,"pacientes")
 );
 
 
-let numero = pacientes.size + 1;
+let numero = dados.size + 1;
 
 
 return "LADRF-" + String(numero).padStart(4,"0");
 
 
 }
+
 
 
 
@@ -58,7 +57,7 @@ document.getElementById("queixa").value;
 
 
 
-if(!nome){
+if(nome===""){
 
 alert("Digite o nome do paciente");
 
@@ -90,15 +89,11 @@ modalidade:modalidade,
 
 queixa:queixa,
 
-
 codigoAtendimento:codigo,
-
 
 status:"Aguardando",
 
-
 maca:"",
-
 
 criadoEm:Timestamp.now()
 
@@ -113,31 +108,31 @@ const link =
 
 "https://ladrffamp.github.io/ladrf-connect/paciente.html?codigo="
 
-+ codigo;
++codigo;
 
 
 
-gerarQRCode(link,codigo);
+mostrarQRCode(link,codigo);
 
 
 
 alert(
 
-"Paciente cadastrado!\n\nCódigo: "
+"Paciente cadastrado!\nCódigo: "
 
-+ codigo
++codigo
 
 );
 
 
 
-};
+}
 
 
 
 
 
-function gerarQRCode(link,codigo){
+function mostrarQRCode(link,codigo){
 
 
 
@@ -146,13 +141,9 @@ document.getElementById("qrcode");
 
 
 
-area.innerHTML=
-
-`
+area.innerHTML = `
 
 <h3>
-
-Código:
 
 ${codigo}
 
@@ -163,6 +154,18 @@ ${codigo}
 <div id="qr"></div>
 
 `;
+
+
+
+if(typeof QRCode === "undefined"){
+
+
+alert("Erro ao carregar QR Code");
+
+return;
+
+
+}
 
 
 
@@ -181,7 +184,6 @@ height:220
 }
 
 );
-
 
 
 }
