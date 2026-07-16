@@ -1,12 +1,10 @@
 import { db } from "./firebase.js";
 
 import {
-collection,
-query,
-orderBy,
-onSnapshot,
-doc,
-updateDoc
+  collection,
+  onSnapshot,
+  query,
+  orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -14,140 +12,60 @@ const lista = document.getElementById("lista");
 const contador = document.getElementById("contador");
 
 
-const filaQuery = query(
-collection(db,"pacientes"),
-orderBy("horario")
+const fila = query(
+  collection(db, "pacientes"),
+  orderBy("horario", "asc")
 );
 
 
-onSnapshot(filaQuery,(snapshot)=>{
+onSnapshot(
+  fila,
+  (snapshot) => {
 
+    lista.innerHTML = "";
 
-lista.innerHTML="";
+    let total = 0;
 
 
-let aguardando = 0;
-let posicao = 1;
+    snapshot.forEach((doc) => {
 
+      const paciente = doc.data();
 
-snapshot.forEach((item)=>{
+      total++;
 
 
-const paciente = item.data();
+      lista.innerHTML += `
 
+      <div class="paciente">
 
-if(
-paciente.status === "Aguardando" ||
-paciente.status === "Chamado"
-){
+        <h2>${paciente.senha || "Sem senha"}</h2>
 
+        <p><b>${paciente.nome}</b></p>
 
-if(paciente.status === "Aguardando"){
-aguardando++;
-}
+        <p>${paciente.modalidade}</p>
 
+        <p>Status: ${paciente.status}</p>
 
-const card=document.createElement("div");
+      </div>
 
+      `;
 
-card.className="paciente";
+    });
 
 
-card.innerHTML=`
+    contador.innerHTML =
+    `🟡 ${total} paciente(s) na fila`;
 
-<div>
 
-<h3>${paciente.senha}</h3>
+  },
 
-<p><b>${paciente.nome}</b></p>
+  (erro) => {
 
-<p>${paciente.modalidade}</p>
+    lista.innerHTML =
+    "Erro ao carregar fila: " + erro.message;
 
-<p>Posição: ${posicao}º</p>
+    console.log(erro);
 
-<p>Status: ${paciente.status}</p>
-
-</div>
-
-
-<div>
-
-
-<select id="maca-${item.id}">
-
-<option value="Maca 1">
-Maca 1
-</option>
-
-<option value="Maca 2">
-Maca 2
-</option>
-
-<option value="Maca 3">
-Maca 3
-</option>
-
-<option value="Maca 4">
-Maca 4
-</option>
-
-</select>
-
-
-<button onclick="chamar('${item.id}')">
-
-Chamar
-
-</button>
-
-
-</div>
-
-`;
-
-
-lista.appendChild(card);
-
-
-posicao++;
-
-
-}
-
-
-});
-
-
-contador.innerHTML = 
-`🟡 ${aguardando} pacientes aguardando`;
-
-
-});
-
-
-
-
-window.chamar = async function(id){
-
-
-const maca =
-document.getElementById(`maca-${id}`).value;
-
-
-
-await updateDoc(
-
-doc(db,"pacientes",id),
-
-{
-
-status:"Chamado",
-
-maca:maca
-
-}
+  }
 
 );
-
-
-}
