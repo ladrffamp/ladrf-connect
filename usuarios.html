@@ -6,83 +6,131 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LADRF Connect - Usuários</title>
+<title>Usuários - LADRF Connect</title>
 
-<link rel="stylesheet" href="styles.css">
+<style>
+
+body{
+font-family:Arial, sans-serif;
+background:#f4f6f9;
+padding:30px;
+}
+
+.container{
+
+background:white;
+padding:30px;
+border-radius:15px;
+max-width:600px;
+margin:auto;
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+
+}
+
+h1{
+color:#0B7A3B;
+}
+
+input,select{
+
+width:100%;
+padding:12px;
+margin-top:15px;
+border-radius:8px;
+border:1px solid #ccc;
+
+}
+
+button{
+
+width:100%;
+padding:15px;
+margin-top:20px;
+border:none;
+border-radius:8px;
+background:#0B7A3B;
+color:white;
+font-size:16px;
+cursor:pointer;
+
+}
+
+.lista{
+
+margin-top:30px;
+
+}
+
+.usuario{
+
+background:#eee;
+padding:15px;
+margin-top:10px;
+border-radius:10px;
+
+}
+
+</style>
 
 </head>
 
 
 <body>
 
-<header>
-
-LADRF CONNECT
-
-<br>
-
-Usuários
-
-</header>
-
 
 <div class="container">
 
-<div class="card">
-
-<h2>Novo usuário</h2>
+<h1>Gerenciamento de Usuários</h1>
 
 
-<input 
-id="nome"
+<input id="nome"
 placeholder="Nome completo">
 
 
-<input 
-id="email"
-placeholder="E-mail">
+<input id="email"
+placeholder="Email">
+
+
+<input id="senha"
+type="password"
+placeholder="Senha">
 
 
 <select id="perfil">
-
-<option value="recepcao">
-Recepção
-</option>
-
-<option value="fisioterapeuta">
-Fisioterapeuta
-</option>
 
 <option value="admin">
 Administrador
 </option>
 
+<option value="recepcao">
+Recepção
+</option>
+
+<option value="membro">
+Membro
+</option>
+
 </select>
 
 
-<input 
-id="senha"
-type="password"
-placeholder="Senha">
+<button onclick="criarUsuario()">
 
-
-<button onclick="cadastrarUsuario()">
-
-Cadastrar
+Criar Usuário
 
 </button>
 
 
-<p id="mensagem"></p>
+<div class="lista" id="lista">
+
+</div>
 
 
 </div>
 
 
-</div>
+<script type="module" src="usuarios.js"></script>
 
-
-<script type="module" src="admin.js"></script>
+<script type="module" src="permissoes.js"></script>
 
 
 </body>
