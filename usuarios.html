@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>LADRF Connect - Usuários</title>
+
+<link rel="stylesheet" href="styles.css">
+
+</head>
+
+
+<body>
+
+<header>
+
+LADRF CONNECT
+
+<br>
+
+Usuários
+
+</header>
+
+
+<div class="container">
+
+<div class="card">
+
+<h2>Novo usuário</h2>
+
+
+<input 
+id="nome"
+placeholder="Nome completo">
+
+
+<input 
+id="email"
+placeholder="E-mail">
+
+
+<select id="perfil">
+
+<option value="recepcao">
+Recepção
+</option>
+
+<option value="fisioterapeuta">
+Fisioterapeuta
+</option>
+
+<option value="admin">
+Administrador
+</option>
+
+</select>
+
+
+<input 
+id="senha"
+type="password"
+placeholder="Senha">
+
+
+<button onclick="cadastrarUsuario()">
+
+Cadastrar
+
+</button>
+
+
+<p id="mensagem"></p>
+
+
+</div>
+
+
+</div>
+
+
+<script type="module" src="usuarios.js"></script>
+
+
+</body>
+
+</html>
