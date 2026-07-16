@@ -4,11 +4,9 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LADRF Connect - Cadastro</title>
-
-<link rel="stylesheet" href="styles.css">
+<title>Cadastro de Paciente - LADRF Connect</title>
 
 <style>
 
@@ -16,166 +14,153 @@
 margin:0;
 padding:0;
 box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
+font-family:Arial, sans-serif;
 }
 
 body{
+
 background:#f4f6f9;
-display:flex;
-}
-
-.sidebar{
-
-width:250px;
-height:100vh;
-background:#0B7A3B;
-padding:20px;
-position:fixed;
-color:white;
+padding:30px;
 
 }
 
-.sidebar h2{
 
-text-align:center;
-margin-bottom:30px;
+.container{
 
-}
-
-.sidebar a{
-
-display:block;
-padding:15px;
-margin-bottom:12px;
-background:rgba(255,255,255,.1);
-border-radius:10px;
-color:white;
-text-decoration:none;
-
-}
-
-.sidebar a:hover{
-
-background:white;
-color:#0B7A3B;
-
-}
-
-.content{
-
-margin-left:250px;
-padding:40px;
-width:100%;
-
-}
-
-.card{
-
+max-width:600px;
+margin:auto;
 background:white;
 padding:30px;
 border-radius:15px;
 box-shadow:0 5px 20px rgba(0,0,0,.1);
-max-width:700px;
 
 }
 
-input,select,textarea{
+
+h1{
+
+color:#0B7A3B;
+margin-bottom:20px;
+
+}
+
+
+input, select, textarea{
 
 width:100%;
-padding:14px;
+padding:12px;
 margin-top:15px;
-border:1px solid #ddd;
-border-radius:10px;
+border:1px solid #ccc;
+border-radius:8px;
 font-size:16px;
 
 }
 
+
 textarea{
 
-height:120px;
-resize:none;
+height:100px;
 
 }
 
+
 button{
 
-margin-top:20px;
-padding:15px;
 width:100%;
+padding:15px;
+margin-top:20px;
 background:#0B7A3B;
 color:white;
 border:none;
-border-radius:10px;
+border-radius:8px;
 font-size:18px;
 cursor:pointer;
 
 }
 
+
 button:hover{
 
-background:#09622f;
+background:#095f30;
 
 }
 
+
+#qrcode{
+
+margin-top:30px;
+text-align:center;
+
+}
+
+
 </style>
+
 
 </head>
 
+
 <body>
 
-<div class="sidebar">
 
-<h2>LADRF CONNECT</h2>
+<div class="container">
 
-<a href="dashboard.html">🏠 Dashboard</a>
 
-<a href="cadastro.html">📝 Cadastro</a>
+<h1>
+Cadastro de Paciente
+</h1>
 
-<a href="fila.html">👥 Fila</a>
 
-<a href="macas.html">🛏️ Macas</a>
-
-<a href="usuarios.html">👤 Usuários</a>
-
-<a href="relatorios.html">📊 Relatórios</a>
-
-</div>
-
-<div class="content">
-
-<div class="card">
-
-<h2>Novo Atendimento</h2>
-
-<input
+<input 
 id="nome"
 placeholder="Nome completo">
 
-<input
+
+<input 
 id="idade"
 type="number"
 placeholder="Idade">
 
-<input
+
+<input 
 id="whatsapp"
 placeholder="WhatsApp">
 
+
 <select id="modalidade">
 
-<option>Futebol</option>
-<option>Futsal</option>
-<option>Vôlei</option>
-<option>Basquete</option>
-<option>Handebol</option>
-<option>Cross Training</option>
-<option>Corrida</option>
-<option>Outro</option>
+<option value="Futebol">
+Futebol
+</option>
+
+<option value="Vôlei">
+Vôlei
+</option>
+
+<option value="Futsal">
+Futsal
+</option>
+
+<option value="Cross Training">
+Cross Training
+</option>
+
+<option value="Corrida">
+Corrida
+</option>
+
+<option value="Outro">
+Outro
+</option>
 
 </select>
 
+
 <textarea
 id="queixa"
-placeholder="Queixa principal"></textarea>
+placeholder="Queixa principal">
+</textarea>
+
 
 <button onclick="cadastrar()">
 
@@ -183,12 +168,26 @@ Cadastrar Paciente
 
 </button>
 
-</div>
+
+<div id="qrcode">
 
 </div>
+
+
+</div>
+
+
+
+<!-- Biblioteca QR Code -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 
 <script type="module" src="cadastro.js"></script>
-<script type="module" src="auth.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
 
 </body>
 
