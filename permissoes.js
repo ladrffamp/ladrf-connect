@@ -1,110 +1,152 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  onAuthStateChanged,
-  signOut
+onAuthStateChanged,
+signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-  doc,
-  getDoc
+doc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-onAuthStateChanged(auth, async (usuario) => {
 
-  if (!usuario) {
-    window.location.href = "login.html";
-    return;
-  }
+onAuthStateChanged(auth, async (usuario)=>{
 
-  try {
 
-    const usuarioRef = doc(db, "usuarios", usuario.uid);
-    const usuarioDoc = await getDoc(usuarioRef);
+if(!usuario){
 
-    if (!usuarioDoc.exists()) {
-      alert("Usuário sem perfil cadastrado.");
+window.location.href="login.html";
 
-      await signOut(auth);
+return;
 
-      window.location.href = "login.html";
-      return;
-    }
+}
 
-    const perfil = usuarioDoc.data().perfil;
 
-    const pagina = window.location.pathname.split("/").pop();
 
-    const permissoes = {
+const usuarioRef = doc(
 
-      admin: [
+db,
 
-        "index.html",
-        "dashboard.html",
-        "cadastro.html",
-        "fila.html",
-        "recepcao.html",
-        "macas.html",
-        "atendimento.html",
-        "historico.html",
-        "usuarios.html",
-        "membros.html",
-        "relatorios.html"
+"usuarios",
 
-      ],
+usuario.uid
 
-      recepcao: [
+);
 
-        "index.html",
-        "dashboard.html",
-        "cadastro.html",
-        "fila.html",
-        "recepcao.html",
-        "painel.html"
 
-      ],
 
-      membro: [
+const usuarioDoc = await getDoc(usuarioRef);
 
-        "index.html",
-        "dashboard.html",
-        "fila.html",
-        "macas.html",
-        "atendimento.html",
-        "historico.html"
 
-      ]
 
-    };
+if(!usuarioDoc.exists()){
 
-    if (!permissoes[perfil]) {
 
-      alert("Perfil inválido.");
+alert("Usuário sem perfil cadastrado.");
 
-      await signOut(auth);
+await signOut(auth);
 
-      window.location.href = "login.html";
+window.location.href="login.html";
 
-      return;
+return;
 
-    }
 
-    if (!permissoes[perfil].includes(pagina)) {
+}
 
-      alert("Você não possui permissão para acessar esta página.");
 
-      window.location.href = "index.html";
 
-    }
+const perfil = usuarioDoc.data().perfil;
 
-  } catch (erro) {
 
-    console.error(erro);
 
-    alert("Erro ao verificar permissões.");
+let pagina = window.location.pathname.split("/").pop();
 
-    window.location.href = "login.html";
 
-  }
+
+// caso esteja entrando pela raiz
+
+if(pagina===""){
+
+pagina="index.html";
+
+}
+
+
+
+const permissoes = {
+
+
+admin:[
+
+"",
+
+"index.html",
+"dashboard.html",
+"cadastro.html",
+"fila.html",
+"recepcao.html",
+"macas.html",
+"atendimento.html",
+"historico.html",
+"usuarios.html",
+"membros.html",
+"relatorios.html",
+"painel.html"
+
+],
+
+
+
+recepcao:[
+
+"",
+
+"index.html",
+"dashboard.html",
+"cadastro.html",
+"fila.html",
+"recepcao.html",
+"painel.html"
+
+],
+
+
+
+membro:[
+
+"",
+
+"index.html",
+"dashboard.html",
+"fila.html",
+"macas.html",
+"atendimento.html",
+"historico.html",
+"painel.html"
+
+]
+
+
+};
+
+
+
+
+if(permissoes[perfil] && permissoes[perfil].includes(pagina)){
+
+
+return;
+
+
+}
+
+
+
+alert("Você não possui permissão para acessar esta página.");
+
+
+window.location.href="index.html";
+
 
 });
