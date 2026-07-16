@@ -4,23 +4,26 @@ import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebas
 
 import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
 const firebaseConfig = {
 
-  apiKey: "SUA_API_KEY",
+  apiKey: "AIzaSyC7hogEzFpAOzPiKsc7FkQnFrCOveZOfos",
 
-  authDomain: "SEU_PROJETO.firebaseapp.com",
+  authDomain: "ladrf-connect.firebaseapp.com",
 
-  projectId: "SEU_PROJETO",
+  projectId: "ladrf-connect",
 
-  storageBucket: "SEU_PROJETO.firebasestorage.app",
+  storageBucket: "ladrf-connect.firebasestorage.app",
 
-  messagingSenderId: "SEU_MESSAGING_SENDER_ID",
+  messagingSenderId: "863498841924",
 
-  appId: "SEU_APP_ID"
+  appId: "1:863498841924:web:f3d97064e13cbdda893111"
 
 };
 
+
 const app = initializeApp(firebaseConfig);
+
 
 export const db = getFirestore(app);
 
