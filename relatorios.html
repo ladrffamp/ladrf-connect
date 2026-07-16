@@ -6,19 +6,27 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Relatórios - LADRF Connect</title>
+<title>Relatórios LADRF</title>
+
 
 <style>
 
 body{
 
-font-family:Arial,Helvetica,sans-serif;
-
+font-family:Arial,sans-serif;
 background:#f4f6f9;
-
 padding:30px;
 
 }
+
+
+.container{
+
+max-width:1000px;
+margin:auto;
+
+}
+
 
 h1{
 
@@ -26,72 +34,51 @@ color:#0B7A3B;
 
 }
 
+
 .cards{
 
 display:grid;
-
 grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
 gap:20px;
 
-margin-top:30px;
-
 }
+
 
 .card{
 
 background:white;
-
 padding:25px;
-
 border-radius:15px;
-
 box-shadow:0 5px 15px rgba(0,0,0,.1);
-
 text-align:center;
 
 }
 
+
 .numero{
 
-font-size:40px;
-
+font-size:35px;
 font-weight:bold;
-
 color:#0B7A3B;
 
-margin-top:10px;
-
 }
 
-.lista{
-
-margin-top:30px;
-
-background:white;
-
-padding:25px;
-
-border-radius:15px;
-
-}
-
-li{
-
-padding:10px;
-
-border-bottom:1px solid #ddd;
-
-}
 
 </style>
 
 </head>
 
+
 <body>
 
 
-<h1>Relatórios do Evento</h1>
+<div class="container">
+
+
+<h1>
+Relatórios LADRF
+</h1>
+
 
 
 <div class="cards">
@@ -99,69 +86,78 @@ border-bottom:1px solid #ddd;
 
 <div class="card">
 
-<h3>Total de Pacientes</h3>
+<h3>
+Atendimentos
+</h3>
 
-<div class="numero" id="total">
+<p class="numero" id="total">
 
 0
 
-</div>
+</p>
 
 </div>
+
+
 
 
 <div class="card">
 
-<h3>Aguardando</h3>
+<h3>
+Pacientes atendidos
+</h3>
 
-<div class="numero" id="aguardando">
+<p class="numero" id="pacientes">
 
 0
 
-</div>
+</p>
 
 </div>
+
+
+
 
 
 <div class="card">
 
-<h3>Em Atendimento</h3>
+<h3>
+Modalidade principal
+</h3>
 
-<div class="numero" id="atendimento">
+<p class="numero" id="modalidade">
 
-0
+-
+
+</p>
 
 </div>
 
-</div>
+
 
 
 <div class="card">
 
-<h3>Finalizados</h3>
+<h3>
+Membro com mais atendimentos
+</h3>
 
-<div class="numero" id="finalizados">
+<p class="numero" id="membro">
 
-0
+-
+
+</p>
+
+</div>
+
+
 
 </div>
 
-</div>
 
 
 </div>
 
-
-
-<div class="lista">
-
-<h2>Modalidades atendidas</h2>
-
-<ul id="modalidades">
-
-</ul>
-
-</div>
 
 
 <script type="module" src="relatorios.js"></script>
