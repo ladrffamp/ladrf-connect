@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Atendimento - LADRF Connect</title>
+
+
+<style>
+
+body{
+
+font-family:Arial,sans-serif;
+background:#f4f6f9;
+padding:30px;
+
+}
+
+
+.container{
+
+max-width:700px;
+margin:auto;
+background:white;
+padding:30px;
+border-radius:15px;
+box-shadow:0 5px 20px rgba(0,0,0,.1);
+
+}
+
+
+h1,h2{
+
+color:#0B7A3B;
+
+}
+
+
+.info{
+
+background:#f1f1f1;
+padding:15px;
+border-radius:10px;
+margin-top:15px;
+
+}
+
+
+textarea{
+
+width:100%;
+height:120px;
+margin-top:15px;
+padding:12px;
+border-radius:8px;
+border:1px solid #ccc;
+
+}
+
+
+button{
+
+width:100%;
+padding:15px;
+margin-top:20px;
+background:#0B7A3B;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+
+}
+
+
+#semPaciente{
+
+display:none;
+color:#777;
+
+}
+
+
+</style>
+
+
+</head>
+
+
+
+<body>
+
+
+<div class="container">
+
+
+<h1>
+Atendimento LADRF
+</h1>
+
+
+
+<div id="pacienteArea">
+
+
+<div class="info">
+
+<h2 id="nome">
+Carregando...
+</h2>
+
+
+<p id="dados">
+
+</p>
+
+
+</div>
+
+
+
+<label>
+Observações
+</label>
+
+
+<textarea id="observacoes"
+placeholder="Digite observações do atendimento">
+</textarea>
+
+
+
+<label>
+Conduta realizada
+</label>
+
+
+<textarea id="conduta"
+placeholder="Digite a conduta realizada">
+</textarea>
+
+
+
+<button onclick="salvarAtendimento()">
+
+Salvar Atendimento
+
+</button>
+
+
+
+</div>
+
+
+
+<h3 id="semPaciente">
+
+Nenhum paciente em atendimento.
+
+</h3>
+
+
+
+</div>
+
+
+
+
+<script type="module" src="atendimento.js"></script>
+
+<script type="module" src="permissoes.js"></script>
+
+
+</body>
+
+</html>
