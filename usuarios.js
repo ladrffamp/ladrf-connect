@@ -1,83 +1,134 @@
-import { auth, db } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
-createUserWithEmailAndPassword
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-import {
+collection,
+onSnapshot,
 doc,
-setDoc
+updateDoc,
+deleteDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-window.cadastrarUsuario = async function(){
+const lista =
+document.getElementById("listaUsuarios");
 
 
-const nome =
-document.getElementById("nome").value;
+onSnapshot(collection(db,"usuarios"),(snapshot)=>{
 
 
-const email =
-document.getElementById("email").value;
+lista.innerHTML="";
 
 
-const senha =
-document.getElementById("senha").value;
+snapshot.forEach((documento)=>{
 
 
-const perfil =
-document.getElementById("perfil").value;
+const usuario=documento.data();
+
+const id=documento.id;
 
 
-const mensagem =
-document.getElementById("mensagem");
+lista.innerHTML += `
+
+<tr>
+
+<td>${usuario.nome || "-"}</td>
+
+<td>${usuario.email || "-"}</td>
 
 
-try{
+<td>
+
+<select onchange="alterarPerfil('${id}',this.value)">
+
+<option value="admin"
+${usuario.perfil==="admin"?"selected":""}>
+
+Administrador
+
+</option>
 
 
-const usuario =
-await createUserWithEmailAndPassword(
-auth,
-email,
-senha
-);
+<option value="recepcao"
+${usuario.perfil==="recepcao"?"selected":""}>
+
+Recepção
+
+</option>
 
 
-await setDoc(
+<option value="membro"
+${usuario.perfil==="membro"?"selected":""}>
 
-doc(
-db,
-"usuarios",
-usuario.user.uid
-),
+Membro
+
+</option>
+
+
+</select>
+
+</td>
+
+
+<td>
+
+<button class="excluir"
+onclick="removerUsuario('${id}')">
+
+Remover
+
+</button>
+
+</td>
+
+
+</tr>
+
+`;
+
+});
+
+
+});
+
+
+
+window.alterarPerfil = async(id,perfil)=>{
+
+
+await updateDoc(
+
+doc(db,"usuarios",id),
 
 {
 
-nome:nome,
-
-perfil:perfil,
-
-email:email
+perfil:perfil
 
 }
 
 );
 
 
-mensagem.innerHTML =
-"Usuário criado com sucesso";
-
-
-}catch(error){
-
-
-mensagem.innerHTML =
-error.message;
-
+alert("Perfil atualizado!");
 
 }
+
+
+
+window.removerUsuario = async(id)=>{
+
+
+const confirmar =
+confirm("Remover perfil deste usuário?");
+
+
+if(!confirmar)return;
+
+
+await deleteDoc(
+
+doc(db,"usuarios",id)
+
+);
 
 
 }
