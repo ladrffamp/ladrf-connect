@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Fila LADRF</title>
+
+<style>
+
+body{
+font-family:Arial;
+background:#f4f4f4;
+padding:20px;
+}
+
+.card{
+
+background:white;
+padding:15px;
+margin-bottom:10px;
+border-radius:10px;
+
+}
+
+button{
+
+background:#1b5e20;
+color:white;
+padding:10px;
+border:none;
+border-radius:8px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<h1>Fila de Atendimento</h1>
+
+<div id="lista"></div>
+
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+
+collection,
+query,
+orderBy,
+onSnapshot,
+doc,
+updateDoc
+
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+const lista=document.getElementById("lista");
+
+const q=query(collection(db,"pacientes"),orderBy("horario"));
+
+onSnapshot(q,(snapshot)=>{
+
+lista.innerHTML="";
+
+snapshot.forEach((documento)=>{
+
+const paciente=documento.data();
+
+lista.innerHTML+=`
+
+<div class="card">
+
+<h3>${paciente.nome}</h3>
+
+<p>${paciente.modalidade}</p>
+
+<p>Status: ${paciente.status}</p>
+
+<button onclick="chamar('${documento.id}')">
+
+Chamar
+
+</button>
+
+</div>
+
+`;
+
+});
+
+});
+
+window.chamar=async(id)=>{
+
+await updateDoc(doc(db,"pacientes",id),{
+
+status:"Chamado"
+
+});
+
+}
+
+</script>
+
+</body>
+</html>
