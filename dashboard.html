@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>LADRF Connect</title>
 
 <link rel="stylesheet" href="styles.css">
@@ -13,11 +16,9 @@
 
 <header>
 
-LADRF CONNECT
+<h1>LADRF CONNECT</h1>
 
-<br>
-
-Dashboard
+<p>Painel Principal</p>
 
 </header>
 
@@ -25,19 +26,52 @@ Dashboard
 
 <div class="card">
 
-<h2>Resumo do Evento</h2>
+<h2>Bem-vindo!</h2>
 
-<div id="cards">
+<p>Escolha uma opção:</p>
 
-Carregando...
+<button onclick="window.location.href='index.html'">
+📝 Novo Atendimento
+</button>
+
+<br><br>
+
+<button onclick="window.location.href='fila.html'">
+👥 Fila de Atendimento
+</button>
+
+<br><br>
+
+<button onclick="window.location.href='macas.html'">
+🛏️ Controle de Macas
+</button>
+
+<br><br>
+
+<button onclick="window.location.href='usuarios.html'" class="admin">
+👤 Usuários
+</button>
+
+<br><br>
+
+<button onclick="window.location.href='relatorios.html'" class="admin">
+📊 Relatórios
+</button>
+
+<br><br>
+
+<button id="sair">
+🚪 Sair
+</button>
 
 </div>
 
 </div>
 
-</div>
+<script type="module" src="dashboard.js"></script>
+<script type="module" src="auth.js"></script>
+<script type="module" src="permissoes.js"></script>
 
-<script type="module" src="usuario.js"></script>
 </body>
 
 </html>
