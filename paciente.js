@@ -5,132 +5,84 @@ import {
   query,
   where,
   getDocs,
-  onSnapshot,
-  orderBy
+  doc,
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-window.buscar = async function(){
+window.buscar = async function () {
 
-  const senhaDigitada = 
-  document.getElementById("senha").value.trim();
+  const senha = document.getElementById("senha").value.trim().toUpperCase();
+  const resultado = document.getElementById("resultado");
 
-
-  const resultado =
-  document.getElementById("resultado");
-
-
-  const ref = collection(db,"pacientes");
-
-
-  const busca = query(
-    ref,
-    where("senha","==",senhaDigitada)
+  const consulta = query(
+    collection(db, "pacientes"),
+    where("senha", "==", senha)
   );
 
+  const dados = await getDocs(consulta);
 
-  const dados = await getDocs(busca);
-
-
-  if(dados.empty){
-
-    resultado.innerHTML =
-    "Senha não encontrada";
-
+  if (dados.empty) {
+    resultado.innerHTML = "<h3>Senha não encontrada.</h3>";
     return;
-
   }
 
+  const documento = dados.docs[0];
 
-  const pacienteDoc = dados.docs[0];
-
-  const paciente = pacienteDoc.data();
-
-
-
-  resultado.innerHTML = `
-
-  <h2>${paciente.senha}</h2>
-
-  <p><b>${paciente.nome}</b></p>
-
-  <p>Status:</p>
-
-  <h3>${paciente.status}</h3>
-
-  `;
-
-
-
-  acompanhar(pacienteDoc.id);
+  acompanhar(documento.id);
 
 };
 
 
-
-
 function acompanhar(id){
 
+  onSnapshot(doc(db,"pacientes",id), (docSnap)=>{
 
-const pacienteRef = 
-collection(db,"pacientes");
+    if(!docSnap.exists()) return;
 
+    const paciente = docSnap.data();
 
+    let cor = "#f4b400";
+    let mensagem = "Aguardando atendimento";
 
-onSnapshot(
+    if(paciente.status === "Chamado"){
+      cor = "#0f9d58";
+      mensagem = `DIRIJA-SE À ${paciente.maca}`;
+    }
 
-query(
-pacienteRef,
-orderBy("horario")
-),
+    if(paciente.status === "Finalizado"){
+      cor = "#4285F4";
+      mensagem = "Atendimento finalizado";
+    }
 
-(snapshot)=>{
+    document.getElementById("resultado").innerHTML = `
 
+      <div style="
+      border:3px solid ${cor};
+      border-radius:15px;
+      padding:20px;
+      margin-top:20px;
+      text-align:center;
+      ">
 
-let posicao = 0;
+      <h2>${paciente.senha}</h2>
 
+      <h3>${paciente.nome}</h3>
 
-snapshot.forEach((item)=>{
+      <p><b>Modalidade:</b> ${paciente.modalidade}</p>
 
+      <p><b>Queixa:</b> ${paciente.queixa}</p>
 
-if(item.id === id){
+      <h2 style="color:${cor};">
+      ${paciente.status}
+      </h2>
 
-return;
+      <h3>${mensagem}</h3>
 
-}
+      </div>
 
+    `;
 
-const dados = item.data();
-
-
-if(dados.status === "Aguardando"){
-
-posicao++;
-
-}
-
-
-});
-
-
-
-document.getElementById("resultado").innerHTML += `
-
-<p>
-
-Posição na fila:
-
-<b>${posicao + 1}º</b>
-
-</p>
-
-`;
-
-
-
-}
-
-);
-
+  });
 
 }
