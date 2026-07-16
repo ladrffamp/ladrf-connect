@@ -1,61 +1,114 @@
-import { auth, db } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
-onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-import {
-doc,
-getDoc
+collection,
+addDoc,
+getDocs
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-export let perfilUsuario = null;
+window.criarUsuario = async function(){
 
 
-onAuthStateChanged(auth, async (user)=>{
+const nome =
+document.getElementById("nome").value;
 
 
-if(!user){
+const email =
+document.getElementById("email").value;
 
-window.location.href="login.html";
+
+const perfil =
+document.getElementById("perfil").value;
+
+
+
+if(!nome || !email){
+
+alert("Preencha nome e email");
 
 return;
 
 }
 
 
-const referencia = doc(
-db,
-"usuarios",
-user.uid
+await addDoc(
+
+collection(db,"usuarios"),
+
+{
+
+nome:nome,
+
+email:email,
+
+perfil:perfil
+
+}
+
 );
 
 
-const dados = await getDoc(referencia);
+alert("Usuário cadastrado!");
 
 
-if(dados.exists()){
+document.getElementById("nome").value="";
+
+document.getElementById("email").value="";
 
 
-perfilUsuario = dados.data().perfil;
-
-
-console.log(
-"Perfil:",
-perfilUsuario
-);
-
-
-}else{
-
-
-console.log(
-"Usuário sem perfil cadastrado"
-);
+carregarUsuarios();
 
 
 }
 
 
+
+async function carregarUsuarios(){
+
+
+const lista =
+document.getElementById("lista");
+
+
+lista.innerHTML="";
+
+
+const usuarios =
+await getDocs(collection(db,"usuarios"));
+
+
+usuarios.forEach((doc)=>{
+
+
+const u=doc.data();
+
+
+lista.innerHTML+=`
+
+<div class="usuario">
+
+<b>${u.nome}</b>
+
+<br>
+
+${u.email}
+
+<br>
+
+Perfil:
+${u.perfil}
+
+</div>
+
+`;
+
 });
+
+
+}
+
+
+carregarUsuarios();
