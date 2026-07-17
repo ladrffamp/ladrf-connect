@@ -15,10 +15,12 @@
 <style>
 
 *{
+
 margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:Arial,Helvetica,sans-serif;
+
 }
 
 
@@ -27,6 +29,47 @@ body{
 background:#f4f6f9;
 
 }
+
+
+
+/* BOTÃO MENU */
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-size:15px;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+}
+
+
+
+.btn-voltar:hover{
+
+background:#075c2b;
+
+}
+
 
 
 
@@ -166,6 +209,16 @@ color:#777;
 
 
 <body>
+
+
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
 
 
 
