@@ -12,6 +12,13 @@
 
 <style>
 
+*{
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+
+
 body{
 
 margin:0;
@@ -19,8 +26,6 @@ margin:0;
 padding:30px;
 
 background:#eef3f7;
-
-font-family:Arial, Helvetica, sans-serif;
 
 }
 
@@ -60,27 +65,21 @@ color:#0B7A3B;
 
 
 
-.status{
+h2{
 
-font-size:25px;
-
-font-weight:bold;
-
-margin:30px 0;
+color:#0B7A3B;
 
 }
 
 
 
-.info{
+.status{
 
-background:#f5f5f5;
+font-size:28px;
 
-padding:20px;
+font-weight:bold;
 
-border-radius:15px;
-
-line-height:1.8;
+margin:30px 0;
 
 }
 
@@ -110,6 +109,42 @@ color:#0B7A3B;
 
 
 
+.info{
+
+background:#f5f5f5;
+
+padding:20px;
+
+border-radius:15px;
+
+line-height:1.8;
+
+font-size:17px;
+
+}
+
+
+
+button{
+
+margin-top:20px;
+
+padding:12px 20px;
+
+border:none;
+
+border-radius:10px;
+
+background:#0B7A3B;
+
+color:white;
+
+font-size:16px;
+
+}
+
+
+
 </style>
 
 
@@ -119,15 +154,18 @@ color:#0B7A3B;
 <body>
 
 
+
 <div class="container">
 
 
 <div class="card">
 
 
+
 <h1>
 LADRF Connect
 </h1>
+
 
 
 <h2>
@@ -151,10 +189,66 @@ Carregando...
 
 
 
+
+
+<button onclick="ativarSom()">
+
+Ativar aviso sonoro
+
+</button>
+
+
+
+
 </div>
 
 
 </div>
+
+
+
+
+
+
+<audio id="somChamada">
+
+<source src="https://actions.google.com/sounds/v1/alarms/beep_short.ogg" type="audio/ogg">
+
+</audio>
+
+
+
+
+
+
+<script>
+
+
+function ativarSom(){
+
+
+const som =
+document.getElementById("somChamada");
+
+
+som.play()
+.then(()=>{
+
+alert("Aviso sonoro ativado!");
+
+})
+.catch(()=>{
+
+alert("Toque novamente para ativar.");
+
+});
+
+
+}
+
+
+
+</script>
 
 
 
@@ -163,7 +257,7 @@ Carregando...
 <script type="module" src="acompanhamento.js"></script>
 
 
-</body>
 
+</body>
 
 </html>
