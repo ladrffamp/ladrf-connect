@@ -1,3 +1,6 @@
+console.log("ACOMPANHAMENTO NOVO CARREGADO");
+
+
 import { db } from "./firebase.js";
 
 import {
@@ -13,13 +16,8 @@ getDocs
 
 
 
-
-// Pegar ID pela URL
-
 const parametros = new URLSearchParams(
-
 window.location.search
-
 );
 
 
@@ -30,7 +28,6 @@ const pacienteId = parametros.get("id");
 const statusTela = document.getElementById("status");
 
 const dadosTela = document.getElementById("dados");
-
 
 
 
@@ -88,12 +85,6 @@ const paciente = snapshot.data();
 
 
 
-// =========================
-// STATUS
-// =========================
-
-
-
 if(paciente.status === "Aguardando"){
 
 
@@ -102,18 +93,13 @@ statusTela.className =
 "status aguardando";
 
 
-
 statusTela.innerHTML =
 "🟡 Aguardando atendimento";
 
 
 
-
-
-const fila = await buscarPosicao(
-
+const fila = await calcularFila(
 pacienteId
-
 );
 
 
@@ -137,7 +123,7 @@ ${paciente.modalidade || "-"}
 <br><br>
 
 
-<b>Posição na fila:</b>
+<b>Sua posição:</b>
 
 ${fila.posicao}º
 
@@ -145,13 +131,14 @@ ${fila.posicao}º
 <br><br>
 
 
-<b>Pessoas na frente:</b>
+<b>Pessoas antes:</b>
 
 ${fila.frente}
 
 
 
 <br><br>
+
 
 Aguarde o chamado da equipe LADRF.
 
@@ -166,14 +153,12 @@ Aguarde o chamado da equipe LADRF.
 
 
 
-
-else if(paciente.status === "Em atendimento"){
+if(paciente.status === "Em atendimento"){
 
 
 
 statusTela.className =
 "status atendimento";
-
 
 
 statusTela.innerHTML =
@@ -208,7 +193,8 @@ ${paciente.maca || "-"}
 
 <br><br>
 
-Dirija-se ao atendimento.
+
+Seu atendimento começou.
 
 `;
 
@@ -222,13 +208,12 @@ Dirija-se ao atendimento.
 
 
 
-else if(paciente.status === "Finalizado"){
+if(paciente.status === "Finalizado"){
 
 
 
 statusTela.className =
 "status finalizado";
-
 
 
 statusTela.innerHTML =
@@ -242,7 +227,6 @@ dadosTela.innerHTML = `
 <b>Paciente:</b>
 
 ${paciente.nome || "-"}
-
 
 
 <br><br>
@@ -276,16 +260,11 @@ Obrigado por utilizar o LADRF Connect.
 
 
 
-// =================================
-// CALCULAR POSIÇÃO NA FILA
-// =================================
-
-
-async function buscarPosicao(id){
+async function calcularFila(id){
 
 
 
-const filaQuery = query(
+const consulta = query(
 
 collection(db,"pacientes"),
 
@@ -295,18 +274,18 @@ where("status","==","Aguardando")
 
 
 
-const resultado = await getDocs(filaQuery);
+const resultado = await getDocs(consulta);
 
 
 
-let lista=[];
+let pacientes = [];
 
 
 
 resultado.forEach((item)=>{
 
 
-lista.push({
+pacientes.push({
 
 id:item.id,
 
@@ -321,17 +300,22 @@ id:item.id,
 
 
 
-lista.sort((a,b)=>{
+pacientes.sort((a,b)=>{
 
 
-const dataA = a.criadoEm?.seconds || 0;
+const aData =
 
-const dataB = b.criadoEm?.seconds || 0;
+a.criadoEm?.seconds || 0;
 
 
 
-return dataA - dataB;
+const bData =
 
+b.criadoEm?.seconds || 0;
+
+
+
+return aData - bData;
 
 
 });
@@ -340,30 +324,25 @@ return dataA - dataB;
 
 
 
+const posicao = pacientes.findIndex(
 
-
-const indice = lista.findIndex(
-
-(p)=>p.id===id
+(p)=>p.id === id
 
 );
-
-
 
 
 
 return {
 
 
-posicao: indice + 1,
+posicao:posicao + 1,
 
 
-frente: indice
+frente:posicao
 
 
 
 };
-
 
 
 }
