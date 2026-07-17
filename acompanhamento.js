@@ -1,21 +1,15 @@
-console.log("LADRF acompanhamento carregado");
-
+console.log("LADRF acompanhamento completo com som");
 
 import { db } from "./firebase.js";
 
-
 import {
-
 doc,
 onSnapshot,
 collection,
 query,
 where,
 getDocs
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
 
 
 
@@ -39,12 +33,9 @@ let statusAnterior = "";
 
 
 
-
-
-// =====================
-// FUNÇÃO SOM
-// =====================
-
+// =============================
+// SOM DA CHAMADA
+// =============================
 
 function tocarSom(){
 
@@ -64,15 +55,20 @@ const audio = new AudioContext();
 
 
 
-const oscilador =
 
+function tocar(){
+
+
+
+const oscilador =
 audio.createOscillator();
 
 
 
 const ganho =
-
 audio.createGain();
+
+
 
 
 
@@ -83,7 +79,8 @@ oscilador.frequency.value = 900;
 
 
 
-ganho.gain.value = 0.5;
+ganho.gain.value = 0.6;
+
 
 
 
@@ -94,7 +91,10 @@ ganho.connect(audio.destination);
 
 
 
+
 oscilador.start();
+
+
 
 
 
@@ -104,8 +104,37 @@ setTimeout(()=>{
 oscilador.stop();
 
 
-
 },600);
+
+
+
+}
+
+
+
+
+
+if(audio.state === "suspended"){
+
+
+audio.resume().then(()=>{
+
+
+tocar();
+
+
+});
+
+
+}
+
+else{
+
+
+tocar();
+
+
+}
 
 
 
@@ -115,7 +144,7 @@ catch(e){
 
 
 console.log(
-"Erro no som",
+"Erro no som:",
 e
 );
 
@@ -132,14 +161,12 @@ e
 
 
 
+// =============================
+// CALCULAR FILA
+// =============================
 
 
-// =====================
-// BUSCAR FILA
-// =====================
-
-
-async function pegarPosicao(id){
+async function calcularFila(id){
 
 
 
@@ -148,13 +175,9 @@ const consulta = query(
 collection(db,"pacientes"),
 
 where(
-
 "status",
-
 "==",
-
 "Aguardando"
-
 )
 
 );
@@ -167,7 +190,7 @@ const resultado = await getDocs(consulta);
 
 
 
-let pacientes=[];
+let lista=[];
 
 
 
@@ -176,8 +199,7 @@ let pacientes=[];
 resultado.forEach((item)=>{
 
 
-
-pacientes.push({
+lista.push({
 
 
 id:item.id,
@@ -198,23 +220,22 @@ id:item.id,
 
 
 
-pacientes.sort((a,b)=>{
+lista.sort((a,b)=>{
 
 
-
-const aTempo =
+const dataA =
 
 a.criadoEm?.seconds || 0;
 
 
 
-const bTempo =
+const dataB =
 
 b.criadoEm?.seconds || 0;
 
 
 
-return aTempo - bTempo;
+return dataA-dataB;
 
 
 
@@ -225,12 +246,9 @@ return aTempo - bTempo;
 
 
 
-
-const indice = pacientes.findIndex(
-
+const posicao = lista.findIndex(
 
 (p)=>p.id===id
-
 
 );
 
@@ -241,16 +259,10 @@ const indice = pacientes.findIndex(
 return {
 
 
-
-posicao:
-
-indice + 1,
+posicao:posicao+1,
 
 
-
-frente:
-
-indice
+frente:posicao
 
 
 
@@ -268,9 +280,9 @@ indice
 
 
 
-// =====================
-// INICIAR
-// =====================
+// =============================
+// ACOMPANHAMENTO
+// =============================
 
 
 if(!pacienteId){
@@ -295,6 +307,7 @@ db,
 pacienteId
 
 );
+
 
 
 
@@ -332,9 +345,10 @@ snapshot.data();
 
 
 
-// =====================
+
+// =============================
 // AGUARDANDO
-// =====================
+// =============================
 
 
 if(paciente.status==="Aguardando"){
@@ -347,13 +361,16 @@ statusTela.className =
 
 
 statusTela.innerHTML =
+
 "🟡 Aguardando atendimento";
 
 
 
 
+
 const fila =
-await pegarPosicao(pacienteId);
+await calcularFila(pacienteId);
+
 
 
 
@@ -371,7 +388,6 @@ ${paciente.nome || "-"}
 <br><br>
 
 
-
 <b>Modalidade:</b>
 
 ${paciente.modalidade || "-"}
@@ -379,7 +395,6 @@ ${paciente.modalidade || "-"}
 
 
 <br><br>
-
 
 
 <b>Posição na fila:</b>
@@ -391,7 +406,6 @@ ${fila.posicao}º
 <br><br>
 
 
-
 <b>Pessoas antes:</b>
 
 ${fila.frente}
@@ -399,7 +413,6 @@ ${fila.frente}
 
 
 <br><br>
-
 
 
 Aguarde o chamado da equipe LADRF.
@@ -418,10 +431,9 @@ Aguarde o chamado da equipe LADRF.
 
 
 
-
-// =====================
-// CHAMADO
-// =====================
+// =============================
+// EM ATENDIMENTO
+// =============================
 
 
 if(paciente.status==="Em atendimento"){
@@ -434,7 +446,10 @@ statusTela.className =
 
 
 statusTela.innerHTML =
+
 "🔔 SUA VEZ!";
+
+
 
 
 
@@ -482,13 +497,15 @@ Dirija-se ao atendimento.
 
 
 
-if(statusAnterior!=="Em atendimento"){
+
+// toca somente na mudança
+
+if(statusAnterior !== "Em atendimento"){
 
 
 tocarSom();
 
 
-
 }
 
 
@@ -503,10 +520,9 @@ tocarSom();
 
 
 
-
-// =====================
+// =============================
 // FINALIZADO
-// =====================
+// =============================
 
 
 if(paciente.status==="Finalizado"){
@@ -519,6 +535,7 @@ statusTela.className =
 
 
 statusTela.innerHTML =
+
 "🟢 Atendimento finalizado";
 
 
@@ -537,7 +554,6 @@ ${paciente.nome || "-"}
 <br><br>
 
 
-
 Obrigado por utilizar o LADRF Connect.
 
 `;
@@ -552,8 +568,7 @@ Obrigado por utilizar o LADRF Connect.
 
 
 
-statusAnterior =
-paciente.status;
+statusAnterior = paciente.status;
 
 
 
