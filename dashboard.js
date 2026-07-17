@@ -1,51 +1,220 @@
-import { db, auth } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
+
 collection,
+query,
+where,
 onSnapshot
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-const pacientes=document.getElementById("pacientes");
-const espera=document.getElementById("espera");
-const atendimento=document.getElementById("atendimento");
-const finalizados=document.getElementById("finalizados");
 
-onSnapshot(collection(db,"pacientes"),(snapshot)=>{
 
-let total=0;
-let aguardando=0;
-let atendendo=0;
-let finalizado=0;
+// Elementos do painel
 
-snapshot.forEach((doc)=>{
+const aguardando =
+document.getElementById("aguardando");
 
-total++;
+const atendimento =
+document.getElementById("atendimento");
 
-const status=doc.data().status;
+const livres =
+document.getElementById("livres");
 
-if(status==="Aguardando") aguardando++;
+const ocupadas =
+document.getElementById("ocupadas");
 
-if(status==="Em atendimento") atendendo++;
+const listaAtendimento =
+document.getElementById("listaAtendimento");
 
-if(status==="Finalizado") finalizado++;
+
+
+
+
+// ===============================
+// PACIENTES AGUARDANDO
+// ===============================
+
+
+const filaQuery = query(
+
+collection(db,"pacientes"),
+
+where("status","==","Aguardando")
+
+);
+
+
+
+onSnapshot(filaQuery,(snapshot)=>{
+
+
+aguardando.innerHTML =
+snapshot.size;
+
 
 });
 
-pacientes.innerHTML=total;
-espera.innerHTML=aguardando;
-atendimento.innerHTML=atendendo;
-finalizados.innerHTML=finalizado;
+
+
+
+
+
+// ===============================
+// PACIENTES EM ATENDIMENTO
+// ===============================
+
+
+const atendimentoQuery = query(
+
+collection(db,"pacientes"),
+
+where("status","==","Em atendimento")
+
+);
+
+
+
+onSnapshot(atendimentoQuery,(snapshot)=>{
+
+
+atendimento.innerHTML =
+snapshot.size;
+
+
+
+listaAtendimento.innerHTML="";
+
+
+
+if(snapshot.empty){
+
+
+listaAtendimento.innerHTML=`
+
+<tr>
+
+<td colspan="3">
+
+Nenhum paciente em atendimento
+
+</td>
+
+</tr>
+
+`;
+
+return;
+
+}
+
+
+
+
+
+snapshot.forEach((item)=>{
+
+
+const paciente=item.data();
+
+
+
+listaAtendimento.innerHTML += `
+
+<tr>
+
+<td>
+
+${paciente.nome || "-"}
+
+</td>
+
+
+<td>
+
+${paciente.maca || "-"}
+
+</td>
+
+
+<td>
+
+${paciente.modalidade || "-"}
+
+</td>
+
+
+</tr>
+
+`;
+
+
 
 });
 
-document.getElementById("logout").addEventListener("click",async()=>{
 
-await signOut(auth);
 
-window.location.href="login.html";
+});
+
+
+
+
+
+
+
+// ===============================
+// MACAS
+// ===============================
+
+
+const macasQuery = collection(db,"macas");
+
+
+
+onSnapshot(macasQuery,(snapshot)=>{
+
+
+let livresTotal=0;
+
+let ocupadasTotal=0;
+
+
+
+snapshot.forEach((item)=>{
+
+
+const maca=item.data();
+
+
+
+if(maca.status==="Livre"){
+
+livresTotal++;
+
+}
+
+
+if(maca.status==="Ocupada"){
+
+ocupadasTotal++;
+
+}
+
+
+
+});
+
+
+
+livres.innerHTML =
+livresTotal;
+
+
+ocupadas.innerHTML =
+ocupadasTotal;
+
+
 
 });
