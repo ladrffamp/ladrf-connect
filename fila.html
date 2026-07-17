@@ -4,11 +4,13 @@
 <head>
 
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>LADRF Connect - Fila</title>
 
 <link rel="stylesheet" href="styles.css">
+
 
 <style>
 
@@ -19,17 +21,26 @@ box-sizing:border-box;
 font-family:Arial,Helvetica,sans-serif;
 }
 
+
 body{
+
 background:#f4f6f9;
+
 }
+
+
 
 header{
 
 background:#0B7A3B;
+
 color:white;
+
 padding:20px;
 
 }
+
+
 
 .container{
 
@@ -37,41 +48,39 @@ padding:30px;
 
 }
 
-table{
 
-width:100%;
-border-collapse:collapse;
-background:white;
-border-radius:10px;
-overflow:hidden;
 
-}
+.topo{
 
-th{
+display:flex;
 
-background:#0B7A3B;
-color:white;
-padding:15px;
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:20px;
 
 }
 
-td{
 
-padding:15px;
-text-align:center;
-border-bottom:1px solid #eee;
-
-}
 
 button{
 
-padding:8px 15px;
+padding:10px 18px;
+
 border:none;
+
 border-radius:8px;
+
 cursor:pointer;
+
 color:white;
 
+font-size:15px;
+
 }
+
+
 
 .chamar{
 
@@ -79,29 +88,137 @@ background:#1976d2;
 
 }
 
-.finalizar{
 
-background:#2e7d32;
+
+.chamar:hover{
+
+background:#125aa0;
 
 }
 
+
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+background:white;
+
+border-radius:10px;
+
+overflow:hidden;
+
+}
+
+
+
+th{
+
+background:#0B7A3B;
+
+color:white;
+
+padding:15px;
+
+}
+
+
+
+td{
+
+padding:15px;
+
+text-align:center;
+
+border-bottom:1px solid #eee;
+
+}
+
+
+
+.acao{
+
+background:#1976d2;
+
+}
+
+
+
+.vazio{
+
+text-align:center;
+
+padding:30px;
+
+color:#777;
+
+}
+
+
+
 </style>
+
 
 </head>
 
+
+
 <body>
+
+
 
 <header>
 
-<h1>Fila de Atendimento</h1>
+<h1>
+
+Fila de Atendimento
+
+</h1>
 
 </header>
 
+
+
+
+
 <div class="container">
+
+
+
+<div class="topo">
+
+
+<h2>
+
+Pacientes aguardando
+
+</h2>
+
+
+
+<button class="chamar" onclick="chamarProximo()">
+
+Chamar Próximo Paciente
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
 
 <table>
 
+
 <thead>
+
 
 <tr>
 
@@ -113,23 +230,41 @@ background:#2e7d32;
 
 <th>Maca</th>
 
-<th>Ações</th>
+<th>Ação</th>
+
 
 </tr>
 
+
 </thead>
+
+
 
 <tbody id="lista">
 
+
 </tbody>
+
+
 
 </table>
 
+
+
 </div>
 
+
+
+
+
+
 <script type="module" src="fila.js"></script>
+
 <script type="module" src="auth.js"></script>
 
+
+
 </body>
+
 
 </html>
