@@ -1,0 +1,748 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+content="width=device-width, initial-scale=1.0">
+
+<title>
+
+LADRF Connect 2.0
+
+</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect"
+href="https://fonts.gstatic.com"
+crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+rel="stylesheet">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<style>
+
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+
+}
+
+body{
+
+background:#eef3f7;
+
+}
+
+header{
+
+background:linear-gradient(90deg,#0B7A3B,#15A34A);
+
+color:white;
+
+padding:25px 40px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+box-shadow:0 4px 15px rgba(0,0,0,.15);
+
+}
+
+.logo{
+
+display:flex;
+
+align-items:center;
+
+gap:15px;
+
+}
+
+.logo i{
+
+font-size:40px;
+
+}
+
+.logo h1{
+
+font-size:30px;
+
+font-weight:700;
+
+}
+
+.usuario{
+
+text-align:right;
+
+}
+
+.usuario h3{
+
+font-size:18px;
+
+}
+
+.usuario span{
+
+font-size:14px;
+
+opacity:.9;
+
+}
+
+.container{
+
+max-width:1400px;
+
+margin:auto;
+
+padding:40px;
+
+}
+
+.cards{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(240px,1fr));
+
+gap:25px;
+
+margin-bottom:40px;
+
+}
+
+.card{
+
+background:white;
+
+border-radius:18px;
+
+padding:25px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+transition:.3s;
+
+}
+
+.card:hover{
+
+transform:translateY(-6px);
+
+}
+
+.card i{
+
+font-size:38px;
+
+color:#0B7A3B;
+
+margin-bottom:15px;
+
+}
+
+.card h2{
+
+font-size:18px;
+
+margin-bottom:10px;
+
+}
+
+.numero{
+
+font-size:34px;
+
+font-weight:bold;
+
+color:#0B7A3B;
+
+}
+
+.menu{
+
+display:grid;
+
+grid-template-columns:
+repeat(auto-fit,minmax(260px,1fr));
+
+gap:25px;
+
+}
+
+.menu a{
+
+text-decoration:none;
+
+}
+
+.menu-card{
+
+background:white;
+
+padding:30px;
+
+border-radius:18px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+transition:.3s;
+
+color:#222;
+
+}
+
+.menu-card:hover{
+
+transform:translateY(-8px);
+
+background:#0B7A3B;
+
+color:white;
+
+}
+
+.menu-card:hover i{
+
+color:white;
+
+}
+
+.menu-card i{
+
+font-size:42px;
+
+margin-bottom:15px;
+
+color:#0B7A3B;
+
+transition:.3s;
+
+}
+
+.menu-card h2{
+
+font-size:22px;
+
+margin-bottom:10px;
+
+}
+
+.menu-card p{
+
+font-size:15px;
+
+opacity:.8;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div class="logo">
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+<div>
+
+<h1>
+
+LADRF Connect
+
+</h1>
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+</div>
+
+</div>
+
+<div class="usuario">
+
+<h3 id="nomeUsuario">
+
+Carregando...
+
+</h3>
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="cards">
+
+<div class="card">
+
+<i class="fa-solid fa-user-group"></i>
+
+<h2>
+
+Pacientes
+
+</h2>
+
+<div class="numero"
+
+id="totalPacientes">
+
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<i class="fa-solid fa-bed"></i>
+
+<h2>
+
+Macas Ocupadas
+
+</h2>
+
+<div class="numero"
+
+id="totalMacas">
+
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<i class="fa-solid fa-stethoscope"></i>
+
+<h2>
+
+Atendimentos
+
+</h2>
+
+<div class="numero"
+
+id="totalAtendimentos">
+
+0
+
+</div>
+
+</div>
+
+<div class="card">
+
+<i class="fa-solid fa-users"></i>
+
+<h2>
+
+Membros
+
+</h2>
+
+<div class="numero"
+
+id="totalMembros">
+
+0
+
+</div>
+
+</div>
+
+</div>
+<div class="menu">
+
+<a href="cadastro.html" data-perfil="admin recepcao">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-user-plus"></i>
+
+<h2>Cadastro</h2>
+
+<p>
+Cadastrar novos pacientes
+</p>
+
+</div>
+
+</a>
+
+
+
+<a href="fila.html" data-perfil="admin recepcao membro">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-list"></i>
+
+<h2>Fila</h2>
+
+<p>
+
+Pacientes aguardando atendimento
+
+</p>
+
+</div>
+
+</a>
+
+
+
+<a href="recepcao.html" data-perfil="admin recepcao">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-desktop"></i>
+
+<h2>Recepção</h2>
+
+<p>
+
+Controle da recepção
+
+</p>
+
+</div>
+
+</a>
+
+
+
+<a href="macas.html" data-perfil="admin membro">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-bed"></i>
+
+<h2>Macas</h2>
+
+<p>
+
+Controle das macas
+
+</p>
+
+</div>
+
+</a>
+
+
+
+<a href="atendimento.html" data-perfil="admin membro">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-stethoscope"></i>
+
+<h2>Atendimento</h2>
+
+<p>
+
+Realizar atendimento
+
+</p>
+
+</div>
+
+</a>
+
+
+
+<a href="historico.html" data-perfil="admin membro">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-book-medical"></i>
+
+<h2>Histórico</h2>
+
+<p>
+
+Consultar atendimentos
+
+</p>
+
+</div>
+
+</a>
+
+
+
+<a href="membros.html" data-perfil="admin">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-users"></i>
+
+<h2>Membros</h2>
+
+<p>
+
+Cadastro da equipe da LADRF
+
+</p>
+
+</div>
+
+</a>
+
+
+
+<a href="usuarios.html" data-perfil="admin">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-user-shield"></i>
+
+<h2>Usuários</h2>
+
+<p>
+
+Gerenciar acessos
+
+</p>
+
+</div>
+
+</a>
+
+
+
+<a href="relatorios.html" data-perfil="admin">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-chart-column"></i>
+
+<h2>Relatórios</h2>
+
+<p>
+
+Indicadores e estatísticas
+
+</p>
+
+</div>
+
+</a>
+
+
+
+<a href="#" id="btnSair">
+
+<div class="menu-card">
+
+<i class="fa-solid fa-right-from-bracket"></i>
+
+<h2>Sair</h2>
+
+<p>
+
+Encerrar sessão
+
+</p>
+
+</div>
+
+</a>
+
+</div>
+
+</div>
+<script type="module">
+
+import { auth, db } from "./firebase.js";
+
+import {
+onAuthStateChanged,
+signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+import {
+collection,
+getDocs,
+doc,
+getDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+// Botão sair
+
+document.getElementById("btnSair").addEventListener("click", async(e)=>{
+
+e.preventDefault();
+
+await signOut(auth);
+
+window.location.href="login.html";
+
+});
+
+
+
+// Carregar informações do usuário
+
+onAuthStateChanged(auth, async(usuario)=>{
+
+if(!usuario){
+
+window.location.href="login.html";
+
+return;
+
+}
+
+
+
+const usuarioDoc = await getDoc(
+
+doc(db,"usuarios",usuario.uid)
+
+);
+
+
+
+if(usuarioDoc.exists()){
+
+const dados = usuarioDoc.data();
+
+document.getElementById("nomeUsuario").innerHTML =
+dados.nome || usuario.email;
+
+document.getElementById("perfilUsuario").innerHTML =
+dados.perfil;
+
+}
+
+
+
+// Mostrar ou esconder cards conforme perfil
+
+const perfil = usuarioDoc.data().perfil;
+
+const itens = document.querySelectorAll("[data-perfil]");
+
+itens.forEach(item=>{
+
+const permitido = item.dataset.perfil.split(" ");
+
+if(!permitido.includes(perfil)){
+
+item.style.display="none";
+
+}
+
+});
+
+
+
+carregarIndicadores();
+
+});
+
+
+
+async function carregarIndicadores(){
+
+// Pacientes
+
+const pacientes = await getDocs(
+collection(db,"pacientes")
+);
+
+document.getElementById("totalPacientes").innerHTML =
+pacientes.size;
+
+
+
+// Membros
+
+const membros = await getDocs(
+collection(db,"membros")
+);
+
+document.getElementById("totalMembros").innerHTML =
+membros.size;
+
+
+
+// Atendimentos
+
+const atendimentos = await getDocs(
+collection(db,"atendimentos")
+);
+
+document.getElementById("totalAtendimentos").innerHTML =
+atendimentos.size;
+
+
+
+// Macas ocupadas
+
+const macas = await getDocs(
+collection(db,"macas")
+);
+
+let ocupadas = 0;
+
+macas.forEach((maca)=>{
+
+const dados = maca.data();
+
+if(dados.ocupada === true){
+
+ocupadas++;
+
+}
+
+});
+
+document.getElementById("totalMacas").innerHTML =
+ocupadas + "/4";
+
+}
+
+</script>
+
+</body>
+
+</html>
