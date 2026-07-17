@@ -1,59 +1,42 @@
 import { db } from "./firebase.js";
 
-
 import {
-
 collection,
 getDocs,
 query,
-where
-
+orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-
-
-const lista =
-document.getElementById("lista");
-
-
 
 
 
 window.buscar = async function(){
 
 
-const nome =
-
-document.getElementById("busca").value;
-
-
-
-if(nome===""){
-
-alert("Digite o nome do paciente");
-
-return;
-
-}
+const termo = document
+.getElementById("busca")
+.value
+.toLowerCase();
 
 
 
-lista.innerHTML="Carregando...";
+const lista = document.getElementById("lista");
+
+
+lista.innerHTML = "Carregando...";
 
 
 
-const consulta = query(
+const busca = query(
 
 collection(db,"atendimentos"),
 
-where("paciente","==",nome)
+orderBy("data","desc")
 
 );
 
 
 
-const resultado = await getDocs(consulta);
+const resultado = await getDocs(busca);
 
 
 
@@ -61,87 +44,157 @@ lista.innerHTML="";
 
 
 
-if(resultado.empty){
-
-
-lista.innerHTML=
-
-"<p>Nenhum atendimento encontrado.</p>";
-
-
-return;
-
-
-}
+let encontrado=false;
 
 
 
+resultado.forEach((item)=>{
 
 
-resultado.forEach((documento)=>{
+const dados=item.data();
 
 
-const atendimento =
-documento.data();
+
+if(
+dados.paciente
+?.toLowerCase()
+.includes(termo)
+){
+
+
+
+encontrado=true;
 
 
 
 lista.innerHTML += `
 
 
-<div class="card">
+<div class="item">
 
 
-<h2>
+<div class="titulo">
 
-${atendimento.paciente}
+${dados.paciente || "-"}
 
-</h2>
+</div>
 
 
-<p>
+
+<b>Idade:</b>
+
+${dados.idade || "-"}
+
+<br>
+
+
+
+<b>Sexo:</b>
+
+${dados.sexo || "-"}
+
+<br>
+
+
 
 <b>Modalidade:</b>
 
-${atendimento.modalidade || "-"}
+${dados.modalidade || "-"}
 
-</p>
+<br>
 
 
-<p>
+
+<b>Evento:</b>
+
+${dados.evento || "-"}
+
+<br>
+
+
+
+<b>Membro responsável:</b>
+
+${dados.membro || "-"}
+
+<br>
+
+
+
+<b>Maca:</b>
+
+${dados.maca || "-"}
+
+<br>
+
+
+
+<b>Horário:</b>
+
+${dados.inicio || "-"}
+até
+${dados.termino || "-"}
+
+<br><br>
+
+
+
 
 <b>Queixa:</b>
 
-${atendimento.queixa || "-"}
+${dados.queixa?.join(", ") || "-"}
 
-</p>
-
-
-<p>
-
-<b>Conduta:</b>
-
-${atendimento.conduta || "-"}
-
-</p>
+<br>
 
 
-<p>
+
+<b>Lado:</b>
+
+${dados.lado || "-"}
+
+<br>
+
+
+
+<b>Tipo de lesão:</b>
+
+${dados.lesao?.join(", ") || "-"}
+
+<br>
+
+
+
+<b>Escala de dor (EVA):</b>
+
+${dados.eva || 0}/10
+
+<br><br>
+
+
+
+
+<b>Condutas:</b>
+
+${dados.condutas?.join(", ") || "-"}
+
+<br><br>
+
+
+
 
 <b>Observações:</b>
 
-${atendimento.observacoes || "-"}
+${dados.observacoes || "-"}
 
-</p>
+<br><br>
 
 
-<p>
 
-<b>Membro:</b>
 
-${atendimento.membro || "-"}
+<b>Situação final:</b>
 
-</p>
+${dados.situacaoFinal || "-"}
+
 
 
 </div>
@@ -151,7 +204,30 @@ ${atendimento.membro || "-"}
 
 
 
+}
+
+
+
 });
+
+
+
+
+
+if(!encontrado){
+
+
+lista.innerHTML = `
+
+<div class="item">
+
+Nenhum atendimento encontrado.
+
+</div>
+
+`;
+
+}
 
 
 }
