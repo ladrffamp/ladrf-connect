@@ -1,5 +1,6 @@
 import { db, auth } from "./firebase.js";
 
+
 import {
 
 collection,
@@ -14,7 +15,9 @@ getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
 let pacienteAtual = null;
+
 
 
 const nome =
@@ -23,6 +26,7 @@ document.getElementById("nome");
 
 const dados =
 document.getElementById("dados");
+
 
 
 
@@ -42,11 +46,14 @@ where("status","==","Em atendimento")
 onSnapshot(consulta,(snapshot)=>{
 
 
+
 if(snapshot.empty){
 
 nome.innerHTML="Nenhum paciente em atendimento";
 
 dados.innerHTML="";
+
+pacienteAtual=null;
 
 return;
 
@@ -54,14 +61,14 @@ return;
 
 
 
-snapshot.forEach((documento)=>{
+snapshot.forEach((item)=>{
 
 
 pacienteAtual={
 
-id:documento.id,
+id:item.id,
 
-...documento.data()
+...item.data()
 
 };
 
@@ -74,7 +81,6 @@ pacienteAtual.nome;
 
 dados.innerHTML = `
 
-
 Modalidade:
 <b>${pacienteAtual.modalidade || "-"}</b>
 
@@ -84,12 +90,12 @@ Modalidade:
 Queixa:
 <b>${pacienteAtual.queixa || "-"}</b>
 
+
 <br><br>
 
 
 Maca:
 <b>${pacienteAtual.maca || "-"}</b>
-
 
 `;
 
@@ -105,7 +111,8 @@ Maca:
 
 
 
-// Buscar nome do membro logado
+
+// Buscar nome do membro
 
 async function buscarMembro(){
 
@@ -121,7 +128,7 @@ return "Não informado";
 
 
 
-const usuarioRef = doc(
+const referencia = doc(
 
 db,
 
@@ -133,17 +140,18 @@ usuario.uid
 
 
 
-const usuarioDoc = await getDoc(usuarioRef);
+const resultado = await getDoc(referencia);
 
 
 
-if(usuarioDoc.exists()){
+if(resultado.exists()){
 
 
-return usuarioDoc.data().nome || usuario.email;
+return resultado.data().nome || usuario.email;
 
 
 }
+
 
 
 return usuario.email;
@@ -156,7 +164,10 @@ return usuario.email;
 
 
 
-// Salvar atendimento
+
+
+// Finalizar atendimento
+
 
 window.salvarAtendimento = async function(){
 
@@ -190,7 +201,7 @@ const membro = await buscarMembro();
 
 
 
-const atendimento = {
+const dadosAtendimento = {
 
 
 pacienteId:
@@ -215,7 +226,7 @@ pacienteAtual.queixa || "",
 
 maca:
 
-pacienteAtual.maca,
+pacienteAtual.maca || "",
 
 
 observacoes,
@@ -237,13 +248,15 @@ Timestamp.now()
 
 
 
-// Criar atendimento e pegar ID
 
-const atendimentoRef = await addDoc(
+
+// Salvar e pegar ID
+
+const atendimentoCriado = await addDoc(
 
 collection(db,"atendimentos"),
 
-atendimento
+dadosAtendimento
 
 );
 
@@ -251,61 +264,93 @@ atendimento
 
 
 
-const idAtendimento = atendimentoRef.id;
+const id = atendimentoCriado.id;
 
 
 
-// Link da avaliação
+
+
+
+// Criar link da avaliação
 
 const link =
 
-`${window.location.origin}/ladrf-connect/avaliacao.html?id=${idAtendimento}`;
+`${window.location.origin}/ladrf-connect/avaliacao.html?id=${id}`;
 
 
 
 
-// Mostrar QR Code
-
-const qr =
-
-document.getElementById("qrcode");
 
 
 
-if(qr){
+// Gerar QR Code
 
 
-qr.innerHTML = "";
+const areaQR = document.getElementById("qrcode");
 
 
-new QRCode(qr,{
+
+if(!areaQR){
+
+alert("Área do QR Code não encontrada no HTML");
+
+return;
+
+}
+
+
+
+areaQR.innerHTML="";
+
+
+
+
+
+if(typeof QRCode === "undefined"){
+
+
+alert("Biblioteca QR Code não carregou");
+
+
+return;
+
+}
+
+
+
+
+
+new QRCode(areaQR,{
 
 text:link,
 
-width:180,
+width:200,
 
-height:180
+height:200
 
 });
 
 
-}
+
 
 
 
 
 alert(
 
-"Atendimento salvo! QR Code de avaliação gerado."
+"Atendimento salvo! QR Code gerado."
 
 );
 
 
 
+
+
 document.getElementById("observacoes").value="";
+
 
 document.getElementById("conduta").value="";
 
 
 
-}
+};
