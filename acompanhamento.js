@@ -1,33 +1,44 @@
-console.log("ACOMPANHAMENTO NOVO CARREGADO");
+console.log("ACOMPANHAMENTO SISTEMA OK");
 
 
 import { db } from "./firebase.js";
 
+
 import {
 
 doc,
-onSnapshot,
-collection,
-query,
-where,
-getDocs
+onSnapshot
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
+
+
 const parametros = new URLSearchParams(
+
 window.location.search
+
 );
+
 
 
 const pacienteId = parametros.get("id");
 
 
 
-const statusTela = document.getElementById("status");
+const statusTela =
+document.getElementById("status");
 
-const dadosTela = document.getElementById("dados");
+
+
+const dadosTela =
+document.getElementById("dados");
+
+
+
+const som =
+document.getElementById("somChamada");
 
 
 
@@ -40,7 +51,13 @@ statusTela.innerHTML =
 "Paciente não encontrado";
 
 
-}else{
+}
+
+
+
+
+
+else{
 
 
 
@@ -62,16 +79,11 @@ onSnapshot(
 
 pacienteRef,
 
-async(snapshot)=>{
+(snapshot)=>{
 
 
 
 if(!snapshot.exists()){
-
-
-statusTela.innerHTML =
-"Paciente não encontrado";
-
 
 return;
 
@@ -85,6 +97,7 @@ const paciente = snapshot.data();
 
 
 
+
 if(paciente.status === "Aguardando"){
 
 
@@ -93,14 +106,11 @@ statusTela.className =
 "status aguardando";
 
 
+
 statusTela.innerHTML =
+
 "🟡 Aguardando atendimento";
 
-
-
-const fila = await calcularFila(
-pacienteId
-);
 
 
 
@@ -109,31 +119,7 @@ dadosTela.innerHTML = `
 
 <b>Paciente:</b>
 
-${paciente.nome || "-"}
-
-
-<br><br>
-
-
-<b>Modalidade:</b>
-
-${paciente.modalidade || "-"}
-
-
-<br><br>
-
-
-<b>Sua posição:</b>
-
-${fila.posicao}º
-
-
-<br><br>
-
-
-<b>Pessoas antes:</b>
-
-${fila.frente}
+${paciente.nome}
 
 
 
@@ -153,6 +139,8 @@ Aguarde o chamado da equipe LADRF.
 
 
 
+
+
 if(paciente.status === "Em atendimento"){
 
 
@@ -161,46 +149,68 @@ statusTela.className =
 "status atendimento";
 
 
+
 statusTela.innerHTML =
-"🔵 Em atendimento";
+
+"🔔 SUA VEZ!";
+
+
 
 
 
 dadosTela.innerHTML = `
 
 
-<b>Paciente:</b>
+<h2>
 
-${paciente.nome || "-"}
+Dirija-se ao atendimento
 
-
-<br><br>
-
-
-<b>Modalidade:</b>
-
-${paciente.modalidade || "-"}
+</h2>
 
 
-<br><br>
+<br>
 
 
 <b>Maca:</b>
 
-${paciente.maca || "-"}
+${paciente.maca}
 
 
-
-<br><br>
-
-
-Seu atendimento começou.
 
 `;
 
 
 
+
+
+
+
+// TOCAR ALERTA
+
+if(
+
+som &&
+
+window.audioLiberado
+
+){
+
+
+
+som.currentTime = 0;
+
+
+som.play();
+
+
+
 }
+
+
+
+}
+
+
 
 
 
@@ -216,20 +226,14 @@ statusTela.className =
 "status finalizado";
 
 
+
 statusTela.innerHTML =
+
 "🟢 Atendimento finalizado";
 
 
 
 dadosTela.innerHTML = `
-
-
-<b>Paciente:</b>
-
-${paciente.nome || "-"}
-
-
-<br><br>
 
 
 Obrigado por utilizar o LADRF Connect.
@@ -242,107 +246,13 @@ Obrigado por utilizar o LADRF Connect.
 
 
 
-}
-
-
-
-);
-
-
 
 }
 
 
 
-
-
-
-
-
-
-async function calcularFila(id){
-
-
-
-const consulta = query(
-
-collection(db,"pacientes"),
-
-where("status","==","Aguardando")
-
 );
 
-
-
-const resultado = await getDocs(consulta);
-
-
-
-let pacientes = [];
-
-
-
-resultado.forEach((item)=>{
-
-
-pacientes.push({
-
-id:item.id,
-
-...item.data()
-
-});
-
-
-});
-
-
-
-
-
-pacientes.sort((a,b)=>{
-
-
-const aData =
-
-a.criadoEm?.seconds || 0;
-
-
-
-const bData =
-
-b.criadoEm?.seconds || 0;
-
-
-
-return aData - bData;
-
-
-});
-
-
-
-
-
-const posicao = pacientes.findIndex(
-
-(p)=>p.id === id
-
-);
-
-
-
-return {
-
-
-posicao:posicao + 1,
-
-
-frente:posicao
-
-
-
-};
 
 
 }
