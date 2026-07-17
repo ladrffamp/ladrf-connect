@@ -20,15 +20,20 @@ const lista = document.getElementById("lista");
 
 
 
-// Mostrar fila
+
+// Mostrar fila por ordem de chegada
 
 const filaQuery = query(
 
 collection(db,"pacientes"),
 
-where("status","==","Aguardando")
+where("status","==","Aguardando"),
+
+orderBy("horarioCadastro","asc")
 
 );
+
+
 
 
 
@@ -40,6 +45,7 @@ lista.innerHTML="";
 
 
 if(snapshot.empty){
+
 
 lista.innerHTML=`
 
@@ -55,9 +61,11 @@ Nenhum paciente aguardando
 
 `;
 
+
 return;
 
 }
+
 
 
 
@@ -104,6 +112,7 @@ ${paciente.maca || "-"}
 
 <td>
 
+
 <button class="chamar"
 
 onclick="chamarPaciente('${item.id}')">
@@ -111,6 +120,7 @@ onclick="chamarPaciente('${item.id}')">
 Chamar
 
 </button>
+
 
 </td>
 
@@ -122,6 +132,7 @@ Chamar
 
 
 });
+
 
 
 });
@@ -140,7 +151,7 @@ async function encontrarMacaLivre(){
 
 
 
-const macas = await getDocs(
+const listaMacas = await getDocs(
 
 collection(db,"macas")
 
@@ -152,7 +163,7 @@ let macaLivre = null;
 
 
 
-macas.forEach((item)=>{
+listaMacas.forEach((item)=>{
 
 
 const maca = item.data();
@@ -166,6 +177,7 @@ maca.status === "Livre"
 && macaLivre === null
 
 ){
+
 
 macaLivre={
 
@@ -187,6 +199,7 @@ numero:maca.numero
 return macaLivre;
 
 
+
 }
 
 
@@ -197,7 +210,7 @@ return macaLivre;
 
 
 
-// Chamar próximo automaticamente
+// Botão chamar próximo
 
 window.chamarProximo = async function(){
 
@@ -205,22 +218,28 @@ window.chamarProximo = async function(){
 
 const pacientes = await getDocs(
 
+
 query(
 
 collection(db,"pacientes"),
 
-where("status","==","Aguardando")
+where("status","==","Aguardando"),
+
+orderBy("horarioCadastro","asc")
 
 )
+
 
 );
 
 
 
 
+
 if(pacientes.empty){
 
-alert("Não existem pacientes aguardando.");
+
+alert("Nenhum paciente aguardando.");
 
 return;
 
@@ -229,16 +248,18 @@ return;
 
 
 
-let primeiro = null;
+
+let proximo = null;
 
 
 
 pacientes.forEach((item)=>{
 
 
-if(!primeiro){
+if(!proximo){
 
-primeiro={
+
+proximo={
 
 id:item.id,
 
@@ -246,7 +267,9 @@ id:item.id,
 
 };
 
+
 }
+
 
 
 });
@@ -256,25 +279,27 @@ id:item.id,
 
 
 
-await chamarPaciente(
+if(proximo){
 
-primeiro.id
 
-);
-
+await chamarPaciente(proximo.id);
 
 
 }
 
 
 
+};
 
 
 
 
 
 
-// Chamar paciente específico
+
+
+
+// Chamar paciente
 
 window.chamarPaciente = async function(idPaciente){
 
@@ -287,12 +312,7 @@ const maca = await encontrarMacaLivre();
 if(!maca){
 
 
-alert(
-
-"Não existe maca livre."
-
-);
-
+alert("Nenhuma maca livre disponível.");
 
 return;
 
@@ -303,8 +323,7 @@ return;
 
 
 
-// atualizar paciente
-
+// Atualiza paciente
 
 await updateDoc(
 
@@ -328,9 +347,7 @@ maca:maca.numero
 
 
 
-
-// atualizar maca
-
+// Atualiza maca
 
 await updateDoc(
 
