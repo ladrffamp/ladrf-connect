@@ -14,26 +14,20 @@ orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-
 const lista = document.getElementById("lista");
 
 
 
 
-
-// Mostrar fila por ordem de chegada
+// Buscar fila
 
 const filaQuery = query(
 
 collection(db,"pacientes"),
 
-where("status","==","Aguardando"),
-
-orderBy("horarioCadastro","asc")
+where("status","==","Aguardando")
 
 );
-
-
 
 
 
@@ -41,7 +35,6 @@ onSnapshot(filaQuery,(snapshot)=>{
 
 
 lista.innerHTML="";
-
 
 
 if(snapshot.empty){
@@ -69,13 +62,58 @@ return;
 
 
 
+let pacientes = [];
+
 
 
 snapshot.forEach((item)=>{
 
 
-const paciente = item.data();
+pacientes.push({
 
+id:item.id,
+
+...item.data()
+
+});
+
+
+});
+
+
+
+
+// ordenar pelo horário quando existir
+
+pacientes.sort((a,b)=>{
+
+
+if(!a.horarioCadastro){
+
+return 1;
+
+}
+
+
+if(!b.horarioCadastro){
+
+return -1;
+
+}
+
+
+return a.horarioCadastro.seconds - b.horarioCadastro.seconds;
+
+
+});
+
+
+
+
+
+
+
+pacientes.forEach((paciente)=>{
 
 
 lista.innerHTML += `
@@ -115,7 +153,7 @@ ${paciente.maca || "-"}
 
 <button class="chamar"
 
-onclick="chamarPaciente('${item.id}')">
+onclick="chamarPaciente('${paciente.id}')">
 
 Chamar
 
@@ -145,13 +183,11 @@ Chamar
 
 
 
-// Encontrar maca livre
 
 async function encontrarMacaLivre(){
 
 
-
-const listaMacas = await getDocs(
+const macas = await getDocs(
 
 collection(db,"macas")
 
@@ -159,11 +195,11 @@ collection(db,"macas")
 
 
 
-let macaLivre = null;
+let livre = null;
 
 
 
-listaMacas.forEach((item)=>{
+macas.forEach((item)=>{
 
 
 const maca = item.data();
@@ -174,12 +210,12 @@ if(
 
 maca.status === "Livre"
 
-&& macaLivre === null
+&& !livre
 
 ){
 
 
-macaLivre={
+livre={
 
 id:item.id,
 
@@ -196,8 +232,7 @@ numero:maca.numero
 
 
 
-return macaLivre;
-
+return livre;
 
 
 }
@@ -208,36 +243,25 @@ return macaLivre;
 
 
 
-
-
-// Botão chamar próximo
-
 window.chamarProximo = async function(){
 
 
 
 const pacientes = await getDocs(
 
-
 query(
 
 collection(db,"pacientes"),
 
-where("status","==","Aguardando"),
-
-orderBy("horarioCadastro","asc")
+where("status","==","Aguardando")
 
 )
-
 
 );
 
 
 
-
-
 if(pacientes.empty){
-
 
 alert("Nenhum paciente aguardando.");
 
@@ -247,19 +271,17 @@ return;
 
 
 
-
-
-let proximo = null;
+let primeiro = null;
 
 
 
 pacientes.forEach((item)=>{
 
 
-if(!proximo){
+if(!primeiro){
 
 
-proximo={
+primeiro={
 
 id:item.id,
 
@@ -271,21 +293,11 @@ id:item.id,
 }
 
 
-
 });
 
 
 
-
-
-
-if(proximo){
-
-
-await chamarPaciente(proximo.id);
-
-
-}
+await chamarPaciente(primeiro.id);
 
 
 
@@ -297,9 +309,6 @@ await chamarPaciente(proximo.id);
 
 
 
-
-
-// Chamar paciente
 
 window.chamarPaciente = async function(idPaciente){
 
@@ -312,7 +321,7 @@ const maca = await encontrarMacaLivre();
 if(!maca){
 
 
-alert("Nenhuma maca livre disponível.");
+alert("Nenhuma maca livre.");
 
 return;
 
@@ -320,22 +329,15 @@ return;
 
 
 
-
-
-
-// Atualiza paciente
-
 await updateDoc(
 
 doc(db,"pacientes",idPaciente),
 
 {
 
-
 status:"Em atendimento",
 
 maca:maca.numero
-
 
 }
 
@@ -344,10 +346,6 @@ maca:maca.numero
 
 
 
-
-
-
-// Atualiza maca
 
 await updateDoc(
 
@@ -355,17 +353,13 @@ doc(db,"macas",maca.id),
 
 {
 
-
 status:"Ocupada",
 
 paciente:idPaciente
 
-
 }
 
 );
-
-
 
 
 
@@ -375,7 +369,6 @@ alert(
 "Paciente chamado para a maca " + maca.numero
 
 );
-
 
 
 };
