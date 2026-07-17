@@ -1,14 +1,13 @@
 import { db } from "./firebase.js";
 
-
 import {
-
 collection,
 getDocs
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
+async function carregarRelatorios(){
 
 
 const atendimentos = await getDocs(
@@ -21,20 +20,24 @@ collection(db,"atendimentos")
 
 let total = 0;
 
-let pacientes = [];
+let pacientes = new Set();
 
 let modalidades = {};
 
-let membros = {};
+let regioes = {};
+
+let lesoes = {};
+
+let situacoes = {};
+
+let somaEVA = 0;
 
 
 
+atendimentos.forEach((item)=>{
 
 
-atendimentos.forEach((doc)=>{
-
-
-const dado = doc.data();
+const dados = item.data();
 
 
 
@@ -42,35 +45,91 @@ total++;
 
 
 
-if(dado.paciente){
 
-pacientes.push(dado.paciente);
+if(dados.paciente){
 
-}
-
-
-
-if(dado.modalidade){
-
-
-modalidades[dado.modalidade] =
-
-(modalidades[dado.modalidade] || 0)+1;
-
+pacientes.add(dados.paciente);
 
 }
 
 
 
-if(dado.membro){
 
 
-membros[dado.membro] =
+// Modalidades
 
-(membros[dado.membro] || 0)+1;
+if(dados.modalidade){
+
+modalidades[dados.modalidade] =
+(modalidades[dados.modalidade] || 0) + 1;
+
+}
+
+
+
+
+
+// Regiões da queixa
+
+if(Array.isArray(dados.queixa)){
+
+
+dados.queixa.forEach((q)=>{
+
+
+regioes[q] =
+(regioes[q] || 0) + 1;
+
+
+});
 
 
 }
+
+
+
+
+
+// Lesões
+
+if(Array.isArray(dados.lesao)){
+
+
+dados.lesao.forEach((l)=>{
+
+
+lesoes[l] =
+(lesoes[l] || 0) + 1;
+
+
+});
+
+
+}
+
+
+
+
+
+// Situação final
+
+if(dados.situacaoFinal){
+
+
+situacoes[dados.situacaoFinal] =
+
+(situacoes[dados.situacaoFinal] || 0) + 1;
+
+
+}
+
+
+
+
+
+// EVA
+
+somaEVA += Number(dados.eva || 0);
 
 
 
@@ -80,72 +139,94 @@ membros[dado.membro] =
 
 
 
-document.getElementById("total").innerHTML = total;
+
+function maior(obj){
+
+
+let maiorValor = "-";
+
+let quantidade = 0;
+
+
+
+for(const item in obj){
+
+
+if(obj[item] > quantidade){
+
+
+quantidade = obj[item];
+
+maiorValor = item;
+
+
+}
+
+
+}
+
+
+
+return maiorValor;
+
+
+}
+
+
+
+
+
+
+document.getElementById("total").innerHTML =
+
+total;
 
 
 
 document.getElementById("pacientes").innerHTML =
 
-[...new Set(pacientes)].length;
-
-
-
-
-
-
-let maiorModalidade="-";
-
-let valorModalidade=0;
-
-
-
-Object.entries(modalidades).forEach(([nome,valor])=>{
-
-
-if(valor > valorModalidade){
-
-valorModalidade=valor;
-
-maiorModalidade=nome;
-
-}
-
-
-});
+pacientes.size;
 
 
 
 document.getElementById("modalidade").innerHTML =
 
-maiorModalidade;
+maior(modalidades);
 
 
 
+document.getElementById("regiao").innerHTML =
+
+maior(regioes);
 
 
 
-let maiorMembro="-";
+document.getElementById("lesao").innerHTML =
 
-let valorMembro=0;
-
-
-
-Object.entries(membros).forEach(([nome,valor])=>{
+maior(lesoes);
 
 
-if(valor > valorMembro){
 
-valorMembro=valor;
+document.getElementById("eva").innerHTML =
 
-maiorMembro=nome;
+total > 0 ?
+
+(somaEVA / total).toFixed(1)
+
+:
+
+0;
+
+
+
+document.getElementById("situacao").innerHTML =
+
+maior(situacoes);
+
+
 
 }
 
 
-});
 
-
-
-document.getElementById("membro").innerHTML =
-
-maiorMembro;
+carregarRelatorios();
