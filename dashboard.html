@@ -4,46 +4,40 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Dashboard - LADRF Connect</title>
+<title>LADRF Connect - Painel</title>
+
+<link rel="stylesheet" href="styles.css">
 
 
 <style>
 
 body{
 
-font-family:Arial,sans-serif;
+font-family:Arial;
 background:#f4f6f9;
-margin:0;
-padding:0;
-
-}
-
-
-header{
-
-background:#0B7A3B;
-color:white;
-padding:20px;
-text-align:center;
-
-}
-
-
-.container{
-
-max-width:1000px;
-margin:auto;
 padding:30px;
 
 }
 
 
-.menu{
+h1{
+
+color:#0B7A3B;
+margin-bottom:30px;
+
+}
+
+
+
+.cards{
 
 display:grid;
+
 grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
 gap:20px;
 
 }
@@ -53,48 +47,67 @@ gap:20px;
 .card{
 
 background:white;
+
 padding:25px;
+
 border-radius:15px;
-text-align:center;
+
 box-shadow:0 5px 15px rgba(0,0,0,.1);
 
 }
 
 
 
-a{
+.numero{
 
-text-decoration:none;
+font-size:40px;
+
+font-weight:bold;
+
+color:#0B7A3B;
 
 }
 
 
 
-button{
+table{
 
 width:100%;
-padding:15px;
+
+margin-top:30px;
+
+background:white;
+
+border-collapse:collapse;
+
+}
+
+
+
+th{
+
 background:#0B7A3B;
+
 color:white;
-border:none;
-border-radius:10px;
-font-size:16px;
-cursor:pointer;
+
+padding:15px;
 
 }
 
 
 
-button:hover{
+td{
 
-opacity:.85;
+padding:15px;
+
+border-bottom:1px solid #ddd;
+
+text-align:center;
 
 }
-
 
 
 </style>
-
 
 </head>
 
@@ -102,167 +115,123 @@ opacity:.85;
 <body>
 
 
-<header>
-
 <h1>
-LADRF Connect
+Painel de Atendimento LADRF Connect
 </h1>
 
-<p>
-Sistema de Gestão da Liga Acadêmica
-</p>
-
-</header>
 
 
+<div class="cards">
 
-<div class="container">
+
+<div class="card">
+
+<h3>
+Aguardando
+</h3>
+
+<div id="aguardando" class="numero">
+0
+</div>
+
+</div>
+
+
+
+
+<div class="card">
+
+<h3>
+Em atendimento
+</h3>
+
+<div id="atendimento" class="numero">
+0
+</div>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h3>
+Macas livres
+</h3>
+
+<div id="livres" class="numero">
+0
+</div>
+
+</div>
+
+
+
+
+
+<div class="card">
+
+<h3>
+Macas ocupadas
+</h3>
+
+<div id="ocupadas" class="numero">
+0
+</div>
+
+</div>
+
+
+
+</div>
+
+
+
 
 
 <h2>
-Menu Principal
+
+Pacientes em atendimento
+
 </h2>
 
 
+<table>
 
-<div class="menu">
 
+<thead>
 
+<tr>
 
-<div class="card">
+<th>Paciente</th>
 
-<a href="cadastro.html">
+<th>Maca</th>
 
-<button>
+<th>Modalidade</th>
 
-Cadastro de Paciente
+</tr>
 
-</button>
+</thead>
 
-</a>
 
-</div>
+<tbody id="listaAtendimento">
 
+</tbody>
 
 
+</table>
 
 
-<div class="card">
 
-<a href="recepcao.html">
 
-<button>
 
-Recepção
 
-</button>
-
-</a>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<a href="fila.html">
-
-<button>
-
-Fila de Atendimento
-
-</button>
-
-</a>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<a href="macas.html">
-
-<button>
-
-Controle de Macas
-
-</button>
-
-</a>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<a href="atendimento.html">
-
-<button>
-
-Atendimento
-
-</button>
-
-</a>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<a href="historico.html">
-
-<button>
-
-Histórico de Atendimentos
-
-</button>
-
-</a>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<a href="usuarios.html">
-
-<button>
-
-Gerenciar Usuários
-
-</button>
-
-</a>
-
-</div>
-
-
-
-</div>
-
-
-</div>
-
-
-
-<script type="module" src="permissoes.js"></script>
+<script type="module" src="dashboard.js"></script>
 
 
 </body>
+
 
 </html>
