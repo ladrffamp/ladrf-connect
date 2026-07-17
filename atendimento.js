@@ -15,8 +15,9 @@ updateDoc
 let pacienteAtual = null;
 
 
+
 const nome = document.getElementById("nome");
-const dados = document.getElementById("dados");
+
 
 
 
@@ -49,11 +50,7 @@ nome.innerHTML =
 "Nenhum paciente em atendimento";
 
 
-dados.innerHTML="";
-
-
 return;
-
 
 }
 
@@ -75,85 +72,38 @@ id:item.id,
 
 
 
-
-
-nome.innerHTML =
-pacienteAtual.nome;
+nome.value = pacienteAtual.nome || "";
 
 
 
-dados.innerHTML = `
+if(document.getElementById("modalidade")){
 
-Modalidade:
-<b>${pacienteAtual.modalidade || "-"}</b>
+document.getElementById("modalidade").value =
+pacienteAtual.modalidade || "";
 
-<br><br>
-
-Queixa:
-<b>${pacienteAtual.queixa || "-"}</b>
-
-<br><br>
-
-Maca:
-<b>${pacienteAtual.maca || "-"}</b>
-
-`;
+}
 
 
 
+if(document.getElementById("maca")){
 
+document.getElementById("maca").value =
+pacienteAtual.maca || "";
 
-// ===============================
-// QR CODE ACOMPANHAMENTO
-// ===============================
-
-
-const qrAcompanhamento =
-
-document.getElementById(
-"qrcodeAcompanhamento"
-);
+}
 
 
 
-if(
+if(document.getElementById("inicio")){
 
-qrAcompanhamento &&
-
-typeof QRCode !== "undefined"
-
-){
-
-
-const link =
-
-`https://ladrffamp.github.io/ladrf-connect/acompanhamento.html?id=${pacienteAtual.id}`;
-
-
-
-qrAcompanhamento.innerHTML="";
-
-
-
-new QRCode(
-
-qrAcompanhamento,
-
+document.getElementById("inicio").value =
+new Date().toLocaleTimeString("pt-BR",
 {
-
-text:link,
-
-width:200,
-
-height:200
+hour:"2-digit",
+minute:"2-digit"
+});
 
 }
-
-);
-
-
-}
-
 
 
 }
@@ -163,6 +113,38 @@ height:200
 carregarPaciente();
 
 
+
+
+
+
+
+
+// =====================================
+// PEGAR CHECKBOX
+// =====================================
+
+
+function pegarSelecionados(nomeCampo){
+
+
+const selecionados = [];
+
+
+document
+.querySelectorAll(`input[name="${nomeCampo}"]:checked`)
+.forEach((item)=>{
+
+
+selecionados.push(item.value);
+
+
+});
+
+
+return selecionados;
+
+
+}
 
 
 
@@ -189,15 +171,11 @@ collection(db,"macas")
 for(const item of macas.docs){
 
 
-const maca = item.data();
+const maca=item.data();
 
 
 
-if(
-
-Number(maca.numero) === Number(numero)
-
-){
+if(Number(maca.numero) === Number(numero)){
 
 
 
@@ -206,7 +184,6 @@ await updateDoc(
 doc(db,"macas",item.id),
 
 {
-
 
 status:"Livre",
 
@@ -217,17 +194,13 @@ paciente:""
 );
 
 
+}
+
 
 }
 
 
-
 }
-
-
-
-}
-
 
 
 
@@ -259,15 +232,138 @@ return;
 
 
 
-const conduta =
-
-document.getElementById("conduta").value;
 
 
 
-const observacoes =
+const lado =
 
-document.getElementById("observacoes").value;
+document.querySelector(
+'input[name="lado"]:checked'
+)?.value || "";
+
+
+
+
+
+const situacao =
+
+document.querySelector(
+'input[name="situacao"]:checked'
+)?.value || "";
+
+
+
+
+
+
+const dados = {
+
+
+pacienteId:
+
+pacienteAtual.id,
+
+
+paciente:
+
+pacienteAtual.nome,
+
+
+idade:
+
+document.getElementById("idade")?.value || "",
+
+
+sexo:
+
+document.getElementById("sexo")?.value || "",
+
+
+
+modalidade:
+
+document.getElementById("modalidade")?.value || "",
+
+
+
+evento:
+
+document.getElementById("evento")?.value || "",
+
+
+
+membro:
+
+document.getElementById("membro")?.value || "",
+
+
+
+maca:
+
+document.getElementById("maca")?.value || pacienteAtual.maca || "",
+
+
+
+inicio:
+
+document.getElementById("inicio")?.value || "",
+
+
+
+termino:
+
+document.getElementById("termino")?.value || "",
+
+
+
+queixa:
+
+pegarSelecionados("queixa"),
+
+
+
+lado,
+
+
+
+lesao:
+
+pegarSelecionados("lesao"),
+
+
+
+eva:
+
+Number(
+document.getElementById("eva")?.value || 0
+),
+
+
+
+condutas:
+
+pegarSelecionados("conduta"),
+
+
+
+observacoes:
+
+document.getElementById("observacoes")?.value || "",
+
+
+
+situacaoFinal:
+
+situacao,
+
+
+
+data:
+
+Timestamp.now()
+
+
+};
 
 
 
@@ -282,55 +378,9 @@ const atendimentoCriado = await addDoc(
 
 collection(db,"atendimentos"),
 
-{
-
-
-pacienteId:
-
-pacienteAtual.id,
-
-
-paciente:
-
-pacienteAtual.nome,
-
-
-modalidade:
-
-pacienteAtual.modalidade || "",
-
-
-queixa:
-
-pacienteAtual.queixa || "",
-
-
-maca:
-
-pacienteAtual.maca || "",
-
-
-conduta,
-
-
-observacoes,
-
-
-membro:
-
-"Administrador LADRF",
-
-
-data:
-
-Timestamp.now()
-
-
-}
+dados
 
 );
-
-
 
 
 
@@ -353,10 +403,9 @@ status:"Finalizado"
 
 
 
-
 await liberarMaca(
 
-pacienteAtual.maca
+dados.maca
 
 );
 
@@ -366,25 +415,14 @@ pacienteAtual.maca
 
 
 
-
-// ===============================
-// QR CODE AVALIAÇÃO
-// ===============================
-
-
 const qr =
 
 document.getElementById("qrcode");
 
 
 
-if(
+if(qr && typeof QRCode !== "undefined"){
 
-qr &&
-
-typeof QRCode !== "undefined"
-
-){
 
 
 const link =
@@ -424,9 +462,13 @@ height:200
 
 alert(
 
-"Atendimento finalizado e QR Code criado!"
+"Atendimento finalizado com sucesso!"
 
 );
+
+
+
+window.location.href="index.html";
 
 
 
@@ -442,9 +484,9 @@ console.error(error);
 
 alert(
 
-"Erro ao finalizar: "
+"Erro ao finalizar atendimento: "
 
-+ error.message
++error.message
 
 );
 
