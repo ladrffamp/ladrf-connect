@@ -1,91 +1,211 @@
 import { auth } from "./firebase.js";
 
+
 import {
-  signInWithEmailAndPassword
+
+signInWithEmailAndPassword
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+
 
 
 window.login = async function(){
 
-  const email = document
-    .getElementById("email")
-    .value
-    .trim();
-
-  const senha = document
-    .getElementById("senha")
-    .value;
 
 
-  const mensagem = document.getElementById("erro");
+const email = document
+
+.getElementById("email")
+
+.value
+
+.trim();
 
 
-  try {
-
-    await signInWithEmailAndPassword(
-      auth,
-      email,
-      senha
-    );
 
 
-    mensagem.style.color = "green";
-    mensagem.innerHTML = "Login realizado!";
+const senha = document
+
+.getElementById("senha")
+
+.value;
 
 
-    setTimeout(()=>{
-
-      window.location.href = "dashboard.html";
-
-    },1000);
 
 
-  } catch(error) {
+
+const mensagem = document
+
+.getElementById("erro");
 
 
-    console.log("Código do erro:", error.code);
-
-    console.log("Mensagem:", error.message);
 
 
-    mensagem.style.color = "red";
+
+try {
 
 
-    if(error.code === "auth/user-not-found"){
 
-      mensagem.innerHTML =
-      "Usuário não encontrado.";
+await signInWithEmailAndPassword(
 
-    }
+auth,
 
-    else if(error.code === "auth/wrong-password"){
+email,
 
-      mensagem.innerHTML =
-      "Senha incorreta.";
+senha
 
-    }
+);
 
-    else if(error.code === "auth/invalid-credential"){
 
-      mensagem.innerHTML =
-      "E-mail ou senha inválidos.";
 
-    }
 
-    else if(error.code === "auth/operation-not-allowed"){
 
-      mensagem.innerHTML =
-      "Login por e-mail não está ativado no Firebase.";
+mensagem.style.color = "green";
 
-    }
 
-    else {
+mensagem.innerHTML =
 
-      mensagem.innerHTML =
-      error.code;
+"Login realizado!";
 
-    }
 
-  }
+
+
+
+
+
+setTimeout(()=>{
+
+
+
+window.location.href = "index.html";
+
+
+
+},1000);
+
+
+
+
+
+
+
+}
+
+catch(error){
+
+
+
+
+
+console.log("Código do erro:", error.code);
+
+
+console.log("Mensagem:", error.message);
+
+
+
+
+
+mensagem.style.color = "red";
+
+
+
+
+
+
+if(error.code === "auth/user-not-found"){
+
+
+
+mensagem.innerHTML =
+
+"Usuário não encontrado.";
+
+
+
+}
+
+
+
+
+
+
+
+else if(error.code === "auth/wrong-password"){
+
+
+
+mensagem.innerHTML =
+
+"Senha incorreta.";
+
+
+
+}
+
+
+
+
+
+
+
+else if(error.code === "auth/invalid-credential"){
+
+
+
+mensagem.innerHTML =
+
+"E-mail ou senha inválidos.";
+
+
+
+}
+
+
+
+
+
+
+
+else if(error.code === "auth/operation-not-allowed"){
+
+
+
+mensagem.innerHTML =
+
+"Login por e-mail não está ativado no Firebase.";
+
+
+
+}
+
+
+
+
+
+
+
+else {
+
+
+
+mensagem.innerHTML =
+
+error.code;
+
+
+
+}
+
+
+
+
+
+
+}
+
+
 
 }
