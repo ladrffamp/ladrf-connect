@@ -1,71 +1,73 @@
 import { db, auth } from "./firebase.js";
 
 import {
-
 collection,
+query,
+where,
+getDocs,
 addDoc,
 Timestamp,
 doc,
-getDoc,
-getDocs,
 updateDoc
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 
 let pacienteAtual = null;
 
 
-
 const nome = document.getElementById("nome");
-
 const dados = document.getElementById("dados");
-
 
 
 
 
 // Buscar paciente em atendimento
 
-const pacientesRef = collection(db,"pacientes");
+async function carregarPaciente(){
+
+
+const consulta = query(
+
+collection(db,"pacientes"),
+
+where("status","==","Em atendimento")
+
+);
 
 
 
-const consulta = await getDocs(pacientesRef);
+const resultado = await getDocs(consulta);
 
 
 
-consulta.forEach((item)=>{
+if(resultado.empty){
 
 
-const paciente = item.data();
+nome.innerHTML="Nenhum paciente em atendimento";
+
+dados.innerHTML="";
+
+return;
+
+
+}
 
 
 
-if(paciente.status === "Em atendimento"){
+resultado.forEach((item)=>{
 
 
 pacienteAtual={
 
 id:item.id,
 
-...paciente
+...item.data()
 
 };
 
 
-}
-
-
 });
 
-
-
-
-
-
-if(pacienteAtual){
 
 
 nome.innerHTML = pacienteAtual.nome;
@@ -91,69 +93,11 @@ Maca:
 
 
 
-}else{
-
-
-nome.innerHTML="Nenhum paciente em atendimento";
-
-
-dados.innerHTML="";
-
 }
 
 
 
-
-
-// Buscar membro logado
-
-async function buscarMembro(){
-
-
-const usuario = auth.currentUser;
-
-
-
-if(!usuario){
-
-return "Não informado";
-
-}
-
-
-
-const usuarioRef = doc(
-
-db,
-
-"usuarios",
-
-usuario.uid
-
-);
-
-
-
-const usuarioDoc = await getDoc(usuarioRef);
-
-
-
-if(usuarioDoc.exists()){
-
-
-return usuarioDoc.data().nome || usuario.email;
-
-
-}
-
-
-
-return usuario.email;
-
-
-
-}
-
+carregarPaciente();
 
 
 
@@ -164,7 +108,6 @@ return usuario.email;
 // Liberar maca
 
 async function liberarMaca(numero){
-
 
 
 if(!numero){
@@ -183,15 +126,14 @@ collection(db,"macas")
 
 
 
-macas.forEach(async(item)=>{
+for(const item of macas.docs){
 
 
 const maca=item.data();
 
 
 
-if(Number(maca.numero) === Number(numero)){
-
+if(String(maca.numero) === String(numero)){
 
 
 await updateDoc(
@@ -200,28 +142,24 @@ doc(db,"macas",item.id),
 
 {
 
-
 status:"Livre",
 
 paciente:""
-
 
 }
 
 );
 
 
+}
+
+
 
 }
 
 
 
-});
-
-
-
 }
-
 
 
 
@@ -247,19 +185,14 @@ return;
 
 
 
-const conduta =
 
+const conduta =
 document.getElementById("conduta").value;
 
 
 
 const observacoes =
-
 document.getElementById("observacoes").value;
-
-
-
-const membro = await buscarMembro();
 
 
 
@@ -269,39 +202,26 @@ try{
 
 
 
-// Criar atendimento
-
-
-const atendimentoCriado = await addDoc(
+const atendimento = await addDoc(
 
 collection(db,"atendimentos"),
 
 {
 
 
-pacienteId:
-
-pacienteAtual.id,
+pacienteId:pacienteAtual.id,
 
 
-paciente:
-
-pacienteAtual.nome,
+paciente:pacienteAtual.nome,
 
 
-modalidade:
-
-pacienteAtual.modalidade || "",
+modalidade:pacienteAtual.modalidade || "",
 
 
-queixa:
-
-pacienteAtual.queixa || "",
+queixa:pacienteAtual.queixa || "",
 
 
-maca:
-
-pacienteAtual.maca || "",
+maca:pacienteAtual.maca || "",
 
 
 conduta,
@@ -310,12 +230,7 @@ conduta,
 observacoes,
 
 
-membro,
-
-
-data:
-
-Timestamp.now()
+data:Timestamp.now()
 
 
 }
@@ -326,8 +241,6 @@ Timestamp.now()
 
 
 
-
-// Atualizar paciente
 
 
 await updateDoc(
@@ -336,9 +249,7 @@ doc(db,"pacientes",pacienteAtual.id),
 
 {
 
-
 status:"Finalizado"
-
 
 }
 
@@ -347,9 +258,6 @@ status:"Finalizado"
 
 
 
-
-
-// Liberar maca
 
 
 await liberarMaca(
@@ -364,46 +272,63 @@ pacienteAtual.maca
 
 
 
-// Gerar QR Code
-
-
-const link =
-
-`https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id=${atendimentoCriado.id}`;
-
-
-
+// GERAR QR CODE
 
 
 const qr = document.getElementById("qrcode");
 
 
 
-if(qr){
+if(!qr){
+
+
+alert("Área do QR Code não encontrada.");
+
+return;
+
+}
+
+
 
 
 qr.innerHTML="";
 
 
 
-new QRCode(qr,{
+
+const link =
+
+"https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id="
+
++
+
+atendimento.id;
 
 
-text:link,
 
 
-width:200,
+
+if(typeof QRCode === "undefined"){
 
 
-height:200
+alert("Biblioteca QR Code não carregada.");
 
-
-});
-
+return;
 
 }
 
 
+
+
+new QRCode(qr,{
+
+text:link,
+
+width:200,
+
+height:200
+
+});
 
 
 
@@ -411,7 +336,7 @@ height:200
 
 alert(
 
-"Atendimento finalizado! QR Code gerado."
+"Atendimento finalizado e QR Code criado!"
 
 );
 
@@ -425,7 +350,11 @@ console.error(error);
 
 alert(
 
-"Erro ao finalizar atendimento."
+"Erro ao finalizar atendimento: "
+
++
+
+error.message
 
 );
 
