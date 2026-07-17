@@ -1,74 +1,51 @@
 import { db } from "./firebase.js";
 
-
 import {
 
 collection,
 addDoc,
-getDocs,
 Timestamp
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
-async function gerarCodigo(){
 
+// Elementos do formulário
 
-const dados = await getDocs(
-collection(db,"pacientes")
-);
-
-
-let numero = dados.size + 1;
-
-
-return "LADRF-" + String(numero).padStart(4,"0");
-
-
-}
+const form = document.getElementById("formCadastro");
 
 
 
 
 
-window.cadastrar = async function(){
+form.addEventListener("submit", async(e)=>{
+
+
+e.preventDefault();
 
 
 
-const nome =
-document.getElementById("nome").value;
 
 
-const idade =
-document.getElementById("idade").value;
+const nome = document.getElementById("nome").value;
 
 
-const whatsapp =
-document.getElementById("whatsapp").value;
+const whatsapp = document.getElementById("whatsapp").value;
 
 
-const modalidade =
-document.getElementById("modalidade").value;
+const modalidade = document.getElementById("modalidade").value;
 
 
-const queixa =
-document.getElementById("queixa").value;
+const queixa = document.getElementById("queixa").value;
 
 
 
-if(nome===""){
-
-alert("Digite o nome do paciente");
-
-return;
-
-}
 
 
 
-const codigo =
-await gerarCodigo();
+
+try{
 
 
 
@@ -81,21 +58,33 @@ collection(db,"pacientes"),
 
 nome:nome,
 
-idade:idade,
 
 whatsapp:whatsapp,
 
+
 modalidade:modalidade,
+
 
 queixa:queixa,
 
-codigoAtendimento:codigo,
+
+
+// entra na fila
 
 status:"Aguardando",
 
-maca:"",
 
-criadoEm:Timestamp.now()
+
+// horário de entrada na fila
+
+horarioCadastro:Timestamp.now(),
+
+
+
+// sem maca inicialmente
+
+maca:""
+
 
 
 }
@@ -103,87 +92,40 @@ criadoEm:Timestamp.now()
 );
 
 
-
-const link =
-
-"https://ladrffamp.github.io/ladrf-connect/paciente.html?codigo="
-
-+codigo;
-
-
-
-mostrarQRCode(link,codigo);
 
 
 
 alert(
 
-"Paciente cadastrado!\nCódigo: "
-
-+codigo
+"Paciente cadastrado com sucesso!"
 
 );
 
 
 
-}
+
+
+form.reset();
 
 
 
 
 
-function mostrarQRCode(link,codigo){
+}catch(error){
 
 
-
-const area =
-document.getElementById("qrcode");
+console.error(error);
 
 
+alert(
 
-area.innerHTML = `
-
-<h3>
-
-${codigo}
-
-</h3>
-
-<br>
-
-<div id="qr"></div>
-
-`;
-
-
-
-if(typeof QRCode === "undefined"){
-
-
-alert("Erro ao carregar QR Code");
-
-return;
-
-
-}
-
-
-
-new QRCode(
-
-document.getElementById("qr"),
-
-{
-
-text:link,
-
-width:220,
-
-height:220
-
-}
+"Erro ao cadastrar paciente"
 
 );
 
 
 }
+
+
+
+});
