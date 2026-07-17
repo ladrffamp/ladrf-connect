@@ -8,15 +8,61 @@
 
 <title>Controle de Macas - LADRF Connect</title>
 
+
 <style>
 
 body{
 
 font-family:Arial,sans-serif;
+
 background:#f4f6f9;
+
 padding:30px;
 
 }
+
+
+
+/* BOTÃO MENU */
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-size:15px;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+}
+
+
+
+.btn-voltar:hover{
+
+background:#075c2b;
+
+}
+
+
+
 
 
 h1{
@@ -26,24 +72,33 @@ color:#0B7A3B;
 }
 
 
+
 .container{
 
 display:grid;
+
 grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
 gap:20px;
 
 }
 
 
+
 .maca{
 
 background:white;
+
 padding:25px;
+
 border-radius:15px;
+
 box-shadow:0 5px 15px rgba(0,0,0,.1);
+
 text-align:center;
 
 }
+
 
 
 .livre{
@@ -53,6 +108,7 @@ border-top:10px solid #4CAF50;
 }
 
 
+
 .ocupada{
 
 border-top:10px solid #E53935;
@@ -60,28 +116,62 @@ border-top:10px solid #E53935;
 }
 
 
+
 button{
 
 background:#0B7A3B;
+
 color:white;
+
 border:none;
+
 padding:12px;
+
 border-radius:8px;
+
 cursor:pointer;
 
 }
 
+
+
+button:hover{
+
+opacity:.85;
+
+}
+
+
+
 </style>
 
+
 </head>
+
 
 
 <body>
 
 
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
+
+
+
 <h1>
+
 Controle de Macas
+
 </h1>
+
+
+
 
 
 <div class="container" id="macas">
@@ -90,9 +180,15 @@ Controle de Macas
 
 
 
+
+
+
+
 <script type="module" src="macas.js"></script>
 
+
 <script type="module" src="permissoes.js"></script>
+
 
 
 </body>
