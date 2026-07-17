@@ -8,24 +8,88 @@
 
 <title>Usuários - LADRF Connect</title>
 
+
 <style>
 
-body{
+*{
+
+margin:0;
+padding:0;
+box-sizing:border-box;
 font-family:Arial, sans-serif;
-background:#f4f6f9;
-padding:30px;
+
 }
+
+
+body{
+
+background:#f4f6f9;
+
+padding:30px;
+
+}
+
+
+
+/* BOTÃO VOLTAR */
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-size:15px;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+}
+
+
+
+.btn-voltar:hover{
+
+background:#08602f;
+
+}
+
+
+
+
 
 .container{
 
 max-width:900px;
+
 margin:auto;
+
 background:white;
+
 padding:30px;
+
 border-radius:15px;
+
 box-shadow:0 5px 20px rgba(0,0,0,.1);
 
 }
+
+
 
 h1{
 
@@ -33,47 +97,71 @@ color:#0B7A3B;
 
 }
 
+
+
 table{
 
 width:100%;
+
 border-collapse:collapse;
+
 margin-top:25px;
 
 }
 
+
+
 th{
 
 background:#0B7A3B;
+
 color:white;
+
 padding:12px;
 
 }
+
+
 
 td{
 
 padding:12px;
+
 text-align:center;
+
 border-bottom:1px solid #ddd;
 
 }
 
+
+
 select{
 
 padding:8px;
+
 border-radius:8px;
 
 }
+
+
 
 button{
 
 padding:8px 12px;
+
 border:none;
+
 border-radius:8px;
+
 background:#0B7A3B;
+
 color:white;
+
 cursor:pointer;
 
 }
+
+
 
 .excluir{
 
@@ -81,44 +169,98 @@ background:#d32f2f;
 
 }
 
+
+
 </style>
+
 
 </head>
 
+
 <body>
+
+
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
+
+
 
 <div class="container">
 
-<h1>Gerenciamento de Usuários</h1>
+
+<h1>
+
+Gerenciamento de Usuários
+
+</h1>
+
+
 
 <table>
 
+
 <thead>
+
 
 <tr>
 
-<th>Nome</th>
 
-<th>Email</th>
+<th>
 
-<th>Perfil</th>
+Nome
 
-<th>Ação</th>
+</th>
+
+
+<th>
+
+Email
+
+</th>
+
+
+<th>
+
+Perfil
+
+</th>
+
+
+<th>
+
+Ação
+
+</th>
+
 
 </tr>
+
 
 </thead>
 
 
+
 <tbody id="listaUsuarios">
 
+
 </tbody>
+
 
 
 </table>
 
 
+
 </div>
+
+
+
 
 
 <script type="module" src="usuarios.js"></script>
