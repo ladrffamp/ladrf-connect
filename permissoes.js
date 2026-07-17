@@ -1,152 +1,186 @@
 import { auth, db } from "./firebase.js";
 
 import {
-onAuthStateChanged,
-signOut
+  onAuthStateChanged,
+  signOut
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-doc,
-getDoc
+  doc,
+  getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-onAuthStateChanged(auth, async (usuario)=>{
+onAuthStateChanged(auth, async (usuario) => {
 
 
-if(!usuario){
+  if (!usuario) {
 
-window.location.href="login.html";
+    window.location.href = "login.html";
+    return;
 
-return;
+  }
 
-}
 
+  try {
 
 
-const usuarioRef = doc(
+    const usuarioRef = doc(
+      db,
+      "usuarios",
+      usuario.uid
+    );
 
-db,
 
-"usuarios",
+    const usuarioDoc = await getDoc(usuarioRef);
 
-usuario.uid
 
-);
 
+    if (!usuarioDoc.exists()) {
 
 
-const usuarioDoc = await getDoc(usuarioRef);
+      alert("Usuário sem perfil cadastrado.");
 
+      await signOut(auth);
 
+      window.location.href = "login.html";
 
-if(!usuarioDoc.exists()){
+      return;
 
+    }
 
-alert("Usuário sem perfil cadastrado.");
 
-await signOut(auth);
 
-window.location.href="login.html";
+    const perfil = usuarioDoc.data().perfil;
 
-return;
 
 
-}
+    const paginaAtual = window.location.pathname
+      .split("/")
+      .pop();
 
 
 
-const perfil = usuarioDoc.data().perfil;
+    const pagina = paginaAtual === ""
+      ? "index.html"
+      : paginaAtual;
 
 
 
-let pagina = window.location.pathname.split("/").pop();
+    console.log("USUÁRIO:", usuario.email);
+    console.log("PERFIL:", perfil);
+    console.log("PÁGINA:", pagina);
 
 
 
-// caso esteja entrando pela raiz
 
-if(pagina===""){
+    const permissoes = {
 
-pagina="index.html";
 
-}
+      admin: [
 
+        "index.html",
+        "dashboard.html",
+        "cadastro.html",
+        "fila.html",
+        "recepcao.html",
+        "macas.html",
+        "atendimento.html",
+        "historico.html",
+        "usuarios.html",
+        "membros.html",
+        "relatorios.html",
+        "painel.html"
 
+      ],
 
-const permissoes = {
 
 
-admin:[
+      recepcao: [
 
-"",
+        "index.html",
+        "dashboard.html",
+        "cadastro.html",
+        "fila.html",
+        "recepcao.html",
+        "painel.html"
 
-"index.html",
-"dashboard.html",
-"cadastro.html",
-"fila.html",
-"recepcao.html",
-"macas.html",
-"atendimento.html",
-"historico.html",
-"usuarios.html",
-"membros.html",
-"relatorios.html",
-"painel.html"
+      ],
 
-],
 
 
+      membro: [
 
-recepcao:[
+        "index.html",
+        "dashboard.html",
+        "fila.html",
+        "macas.html",
+        "atendimento.html",
+        "historico.html",
+        "painel.html"
 
-"",
+      ]
 
-"index.html",
-"dashboard.html",
-"cadastro.html",
-"fila.html",
-"recepcao.html",
-"painel.html"
 
-],
+    };
 
 
 
-membro:[
 
-"",
+    if (!permissoes[perfil]) {
 
-"index.html",
-"dashboard.html",
-"fila.html",
-"macas.html",
-"atendimento.html",
-"historico.html",
-"painel.html"
 
-]
+      alert(
+        "Perfil não reconhecido: " + perfil
+      );
 
 
-};
+      window.location.href="index.html";
 
+      return;
 
 
+    }
 
-if(permissoes[perfil] && permissoes[perfil].includes(pagina)){
 
 
-return;
 
+    if (!permissoes[perfil].includes(pagina)) {
 
-}
 
+      alert(
+        "Sem permissão para: " + pagina
+      );
 
 
-alert("Você não possui permissão para acessar esta página.");
+      window.location.href="index.html";
 
+      return;
 
-window.location.href="index.html";
+
+    }
+
+
+
+    console.log("Acesso permitido");
+
+
+
+  } catch (erro) {
+
+
+    console.error(
+      "Erro nas permissões:",
+      erro
+    );
+
+
+    alert(
+      "Erro ao verificar permissões."
+    );
+
+
+  }
 
 
 });
