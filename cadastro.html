@@ -30,6 +30,46 @@ padding:30px;
 
 
 
+/* BOTÃO MENU */
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-size:15px;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+}
+
+
+
+.btn-voltar:hover{
+
+background:#075c2b;
+
+}
+
+
+
 .container{
 
 max-width:500px;
@@ -187,11 +227,17 @@ font-size:14px;
 
 
 <body>
+
+
+
 <button class="btn-voltar" onclick="window.location.href='index.html'">
 
 🏠 Menu Inicial
 
 </button>
+
+
+
 
 
 <div class="container">
@@ -201,7 +247,9 @@ font-size:14px;
 
 
 <h1>
+
 Cadastro de Paciente
+
 </h1>
 
 
@@ -211,84 +259,121 @@ Cadastro de Paciente
 
 
 <label>
+
 Nome
+
 </label>
 
+
 <input
+
 type="text"
+
 id="nome"
+
 required
+
 >
 
 
 
 
+
 <label>
+
 WhatsApp
+
 </label>
 
+
 <input
+
 type="text"
+
 id="whatsapp"
+
 >
 
 
 
 
+
 <label>
+
 Idade
+
 </label>
+
 
 <input
+
 type="text"
+
 id="idade"
+
 >
+
 
 
 
 
 <label>
+
 Modalidade
+
 </label>
 
-<select
-id="modalidade"
-required
->
+
+
+<select id="modalidade" required>
 
 
 <option value="">
+
 Selecione
+
 </option>
 
 
 <option>
+
 Futebol
+
 </option>
 
 
 <option>
+
 CrossFit
+
 </option>
 
 
 <option>
+
 Vôlei
+
 </option>
 
 
 <option>
+
 Beach Tennis
+
 </option>
 
 
 <option>
+
 Corrida
+
 </option>
 
 
 <option>
+
 Outro
+
 </option>
 
 
@@ -299,13 +384,19 @@ Outro
 
 
 <label>
+
 Queixa principal
+
 </label>
 
 
+
 <textarea
+
 id="queixa"
+
 placeholder="Descreva a queixa">
+
 </textarea>
 
 
@@ -326,11 +417,14 @@ Cadastrar Paciente
 
 
 
+
 <div class="qr-box">
 
 
 <h2>
+
 QR Code de acompanhamento
+
 </h2>
 
 
@@ -342,21 +436,28 @@ Entregue este QR Code ao paciente para acompanhar a fila.
 
 
 
+
 <div id="qrcode">
 
 </div>
 
 
 
-</div>
-
-
-
-
 
 </div>
 
+
+
+
+
+
+
 </div>
+
+
+</div>
+
+
 
 
 
