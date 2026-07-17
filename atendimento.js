@@ -20,15 +20,11 @@ const dados = document.getElementById("dados");
 
 
 
-// ===============================
+// =================================
 // CARREGAR PACIENTE EM ATENDIMENTO
-// ===============================
+// =================================
 
 async function carregarPaciente(){
-
-
-console.log("Carregando paciente...");
-
 
 
 const busca = query(
@@ -48,15 +44,11 @@ const resultado = await getDocs(busca);
 if(resultado.empty){
 
 
-nome.innerHTML =
-"Nenhum paciente em atendimento";
-
+nome.innerHTML="Nenhum paciente em atendimento";
 
 dados.innerHTML="";
 
-
 return;
-
 
 }
 
@@ -78,8 +70,8 @@ id:item.id,
 
 
 
-nome.innerHTML =
-pacienteAtual.nome;
+
+nome.innerHTML = pacienteAtual.nome;
 
 
 
@@ -102,12 +94,6 @@ Maca:
 
 
 
-console.log(
-"Paciente:",
-pacienteAtual
-);
-
-
 }
 
 
@@ -119,34 +105,52 @@ carregarPaciente();
 
 
 
-// ===============================
+
+// =================================
 // LIBERAR MACA
-// ===============================
+// =================================
 
 async function liberarMaca(numero){
 
 
-if(!numero)
-return;
+console.log(
+"Tentando liberar maca:",
+numero
+);
 
 
 
-const macas =
-await getDocs(collection(db,"macas"));
+const macas = await getDocs(
+
+collection(db,"macas")
+
+);
 
 
 
 for(const item of macas.docs){
 
 
-const dadosMaca =
-item.data();
+
+const maca = item.data();
+
+
+
+console.log(
+"Maca encontrada:",
+maca
+);
+
+
 
 
 
 if(
-String(dadosMaca.numero) === String(numero)
+
+Number(maca.numero) === Number(numero)
+
 ){
+
 
 
 await updateDoc(
@@ -155,16 +159,25 @@ doc(db,"macas",item.id),
 
 {
 
+
 status:"Livre",
 
 paciente:""
+
 
 }
 
 );
 
 
-}
+
+console.log(
+
+"Maca liberada:",
+
+maca.numero
+
+);
 
 
 
@@ -176,18 +189,21 @@ paciente:""
 
 
 
+}
 
 
 
 
-// ===============================
+
+
+
+
+
+// =================================
 // FINALIZAR ATENDIMENTO
-// ===============================
+// =================================
 
 window.salvarAtendimento = async function(){
-
-
-console.log("Finalizando...");
 
 
 
@@ -195,24 +211,31 @@ if(!pacienteAtual){
 
 
 alert(
-"Nenhum paciente em atendimento"
+"Nenhum paciente em atendimento."
 );
 
 
 return;
 
-
 }
 
 
 
+
+
 const conduta =
+
 document.getElementById("conduta").value;
 
 
 
+
 const observacoes =
+
 document.getElementById("observacoes").value;
+
+
+
 
 
 
@@ -220,8 +243,11 @@ try{
 
 
 
-const atendimento =
-await addDoc(
+
+
+// Criar atendimento
+
+const atendimentoCriado = await addDoc(
 
 collection(db,"atendimentos"),
 
@@ -229,22 +255,27 @@ collection(db,"atendimentos"),
 
 
 pacienteId:
+
 pacienteAtual.id,
 
 
 paciente:
+
 pacienteAtual.nome,
 
 
 modalidade:
+
 pacienteAtual.modalidade || "",
 
 
 queixa:
+
 pacienteAtual.queixa || "",
 
 
 maca:
+
 pacienteAtual.maca || "",
 
 
@@ -254,7 +285,13 @@ conduta,
 observacoes,
 
 
+membro:
+
+"Administrador LADRF",
+
+
 data:
+
 Timestamp.now()
 
 
@@ -265,15 +302,9 @@ Timestamp.now()
 
 
 
-console.log(
-"Atendimento criado:",
-atendimento.id
-);
 
 
-
-
-
+// Finalizar paciente
 
 await updateDoc(
 
@@ -281,8 +312,10 @@ doc(db,"pacientes",pacienteAtual.id),
 
 {
 
+
 status:"Finalizado"
 
+
 }
 
 );
@@ -290,9 +323,14 @@ status:"Finalizado"
 
 
 
+
+
+// Liberar maca
 
 await liberarMaca(
+
 pacienteAtual.maca
+
 );
 
 
@@ -300,45 +338,10 @@ pacienteAtual.maca
 
 
 
-// ===============================
+
 // GERAR QR CODE
-// ===============================
 
-
-const areaQR =
-document.getElementById("qrcode");
-
-
-
-if(!areaQR){
-
-
-alert(
-"Elemento qrcode não encontrado no HTML"
-);
-
-
-return;
-
-
-}
-
-
-
-
-if(typeof QRCode === "undefined"){
-
-
-alert(
-"Biblioteca QRCode não carregou"
-);
-
-
-return;
-
-
-}
-
+const qr = document.getElementById("qrcode");
 
 
 
@@ -348,62 +351,70 @@ const link =
 
 +
 
-atendimento.id;
+atendimentoCriado.id;
 
 
 
 
-console.log(
-"Link QR:",
-link
-);
+
+if(qr && typeof QRCode !== "undefined"){
+
+
+qr.innerHTML="";
 
 
 
-areaQR.innerHTML="";
+new QRCode(qr,{
 
-
-
-new QRCode(
-
-areaQR,
-
-{
 
 text:link,
 
+
 width:200,
+
 
 height:200
 
+
+});
+
+
 }
 
-);
 
 
 
 
 
 alert(
-"Atendimento finalizado. QR Code gerado!"
+
+"Atendimento finalizado, maca liberada e QR Code criado."
+
 );
 
 
 
-}catch(erro){
 
 
-console.error(
-erro
-);
+}catch(error){
+
+
+console.error(error);
 
 
 alert(
-"Erro: "+erro.message
+
+"Erro ao finalizar atendimento: "
+
++
+
+error.message
+
 );
 
 
 }
+
 
 
 
