@@ -274,3 +274,145 @@ margin-top:20px;
 Atendimento Fisioterapêutico
 
 </h1>
+<div class="box">
+
+
+<h2>
+
+Paciente em atendimento
+
+</h2>
+
+
+
+<h3 id="nome">
+
+Carregando...
+
+</h3>
+
+
+
+
+<div id="dados" class="info">
+
+</div>
+
+
+</div>
+
+
+
+
+
+<label>
+
+Conduta realizada
+
+</label>
+
+
+<textarea
+
+id="conduta"
+
+placeholder="Descreva a conduta realizada">
+
+</textarea>
+
+
+
+
+
+
+<label>
+
+Observações
+
+</label>
+
+
+<textarea
+
+id="observacoes"
+
+placeholder="Digite observações do atendimento">
+
+</textarea>
+
+
+
+
+
+
+<button
+
+class="btn-finalizar"
+
+onclick="salvarAtendimento()">
+
+Finalizar Atendimento
+
+</button>
+
+
+
+
+
+
+
+<div class="qr-area">
+
+
+<h2>
+
+Avaliação do paciente
+
+</h2>
+
+
+
+<p>
+
+Após finalizar o atendimento, o QR Code aparecerá abaixo.
+
+</p>
+
+
+
+
+<div id="qrcode">
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+</div>
+<!-- Biblioteca QR Code -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+
+
+<!-- Sistema LADRF -->
+
+<script type="module" src="atendimento.js"></script>
+
+
+
+</body>
+
+
+</html>
