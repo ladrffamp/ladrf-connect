@@ -1,4 +1,4 @@
-console.log("Acompanhamento carregado");
+console.log("LADRF acompanhamento com som carregado");
 
 
 import { db } from "./firebase.js";
@@ -30,53 +30,57 @@ const dadosTela =
 document.getElementById("dados");
 
 
-
-let statusAnterior="";
-
-
-let audioLiberado=false;
+const som =
+document.getElementById("somChamada");
 
 
-let audioContext=null;
+const botaoSom =
+document.getElementById("ativarSom");
 
 
 
+let somLiberado = false;
+
+
+let statusAnterior = "";
 
 
 
 
-// ======================
-// LIBERAR SOM
-// ======================
-
-
-document
-.getElementById("ativarSom")
-.onclick=function(){
 
 
 
-audioContext = new (
+// liberar áudio
 
-window.AudioContext ||
-
-window.webkitAudioContext
-
-)();
+botaoSom.onclick = ()=>{
 
 
+som.play()
 
-audioContext.resume();
-
-
-
-audioLiberado=true;
+.then(()=>{
 
 
+som.pause();
 
-alert(
-"Alerta sonoro ativado!"
-);
+som.currentTime = 0;
+
+
+somLiberado = true;
+
+
+alert("Alerta sonoro ativado!");
+
+
+
+})
+
+.catch((erro)=>{
+
+
+console.log(erro);
+
+
+});
 
 
 
@@ -90,94 +94,81 @@ alert(
 
 
 
-// ======================
-// SOM
-// ======================
-
-
 function tocarSom(){
 
 
 
-if(!audioLiberado){
+if(!somLiberado){
 
-console.log(
-"Som bloqueado"
-);
+
+console.log("Som ainda não liberado");
+
 
 return;
 
-}
-
-
-
-
-
-const oscilador =
-audioContext.createOscillator();
-
-
-
-const ganho =
-audioContext.createGain();
-
-
-
-
-
-oscilador.type="sine";
-
-
-oscilador.frequency.value=900;
-
-
-
-ganho.gain.value=0.5;
-
-
-
-oscilador.connect(ganho);
-
-
-ganho.connect(audioContext.destination);
-
-
-
-oscilador.start();
-
-
-
-setTimeout(()=>{
-
-
-oscilador.stop();
-
-
-
-},700);
-
-
 
 }
 
 
 
 
+som.currentTime = 0;
+
+
+
+som.play()
+
+.then(()=>{
+
+
+console.log("Som tocando");
+
+
+})
+
+.catch((erro)=>{
+
+
+console.log(
+"Erro áudio:",
+erro
+);
+
+
+});
 
 
 
 
 
-// ======================
-// FILA
-// ======================
+if(navigator.vibrate){
+
+
+navigator.vibrate(
+[500,200,500]
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+
 
 
 async function calcularFila(id){
 
 
 
-const consulta=query(
+const consulta = query(
 
 collection(db,"pacientes"),
 
@@ -191,7 +182,8 @@ where(
 
 
 
-const snap=await getDocs(consulta);
+const resultado =
+await getDocs(consulta);
 
 
 
@@ -199,8 +191,7 @@ let lista=[];
 
 
 
-
-snap.forEach(item=>{
+resultado.forEach((item)=>{
 
 
 lista.push({
@@ -213,7 +204,6 @@ id:item.id,
 
 
 });
-
 
 
 
@@ -239,12 +229,12 @@ return (
 
 
 
-const posicao =
-lista.findIndex(
+const posicao = lista.findIndex(
 
-p=>p.id===id
+(p)=>p.id===id
 
 );
+
 
 
 
@@ -258,7 +248,6 @@ frente:posicao
 };
 
 
-
 }
 
 
@@ -269,18 +258,11 @@ frente:posicao
 
 
 
-
-// ======================
-// TEMPO REAL
-// ======================
-
-
 if(pacienteId){
 
 
 
-const referencia =
-doc(
+const referencia = doc(
 
 db,
 
@@ -307,7 +289,6 @@ if(!snapshot.exists()) return;
 
 
 
-
 const paciente =
 snapshot.data();
 
@@ -321,18 +302,17 @@ if(paciente.status==="Aguardando"){
 
 
 
-statusTela.className=
+statusTela.className =
 "status aguardando";
 
 
-statusTela.innerHTML=
+statusTela.innerHTML =
 "🟡 Aguardando atendimento";
 
 
 
 const fila =
 await calcularFila(pacienteId);
-
 
 
 
@@ -388,11 +368,11 @@ if(paciente.status==="Em atendimento"){
 
 
 
-statusTela.className=
+statusTela.className =
 "status atendimento";
 
 
-statusTela.innerHTML=
+statusTela.innerHTML =
 "🔔 SUA VEZ!";
 
 
@@ -402,7 +382,7 @@ dadosTela.innerHTML=`
 
 <b>Paciente:</b>
 
-${paciente.nome}
+${paciente.nome || "-"}
 
 
 <br><br>
@@ -410,7 +390,7 @@ ${paciente.nome}
 
 <b>Maca:</b>
 
-${paciente.maca}
+${paciente.maca || "-"}
 
 
 <br><br>
@@ -424,8 +404,7 @@ Dirija-se ao atendimento.
 
 
 
-
-if(statusAnterior!=="Em atendimento"){
+if(statusAnterior !== "Em atendimento"){
 
 
 tocarSom();
@@ -445,22 +424,22 @@ tocarSom();
 
 
 
-
 if(paciente.status==="Finalizado"){
 
 
 
-statusTela.className=
+statusTela.className =
 "status finalizado";
 
 
-statusTela.innerHTML=
+statusTela.innerHTML =
 "🟢 Atendimento finalizado";
 
 
 
-dadosTela.innerHTML=
+dadosTela.innerHTML =
 "Obrigado pelo atendimento.";
+
 
 
 }
