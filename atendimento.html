@@ -7,37 +7,27 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>
-Atendimento | LADRF Connect
-</title>
+<title>Atendimento | LADRF Connect</title>
 
 
 <style>
 
-
 *{
-
 box-sizing:border-box;
-
 font-family:Arial, Helvetica, sans-serif;
-
 }
-
 
 
 body{
 
 margin:0;
-
 background:#eef3f7;
-
 padding:30px;
 
 }
 
 
-
-/* BOTÃO MENU */
+/* BOTÃO VOLTAR MENU */
 
 .btn-menu{
 
@@ -47,7 +37,7 @@ top:20px;
 
 left:20px;
 
-z-index:9999;
+z-index:99999;
 
 background:#0B7A3B;
 
@@ -55,11 +45,11 @@ color:white;
 
 border:none;
 
-padding:12px 20px;
+padding:15px 20px;
 
-border-radius:12px;
+border-radius:10px;
 
-font-size:15px;
+font-size:16px;
 
 cursor:pointer;
 
@@ -78,10 +68,9 @@ background:#075c2b;
 
 
 
-
 .container{
 
-max-width:900px;
+max-width:800px;
 
 margin:auto;
 
@@ -108,8 +97,6 @@ h1{
 text-align:center;
 
 color:#0B7A3B;
-
-margin-bottom:25px;
 
 }
 
@@ -149,9 +136,9 @@ line-height:1.8;
 
 label{
 
-font-weight:bold;
-
 display:block;
+
+font-weight:bold;
 
 margin-top:15px;
 
@@ -179,17 +166,21 @@ margin-top:8px;
 
 
 
-button{
+.btn-finalizar{
+
+width:100%;
 
 padding:15px;
 
-border:none;
-
-border-radius:12px;
+margin-top:25px;
 
 background:#0B7A3B;
 
 color:white;
+
+border:none;
+
+border-radius:12px;
 
 font-size:18px;
 
@@ -199,17 +190,7 @@ cursor:pointer;
 
 
 
-.btn-finalizar{
-
-width:100%;
-
-margin-top:25px;
-
-}
-
-
-
-button:hover{
+.btn-finalizar:hover{
 
 background:#075c2b;
 
@@ -217,15 +198,16 @@ background:#075c2b;
 
 
 
-.qr-area{
 
-text-align:center;
+.qr-area{
 
 margin-top:40px;
 
 padding-top:20px;
 
 border-top:1px solid #ddd;
+
+text-align:center;
 
 }
 
@@ -236,8 +218,6 @@ border-top:1px solid #ddd;
 display:flex;
 
 justify-content:center;
-
-align-items:center;
 
 margin-top:20px;
 
@@ -251,33 +231,18 @@ margin-top:20px;
 </head>
 
 
+
 <body>
 
 
 
-  <button onclick="window.location.href='index.html'" 
-style="
-position:fixed;
-top:20px;
-left:20px;
-z-index:99999;
-background:#0B7A3B;
-color:white;
-padding:12px 20px;
-border:none;
-border-radius:10px;
-font-size:16px;
-cursor:pointer;
-">
+<button class="btn-menu" onclick="window.location.href='./index.html'">
 
-🏠 Menu Inicial
+🏠 VOLTAR AO MENU
 
 </button>
-<button class="btn-menu" onclick="window.location.href='index.html'">
 
-🏠 Menu Inicial
 
-</button>
 
 
 
@@ -287,11 +252,17 @@ cursor:pointer;
 <div class="card">
 
 
+
 <h1>
 
 Atendimento Fisioterapêutico
 
 </h1>
+
+
+
+
+
 <div class="box">
 
 
@@ -311,7 +282,6 @@ Carregando...
 
 
 
-
 <div id="dados" class="info">
 
 </div>
@@ -323,11 +293,14 @@ Carregando...
 
 
 
+
+
 <label>
 
 Conduta realizada
 
 </label>
+
 
 
 <textarea
@@ -343,11 +316,13 @@ placeholder="Descreva a conduta realizada">
 
 
 
+
 <label>
 
 Observações
 
 </label>
+
 
 
 <textarea
@@ -363,6 +338,7 @@ placeholder="Digite observações do atendimento">
 
 
 
+
 <button
 
 class="btn-finalizar"
@@ -372,6 +348,7 @@ onclick="salvarAtendimento()">
 Finalizar Atendimento
 
 </button>
+
 
 
 
@@ -405,6 +382,16 @@ Após finalizar o atendimento, o QR Code aparecerá abaixo.
 
 
 
+</div>
+
+
+
+
+
+
+
+</div>
+
 
 </div>
 
@@ -413,24 +400,16 @@ Após finalizar o atendimento, o QR Code aparecerá abaixo.
 
 
 
-</div>
 
-
-</div>
-<!-- Biblioteca QR Code -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 
-
-
-<!-- Sistema LADRF -->
 
 <script type="module" src="atendimento.js"></script>
 
 
 
 </body>
-
 
 </html>
