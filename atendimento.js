@@ -20,9 +20,10 @@ const dados = document.getElementById("dados");
 
 
 
-// =================================
+
+// =====================================
 // CARREGAR PACIENTE EM ATENDIMENTO
-// =================================
+// =====================================
 
 async function carregarPaciente(){
 
@@ -44,11 +45,15 @@ const resultado = await getDocs(busca);
 if(resultado.empty){
 
 
-nome.innerHTML="Nenhum paciente em atendimento";
+nome.innerHTML =
+"Nenhum paciente em atendimento";
+
 
 dados.innerHTML="";
 
+
 return;
+
 
 }
 
@@ -57,7 +62,7 @@ return;
 resultado.forEach((item)=>{
 
 
-pacienteAtual={
+pacienteAtual = {
 
 id:item.id,
 
@@ -71,7 +76,9 @@ id:item.id,
 
 
 
-nome.innerHTML = pacienteAtual.nome;
+
+nome.innerHTML =
+pacienteAtual.nome;
 
 
 
@@ -94,6 +101,61 @@ Maca:
 
 
 
+
+
+// ===============================
+// QR CODE ACOMPANHAMENTO
+// ===============================
+
+
+const qrAcompanhamento =
+
+document.getElementById(
+"qrcodeAcompanhamento"
+);
+
+
+
+if(
+
+qrAcompanhamento &&
+
+typeof QRCode !== "undefined"
+
+){
+
+
+const link =
+
+`https://ladrffamp.github.io/ladrf-connect/acompanhamento.html?id=${pacienteAtual.id}`;
+
+
+
+qrAcompanhamento.innerHTML="";
+
+
+
+new QRCode(
+
+qrAcompanhamento,
+
+{
+
+text:link,
+
+width:200,
+
+height:200
+
+}
+
+);
+
+
+}
+
+
+
 }
 
 
@@ -106,17 +168,13 @@ carregarPaciente();
 
 
 
-// =================================
+
+
+// =====================================
 // LIBERAR MACA
-// =================================
+// =====================================
 
 async function liberarMaca(numero){
-
-
-console.log(
-"Tentando liberar maca:",
-numero
-);
 
 
 
@@ -131,17 +189,7 @@ collection(db,"macas")
 for(const item of macas.docs){
 
 
-
 const maca = item.data();
-
-
-
-console.log(
-"Maca encontrada:",
-maca
-);
-
-
 
 
 
@@ -164,23 +212,12 @@ status:"Livre",
 
 paciente:""
 
-
 }
 
 );
 
 
 
-console.log(
-
-"Maca liberada:",
-
-maca.numero
-
-);
-
-
-
 }
 
 
@@ -199,9 +236,10 @@ maca.numero
 
 
 
-// =================================
+// =====================================
 // FINALIZAR ATENDIMENTO
-// =================================
+// =====================================
+
 
 window.salvarAtendimento = async function(){
 
@@ -221,12 +259,9 @@ return;
 
 
 
-
-
 const conduta =
 
 document.getElementById("conduta").value;
-
 
 
 
@@ -242,10 +277,6 @@ document.getElementById("observacoes").value;
 try{
 
 
-
-
-
-// Criar atendimento
 
 const atendimentoCriado = await addDoc(
 
@@ -304,7 +335,6 @@ Timestamp.now()
 
 
 
-// Finalizar paciente
 
 await updateDoc(
 
@@ -312,9 +342,7 @@ doc(db,"pacientes",pacienteAtual.id),
 
 {
 
-
 status:"Finalizado"
-
 
 }
 
@@ -325,7 +353,6 @@ status:"Finalizado"
 
 
 
-// Liberar maca
 
 await liberarMaca(
 
@@ -339,44 +366,52 @@ pacienteAtual.maca
 
 
 
-// GERAR QR CODE
 
-const qr = document.getElementById("qrcode");
+// ===============================
+// QR CODE AVALIAÇÃO
+// ===============================
 
+
+const qr =
+
+document.getElementById("qrcode");
+
+
+
+if(
+
+qr &&
+
+typeof QRCode !== "undefined"
+
+){
 
 
 const link =
 
-"https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id="
+`https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id=${atendimentoCriado.id}`;
 
-+
-
-atendimentoCriado.id;
-
-
-
-
-
-if(qr && typeof QRCode !== "undefined"){
 
 
 qr.innerHTML="";
 
 
 
-new QRCode(qr,{
+new QRCode(
 
+qr,
+
+{
 
 text:link,
 
-
 width:200,
-
 
 height:200
 
+}
 
-});
+);
 
 
 }
@@ -386,9 +421,10 @@ height:200
 
 
 
+
 alert(
 
-"Atendimento finalizado, maca liberada e QR Code criado."
+"Atendimento finalizado e QR Code criado!"
 
 );
 
@@ -399,22 +435,22 @@ alert(
 }catch(error){
 
 
+
 console.error(error);
+
 
 
 alert(
 
-"Erro ao finalizar atendimento: "
+"Erro ao finalizar: "
 
-+
-
-error.message
++ error.message
 
 );
 
 
-}
 
+}
 
 
 
