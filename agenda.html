@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Agenda LADRF Connect</title>
+
+
+<style>
+
+*{
+
+box-sizing:border-box;
+font-family:Arial;
+
+}
+
+
+body{
+
+background:#f4f6f9;
+
+padding:30px;
+
+}
+
+
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+}
+
+
+
+.container{
+
+max-width:1000px;
+
+margin:auto;
+
+}
+
+
+
+.card{
+
+background:white;
+
+padding:25px;
+
+border-radius:15px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+
+margin-bottom:25px;
+
+}
+
+
+
+h1,h2{
+
+color:#0B7A3B;
+
+}
+
+
+
+input,select,textarea{
+
+width:100%;
+
+padding:12px;
+
+margin-top:10px;
+
+border-radius:8px;
+
+border:1px solid #ccc;
+
+}
+
+
+
+textarea{
+
+height:100px;
+
+}
+
+
+
+button{
+
+margin-top:15px;
+
+padding:12px 20px;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+border-radius:8px;
+
+cursor:pointer;
+
+}
+
+
+
+.evento{
+
+background:#f4f4f4;
+
+padding:20px;
+
+border-radius:12px;
+
+margin-top:15px;
+
+}
+
+
+
+</style>
+
+
+</head>
+
+
+<body>
+
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
+
+<div class="container">
+
+
+<h1>
+
+📅 Agenda LADRF
+
+</h1>
+
+
+
+<div class="card">
+
+
+<h2>
+
+Novo Evento
+
+</h2>
+
+
+<input id="titulo" placeholder="Nome do evento">
+
+
+<select id="tipo">
+
+<option>Atendimento esportivo</option>
+
+<option>Reunião</option>
+
+<option>Treinamento</option>
+
+<option>Curso</option>
+
+<option>Congresso</option>
+
+<option>Ação social</option>
+
+<option>Outro</option>
+
+</select>
+
+
+<input id="data" type="date">
+
+
+<input id="inicio" type="time">
+
+
+<input id="fim" type="time">
+
+
+<input id="local" placeholder="Local">
+
+
+<input id="responsavel" placeholder="Responsável">
+
+
+<textarea id="observacoes" placeholder="Observações"></textarea>
+
+
+<button onclick="salvarEvento()">
+
+Cadastrar Evento
+
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h2>
+
+Próximos eventos
+
+</h2>
+
+
+<div id="listaEventos">
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<script type="module" src="agenda.js"></script>
+
+<script type="module" src="permissoes.js"></script>
+
+
+</body>
+
+</html>
