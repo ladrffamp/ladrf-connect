@@ -1,64 +1,71 @@
 import { db, auth } from "./firebase.js";
 
 import {
+
 collection,
-query,
-where,
-onSnapshot,
 addDoc,
 Timestamp,
 doc,
 getDoc,
 getDocs,
 updateDoc
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 
 let pacienteAtual = null;
 
 
+
 const nome = document.getElementById("nome");
+
 const dados = document.getElementById("dados");
+
+
 
 
 
 // Buscar paciente em atendimento
 
-const consulta = query(
-collection(db,"pacientes"),
-where("status","==","Em atendimento")
-);
+const pacientesRef = collection(db,"pacientes");
 
 
 
-onSnapshot(consulta,(snapshot)=>{
-
-
-if(snapshot.empty){
-
-nome.innerHTML="Nenhum paciente em atendimento";
-
-dados.innerHTML="";
-
-pacienteAtual=null;
-
-return;
-
-}
+const consulta = await getDocs(pacientesRef);
 
 
 
-snapshot.forEach((item)=>{
+consulta.forEach((item)=>{
+
+
+const paciente = item.data();
+
+
+
+if(paciente.status === "Em atendimento"){
 
 
 pacienteAtual={
 
 id:item.id,
 
-...item.data()
+...paciente
 
 };
 
+
+}
+
+
+});
+
+
+
+
+
+
+if(pacienteAtual){
 
 
 nome.innerHTML = pacienteAtual.nome;
@@ -84,21 +91,27 @@ Maca:
 
 
 
-});
+}else{
 
 
-});
+nome.innerHTML="Nenhum paciente em atendimento";
+
+
+dados.innerHTML="";
+
+}
 
 
 
 
 
-// Buscar nome do membro logado
+// Buscar membro logado
 
 async function buscarMembro(){
 
 
 const usuario = auth.currentUser;
+
 
 
 if(!usuario){
@@ -127,7 +140,9 @@ const usuarioDoc = await getDoc(usuarioRef);
 
 if(usuarioDoc.exists()){
 
+
 return usuarioDoc.data().nome || usuario.email;
+
 
 }
 
@@ -136,7 +151,10 @@ return usuarioDoc.data().nome || usuario.email;
 return usuario.email;
 
 
+
 }
+
+
 
 
 
@@ -145,10 +163,11 @@ return usuario.email;
 
 // Liberar maca
 
-async function liberarMaca(numeroMaca){
+async function liberarMaca(numero){
 
 
-if(!numeroMaca){
+
+if(!numero){
 
 return;
 
@@ -156,7 +175,7 @@ return;
 
 
 
-const listaMacas = await getDocs(
+const macas = await getDocs(
 
 collection(db,"macas")
 
@@ -164,14 +183,15 @@ collection(db,"macas")
 
 
 
-listaMacas.forEach(async(item)=>{
+macas.forEach(async(item)=>{
 
 
-const maca = item.data();
+const maca=item.data();
 
 
 
-if(Number(maca.numero) === Number(numeroMaca)){
+if(Number(maca.numero) === Number(numero)){
+
 
 
 await updateDoc(
@@ -181,13 +201,15 @@ doc(db,"macas",item.id),
 {
 
 
-paciente:"",
+status:"Livre",
 
-status:"Livre"
+paciente:""
+
 
 }
 
 );
+
 
 
 }
@@ -197,7 +219,10 @@ status:"Livre"
 });
 
 
+
 }
+
+
 
 
 
@@ -213,18 +238,12 @@ window.salvarAtendimento = async function(){
 
 if(!pacienteAtual){
 
-alert("Nenhum paciente em atendimento");
+
+alert("Nenhum paciente em atendimento.");
 
 return;
 
 }
-
-
-
-
-const observacoes =
-
-document.getElementById("observacoes").value;
 
 
 
@@ -234,14 +253,24 @@ document.getElementById("conduta").value;
 
 
 
+const observacoes =
+
+document.getElementById("observacoes").value;
+
+
+
 const membro = await buscarMembro();
 
 
 
 
 
+try{
 
-// Salvar atendimento
+
+
+// Criar atendimento
+
 
 const atendimentoCriado = await addDoc(
 
@@ -275,10 +304,10 @@ maca:
 pacienteAtual.maca || "",
 
 
-observacoes,
-
-
 conduta,
+
+
+observacoes,
 
 
 membro,
@@ -298,8 +327,8 @@ Timestamp.now()
 
 
 
-
 // Atualizar paciente
+
 
 await updateDoc(
 
@@ -307,7 +336,9 @@ doc(db,"pacientes",pacienteAtual.id),
 
 {
 
+
 status:"Finalizado"
+
 
 }
 
@@ -318,8 +349,8 @@ status:"Finalizado"
 
 
 
-
 // Liberar maca
+
 
 await liberarMaca(
 
@@ -333,12 +364,14 @@ pacienteAtual.maca
 
 
 
-// Criar QR Code da avaliação
+// Gerar QR Code
 
 
 const link =
 
-`${window.location.origin}/ladrf-connect/avaliacao.html?id=${atendimentoCriado.id}`;
+`https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id=${atendimentoCriado.id}`;
+
+
 
 
 
@@ -355,11 +388,15 @@ qr.innerHTML="";
 
 new QRCode(qr,{
 
+
 text:link,
+
 
 width:200,
 
+
 height:200
+
 
 });
 
@@ -371,19 +408,29 @@ height:200
 
 
 
+
 alert(
 
-"Atendimento finalizado! Maca liberada e QR Code gerado."
+"Atendimento finalizado! QR Code gerado."
 
 );
 
 
 
+}catch(error){
 
 
-document.getElementById("observacoes").value="";
+console.error(error);
 
-document.getElementById("conduta").value="";
+
+alert(
+
+"Erro ao finalizar atendimento."
+
+);
+
+
+}
 
 
 
