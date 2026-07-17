@@ -9,16 +9,22 @@
 
 <title>LADRF Connect - Cadastro</title>
 
-<link rel="stylesheet" href="styles.css">
-
 
 <style>
+
+*{
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
 
 body{
 
 background:#f4f6f9;
 
-font-family:Arial,Helvetica,sans-serif;
+margin:0;
+
+padding:30px;
 
 }
 
@@ -28,15 +34,21 @@ font-family:Arial,Helvetica,sans-serif;
 
 max-width:500px;
 
-margin:40px auto;
+margin:auto;
+
+}
+
+
+
+.card{
 
 background:white;
 
 padding:30px;
 
-border-radius:15px;
+border-radius:20px;
 
-box-shadow:0 5px 15px rgba(0,0,0,.1);
+box-shadow:0 8px 20px rgba(0,0,0,.12);
 
 }
 
@@ -58,9 +70,9 @@ label{
 
 display:block;
 
-margin-top:15px;
-
 font-weight:bold;
+
+margin-top:15px;
 
 }
 
@@ -76,9 +88,9 @@ padding:12px;
 
 margin-top:5px;
 
-border:1px solid #ccc;
-
 border-radius:8px;
+
+border:1px solid #ccc;
 
 font-size:15px;
 
@@ -100,9 +112,9 @@ button{
 
 width:100%;
 
-margin-top:25px;
-
 padding:14px;
+
+margin-top:25px;
 
 background:#0B7A3B;
 
@@ -110,9 +122,9 @@ color:white;
 
 border:none;
 
-border-radius:8px;
+border-radius:10px;
 
-font-size:16px;
+font-size:17px;
 
 cursor:pointer;
 
@@ -122,12 +134,54 @@ cursor:pointer;
 
 button:hover{
 
-background:#075d2d;
+background:#075c2b;
 
 }
 
 
+
+.qr-box{
+
+margin-top:35px;
+
+padding-top:25px;
+
+border-top:1px solid #ddd;
+
+text-align:center;
+
+}
+
+
+
+#qrcode{
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+margin-top:20px;
+
+min-height:220px;
+
+}
+
+
+
+.info{
+
+color:#666;
+
+font-size:14px;
+
+}
+
+
+
 </style>
+
 
 </head>
 
@@ -135,7 +189,11 @@ background:#075d2d;
 <body>
 
 
+
 <div class="container">
+
+
+<div class="card">
 
 
 <h1>
@@ -147,11 +205,12 @@ Cadastro de Paciente
 <form id="formCadastro">
 
 
+
 <label>
 Nome
 </label>
 
-<input 
+<input
 type="text"
 id="nome"
 required
@@ -164,7 +223,7 @@ required
 WhatsApp
 </label>
 
-<input 
+<input
 type="text"
 id="whatsapp"
 >
@@ -176,7 +235,7 @@ id="whatsapp"
 Idade
 </label>
 
-<input 
+<input
 type="text"
 id="idade"
 >
@@ -188,37 +247,49 @@ id="idade"
 Modalidade
 </label>
 
-<select id="modalidade" required>
+<select
+id="modalidade"
+required
+>
+
 
 <option value="">
 Selecione
 </option>
 
+
 <option>
 Futebol
 </option>
+
 
 <option>
 CrossFit
 </option>
 
+
 <option>
 Vôlei
 </option>
+
 
 <option>
 Beach Tennis
 </option>
 
+
 <option>
 Corrida
 </option>
+
 
 <option>
 Outro
 </option>
 
+
 </select>
+
 
 
 
@@ -227,9 +298,12 @@ Outro
 Queixa principal
 </label>
 
+
 <textarea
-id="queixa">
+id="queixa"
+placeholder="Descreva a queixa">
 </textarea>
+
 
 
 
@@ -246,15 +320,51 @@ Cadastrar Paciente
 
 
 
+
+
+<div class="qr-box">
+
+
+<h2>
+QR Code de acompanhamento
+</h2>
+
+
+<p class="info">
+
+Entregue este QR Code ao paciente para acompanhar a fila.
+
+</p>
+
+
+
+<div id="qrcode">
+
+</div>
+
+
+
 </div>
 
 
 
 
+
+</div>
+
+</div>
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
 <script type="module" src="cadastro.js"></script>
 
 
-</body>
 
+</body>
 
 </html>
