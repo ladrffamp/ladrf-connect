@@ -1,4 +1,4 @@
-import { db, auth } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
 collection,
@@ -20,13 +20,18 @@ const dados = document.getElementById("dados");
 
 
 
-
-// Buscar paciente em atendimento
+// ===============================
+// CARREGAR PACIENTE EM ATENDIMENTO
+// ===============================
 
 async function carregarPaciente(){
 
 
-const consulta = query(
+console.log("Carregando paciente...");
+
+
+
+const busca = query(
 
 collection(db,"pacientes"),
 
@@ -36,16 +41,19 @@ where("status","==","Em atendimento")
 
 
 
-const resultado = await getDocs(consulta);
+const resultado = await getDocs(busca);
 
 
 
 if(resultado.empty){
 
 
-nome.innerHTML="Nenhum paciente em atendimento";
+nome.innerHTML =
+"Nenhum paciente em atendimento";
+
 
 dados.innerHTML="";
+
 
 return;
 
@@ -70,7 +78,8 @@ id:item.id,
 
 
 
-nome.innerHTML = pacienteAtual.nome;
+nome.innerHTML =
+pacienteAtual.nome;
 
 
 
@@ -93,6 +102,12 @@ Maca:
 
 
 
+console.log(
+"Paciente:",
+pacienteAtual
+);
+
+
 }
 
 
@@ -104,36 +119,34 @@ carregarPaciente();
 
 
 
-
-// Liberar maca
+// ===============================
+// LIBERAR MACA
+// ===============================
 
 async function liberarMaca(numero){
 
 
-if(!numero){
-
+if(!numero)
 return;
 
-}
 
 
-
-const macas = await getDocs(
-
-collection(db,"macas")
-
-);
+const macas =
+await getDocs(collection(db,"macas"));
 
 
 
 for(const item of macas.docs){
 
 
-const maca=item.data();
+const dadosMaca =
+item.data();
 
 
 
-if(String(maca.numero) === String(numero)){
+if(
+String(dadosMaca.numero) === String(numero)
+){
 
 
 await updateDoc(
@@ -167,22 +180,29 @@ paciente:""
 
 
 
-
-// Finalizar atendimento
+// ===============================
+// FINALIZAR ATENDIMENTO
+// ===============================
 
 window.salvarAtendimento = async function(){
+
+
+console.log("Finalizando...");
 
 
 
 if(!pacienteAtual){
 
 
-alert("Nenhum paciente em atendimento.");
+alert(
+"Nenhum paciente em atendimento"
+);
+
 
 return;
 
-}
 
+}
 
 
 
@@ -196,32 +216,36 @@ document.getElementById("observacoes").value;
 
 
 
-
-
 try{
 
 
 
-const atendimento = await addDoc(
+const atendimento =
+await addDoc(
 
 collection(db,"atendimentos"),
 
 {
 
 
-pacienteId:pacienteAtual.id,
+pacienteId:
+pacienteAtual.id,
 
 
-paciente:pacienteAtual.nome,
+paciente:
+pacienteAtual.nome,
 
 
-modalidade:pacienteAtual.modalidade || "",
+modalidade:
+pacienteAtual.modalidade || "",
 
 
-queixa:pacienteAtual.queixa || "",
+queixa:
+pacienteAtual.queixa || "",
 
 
-maca:pacienteAtual.maca || "",
+maca:
+pacienteAtual.maca || "",
 
 
 conduta,
@@ -230,13 +254,21 @@ conduta,
 observacoes,
 
 
-data:Timestamp.now()
+data:
+Timestamp.now()
 
 
 }
 
 );
 
+
+
+
+console.log(
+"Atendimento criado:",
+atendimento.id
+);
 
 
 
@@ -259,11 +291,8 @@ status:"Finalizado"
 
 
 
-
 await liberarMaca(
-
 pacienteAtual.maca
-
 );
 
 
@@ -271,27 +300,44 @@ pacienteAtual.maca
 
 
 
-
+// ===============================
 // GERAR QR CODE
+// ===============================
 
 
-const qr = document.getElementById("qrcode");
+const areaQR =
+document.getElementById("qrcode");
 
 
 
-if(!qr){
+if(!areaQR){
 
 
-alert("Área do QR Code não encontrada.");
+alert(
+"Elemento qrcode não encontrado no HTML"
+);
+
 
 return;
+
 
 }
 
 
 
 
-qr.innerHTML="";
+if(typeof QRCode === "undefined"){
+
+
+alert(
+"Biblioteca QRCode não carregou"
+);
+
+
+return;
+
+
+}
 
 
 
@@ -307,20 +353,22 @@ atendimento.id;
 
 
 
-
-if(typeof QRCode === "undefined"){
-
-
-alert("Biblioteca QR Code não carregada.");
-
-return;
-
-}
+console.log(
+"Link QR:",
+link
+);
 
 
 
+areaQR.innerHTML="";
 
-new QRCode(qr,{
+
+
+new QRCode(
+
+areaQR,
+
+{
 
 text:link,
 
@@ -328,34 +376,30 @@ width:200,
 
 height:200
 
-});
-
-
-
-
-
-alert(
-
-"Atendimento finalizado e QR Code criado!"
+}
 
 );
 
 
 
-}catch(error){
-
-
-console.error(error);
 
 
 alert(
+"Atendimento finalizado. QR Code gerado!"
+);
 
-"Erro ao finalizar atendimento: "
 
-+
 
-error.message
+}catch(erro){
 
+
+console.error(
+erro
+);
+
+
+alert(
+"Erro: "+erro.message
 );
 
 
