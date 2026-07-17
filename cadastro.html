@@ -4,66 +4,125 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Cadastro de Paciente - LADRF Connect</title>
+<title>LADRF Connect - Cadastro</title>
+
+<link rel="stylesheet" href="styles.css">
+
 
 <style>
 
 body{
-font-family:Arial,sans-serif;
+
 background:#f4f6f9;
-padding:30px;
+
+font-family:Arial,Helvetica,sans-serif;
+
 }
+
+
 
 .container{
-max-width:600px;
-margin:auto;
+
+max-width:500px;
+
+margin:40px auto;
+
 background:white;
+
 padding:30px;
+
 border-radius:15px;
-box-shadow:0 5px 20px rgba(0,0,0,.1);
+
+box-shadow:0 5px 15px rgba(0,0,0,.1);
+
 }
+
+
 
 h1{
+
+text-align:center;
+
 color:#0B7A3B;
+
+margin-bottom:25px;
+
 }
 
-input,select,textarea{
+
+
+label{
+
+display:block;
+
+margin-top:15px;
+
+font-weight:bold;
+
+}
+
+
+
+input,
+select,
+textarea{
 
 width:100%;
+
 padding:12px;
-margin-top:15px;
-border-radius:8px;
+
+margin-top:5px;
+
 border:1px solid #ccc;
 
+border-radius:8px;
+
+font-size:15px;
+
 }
+
+
 
 textarea{
 
 height:100px;
 
+resize:none;
+
 }
+
 
 
 button{
 
 width:100%;
-padding:15px;
-margin-top:20px;
+
+margin-top:25px;
+
+padding:14px;
+
 background:#0B7A3B;
+
 color:white;
+
 border:none;
+
 border-radius:8px;
+
 font-size:16px;
+
+cursor:pointer;
 
 }
 
 
-#qrcode{
 
-margin-top:30px;
-text-align:center;
+button:hover{
+
+background:#075d2d;
 
 }
 
@@ -84,59 +143,118 @@ Cadastro de Paciente
 </h1>
 
 
-<input id="nome" placeholder="Nome completo">
+
+<form id="formCadastro">
 
 
-<input id="idade" placeholder="Idade" type="number">
+<label>
+Nome
+</label>
+
+<input 
+type="text"
+id="nome"
+required
+>
 
 
-<input id="whatsapp" placeholder="WhatsApp">
 
 
-<select id="modalidade">
+<label>
+WhatsApp
+</label>
 
-<option value="Futebol">Futebol</option>
+<input 
+type="text"
+id="whatsapp"
+>
 
-<option value="Vôlei">Vôlei</option>
 
-<option value="Futsal">Futsal</option>
 
-<option value="Cross Training">Cross Training</option>
 
-<option value="Corrida">Corrida</option>
+<label>
+Idade
+</label>
 
-<option value="Outro">Outro</option>
+<input 
+type="text"
+id="idade"
+>
+
+
+
+
+<label>
+Modalidade
+</label>
+
+<select id="modalidade" required>
+
+<option value="">
+Selecione
+</option>
+
+<option>
+Futebol
+</option>
+
+<option>
+CrossFit
+</option>
+
+<option>
+Vôlei
+</option>
+
+<option>
+Beach Tennis
+</option>
+
+<option>
+Corrida
+</option>
+
+<option>
+Outro
+</option>
 
 </select>
 
 
-<textarea id="queixa" placeholder="Queixa principal"></textarea>
 
 
-<button onclick="cadastrar()">
+<label>
+Queixa principal
+</label>
+
+<textarea
+id="queixa">
+</textarea>
+
+
+
+
+<button type="submit">
 
 Cadastrar Paciente
 
 </button>
 
 
-<div id="qrcode"></div>
+
+</form>
+
 
 
 </div>
 
 
 
-<!-- Biblioteca QR Code -->
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
 
 <script type="module" src="cadastro.js"></script>
 
-<script type="module" src="permissoes.js"></script>
-
 
 </body>
+
 
 </html>
