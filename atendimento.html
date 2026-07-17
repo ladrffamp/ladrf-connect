@@ -7,27 +7,30 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Atendimento | LADRF Connect</title>
+<title>Atendimento - LADRF Connect</title>
 
 
 <style>
 
 *{
+
 box-sizing:border-box;
+
 font-family:Arial, Helvetica, sans-serif;
+
 }
+
 
 
 body{
 
-margin:0;
-background:#eef3f7;
+background:#f4f6f9;
+
 padding:30px;
 
 }
 
 
-/* BOTÃO MENU INICIAL */
 
 .btn-voltar{
 
@@ -37,8 +40,6 @@ top:20px;
 
 left:20px;
 
-z-index:99999;
-
 background:#0B7A3B;
 
 color:white;
@@ -47,20 +48,9 @@ border:none;
 
 padding:12px 20px;
 
-border-radius:12px;
-
-font-size:15px;
+border-radius:10px;
 
 cursor:pointer;
-
-box-shadow:0 5px 15px rgba(0,0,0,.2);
-
-}
-
-
-.btn-voltar:hover{
-
-background:#075c2b;
 
 }
 
@@ -68,7 +58,7 @@ background:#075c2b;
 
 .container{
 
-max-width:800px;
+max-width:900px;
 
 margin:auto;
 
@@ -86,84 +76,130 @@ border-radius:20px;
 
 box-shadow:0 8px 20px rgba(0,0,0,.12);
 
-}
-
-
-
-h1{
-
-text-align:center;
-
-color:#0B7A3B;
-
-}
-
-
-
-h2{
-
-color:#0B7A3B;
-
-}
-
-
-.box{
-
-background:#f5f5f5;
-
-padding:20px;
-
-border-radius:15px;
-
 margin-bottom:25px;
 
 }
 
 
-.info{
 
-font-size:16px;
+h1,h2{
 
-line-height:1.8;
+color:#0B7A3B;
 
 }
 
 
+
 label{
 
-font-weight:bold;
-
 display:block;
+
+font-weight:bold;
 
 margin-top:15px;
 
 }
 
 
+
+input,
+select,
 textarea{
 
 width:100%;
 
-height:120px;
+padding:12px;
 
-padding:15px;
+margin-top:5px;
 
-border-radius:10px;
+border-radius:8px;
 
 border:1px solid #ccc;
 
-resize:none;
+}
 
-margin-top:8px;
+
+
+textarea{
+
+height:100px;
 
 }
+
+
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:15px;
+
+}
+
+
+
+.checkbox{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+
+gap:10px;
+
+margin-top:10px;
+
+}
+
+
+
+.checkbox label{
+
+font-weight:normal;
+
+}
+
+
+
+button{
+
+width:100%;
+
+padding:15px;
+
+margin-top:25px;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+border-radius:10px;
+
+font-size:17px;
+
+cursor:pointer;
+
+}
+
+
+
+button:hover{
+
+background:#075c2b;
+
+}
+
+
+
 </style>
 
 </head>
 
 
 <body>
-
 
 
 <button class="btn-voltar" onclick="window.location.href='index.html'">
@@ -173,45 +209,494 @@ margin-top:8px;
 </button>
 
 
-
-
-
 <div class="container">
+
+
+<h1>
+
+Ficha de Atendimento LADRF
+
+</h1>
+
+<div class="card">
+
+
+<h2>
+📌 Dados do paciente
+</h2>
+
+
+<div class="grid">
+
+
+<div>
+
+<label>
+Nome
+</label>
+
+<input id="nome" type="text">
+
+</div>
+
+
+
+<div>
+
+<label>
+Idade
+</label>
+
+<input id="idade" type="number">
+
+</div>
+
+
+
+<div>
+
+<label>
+Sexo
+</label>
+
+<select id="sexo">
+
+<option value="">
+Selecione
+</option>
+
+<option>
+Masculino
+</option>
+
+<option>
+Feminino
+</option>
+
+<option>
+Outro
+</option>
+
+</select>
+
+</div>
+
+
+
+<div>
+
+<label>
+Modalidade esportiva
+</label>
+
+<select id="modalidade">
+
+
+<option value="">
+Selecione
+</option>
+
+
+<option>
+Futebol
+</option>
+
+
+<option>
+CrossFit
+</option>
+
+
+<option>
+Vôlei
+</option>
+
+
+<option>
+Beach Tennis
+</option>
+
+
+<option>
+Corrida
+</option>
+
+
+<option>
+Outro
+</option>
+
+
+</select>
+
+</div>
+
+
+
+<div>
+
+<label>
+Evento/Ação
+</label>
+
+<input id="evento" type="text">
+
+</div>
+
+
+
+<div>
+
+<label>
+Membro responsável
+</label>
+
+<input id="membro" type="text">
+
+</div>
+
+
+
+<div>
+
+<label>
+Maca
+</label>
+
+<input id="maca" type="text">
+
+</div>
+
+
+
+<div>
+
+<label>
+Horário de início
+</label>
+
+<input id="inicio" type="time">
+
+</div>
+
+
+
+<div>
+
+<label>
+Horário de término
+</label>
+
+<input id="termino" type="time">
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
+
+
 
 
 <div class="card">
 
 
-
-<h1>
-
-Atendimento Fisioterapêutico
-
-</h1>
-
-
-
-
-
-<div class="box">
-
-
 <h2>
-
-Paciente em atendimento
-
+📌 Queixa principal
 </h2>
 
 
-<h3 id="nome">
+<div class="checkbox">
 
-Carregando...
+
+<label>
+<input type="checkbox" name="queixa" value="Tornozelo">
+Tornozelo
+</label>
+
+
+<label>
+<input type="checkbox" name="queixa" value="Pé">
+Pé
+</label>
+
+
+<label>
+<input type="checkbox" name="queixa" value="Joelho">
+Joelho
+</label>
+
+
+<label>
+<input type="checkbox" name="queixa" value="Coxa">
+Coxa
+</label>
+
+
+<label>
+<input type="checkbox" name="queixa" value="Quadril">
+Quadril
+</label>
+
+
+<label>
+<input type="checkbox" name="queixa" value="Lombar">
+Lombar
+</label>
+
+
+<label>
+<input type="checkbox" name="queixa" value="Ombro">
+Ombro
+</label>
+
+
+<label>
+<input type="checkbox" name="queixa" value="Cotovelo">
+Cotovelo
+</label>
+
+
+<label>
+<input type="checkbox" name="queixa" value="Punho">
+Punho
+</label>
+
+
+<label>
+<input type="checkbox" name="queixa" value="Outro">
+Outro
+</label>
+
+
+</div>
+
+
+</div>
+
+<div class="card">
+
+
+<h2>
+📌 Lado acometido
+</h2>
+
+
+<label>
+<input type="radio" name="lado" value="Direito">
+Direito
+</label>
+
+
+<label>
+<input type="radio" name="lado" value="Esquerdo">
+Esquerdo
+</label>
+
+
+<label>
+<input type="radio" name="lado" value="Bilateral">
+Bilateral
+</label>
+
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+📌 Tipo de lesão
+</h2>
+
+
+<div class="checkbox">
+
+
+<label>
+<input type="checkbox" name="lesao" value="Entorse">
+Entorse
+</label>
+
+
+<label>
+<input type="checkbox" name="lesao" value="Distensão muscular">
+Distensão muscular
+</label>
+
+
+<label>
+<input type="checkbox" name="lesao" value="Cãibra">
+Cãibra
+</label>
+
+
+<label>
+<input type="checkbox" name="lesao" value="Contusão">
+Contusão
+</label>
+
+
+<label>
+<input type="checkbox" name="lesao" value="Tendinopatia">
+Tendinopatia
+</label>
+
+
+<label>
+<input type="checkbox" name="lesao" value="Luxação">
+Luxação
+</label>
+
+
+<label>
+<input type="checkbox" name="lesao" value="Suspeita de fratura">
+Suspeita de fratura
+</label>
+
+
+<label>
+<input type="checkbox" name="lesao" value="Outro">
+Outro
+</label>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+📌 Escala de dor (EVA)
+</h2>
+
+
+<input 
+type="range"
+id="eva"
+min="0"
+max="10"
+value="0"
+oninput="valorEVA.innerHTML=this.value">
+
+
+<h3>
+
+Dor:
+
+<span id="valorEVA">
+0
+</span>
+
+/10
 
 </h3>
 
 
+</div>
 
-<div id="dados" class="info">
+
+
+
+
+<div class="card">
+
+
+<h2>
+📌 Condutas realizadas
+</h2>
+
+
+<div class="checkbox">
+
+
+<label>
+<input type="checkbox" name="conduta" value="Crioterapia">
+Crioterapia
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Termoterapia">
+Termoterapia
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Liberação miofascial">
+Liberação miofascial
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Massagem">
+Massagem
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Alongamento">
+Alongamento
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Mobilização articular">
+Mobilização articular
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Bandagem funcional">
+Bandagem funcional
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Kinesio Taping">
+Kinesio Taping
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Exercícios">
+Exercícios
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Orientações">
+Orientações
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Encaminhamento médico">
+Encaminhamento médico
+</label>
+
+
+<label>
+<input type="checkbox" name="conduta" value="Outro">
+Outro
+</label>
+
 
 </div>
 
@@ -222,56 +707,87 @@ Carregando...
 
 
 
+<div class="card">
+
+
+<h2>
+📌 Observações
+</h2>
+
+
+<textarea id="observacoes"></textarea>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+📌 Situação ao final do atendimento
+</h2>
 
 
 <label>
 
-Conduta realizada
+<input type="radio" name="situacao" value="Retornou ao jogo">
+
+Retornou ao jogo
 
 </label>
 
 
 
-<textarea
-
-id="conduta"
-
-placeholder="Descreva a conduta realizada">
-
-</textarea>
-
-
-
-
-
-
-
 <label>
 
-Observações
+<input type="radio" name="situacao" value="Liberado">
+
+Liberado
 
 </label>
 
 
 
-<textarea
+<label>
 
-id="observacoes"
+<input type="radio" name="situacao" value="Encaminhado ao hospital">
 
-placeholder="Digite observações do atendimento">
+Encaminhado ao hospital
 
-</textarea>
-
-
+</label>
 
 
 
+<label>
 
-<button
+<input type="radio" name="situacao" value="Encaminhado para avaliação médica">
 
-class="btn-finalizar"
+Encaminhado para avaliação médica
 
-onclick="salvarAtendimento()">
+</label>
+
+
+
+<label>
+
+<input type="radio" name="situacao" value="Permaneceu em observação">
+
+Permaneceu em observação
+
+</label>
+
+
+</div>
+
+
+
+
+
+<button onclick="salvarAtendimento()">
 
 Finalizar Atendimento
 
@@ -281,60 +797,15 @@ Finalizar Atendimento
 
 
 
-<div class="qr-area">
-  <div class="qr-area">
-
-
-<h2>
-
-Avaliação do paciente
-
-</h2>
-
-
-
-<p>
-
-Após finalizar o atendimento, o QR Code aparecerá abaixo.
-
-</p>
-
-
-
-
-<div id="qrcode">
-
 </div>
 
 
-
-</div>
-
-
-
-
-
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
 
 
 
 <script type="module" src="atendimento.js"></script>
 
 
-
 </body>
-
 
 </html>
