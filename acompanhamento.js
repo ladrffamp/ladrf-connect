@@ -1,4 +1,4 @@
-console.log("LADRF acompanhamento completo carregado");
+console.log("LADRF acompanhamento carregado");
 
 
 import { db } from "./firebase.js";
@@ -19,18 +19,17 @@ getDocs
 
 
 
-const parametros = new URLSearchParams(
-window.location.search
-);
-
-
-const pacienteId = parametros.get("id");
+const pacienteId =
+new URLSearchParams(window.location.search).get("id");
 
 
 
-const statusTela = document.getElementById("status");
+const statusTela =
+document.getElementById("status");
 
-const dadosTela = document.getElementById("dados");
+
+const dadosTela =
+document.getElementById("dados");
 
 
 
@@ -42,17 +41,15 @@ let statusAnterior = "";
 
 
 
-// ==========================
-// SOM DE CHAMADA
-// ==========================
+// =====================
+// FUNÇÃO SOM
+// =====================
 
 
 function tocarSom(){
 
 
-
 try{
-
 
 
 const AudioContext =
@@ -79,8 +76,6 @@ audio.createGain();
 
 
 
-
-
 oscilador.type = "sine";
 
 
@@ -103,22 +98,26 @@ oscilador.start();
 
 
 
-
-
 setTimeout(()=>{
 
 
 oscilador.stop();
 
 
-},700);
+
+},600);
 
 
 
-}catch(error){
+}
+
+catch(e){
 
 
-console.log(error);
+console.log(
+"Erro no som",
+e
+);
 
 
 }
@@ -135,30 +134,40 @@ console.log(error);
 
 
 
-// ==========================
-// POSIÇÃO NA FILA
-// ==========================
+// =====================
+// BUSCAR FILA
+// =====================
 
 
-async function calcularFila(id){
+async function pegarPosicao(id){
 
 
 
-const filaQuery = query(
+const consulta = query(
 
 collection(db,"pacientes"),
 
-where("status","==","Aguardando")
+where(
+
+"status",
+
+"==",
+
+"Aguardando"
+
+)
 
 );
 
 
 
-const resultado = await getDocs(filaQuery);
+
+
+const resultado = await getDocs(consulta);
 
 
 
-let lista = [];
+let pacientes=[];
 
 
 
@@ -167,39 +176,45 @@ let lista = [];
 resultado.forEach((item)=>{
 
 
-lista.push({
+
+pacientes.push({
+
 
 id:item.id,
 
+
 ...item.data()
 
-});
 
 
 });
 
 
+});
 
 
 
 
 
-lista.sort((a,b)=>{
 
 
-const dataA =
+pacientes.sort((a,b)=>{
+
+
+
+const aTempo =
 
 a.criadoEm?.seconds || 0;
 
 
 
-const dataB =
+const bTempo =
 
 b.criadoEm?.seconds || 0;
 
 
 
-return dataA - dataB;
+return aTempo - bTempo;
 
 
 
@@ -211,11 +226,11 @@ return dataA - dataB;
 
 
 
-const posicao = lista.findIndex(
+const indice = pacientes.findIndex(
 
-(paciente)=>
 
-paciente.id === id
+(p)=>p.id===id
+
 
 );
 
@@ -225,9 +240,19 @@ paciente.id === id
 
 return {
 
-posicao: posicao + 1,
 
-frente: posicao
+
+posicao:
+
+indice + 1,
+
+
+
+frente:
+
+indice
+
+
 
 };
 
@@ -243,19 +268,16 @@ frente: posicao
 
 
 
-
-// ==========================
-// ACOMPANHAMENTO
-// ==========================
+// =====================
+// INICIAR
+// =====================
 
 
 if(!pacienteId){
 
 
 statusTela.innerHTML =
-
 "QR Code inválido";
-
 
 
 }
@@ -278,6 +300,7 @@ pacienteId
 
 
 
+
 onSnapshot(
 
 pacienteRef,
@@ -290,56 +313,47 @@ if(!snapshot.exists()){
 
 
 statusTela.innerHTML =
-
 "Paciente não encontrado";
 
 
 return;
-
 
 }
 
 
 
 
-
-const paciente = snapshot.data();
-
-
+const paciente =
+snapshot.data();
 
 
 
 
 
-// ==========================
+
+
+// =====================
 // AGUARDANDO
-// ==========================
+// =====================
 
 
-if(paciente.status === "Aguardando"){
+if(paciente.status==="Aguardando"){
 
 
 
 statusTela.className =
-
 "status aguardando";
 
 
 
 statusTela.innerHTML =
-
 "🟡 Aguardando atendimento";
 
 
 
 
-
-const fila = await calcularFila(
-
-pacienteId
-
-);
-
+const fila =
+await pegarPosicao(pacienteId);
 
 
 
@@ -357,6 +371,7 @@ ${paciente.nome || "-"}
 <br><br>
 
 
+
 <b>Modalidade:</b>
 
 ${paciente.modalidade || "-"}
@@ -364,6 +379,7 @@ ${paciente.modalidade || "-"}
 
 
 <br><br>
+
 
 
 <b>Posição na fila:</b>
@@ -375,13 +391,15 @@ ${fila.posicao}º
 <br><br>
 
 
-<b>Pessoas na frente:</b>
+
+<b>Pessoas antes:</b>
 
 ${fila.frente}
 
 
 
 <br><br>
+
 
 
 Aguarde o chamado da equipe LADRF.
@@ -401,25 +419,22 @@ Aguarde o chamado da equipe LADRF.
 
 
 
-// ==========================
-// EM ATENDIMENTO
-// ==========================
+// =====================
+// CHAMADO
+// =====================
 
 
-if(paciente.status === "Em atendimento"){
+if(paciente.status==="Em atendimento"){
 
 
 
 statusTela.className =
-
 "status atendimento";
 
 
 
 statusTela.innerHTML =
-
 "🔔 SUA VEZ!";
-
 
 
 
@@ -437,6 +452,7 @@ ${paciente.nome || "-"}
 <br><br>
 
 
+
 <b>Modalidade:</b>
 
 ${paciente.modalidade || "-"}
@@ -444,6 +460,7 @@ ${paciente.modalidade || "-"}
 
 
 <br><br>
+
 
 
 <b>Maca:</b>
@@ -455,6 +472,7 @@ ${paciente.maca || "-"}
 <br><br>
 
 
+
 Dirija-se ao atendimento.
 
 `;
@@ -464,44 +482,43 @@ Dirija-se ao atendimento.
 
 
 
-
-if(statusAnterior !== "Em atendimento"){
+if(statusAnterior!=="Em atendimento"){
 
 
 tocarSom();
 
 
-}
-
-
 
 }
 
 
 
+}
 
 
 
 
 
 
-// ==========================
+
+
+
+
+// =====================
 // FINALIZADO
-// ==========================
+// =====================
 
 
-if(paciente.status === "Finalizado"){
+if(paciente.status==="Finalizado"){
 
 
 
 statusTela.className =
-
 "status finalizado";
 
 
 
 statusTela.innerHTML =
-
 "🟢 Atendimento finalizado";
 
 
@@ -520,6 +537,7 @@ ${paciente.nome || "-"}
 <br><br>
 
 
+
 Obrigado por utilizar o LADRF Connect.
 
 `;
@@ -534,7 +552,8 @@ Obrigado por utilizar o LADRF Connect.
 
 
 
-statusAnterior = paciente.status;
+statusAnterior =
+paciente.status;
 
 
 
