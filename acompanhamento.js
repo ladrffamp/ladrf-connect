@@ -1,8 +1,8 @@
-console.log("ACOMPANHAMENTO SISTEMA OK");
+console.log("Acompanhamento carregado");
+
 
 
 import { db } from "./firebase.js";
-
 
 import {
 
@@ -13,17 +13,12 @@ onSnapshot
 
 
 
-
-
-const parametros = new URLSearchParams(
-
+const url = new URLSearchParams(
 window.location.search
-
 );
 
 
-
-const pacienteId = parametros.get("id");
+const pacienteId = url.get("id");
 
 
 
@@ -31,14 +26,81 @@ const statusTela =
 document.getElementById("status");
 
 
-
 const dadosTela =
 document.getElementById("dados");
 
 
 
-const som =
-document.getElementById("somChamada");
+let statusAnterior = "";
+
+
+
+
+
+function tocarSom(){
+
+
+
+const AudioContext =
+window.AudioContext ||
+window.webkitAudioContext;
+
+
+
+const audio =
+new AudioContext();
+
+
+
+const beep =
+audio.createOscillator();
+
+
+
+const volume =
+audio.createGain();
+
+
+
+beep.type="sine";
+
+
+beep.frequency.value=900;
+
+
+
+volume.gain.value=0.5;
+
+
+
+beep.connect(volume);
+
+
+volume.connect(audio.destination);
+
+
+
+beep.start();
+
+
+
+
+
+setTimeout(()=>{
+
+
+beep.stop();
+
+
+},700);
+
+
+
+}
+
+
+
+
 
 
 
@@ -48,20 +110,16 @@ if(!pacienteId){
 
 
 statusTela.innerHTML =
-"Paciente não encontrado";
+"QR Code inválido";
 
 
-}
-
-
-
-
-
-else{
+}else{
 
 
 
-const pacienteRef = doc(
+
+
+const referencia = doc(
 
 db,
 
@@ -77,7 +135,7 @@ pacienteId
 
 onSnapshot(
 
-pacienteRef,
+referencia,
 
 (snapshot)=>{
 
@@ -85,13 +143,22 @@ pacienteRef,
 
 if(!snapshot.exists()){
 
+
+statusTela.innerHTML =
+"Paciente não encontrado";
+
+
 return;
 
 }
 
 
 
-const paciente = snapshot.data();
+
+const paciente =
+snapshot.data();
+
+
 
 
 
@@ -106,11 +173,8 @@ statusTela.className =
 "status aguardando";
 
 
-
 statusTela.innerHTML =
-
 "🟡 Aguardando atendimento";
-
 
 
 
@@ -122,17 +186,17 @@ dadosTela.innerHTML = `
 ${paciente.nome}
 
 
-
 <br><br>
 
 
-Aguarde o chamado da equipe LADRF.
+Aguarde o chamado da equipe.
 
 `;
 
 
 
 }
+
 
 
 
@@ -149,26 +213,20 @@ statusTela.className =
 "status atendimento";
 
 
-
 statusTela.innerHTML =
-
 "🔔 SUA VEZ!";
-
-
 
 
 
 dadosTela.innerHTML = `
 
 
-<h2>
+<b>Paciente:</b>
 
-Dirija-se ao atendimento
-
-</h2>
+${paciente.nome}
 
 
-<br>
+<br><br>
 
 
 <b>Maca:</b>
@@ -176,6 +234,10 @@ Dirija-se ao atendimento
 ${paciente.maca}
 
 
+<br><br>
+
+
+Dirija-se ao atendimento.
 
 `;
 
@@ -183,25 +245,10 @@ ${paciente.maca}
 
 
 
+if(statusAnterior !== "Em atendimento"){
 
 
-// TOCAR ALERTA
-
-if(
-
-som &&
-
-window.audioLiberado
-
-){
-
-
-
-som.currentTime = 0;
-
-
-som.play();
-
+tocarSom();
 
 
 }
@@ -209,7 +256,6 @@ som.play();
 
 
 }
-
 
 
 
@@ -226,9 +272,7 @@ statusTela.className =
 "status finalizado";
 
 
-
 statusTela.innerHTML =
-
 "🟢 Atendimento finalizado";
 
 
@@ -244,6 +288,13 @@ Obrigado por utilizar o LADRF Connect.
 
 }
 
+
+
+
+
+
+statusAnterior =
+paciente.status;
 
 
 
