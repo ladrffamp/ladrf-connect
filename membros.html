@@ -17,68 +17,146 @@ box-sizing:border-box;
 font-family:Arial, Helvetica, sans-serif;
 }
 
+
 body{
 
 background:#f4f6f9;
 
 }
 
+
+
+/* BOTÃO VOLTAR */
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-size:15px;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+}
+
+
+
+.btn-voltar:hover{
+
+background:#08602f;
+
+}
+
+
+
+
+
 header{
 
 background:#0B7A3B;
+
 color:white;
+
 padding:20px;
+
 text-align:center;
 
 }
 
+
+
 .container{
 
 max-width:1200px;
+
 margin:30px auto;
+
 padding:20px;
 
 }
+
+
 
 .card{
 
 background:white;
+
 padding:20px;
+
 border-radius:15px;
+
 box-shadow:0 3px 10px rgba(0,0,0,.15);
+
 margin-bottom:25px;
 
 }
 
+
+
 h2{
 
 margin-bottom:20px;
+
 color:#0B7A3B;
 
 }
 
+
+
 input,select{
 
 width:100%;
+
 padding:12px;
+
 margin-bottom:15px;
+
 border:1px solid #ccc;
+
 border-radius:8px;
 
 }
+
+
 
 button{
 
 background:#0B7A3B;
+
 color:white;
+
 border:none;
+
 padding:12px;
+
 width:100%;
+
 border-radius:8px;
+
 cursor:pointer;
+
 font-size:16px;
 
 }
+
+
 
 button:hover{
 
@@ -86,34 +164,49 @@ background:#08602f;
 
 }
 
+
+
 table{
 
 width:100%;
+
 border-collapse:collapse;
 
 }
 
+
+
 th{
 
 background:#0B7A3B;
+
 color:white;
+
 padding:12px;
 
 }
 
+
+
 td{
 
 padding:10px;
+
 border-bottom:1px solid #ddd;
 
 }
 
+
+
 .acao{
 
 display:flex;
+
 gap:10px;
 
 }
+
+
 
 .editar{
 
@@ -121,17 +214,32 @@ background:#1565C0;
 
 }
 
+
+
 .excluir{
 
 background:#C62828;
 
 }
 
+
+
 </style>
 
 </head>
 
+
 <body>
+
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
+
 
 <header>
 
@@ -141,59 +249,100 @@ background:#C62828;
 
 </header>
 
+
+
+
+
 <div class="container">
+
+
 
 <div class="card">
 
+
 <h2>Novo Membro</h2>
+
+
 
 <input
 id="nome"
 placeholder="Nome completo">
 
+
+
 <input
 id="email"
 placeholder="E-mail">
+
+
 
 <input
 id="telefone"
 placeholder="Telefone">
 
+
+
 <input
 id="curso"
 placeholder="Curso">
+
+
 
 <input
 id="periodo"
 placeholder="Período">
 
+
+
+
+
 <select id="funcao">
+
 
 <option>Membro</option>
 
+
 <option>Presidente</option>
+
 
 <option>Vice-presidente</option>
 
+
 <option>Diretor Científico</option>
+
 
 <option>Diretor Financeiro</option>
 
+
 <option>Diretor de Marketing</option>
+
 
 <option>Secretário</option>
 
+
 <option>Orientador</option>
 
+
 </select>
+
+
+
+
 
 <select id="status">
 
+
 <option>Ativo</option>
+
 
 <option>Inativo</option>
 
+
 </select>
+
+
+
+
 
 <button onclick="salvarMembro()">
 
@@ -201,43 +350,73 @@ Cadastrar Membro
 
 </button>
 
+
+
 </div>
+
+
+
+
 
 <div class="card">
 
+
 <h2>Membros Cadastrados</h2>
+
+
 
 <table>
 
+
 <thead>
+
 
 <tr>
 
+
 <th>Nome</th>
+
 
 <th>Função</th>
 
+
 <th>Status</th>
+
 
 <th>Ações</th>
 
+
 </tr>
+
 
 </thead>
 
+
+
 <tbody id="listaMembros">
+
 
 </tbody>
 
+
+
 </table>
 
-</div>
 
 </div>
+
+
+
+</div>
+
+
+
+
 
 <script type="module" src="membros.js"></script>
 
 <script type="module" src="permissoes.js"></script>
+
 
 </body>
 
