@@ -7,7 +7,6 @@ where,
 onSnapshot,
 getDocs,
 doc,
-getDoc,
 updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -15,81 +14,47 @@ const lista = document.getElementById("lista");
 
 let pacientesFila = [];
 
-async function encontrarMacaLivre(){
-
-    const snapshot = await getDocs(
-        collection(db,"macas")
-    );
-
-    let macaLivre = null;
-
-    snapshot.forEach((item)=>{
-
-        const maca = item.data();
-
-        if(
-            maca.status === "Livre" &&
-            macaLivre === null
-        ){
-
-            macaLivre = {
-                id:item.id,
-                numero:maca.numero
-            };
-
-        }
-
-    });
-
-    return macaLivre;
-
-}
-
 const filaQuery = query(
-
-    collection(db,"pacientes"),
-
-    where("status","==","Aguardando")
-
+    collection(db, "pacientes"),
+    where("status", "==", "Aguardando")
 );
 
-onSnapshot(filaQuery,(snapshot)=>{
+// Atualiza a fila em tempo real
+onSnapshot(filaQuery, (snapshot) => {
 
-    pacientesFila=[];
+    pacientesFila = [];
 
-    snapshot.forEach((item)=>{
+    snapshot.forEach((item) => {
 
         pacientesFila.push({
-
-            id:item.id,
-
+            id: item.id,
             ...item.data()
-
         });
 
     });
 
-    pacientesFila.sort((a,b)=>{
+    // Ordena pelo horário de cadastro
+    pacientesFila.sort((a, b) => {
 
-        if(!a.criadoEm) return 1;
+        if (!a.criadoEm) return 1;
+        if (!b.criadoEm) return -1;
 
-        if(!b.criadoEm) return -1;
-
-        return a.criadoEm.seconds-b.criadoEm.seconds;
+        return a.criadoEm.seconds - b.criadoEm.seconds;
 
     });
 
-    desenharTabela();
+    atualizarTabela();
 
 });
 
-function desenharTabela(){
+// Atualiza tabela
+function atualizarTabela() {
 
-    lista.innerHTML="";
+    lista.innerHTML = "";
 
-    if(pacientesFila.length===0){
+    if (pacientesFila.length === 0) {
 
-        lista.innerHTML=`
+        lista.innerHTML = `
         <tr>
             <td colspan="5">
                 Nenhum paciente aguardando
@@ -101,9 +66,9 @@ function desenharTabela(){
 
     }
 
-    pacientesFila.forEach((paciente)=>{
+    pacientesFila.forEach((paciente) => {
 
-        lista.innerHTML+=`
+        lista.innerHTML += `
 
         <tr>
 
@@ -134,13 +99,49 @@ function desenharTabela(){
     });
 
 }
-// ===============================
-// CHAMAR PRÓXIMO PACIENTE
-// ===============================
+// ======================================
+// ENCONTRAR A PRIMEIRA MACA LIVRE
+// ======================================
 
-window.chamarProximo = async function(){
+async function encontrarMacaLivre() {
 
-    if(pacientesFila.length===0){
+    const snapshot = await getDocs(
+        collection(db, "macas")
+    );
+
+    let macaLivre = null;
+
+    snapshot.forEach((item) => {
+
+        const maca = item.data();
+
+        if (
+            maca.status === "Livre" &&
+            macaLivre === null
+        ) {
+
+            macaLivre = {
+                id: item.id,
+                numero: maca.numero
+            };
+
+        }
+
+    });
+
+    return macaLivre;
+
+}
+
+
+
+// ======================================
+// CHAMAR O PRIMEIRO PACIENTE DA FILA
+// ======================================
+
+window.chamarProximo = async function () {
+
+    if (pacientesFila.length === 0) {
 
         alert("Nenhum paciente aguardando.");
 
@@ -153,12 +154,9 @@ window.chamarProximo = async function(){
     );
 
 };
-
-
-
-// ===============================
-// CHAMAR PACIENTE ESPECÍFICO
-// ===============================
+// ======================================
+// CHAMAR PACIENTE
+// ======================================
 
 window.chamarPaciente = async function(idPaciente){
 
@@ -218,6 +216,8 @@ window.chamarPaciente = async function(idPaciente){
 
     );
 
+
+
     alert(
 
         `${paciente.nome} foi chamado para a maca ${maca.numero}.`
@@ -226,103 +226,30 @@ window.chamarPaciente = async function(idPaciente){
 
 };
 // ==========================================
-// ATUALIZAÇÃO AUTOMÁTICA DA FILA
+// FUNÇÕES AUXILIARES
+// ==========================================
+
+// Atualiza automaticamente a fila quando
+// um paciente é chamado ou finalizado.
+// O onSnapshot já faz isso, então aqui
+// apenas deixamos uma função para futuras melhorias.
+
+function atualizarFila() {
+    console.log("Fila sincronizada.");
+}
+
+
+// ==========================================
+// INICIALIZAÇÃO
 // ==========================================
 
 window.addEventListener("load", () => {
 
-    console.log("Fila carregada com sucesso.");
+    console.log("LADRF Connect - Fila iniciada.");
 
 });
 
 
+// Deixa as funções disponíveis para o HTML
 
-// ==========================================
-// FUNÇÃO PARA ATUALIZAR A TABELA
-// ==========================================
-
-function atualizarTabela(){
-
-    lista.innerHTML = "";
-
-    if(pacientesFila.length === 0){
-
-        lista.innerHTML = `
-            <tr>
-                <td colspan="5">
-                    Nenhum paciente aguardando.
-                </td>
-            </tr>
-        `;
-
-        return;
-
-    }
-
-    pacientesFila.forEach((paciente)=>{
-
-        lista.innerHTML += `
-
-        <tr>
-
-            <td>${paciente.nome}</td>
-
-            <td>${paciente.modalidade || "-"}</td>
-
-            <td>${paciente.status}</td>
-
-            <td>${paciente.maca || "-"}</td>
-
-            <td>
-
-                <button
-                    class="chamar"
-                    onclick="chamarPaciente('${paciente.id}')">
-
-                    Chamar
-
-                </button>
-
-            </td>
-
-        </tr>
-
-        `;
-
-    });
-
-}
-
-
-
-// Sempre que a lista mudar no Firestore,
-// ela será redesenhada automaticamente.
-
-onSnapshot(filaQuery,(snapshot)=>{
-
-    pacientesFila=[];
-
-    snapshot.forEach((docItem)=>{
-
-        pacientesFila.push({
-
-            id:docItem.id,
-
-            ...docItem.data()
-
-        });
-
-    });
-
-    pacientesFila.sort((a,b)=>{
-
-        if(!a.criadoEm) return 1;
-        if(!b.criadoEm) return -1;
-
-        return a.criadoEm.seconds - b.criadoEm.seconds;
-
-    });
-
-    atualizarTabela();
-
-});
+window.atualizarFila = atualizarFila;
