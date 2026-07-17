@@ -1,52 +1,46 @@
 import { db } from "./firebase.js";
 
 import {
-
 collection,
 addDoc,
 Timestamp
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-
-
-// Elementos do formulário
 
 const form = document.getElementById("formCadastro");
 
 
 
-
-
-form.addEventListener("submit", async(e)=>{
+form.addEventListener("submit", async (e)=>{
 
 
 e.preventDefault();
 
 
 
+const nome =
+document.getElementById("nome").value;
 
 
-const nome = document.getElementById("nome").value;
+const whatsapp =
+document.getElementById("whatsapp").value;
 
 
-const whatsapp = document.getElementById("whatsapp").value;
+const idade =
+document.getElementById("idade").value;
 
 
-const modalidade = document.getElementById("modalidade").value;
+const modalidade =
+document.getElementById("modalidade").value;
 
 
-const queixa = document.getElementById("queixa").value;
-
-
-
-
+const queixa =
+document.getElementById("queixa").value;
 
 
 
 try{
-
 
 
 await addDoc(
@@ -56,35 +50,33 @@ collection(db,"pacientes"),
 {
 
 
-nome:nome,
+codigoAtendimento:
+"LADRF-" + Date.now(),
 
 
-whatsapp:whatsapp,
+nome,
 
 
-modalidade:modalidade,
+whatsapp,
 
 
-queixa:queixa,
+idade,
 
 
+modalidade,
 
-// entra na fila
+
+queixa,
+
+
+maca:"",
+
 
 status:"Aguardando",
 
 
-
-// horário de entrada na fila
-
-horarioCadastro:Timestamp.now(),
-
-
-
-// sem maca inicialmente
-
-maca:""
-
+criadoEm:
+Timestamp.now()
 
 
 }
@@ -94,20 +86,11 @@ maca:""
 
 
 
-
-alert(
-
-"Paciente cadastrado com sucesso!"
-
-);
-
-
+alert("Paciente cadastrado com sucesso!");
 
 
 
 form.reset();
-
-
 
 
 
@@ -118,9 +101,7 @@ console.error(error);
 
 
 alert(
-
 "Erro ao cadastrar paciente"
-
 );
 
 
