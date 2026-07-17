@@ -14,18 +14,64 @@
 body{
 
 font-family:Arial,sans-serif;
+
 background:#f4f6f9;
+
 padding:30px;
 
 }
 
 
+
+/* BOTÃO MENU */
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-size:15px;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+}
+
+
+
+.btn-voltar:hover{
+
+background:#075c2b;
+
+}
+
+
+
+
 .container{
 
 max-width:1000px;
+
 margin:auto;
 
 }
+
 
 
 h1,h2{
@@ -35,53 +81,73 @@ color:#0B7A3B;
 }
 
 
+
 .card{
 
 background:white;
+
 padding:25px;
+
 border-radius:15px;
+
 margin-top:25px;
+
 box-shadow:0 5px 15px rgba(0,0,0,.1);
 
 }
 
 
+
 table{
 
 width:100%;
+
 border-collapse:collapse;
 
 }
 
 
+
 th{
 
 background:#0B7A3B;
+
 color:white;
+
 padding:12px;
 
 }
+
 
 
 td{
 
 padding:12px;
+
 border-bottom:1px solid #ddd;
+
 text-align:center;
 
 }
 
 
+
 button{
 
 background:#0B7A3B;
+
 color:white;
+
 border:none;
+
 padding:12px 20px;
+
 border-radius:8px;
+
 cursor:pointer;
 
 }
+
 
 
 button:hover{
@@ -95,7 +161,9 @@ opacity:.85;
 #macas{
 
 display:flex;
+
 flex-wrap:wrap;
+
 gap:15px;
 
 }
@@ -105,8 +173,11 @@ gap:15px;
 .maca{
 
 width:150px;
+
 padding:20px;
+
 border-radius:12px;
+
 font-size:16px;
 
 }
@@ -123,12 +194,27 @@ font-size:16px;
 <body>
 
 
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
+
+
+
 <div class="container">
 
 
 <h1>
+
 Recepção LADRF Connect
+
 </h1>
+
+
 
 
 
@@ -136,8 +222,11 @@ Recepção LADRF Connect
 
 
 <h2>
+
 Fila de Atendimento
+
 </h2>
+
 
 
 <table>
@@ -148,17 +237,23 @@ Fila de Atendimento
 <tr>
 
 <th>
+
 Paciente
+
 </th>
 
 
 <th>
+
 Modalidade
+
 </th>
 
 
 <th>
+
 Ação
+
 </th>
 
 
@@ -183,17 +278,24 @@ Ação
 
 
 
+
+
 <div class="card">
 
 
 <h2>
+
 Escolha a Maca
+
 </h2>
 
 
 <p>
+
 Selecione um paciente na fila e depois escolha uma maca livre.
+
 </p>
+
 
 
 <div id="macas">
@@ -201,11 +303,15 @@ Selecione um paciente na fila e depois escolha uma maca livre.
 </div>
 
 
+
+</div>
+
+
+
+
 </div>
 
 
-
-</div>
 
 
 
@@ -214,6 +320,7 @@ Selecione um paciente na fila e depois escolha uma maca livre.
 <script type="module" src="recepcao.js"></script>
 
 <script type="module" src="permissoes.js"></script>
+
 
 
 </body>
