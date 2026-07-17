@@ -4,15 +4,25 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Histórico - LADRF Connect</title>
 
+
 <style>
 
-body{
+*{
 
-font-family:Arial,sans-serif;
+box-sizing:border-box;
+
+font-family:Arial, Helvetica, sans-serif;
+
+}
+
+
+
+body{
 
 background:#f4f6f9;
 
@@ -22,8 +32,6 @@ padding:30px;
 
 
 
-/* BOTÃO MENU */
-
 .btn-voltar{
 
 position:fixed;
@@ -31,8 +39,6 @@ position:fixed;
 top:20px;
 
 left:20px;
-
-z-index:9999;
 
 background:#0B7A3B;
 
@@ -44,28 +50,15 @@ padding:12px 20px;
 
 border-radius:10px;
 
-font-size:15px;
-
 cursor:pointer;
 
-box-shadow:0 5px 15px rgba(0,0,0,.2);
-
 }
-
-
-
-.btn-voltar:hover{
-
-background:#075c2b;
-
-}
-
 
 
 
 .container{
 
-max-width:900px;
+max-width:1100px;
 
 margin:auto;
 
@@ -77,6 +70,8 @@ h1{
 
 color:#0B7A3B;
 
+margin-bottom:25px;
+
 }
 
 
@@ -85,13 +80,13 @@ color:#0B7A3B;
 
 background:white;
 
-padding:20px;
-
-margin-top:20px;
+padding:25px;
 
 border-radius:15px;
 
 box-shadow:0 5px 15px rgba(0,0,0,.1);
+
+margin-bottom:20px;
 
 }
 
@@ -131,9 +126,29 @@ cursor:pointer;
 
 
 
-button:hover{
+.item{
 
-opacity:.85;
+background:#f8f8f8;
+
+padding:20px;
+
+border-radius:12px;
+
+margin-top:15px;
+
+line-height:1.8;
+
+}
+
+
+
+.titulo{
+
+font-size:22px;
+
+font-weight:bold;
+
+color:#0B7A3B;
 
 }
 
@@ -157,7 +172,6 @@ opacity:.85;
 
 
 
-
 <div class="container">
 
 
@@ -169,16 +183,12 @@ Histórico de Atendimentos
 
 
 
+<div class="card">
 
 
 <input 
-
 id="busca"
-
-placeholder="Digite o nome do paciente">
-
-
-
+placeholder="Nome do paciente">
 
 
 <button onclick="buscar()">
@@ -186,6 +196,9 @@ placeholder="Digite o nome do paciente">
 Buscar
 
 </button>
+
+
+</div>
 
 
 
@@ -206,7 +219,6 @@ Buscar
 <script type="module" src="historico.js"></script>
 
 <script type="module" src="permissoes.js"></script>
-
 
 
 </body>
