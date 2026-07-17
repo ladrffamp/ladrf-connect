@@ -10,16 +10,22 @@ content="width=device-width, initial-scale=1.0">
 
 <title>Painel LADRF</title>
 
+
 <style>
 
 *{
 
 margin:0;
+
 padding:0;
+
 box-sizing:border-box;
+
 font-family:Arial;
 
 }
+
+
 
 body{
 
@@ -37,6 +43,50 @@ padding:40px;
 
 }
 
+
+
+/* BOTÃO MENU */
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#00d26a;
+
+color:#111;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-size:16px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+}
+
+
+
+.btn-voltar:hover{
+
+background:#00a854;
+
+}
+
+
+
+
+
 h1{
 
 font-size:55px;
@@ -46,6 +96,8 @@ margin-bottom:40px;
 color:#00d26a;
 
 }
+
+
 
 .chamado{
 
@@ -63,6 +115,8 @@ margin-bottom:40px;
 
 }
 
+
+
 .nome{
 
 font-size:65px;
@@ -73,6 +127,8 @@ margin:25px;
 
 }
 
+
+
 .maca{
 
 font-size:40px;
@@ -80,6 +136,8 @@ font-size:40px;
 color:#00d26a;
 
 }
+
+
 
 .proximos{
 
@@ -93,17 +151,23 @@ border-radius:20px;
 
 }
 
+
+
 .proximos h2{
 
 margin-bottom:20px;
 
 }
 
+
+
 .proximos ul{
 
 list-style:none;
 
 }
+
+
 
 .proximos li{
 
@@ -115,17 +179,48 @@ border-bottom:1px solid #444;
 
 }
 
+
+
 </style>
+
 
 </head>
 
+
 <body>
 
-<h1>LADRF CONNECT</h1>
+
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
+
+
+
+<h1>
+
+LADRF CONNECT
+
+</h1>
+
+
+
+
 
 <div class="chamado">
 
-<h2>Paciente em Atendimento</h2>
+
+<h2>
+
+Paciente em Atendimento
+
+</h2>
+
+
 
 <div
 class="nome"
@@ -135,6 +230,8 @@ Nenhum
 
 </div>
 
+
+
 <div
 class="maca"
 id="maca">
@@ -143,23 +240,44 @@ id="maca">
 
 </div>
 
+
+
 </div>
+
+
+
+
 
 <div class="proximos">
 
-<h2>Fila de Espera</h2>
+
+<h2>
+
+Fila de Espera
+
+</h2>
+
+
 
 <ul id="fila">
 
 </ul>
 
+
+
 </div>
+
+
+
+
 
 <script
 type="module"
 src="painel.js">
 
 </script>
+
+
 
 </body>
 
