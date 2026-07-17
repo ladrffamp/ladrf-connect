@@ -17,15 +17,60 @@
 body{
 
 font-family:Arial;
+
 background:#f4f6f9;
+
 padding:30px;
 
 }
 
 
+
+/* BOTÃO MENU */
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-size:15px;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+}
+
+
+
+.btn-voltar:hover{
+
+background:#075c2b;
+
+}
+
+
+
+
 h1{
 
 color:#0B7A3B;
+
 margin-bottom:30px;
 
 }
@@ -107,6 +152,7 @@ text-align:center;
 }
 
 
+
 </style>
 
 </head>
@@ -115,9 +161,24 @@ text-align:center;
 <body>
 
 
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
+
+
+
 <h1>
+
 Painel de Atendimento LADRF Connect
+
 </h1>
+
+
 
 
 
@@ -127,14 +188,19 @@ Painel de Atendimento LADRF Connect
 <div class="card">
 
 <h3>
+
 Aguardando
+
 </h3>
 
 <div id="aguardando" class="numero">
+
 0
+
 </div>
 
 </div>
+
 
 
 
@@ -142,11 +208,15 @@ Aguardando
 <div class="card">
 
 <h3>
+
 Em atendimento
+
 </h3>
 
 <div id="atendimento" class="numero">
+
 0
+
 </div>
 
 </div>
@@ -158,11 +228,15 @@ Em atendimento
 <div class="card">
 
 <h3>
+
 Macas livres
+
 </h3>
 
 <div id="livres" class="numero">
+
 0
+
 </div>
 
 </div>
@@ -174,18 +248,24 @@ Macas livres
 <div class="card">
 
 <h3>
+
 Macas ocupadas
+
 </h3>
 
 <div id="ocupadas" class="numero">
+
 0
-</div>
 
 </div>
 
+</div>
+
 
 
 </div>
+
+
 
 
 
@@ -198,6 +278,9 @@ Pacientes em atendimento
 </h2>
 
 
+
+
+
 <table>
 
 
@@ -205,20 +288,38 @@ Pacientes em atendimento
 
 <tr>
 
-<th>Paciente</th>
+<th>
 
-<th>Maca</th>
+Paciente
 
-<th>Modalidade</th>
+</th>
+
+
+<th>
+
+Maca
+
+</th>
+
+
+<th>
+
+Modalidade
+
+</th>
+
 
 </tr>
 
 </thead>
 
 
+
+
 <tbody id="listaAtendimento">
 
 </tbody>
+
 
 
 </table>
@@ -228,10 +329,11 @@ Pacientes em atendimento
 
 
 
+
 <script type="module" src="dashboard.js"></script>
 
 
-</body>
 
+</body>
 
 </html>
