@@ -1,374 +1,328 @@
 import { db } from "./firebase.js";
 
 import {
-
 collection,
 query,
 where,
 onSnapshot,
 getDocs,
 doc,
-updateDoc,
-orderBy
-
+getDoc,
+updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 const lista = document.getElementById("lista");
 
-
-
-
-// Buscar fila
-
-const filaQuery = query(
-
-collection(db,"pacientes"),
-
-where("status","==","Aguardando")
-
-);
-
-
-
-onSnapshot(filaQuery,(snapshot)=>{
-
-
-lista.innerHTML="";
-
-
-if(snapshot.empty){
-
-
-lista.innerHTML=`
-
-<tr>
-
-<td colspan="5">
-
-Nenhum paciente aguardando
-
-</td>
-
-</tr>
-
-`;
-
-
-return;
-
-}
-
-
-
-
-let pacientes = [];
-
-
-
-snapshot.forEach((item)=>{
-
-
-pacientes.push({
-
-id:item.id,
-
-...item.data()
-
-});
-
-
-});
-
-
-
-
-// ordenar pelo horário quando existir
-
-pacientes.sort((a,b)=>{
-
-
-if(!a.horarioCadastro){
-
-return 1;
-
-}
-
-
-if(!b.horarioCadastro){
-
-return -1;
-
-}
-
-
-return a.horarioCadastro.seconds - b.horarioCadastro.seconds;
-
-
-});
-
-
-
-
-
-
-
-pacientes.forEach((paciente)=>{
-
-
-lista.innerHTML += `
-
-<tr>
-
-<td>
-
-${paciente.nome || "-"}
-
-</td>
-
-
-<td>
-
-${paciente.modalidade || "-"}
-
-</td>
-
-
-<td>
-
-${paciente.status}
-
-</td>
-
-
-<td>
-
-${paciente.maca || "-"}
-
-</td>
-
-
-<td>
-
-
-<button class="chamar"
-
-onclick="chamarPaciente('${paciente.id}')">
-
-Chamar
-
-</button>
-
-
-</td>
-
-
-</tr>
-
-`;
-
-
-
-});
-
-
-
-});
-
-
-
-
-
-
-
-
-
+let pacientesFila = [];
 
 async function encontrarMacaLivre(){
 
+    const snapshot = await getDocs(
+        collection(db,"macas")
+    );
 
-const macas = await getDocs(
+    let macaLivre = null;
 
-collection(db,"macas")
+    snapshot.forEach((item)=>{
+
+        const maca = item.data();
+
+        if(
+            maca.status === "Livre" &&
+            macaLivre === null
+        ){
+
+            macaLivre = {
+                id:item.id,
+                numero:maca.numero
+            };
+
+        }
+
+    });
+
+    return macaLivre;
+
+}
+
+const filaQuery = query(
+
+    collection(db,"pacientes"),
+
+    where("status","==","Aguardando")
 
 );
 
+onSnapshot(filaQuery,(snapshot)=>{
 
+    pacientesFila=[];
 
-let livre = null;
+    snapshot.forEach((item)=>{
 
+        pacientesFila.push({
 
+            id:item.id,
 
-macas.forEach((item)=>{
+            ...item.data()
 
+        });
 
-const maca = item.data();
+    });
 
+    pacientesFila.sort((a,b)=>{
 
+        if(!a.criadoEm) return 1;
 
-if(
+        if(!b.criadoEm) return -1;
 
-maca.status === "Livre"
+        return a.criadoEm.seconds-b.criadoEm.seconds;
 
-&& !livre
+    });
 
-){
-
-
-livre={
-
-id:item.id,
-
-numero:maca.numero
-
-};
-
-
-}
-
-
+    desenharTabela();
 
 });
 
+function desenharTabela(){
 
+    lista.innerHTML="";
 
-return livre;
+    if(pacientesFila.length===0){
 
+        lista.innerHTML=`
+        <tr>
+            <td colspan="5">
+                Nenhum paciente aguardando
+            </td>
+        </tr>
+        `;
+
+        return;
+
+    }
+
+    pacientesFila.forEach((paciente)=>{
+
+        lista.innerHTML+=`
+
+        <tr>
+
+            <td>${paciente.nome}</td>
+
+            <td>${paciente.modalidade || "-"}</td>
+
+            <td>${paciente.status}</td>
+
+            <td>${paciente.maca || "-"}</td>
+
+            <td>
+
+                <button
+                    class="chamar"
+                    onclick="chamarPaciente('${paciente.id}')">
+
+                    Chamar
+
+                </button>
+
+            </td>
+
+        </tr>
+
+        `;
+
+    });
 
 }
-
-
-
-
-
-
+// ===============================
+// CHAMAR PRÓXIMO PACIENTE
+// ===============================
 
 window.chamarProximo = async function(){
 
+    if(pacientesFila.length===0){
 
+        alert("Nenhum paciente aguardando.");
 
-const pacientes = await getDocs(
+        return;
 
-query(
+    }
 
-collection(db,"pacientes"),
-
-where("status","==","Aguardando")
-
-)
-
-);
-
-
-
-if(pacientes.empty){
-
-alert("Nenhum paciente aguardando.");
-
-return;
-
-}
-
-
-
-let primeiro = null;
-
-
-
-pacientes.forEach((item)=>{
-
-
-if(!primeiro){
-
-
-primeiro={
-
-id:item.id,
-
-...item.data()
+    await chamarPaciente(
+        pacientesFila[0].id
+    );
 
 };
 
 
-}
 
+// ===============================
+// CHAMAR PACIENTE ESPECÍFICO
+// ===============================
+
+window.chamarPaciente = async function(idPaciente){
+
+    const maca = await encontrarMacaLivre();
+
+    if(!maca){
+
+        alert("Nenhuma maca livre disponível.");
+
+        return;
+
+    }
+
+    const paciente = pacientesFila.find(
+        p => p.id === idPaciente
+    );
+
+    if(!paciente){
+
+        alert("Paciente não encontrado.");
+
+        return;
+
+    }
+
+    // Atualiza paciente
+
+    await updateDoc(
+
+        doc(db,"pacientes",idPaciente),
+
+        {
+
+            status:"Em atendimento",
+
+            maca:maca.numero
+
+        }
+
+    );
+
+
+
+    // Atualiza maca
+
+    await updateDoc(
+
+        doc(db,"macas",maca.id),
+
+        {
+
+            status:"Ocupada",
+
+            paciente:paciente.nome
+
+        }
+
+    );
+
+    alert(
+
+        `${paciente.nome} foi chamado para a maca ${maca.numero}.`
+
+    );
+
+};
+// ==========================================
+// ATUALIZAÇÃO AUTOMÁTICA DA FILA
+// ==========================================
+
+window.addEventListener("load", () => {
+
+    console.log("Fila carregada com sucesso.");
 
 });
 
 
 
-await chamarPaciente(primeiro.id);
+// ==========================================
+// FUNÇÃO PARA ATUALIZAR A TABELA
+// ==========================================
 
+function atualizarTabela(){
 
+    lista.innerHTML = "";
 
-};
+    if(pacientesFila.length === 0){
 
+        lista.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    Nenhum paciente aguardando.
+                </td>
+            </tr>
+        `;
 
+        return;
 
+    }
 
+    pacientesFila.forEach((paciente)=>{
 
+        lista.innerHTML += `
 
+        <tr>
 
+            <td>${paciente.nome}</td>
 
-window.chamarPaciente = async function(idPaciente){
+            <td>${paciente.modalidade || "-"}</td>
 
+            <td>${paciente.status}</td>
 
+            <td>${paciente.maca || "-"}</td>
 
-const maca = await encontrarMacaLivre();
+            <td>
 
+                <button
+                    class="chamar"
+                    onclick="chamarPaciente('${paciente.id}')">
 
+                    Chamar
 
-if(!maca){
+                </button>
 
+            </td>
 
-alert("Nenhuma maca livre.");
+        </tr>
 
-return;
+        `;
 
-}
-
-
-
-await updateDoc(
-
-doc(db,"pacientes",idPaciente),
-
-{
-
-status:"Em atendimento",
-
-maca:maca.numero
-
-}
-
-);
-
-
-
-
-
-await updateDoc(
-
-doc(db,"macas",maca.id),
-
-{
-
-status:"Ocupada",
-
-paciente:idPaciente
+    });
 
 }
 
-);
 
 
+// Sempre que a lista mudar no Firestore,
+// ela será redesenhada automaticamente.
 
+onSnapshot(filaQuery,(snapshot)=>{
 
-alert(
+    pacientesFila=[];
 
-"Paciente chamado para a maca " + maca.numero
+    snapshot.forEach((docItem)=>{
 
-);
+        pacientesFila.push({
 
+            id:docItem.id,
 
-};
+            ...docItem.data()
+
+        });
+
+    });
+
+    pacientesFila.sort((a,b)=>{
+
+        if(!a.criadoEm) return 1;
+        if(!b.criadoEm) return -1;
+
+        return a.criadoEm.seconds - b.criadoEm.seconds;
+
+    });
+
+    atualizarTabela();
+
+});
