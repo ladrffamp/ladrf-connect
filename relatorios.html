@@ -4,6 +4,7 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Relatórios LADRF</title>
@@ -14,18 +15,64 @@
 body{
 
 font-family:Arial,sans-serif;
+
 background:#f4f6f9;
+
 padding:30px;
 
 }
 
 
+
+/* BOTÃO MENU */
+
+.btn-voltar{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#0B7A3B;
+
+color:white;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-size:15px;
+
+cursor:pointer;
+
+box-shadow:0 5px 15px rgba(0,0,0,.2);
+
+}
+
+
+
+.btn-voltar:hover{
+
+background:#075c2b;
+
+}
+
+
+
+
 .container{
 
 max-width:1000px;
+
 margin:auto;
 
 }
+
 
 
 h1{
@@ -35,33 +82,45 @@ color:#0B7A3B;
 }
 
 
+
 .cards{
 
 display:grid;
+
 grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
 gap:20px;
 
 }
 
 
+
 .card{
 
 background:white;
+
 padding:25px;
+
 border-radius:15px;
+
 box-shadow:0 5px 15px rgba(0,0,0,.1);
+
 text-align:center;
 
 }
 
 
+
 .numero{
 
 font-size:35px;
+
 font-weight:bold;
+
 color:#0B7A3B;
 
 }
+
 
 
 </style>
@@ -72,23 +131,42 @@ color:#0B7A3B;
 <body>
 
 
+
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
+
+
+
 <div class="container">
 
 
 <h1>
+
 Relatórios LADRF
+
 </h1>
+
+
 
 
 
 <div class="cards">
 
 
+
 <div class="card">
 
 <h3>
+
 Atendimentos
+
 </h3>
+
 
 <p class="numero" id="total">
 
@@ -96,7 +174,9 @@ Atendimentos
 
 </p>
 
+
 </div>
+
 
 
 
@@ -104,8 +184,11 @@ Atendimentos
 <div class="card">
 
 <h3>
+
 Pacientes atendidos
+
 </h3>
+
 
 <p class="numero" id="pacientes">
 
@@ -113,6 +196,7 @@ Pacientes atendidos
 
 </p>
 
+
 </div>
 
 
@@ -122,8 +206,11 @@ Pacientes atendidos
 <div class="card">
 
 <h3>
+
 Modalidade principal
+
 </h3>
+
 
 <p class="numero" id="modalidade">
 
@@ -131,7 +218,9 @@ Modalidade principal
 
 </p>
 
+
 </div>
+
 
 
 
@@ -139,8 +228,11 @@ Modalidade principal
 <div class="card">
 
 <h3>
+
 Membro com mais atendimentos
+
 </h3>
+
 
 <p class="numero" id="membro">
 
@@ -148,6 +240,12 @@ Membro com mais atendimentos
 
 </p>
 
+
+</div>
+
+
+
+
 </div>
 
 
@@ -155,14 +253,13 @@ Membro com mais atendimentos
 </div>
 
 
-
-</div>
 
 
 
 <script type="module" src="relatorios.js"></script>
 
 <script type="module" src="permissoes.js"></script>
+
 
 
 </body>
