@@ -1,59 +1,56 @@
 import { db } from "./firebase.js";
 
 import {
-
 collection,
 addDoc,
 Timestamp
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+console.log("cadastro.js carregado");
 
 
 
 const form = document.getElementById("formCadastro");
 
-const qr = document.getElementById("qrcode");
+const qrArea = document.getElementById("qrcode");
+
+
+
+console.log(
+"QRCode disponível:",
+typeof QRCode
+);
 
 
 
 
 
-form.addEventListener("submit", async(e)=>{
+
+form.addEventListener("submit", async function(e){
 
 
 e.preventDefault();
 
 
 
-
-
 const nome =
-
 document.getElementById("nome").value;
 
 
-
 const whatsapp =
-
 document.getElementById("whatsapp").value;
 
 
-
 const idade =
-
 document.getElementById("idade").value;
 
 
-
 const modalidade =
-
 document.getElementById("modalidade").value;
 
 
-
 const queixa =
-
 document.getElementById("queixa").value;
 
 
@@ -64,28 +61,30 @@ try{
 
 
 
-// Criar paciente
+console.log("Salvando paciente...");
 
-const pacienteCriado = await addDoc(
+
+
+const paciente = await addDoc(
 
 collection(db,"pacientes"),
 
 {
 
 
-nome,
+nome:nome,
 
 
-whatsapp,
+whatsapp:whatsapp,
 
 
-idade,
+idade:idade,
 
 
-modalidade,
+modalidade:modalidade,
 
 
-queixa,
+queixa:queixa,
 
 
 maca:"",
@@ -94,9 +93,7 @@ maca:"",
 status:"Aguardando",
 
 
-criadoEm:
-
-Timestamp.now()
+criadoEm:Timestamp.now()
 
 
 }
@@ -104,6 +101,13 @@ Timestamp.now()
 );
 
 
+
+
+
+console.log(
+"Paciente criado:",
+paciente.id
+);
 
 
 
@@ -119,41 +123,78 @@ alert(
 
 
 
-
-// Gerar QR Code
-
-if(qr && typeof QRCode !== "undefined"){
-
-
-
 const link =
 
-`https://ladrffamp.github.io/ladrf-connect/acompanhamento.html?id=${pacienteCriado.id}`;
+"https://ladrffamp.github.io/ladrf-connect/acompanhamento.html?id="
+
++
+
+paciente.id;
 
 
 
 
 
-qr.innerHTML="";
+console.log(
+"Link QR:",
+link
+);
+
+
+
+
+
+
+if(!qrArea){
+
+
+alert(
+"Elemento qrcode não encontrado"
+);
+
+
+return;
+
+}
+
+
+
+
+
+if(typeof QRCode === "undefined"){
+
+
+alert(
+"Biblioteca QR Code não carregou"
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+qrArea.innerHTML="";
+
 
 
 
 
 new QRCode(
 
-qr,
+qrArea,
 
 {
 
-
 text:link,
-
 
 width:200,
 
-
 height:200
-
 
 }
 
@@ -162,15 +203,10 @@ height:200
 
 
 
-}
 
-
-
-
-
-
-
-form.reset();
+console.log(
+"QR Code criado!"
+);
 
 
 
@@ -179,21 +215,18 @@ form.reset();
 }catch(error){
 
 
-
 console.error(error);
-
 
 
 alert(
 
-"Erro ao cadastrar paciente: "
+"Erro ao cadastrar: "
 
 +
 
 error.message
 
 );
-
 
 
 }
