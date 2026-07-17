@@ -1,14 +1,18 @@
-console.log("LADRF acompanhamento completo com som");
+console.log("Acompanhamento carregado");
+
 
 import { db } from "./firebase.js";
 
+
 import {
+
 doc,
 onSnapshot,
 collection,
 query,
 where,
 getDocs
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -27,74 +31,119 @@ document.getElementById("dados");
 
 
 
-let statusAnterior = "";
+let statusAnterior="";
+
+
+let audioLiberado=false;
+
+
+let audioContext=null;
 
 
 
 
 
-// =============================
-// SOM DA CHAMADA
-// =============================
+
+
+// ======================
+// LIBERAR SOM
+// ======================
+
+
+document
+.getElementById("ativarSom")
+.onclick=function(){
+
+
+
+audioContext = new (
+
+window.AudioContext ||
+
+window.webkitAudioContext
+
+)();
+
+
+
+audioContext.resume();
+
+
+
+audioLiberado=true;
+
+
+
+alert(
+"Alerta sonoro ativado!"
+);
+
+
+
+};
+
+
+
+
+
+
+
+
+
+// ======================
+// SOM
+// ======================
+
 
 function tocarSom(){
 
 
-try{
+
+if(!audioLiberado){
+
+console.log(
+"Som bloqueado"
+);
+
+return;
+
+}
 
 
-const AudioContext =
-
-window.AudioContext ||
-
-window.webkitAudioContext;
-
-
-
-const audio = new AudioContext();
-
-
-
-
-function tocar(){
 
 
 
 const oscilador =
-audio.createOscillator();
+audioContext.createOscillator();
 
 
 
 const ganho =
-audio.createGain();
+audioContext.createGain();
 
 
 
 
 
-oscilador.type = "sine";
+oscilador.type="sine";
 
 
-oscilador.frequency.value = 900;
+oscilador.frequency.value=900;
 
 
 
-ganho.gain.value = 0.6;
-
+ganho.gain.value=0.5;
 
 
 
 oscilador.connect(ganho);
 
 
-ganho.connect(audio.destination);
-
+ganho.connect(audioContext.destination);
 
 
 
 oscilador.start();
-
-
 
 
 
@@ -104,52 +153,8 @@ setTimeout(()=>{
 oscilador.stop();
 
 
-},600);
 
-
-
-}
-
-
-
-
-
-if(audio.state === "suspended"){
-
-
-audio.resume().then(()=>{
-
-
-tocar();
-
-
-});
-
-
-}
-
-else{
-
-
-tocar();
-
-
-}
-
-
-
-}
-
-catch(e){
-
-
-console.log(
-"Erro no som:",
-e
-);
-
-
-}
+},700);
 
 
 
@@ -161,16 +166,18 @@ e
 
 
 
-// =============================
-// CALCULAR FILA
-// =============================
+
+
+// ======================
+// FILA
+// ======================
 
 
 async function calcularFila(id){
 
 
 
-const consulta = query(
+const consulta=query(
 
 collection(db,"pacientes"),
 
@@ -184,9 +191,7 @@ where(
 
 
 
-
-
-const resultado = await getDocs(consulta);
+const snap=await getDocs(consulta);
 
 
 
@@ -195,25 +200,19 @@ let lista=[];
 
 
 
-
-resultado.forEach((item)=>{
+snap.forEach(item=>{
 
 
 lista.push({
 
-
 id:item.id,
-
 
 ...item.data()
 
-
-
 });
 
 
 });
-
 
 
 
@@ -223,20 +222,15 @@ id:item.id,
 lista.sort((a,b)=>{
 
 
-const dataA =
+return (
 
-a.criadoEm?.seconds || 0;
+(a.criadoEm?.seconds || 0)
 
+-
 
+(b.criadoEm?.seconds || 0)
 
-const dataB =
-
-b.criadoEm?.seconds || 0;
-
-
-
-return dataA-dataB;
-
+);
 
 
 });
@@ -245,26 +239,21 @@ return dataA-dataB;
 
 
 
+const posicao =
+lista.findIndex(
 
-const posicao = lista.findIndex(
-
-(p)=>p.id===id
+p=>p.id===id
 
 );
 
 
 
 
-
 return {
-
 
 posicao:posicao+1,
 
-
 frente:posicao
-
-
 
 };
 
@@ -280,25 +269,18 @@ frente:posicao
 
 
 
-// =============================
-// ACOMPANHAMENTO
-// =============================
+
+// ======================
+// TEMPO REAL
+// ======================
 
 
-if(!pacienteId){
-
-
-statusTela.innerHTML =
-"QR Code inválido";
-
-
-}
-
-else{
+if(pacienteId){
 
 
 
-const pacienteRef = doc(
+const referencia =
+doc(
 
 db,
 
@@ -313,25 +295,15 @@ pacienteId
 
 
 
-
 onSnapshot(
 
-pacienteRef,
+referencia,
 
 async(snapshot)=>{
 
 
 
-if(!snapshot.exists()){
-
-
-statusTela.innerHTML =
-"Paciente não encontrado";
-
-
-return;
-
-}
+if(!snapshot.exists()) return;
 
 
 
@@ -345,26 +317,16 @@ snapshot.data();
 
 
 
-
-// =============================
-// AGUARDANDO
-// =============================
-
-
 if(paciente.status==="Aguardando"){
 
 
 
-statusTela.className =
+statusTela.className=
 "status aguardando";
 
 
-
-statusTela.innerHTML =
-
+statusTela.innerHTML=
 "🟡 Aguardando atendimento";
-
-
 
 
 
@@ -375,14 +337,12 @@ await calcularFila(pacienteId);
 
 
 
-
-dadosTela.innerHTML = `
+dadosTela.innerHTML=`
 
 
 <b>Paciente:</b>
 
 ${paciente.nome || "-"}
-
 
 
 <br><br>
@@ -393,14 +353,12 @@ ${paciente.nome || "-"}
 ${paciente.modalidade || "-"}
 
 
-
 <br><br>
 
 
-<b>Posição na fila:</b>
+<b>Posição:</b>
 
 ${fila.posicao}º
-
 
 
 <br><br>
@@ -410,12 +368,6 @@ ${fila.posicao}º
 
 ${fila.frente}
 
-
-
-<br><br>
-
-
-Aguarde o chamado da equipe LADRF.
 
 `;
 
@@ -431,61 +383,37 @@ Aguarde o chamado da equipe LADRF.
 
 
 
-// =============================
-// EM ATENDIMENTO
-// =============================
-
 
 if(paciente.status==="Em atendimento"){
 
 
 
-statusTela.className =
+statusTela.className=
 "status atendimento";
 
 
-
-statusTela.innerHTML =
-
+statusTela.innerHTML=
 "🔔 SUA VEZ!";
 
 
 
-
-
-
-
-dadosTela.innerHTML = `
+dadosTela.innerHTML=`
 
 
 <b>Paciente:</b>
 
-${paciente.nome || "-"}
-
-
-
-<br><br>
-
-
-
-<b>Modalidade:</b>
-
-${paciente.modalidade || "-"}
-
+${paciente.nome}
 
 
 <br><br>
-
 
 
 <b>Maca:</b>
 
-${paciente.maca || "-"}
-
+${paciente.maca}
 
 
 <br><br>
-
 
 
 Dirija-se ao atendimento.
@@ -497,10 +425,7 @@ Dirija-se ao atendimento.
 
 
 
-
-// toca somente na mudança
-
-if(statusAnterior !== "Em atendimento"){
+if(statusAnterior!=="Em atendimento"){
 
 
 tocarSom();
@@ -520,44 +445,22 @@ tocarSom();
 
 
 
-// =============================
-// FINALIZADO
-// =============================
-
 
 if(paciente.status==="Finalizado"){
 
 
 
-statusTela.className =
+statusTela.className=
 "status finalizado";
 
 
-
-statusTela.innerHTML =
-
+statusTela.innerHTML=
 "🟢 Atendimento finalizado";
 
 
 
-
-
-dadosTela.innerHTML = `
-
-
-<b>Paciente:</b>
-
-${paciente.nome || "-"}
-
-
-
-<br><br>
-
-
-Obrigado por utilizar o LADRF Connect.
-
-`;
-
+dadosTela.innerHTML=
+"Obrigado pelo atendimento.";
 
 
 }
@@ -565,10 +468,8 @@ Obrigado por utilizar o LADRF Connect.
 
 
 
-
-
-
-statusAnterior = paciente.status;
+statusAnterior =
+paciente.status;
 
 
 
