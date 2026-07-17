@@ -13,7 +13,6 @@ import {
 
 onAuthStateChanged(auth, async (usuario) => {
 
-
   if (!usuario) {
 
     window.location.href = "login.html";
@@ -21,9 +20,7 @@ onAuthStateChanged(auth, async (usuario) => {
 
   }
 
-
   try {
-
 
     const usuarioRef = doc(
       db,
@@ -31,13 +28,9 @@ onAuthStateChanged(auth, async (usuario) => {
       usuario.uid
     );
 
-
     const usuarioDoc = await getDoc(usuarioRef);
 
-
-
     if (!usuarioDoc.exists()) {
-
 
       alert("Usuário sem perfil cadastrado.");
 
@@ -49,33 +42,21 @@ onAuthStateChanged(auth, async (usuario) => {
 
     }
 
-
-
     const perfil = usuarioDoc.data().perfil;
-
-
 
     const paginaAtual = window.location.pathname
       .split("/")
       .pop();
 
-
-
     const pagina = paginaAtual === ""
       ? "index.html"
       : paginaAtual;
-
-
 
     console.log("USUÁRIO:", usuario.email);
     console.log("PERFIL:", perfil);
     console.log("PÁGINA:", pagina);
 
-
-
-
     const permissoes = {
-
 
       admin: [
 
@@ -90,6 +71,7 @@ onAuthStateChanged(auth, async (usuario) => {
         "usuarios.html",
         "membros.html",
         "relatorios.html",
+        "agenda.html",
         "painel.html"
 
       ],
@@ -117,70 +99,54 @@ onAuthStateChanged(auth, async (usuario) => {
         "macas.html",
         "atendimento.html",
         "historico.html",
+        "agenda.html",
         "painel.html"
 
       ]
-
 
     };
 
 
 
-
     if (!permissoes[perfil]) {
-
 
       alert(
         "Perfil não reconhecido: " + perfil
       );
 
-
-      window.location.href="index.html";
+      window.location.href = "index.html";
 
       return;
 
-
     }
-
 
 
 
     if (!permissoes[perfil].includes(pagina)) {
 
-
       alert(
         "Sem permissão para: " + pagina
       );
 
-
-      window.location.href="index.html";
+      window.location.href = "index.html";
 
       return;
 
-
     }
-
-
 
     console.log("Acesso permitido");
 
-
-
   } catch (erro) {
-
 
     console.error(
       "Erro nas permissões:",
       erro
     );
 
-
     alert(
       "Erro ao verificar permissões."
     );
 
-
   }
-
 
 });
