@@ -1,413 +1,104 @@
-// acompanhamento.js
-
-
-import { db, app } from "./firebase.js";
-
+import { db } from "./firebase.js";
 
 import {
-
-doc,
-
-getDoc,
-
-updateDoc
-
+    doc,
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const idPaciente = new URLSearchParams(window.location.search).get("id");
 
-import {
+const nome = document.getElementById("nome");
+const status = document.getElementById("status");
+const maca = document.getElementById("maca");
+const mensagem = document.getElementById("mensagem");
 
-getMessaging,
+let notificacaoEnviada = false;
 
-getToken
+// Som simples gerado pelo navegador
+function tocarSom() {
+    try {
+        const audio = new Audio(
+            "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+        );
+        audio.play().catch(() => {});
+    } catch (e) {}
+}
 
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+async function pedirPermissao() {
+    if (!("Notification" in window)) return;
 
+    if (Notification.permission === "default") {
+        await Notification.requestPermission();
+    }
+}
 
+function mostrarNotificacao(paciente) {
 
+    if (!("Notification" in window)) return;
 
-// ================================
-// ID DO PACIENTE PELO QR CODE
-// ================================
+    if (Notification.permission !== "granted") return;
 
+    if (notificacaoEnviada) return;
 
-const idPaciente =
+    notificacaoEnviada = true;
 
-new URLSearchParams(window.location.search).get("id");
+    new Notification("LADRF Connect", {
+        body: `${paciente.nome}, chegou sua vez! Dirija-se ao atendimento.`,
+        icon: "https://ladrffamp.github.io/ladrf-connect/icon.png"
+    });
 
+    tocarSom();
+}
 
+async function iniciar() {
 
+    await pedirPermissao();
 
+    if (!idPaciente) {
 
-// ================================
-// ELEMENTOS DA TELA
-// ================================
+        nome.innerHTML = "Paciente não encontrado";
+        return;
 
+    }
 
-const nome =
+    const pacienteRef = doc(db, "pacientes", idPaciente);
 
-document.getElementById("nome");
+    onSnapshot(pacienteRef, (snapshot) => {
 
+        if (!snapshot.exists()) {
 
-const status =
+            nome.innerHTML = "Paciente não encontrado";
+            return;
 
-document.getElementById("status");
+        }
 
+        const paciente = snapshot.data();
 
-const maca =
+        nome.innerHTML = paciente.nome || "-";
 
-document.getElementById("maca");
+        status.innerHTML = paciente.status || "-";
 
+        maca.innerHTML = paciente.maca
+            ? "MACA " + paciente.maca
+            : "-";
 
-const mensagem =
+        if (paciente.status === "Em atendimento") {
 
-document.getElementById("mensagem");
+            mensagem.innerHTML =
+                "🔔 Chegou sua vez! Dirija-se ao atendimento.";
 
+            mostrarNotificacao(paciente);
 
+        } else {
 
+            notificacaoEnviada = false;
 
+            mensagem.innerHTML = "Aguarde sua vez.";
 
+        }
 
-// ================================
-// SALVAR TOKEN PUSH DO PACIENTE
-// ================================
-
-
-async function salvarTokenPush(){
-
-
-try{
-
-
-if(!idPaciente){
-
-console.log("Paciente sem ID");
-
-return;
+    });
 
 }
 
-
-
-
-const permissao =
-
-await Notification.requestPermission();
-
-
-
-
-if(permissao !== "granted"){
-
-
-console.log("Permissão negada");
-
-
-return;
-
-
-}
-
-
-
-
-const messaging = getMessaging(app);
-
-
-
-
-// Registrar service worker correto do GitHub Pages
-
-const registroSW =
-
-await navigator.serviceWorker.register(
-
-"/ladrf-connect/firebase-messaging-sw.js"
-
-);
-
-
-
-
-
-const token = await getToken(
-
-messaging,
-
-{
-
-
-vapidKey:
-
-"BLd1c09XUUZnB4WjZY0XvdCJs_wdLvxxUw_ey-sNTC8f7hUreUwY5x5rOsnWkrRwrj-G4KH1cj8LHtv-oR6jZe0",
-
-
-serviceWorkerRegistration:
-
-registroSW
-
-
-}
-
-);
-
-
-
-
-
-if(token){
-
-
-
-await updateDoc(
-
-doc(
-
-db,
-
-"pacientes",
-
-idPaciente
-
-),
-
-{
-
-
-tokenPush: token
-
-
-}
-
-);
-
-
-
-console.log(
-
-"Token salvo com sucesso"
-
-);
-
-
-
-}else{
-
-
-console.log(
-
-"Token não gerado"
-
-);
-
-
-}
-
-
-
-
-
-}catch(erro){
-
-
-console.error(
-
-"Erro token:",
-
-erro
-
-);
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// ================================
-// CARREGAR PACIENTE
-// ================================
-
-
-async function carregarPaciente(){
-
-
-
-try{
-
-
-
-if(!idPaciente){
-
-
-nome.innerHTML =
-
-"Paciente não identificado";
-
-
-return;
-
-
-}
-
-
-
-
-
-const pacienteDoc =
-
-await getDoc(
-
-doc(
-
-db,
-
-"pacientes",
-
-idPaciente
-
-)
-
-);
-
-
-
-
-
-if(!pacienteDoc.exists()){
-
-
-nome.innerHTML =
-
-"Paciente não encontrado";
-
-
-return;
-
-
-}
-
-
-
-
-
-
-const paciente =
-
-pacienteDoc.data();
-
-
-
-
-
-
-nome.innerHTML =
-
-paciente.nome || "-";
-
-
-
-
-
-status.innerHTML =
-
-paciente.status || "-";
-
-
-
-
-
-if(paciente.maca){
-
-
-maca.innerHTML =
-
-"MACA " + paciente.maca;
-
-
-}else{
-
-
-maca.innerHTML = "-";
-
-
-}
-
-
-
-
-
-if(
-
-paciente.status === "Em atendimento"
-
-){
-
-
-
-mensagem.innerHTML =
-
-"🔔 Chegou sua vez! Dirija-se ao atendimento.";
-
-
-
-}else{
-
-
-
-mensagem.innerHTML =
-
-"Aguarde sua vez.";
-
-
-
-}
-
-
-
-
-
-
-}catch(erro){
-
-
-console.error(
-
-"Erro carregando paciente:",
-
-erro
-
-);
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-// ================================
-// INICIAR
-// ================================
-
-
-salvarTokenPush();
-
-
-carregarPaciente();
+iniciar();
