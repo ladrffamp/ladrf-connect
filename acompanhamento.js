@@ -1,17 +1,11 @@
 // acompanhamento.js
 
-import { db, messaging } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
     doc,
-    onSnapshot,
-    updateDoc
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-import {
-    getToken,
-    onMessage
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
 
 
 // =====================================
@@ -21,104 +15,94 @@ import {
 const idPaciente =
 new URLSearchParams(window.location.search).get("id");
 
-
 const nome = document.getElementById("nome");
 const status = document.getElementById("status");
 const maca = document.getElementById("maca");
 const mensagem = document.getElementById("mensagem");
 
+let jaChamado = false;
+let audio;
+
 
 // =====================================
-// REGISTRAR SERVICE WORKER
+// SOM
 // =====================================
 
-async function registrarServiceWorker(){
+function tocarAlarme() {
 
-    if(!("serviceWorker" in navigator)){
-        throw new Error("Service Worker não suportado.");
-    }
+    if (audio) return;
 
-    const registration =
-    await navigator.serviceWorker.register(
-        "/ladrf-connect/firebase-messaging-sw.js"
+    audio = new Audio(
+        "https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"
     );
 
-    await navigator.serviceWorker.ready;
+    audio.loop = true;
 
-    console.log("Service Worker registrado:", registration);
+    audio.play().catch(() => {
+        console.log("O navegador bloqueou o áudio automático.");
+    });
 
-    return registration;
+    setTimeout(() => {
+
+        if (audio) {
+
+            audio.pause();
+            audio.currentTime = 0;
+            audio = null;
+
+        }
+
+    }, 10000);
 
 }
 
 
 // =====================================
-// SALVAR TOKEN DO PACIENTE
+// VIBRAÇÃO
 // =====================================
 
-async function salvarTokenPaciente(){
+function vibrar() {
 
-    try{
+    if (navigator.vibrate) {
 
-        const registration =
-        await registrarServiceWorker();
+        navigator.vibrate([
+            500,
+            300,
+            500,
+            300,
+            500,
+            300,
+            500
+        ]);
 
-        const permissao =
+    }
+
+}
+
+
+// =====================================
+// NOTIFICAÇÃO
+// =====================================
+
+async function mostrarNotificacao(texto) {
+
+    if (!("Notification" in window)) return;
+
+    if (Notification.permission === "default") {
+
         await Notification.requestPermission();
 
-        if(permissao !== "granted"){
-
-            console.log("Permissão negada.");
-
-            return;
-
-        }
-
-        const token =
-        await getToken(
-
-            messaging,
-
-            {
-
-                vapidKey:
-                "BLd1c09XUUZnB4WjZY0XvdCJs_wdLvxxUw_ey-sNTC8f7hUreUwY5x5rOsnWkrRwrj-G4KH1cj8LHtv-oR6jZe0",
-
-                serviceWorkerRegistration: registration
-
-            }
-
-        );
-
-        if(!token){
-
-            console.log("Nenhum token recebido.");
-
-            return;
-
-        }
-
-        console.log("TOKEN:", token);
-
-        await updateDoc(
-
-            doc(db,"pacientes",idPaciente),
-
-            {
-
-                fcmToken: token
-
-            }
-
-        );
-
-        console.log("Token salvo com sucesso.");
-
     }
 
-    catch(error){
+    if (Notification.permission === "granted") {
 
-        console.error("Erro FCM paciente:", error);
+        new Notification(
+            "LADRF Connect",
+            {
+                body: texto,
+                icon: "/ladrf-connect/icon-192.png"
+            }
+        );
 
     }
 
@@ -126,96 +110,99 @@ async function salvarTokenPaciente(){
 
 
 // =====================================
-// RECEBER NOTIFICAÇÃO COM SITE ABERTO
+// CHAMAR PACIENTE
 // =====================================
 
-onMessage(
+async function chamarPaciente(numeroMaca) {
 
-    messaging,
+    if (jaChamado) return;
 
-    (payload)=>{
+    jaChamado = true;
 
-        console.log(payload);
+    document.body.style.background = "#d4edda";
 
-        if(Notification.permission==="granted"){
+    mensagem.innerHTML =
+        "🔔 SUA VEZ! DIRIJA-SE À MACA " + numeroMaca;
 
-            new Notification(
+    vibrar();
 
-                payload.notification.title,
+    tocarAlarme();
 
-                {
+    await mostrarNotificacao(
+        "Chegou sua vez! Dirija-se à MACA " + numeroMaca
+    );
 
-                    body: payload.notification.body,
-
-                    icon: "/ladrf-connect/icon-192.png"
-
-                }
-
-            );
-
-        }
-
-    }
-
-);
+}
 
 
 // =====================================
-// ACOMPANHAMENTO EM TEMPO REAL
+// VOLTAR AO NORMAL
 // =====================================
 
-async function iniciar(){
+function voltarNormal() {
 
-    if(!idPaciente){
+    jaChamado = false;
 
-        nome.innerHTML="Paciente não encontrado";
+    document.body.style.background = "";
+
+    mensagem.innerHTML = "Aguarde sua vez.";
+
+}
+
+
+// =====================================
+// ACOMPANHAMENTO
+// =====================================
+
+async function iniciar() {
+
+    if (!idPaciente) {
+
+        nome.innerHTML = "Paciente não encontrado";
 
         return;
 
     }
 
-    await salvarTokenPaciente();
-
     const pacienteRef =
-    doc(db,"pacientes",idPaciente);
+        doc(db, "pacientes", idPaciente);
 
     onSnapshot(
 
         pacienteRef,
 
-        (snapshot)=>{
+        (snapshot) => {
 
-            if(!snapshot.exists()){
+            if (!snapshot.exists()) {
 
-                nome.innerHTML="Paciente não encontrado";
+                nome.innerHTML = "Paciente não encontrado";
 
                 return;
 
             }
 
-            const paciente =
-            snapshot.data();
+            const paciente = snapshot.data();
 
             nome.innerHTML =
-            paciente.nome || "-";
+                paciente.nome || "-";
 
             status.innerHTML =
-            paciente.status || "-";
+                paciente.status || "-";
 
             maca.innerHTML =
-            paciente.maca
-            ? "MACA " + paciente.maca
-            : "-";
+                paciente.maca
+                    ? "MACA " + paciente.maca
+                    : "-";
 
-            if(paciente.status==="Em atendimento"){
+            if (paciente.status === "Em atendimento") {
 
-                mensagem.innerHTML =
-                "🔔 Chegou sua vez! Dirija-se ao atendimento.";
+                chamarPaciente(
+                    paciente.maca || ""
+                );
 
-            }else{
+            } else {
 
-                mensagem.innerHTML =
-                "Aguarde sua vez.";
+                voltarNormal();
 
             }
 
