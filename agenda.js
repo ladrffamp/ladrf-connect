@@ -6,15 +6,21 @@ addDoc,
 updateDoc,
 deleteDoc,
 doc,
+getDoc,
 onSnapshot,
 query,
 orderBy,
 Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+
 const eventosRef = collection(db,"agenda");
 
+
 let editando = null;
+
+
 
 const titulo = document.getElementById("titulo");
 const tipo = document.getElementById("tipo");
@@ -26,33 +32,47 @@ const responsavel = document.getElementById("responsavel");
 const observacoes = document.getElementById("observacoes");
 const listaEventos = document.getElementById("listaEventos");
 
+
+
+
+// =====================================
+// SALVAR EVENTO
+// =====================================
+
+
 window.salvarEvento = async function(){
+
 
 try{
 
-const evento={
 
-titulo:titulo.value,
+const evento = {
 
-tipo:tipo.value,
 
-data:data.value,
+titulo: titulo.value,
 
-inicio:inicio.value,
+tipo: tipo.value,
 
-fim:fim.value,
+data: data.value,
 
-local:local.value,
+inicio: inicio.value,
 
-responsavel:responsavel.value,
+fim: fim.value,
 
-observacoes:observacoes.value,
+local: local.value,
+
+responsavel: responsavel.value,
+
+observacoes: observacoes.value,
 
 status:"Programado",
 
 criadoEm:Timestamp.now()
 
+
 };
+
+
 
 if(
 !evento.titulo ||
@@ -60,13 +80,22 @@ if(
 !evento.inicio
 ){
 
-alert("Preencha os campos obrigatórios.");
+
+alert(
+"Preencha título, data e horário."
+);
+
 
 return;
 
 }
 
+
+
+
 if(editando){
+
+
 
 await updateDoc(
 
@@ -76,9 +105,15 @@ evento
 
 );
 
+
+
 editando=null;
 
+
+
 }else{
+
+
 
 await addDoc(
 
@@ -88,34 +123,82 @@ evento
 
 );
 
+
+
 }
+
+
 
 limparFormulario();
 
-}catch(e){
 
-console.error(e);
 
-alert(e.message);
+alert(
+"Evento salvo com sucesso!"
+);
+
+
+
+}catch(error){
+
+
+console.error(error);
+
+
+alert(
+"Erro ao salvar evento."
+);
+
 
 }
+
+
 
 };
 
+
+
+
+
+
+// =====================================
+// LIMPAR FORMULÁRIO
+// =====================================
+
+
 function limparFormulario(){
 
+
 titulo.value="";
+
 tipo.selectedIndex=0;
+
 data.value="";
+
 inicio.value="";
+
 fim.value="";
+
 local.value="";
+
 responsavel.value="";
+
 observacoes.value="";
+
 
 }
 
-const consulta=query(
+
+
+
+
+
+// =====================================
+// LISTAR EVENTOS EM TEMPO REAL
+// =====================================
+
+
+const consulta = query(
 
 eventosRef,
 
@@ -123,58 +206,165 @@ orderBy("data")
 
 );
 
+
+
 onSnapshot(consulta,(snapshot)=>{
+
+
 
 listaEventos.innerHTML="";
 
+
+
 if(snapshot.empty){
+
 
 listaEventos.innerHTML=`
 
 <div class="evento">
 
-<h2>Nenhum evento cadastrado</h2>
+<h2>
+
+Nenhum evento cadastrado
+
+</h2>
 
 </div>
 
 `;
 
+
 return;
+
 
 }
 
+
+
+
+
 snapshot.forEach((item)=>{
+
+
+
+listaEventos.innerHTML += renderizarEvento(item);
+
+
+
+});
+
+
+
+});
+
+
+
+
+
+
+
+// =====================================
+// RENDERIZAÇÃO DOS EVENTOS
+// =====================================
+
+
+function renderizarEvento(item){
+
 
 const evento=item.data();
 
-let classe="programado";
 
-if(evento.status==="Em andamento")
-classe="andamento";
 
-if(evento.status==="Concluído")
-classe="concluido";
+const classe=corStatus(evento.status);
 
-if(evento.status==="Cancelado")
-classe="cancelado";
 
-listaEventos.innerHTML+=`
+
+return `
+
 
 <div class="evento">
 
-<h2>${evento.titulo}</h2>
 
-<p><b>Tipo:</b> ${evento.tipo}</p>
 
-<p><b>Data:</b> ${evento.data}</p>
+<h2>
 
-<p><b>Horário:</b> ${evento.inicio} às ${evento.fim}</p>
+${escaparTexto(evento.titulo)}
 
-<p><b>Local:</b> ${evento.local}</p>
+</h2>
 
-<p><b>Responsável:</b> ${evento.responsavel}</p>
 
-<p><b>Observações:</b><br>${evento.observacoes}</p>
+
+
+<p>
+
+<b>Tipo:</b>
+
+${escaparTexto(evento.tipo)}
+
+</p>
+
+
+
+<p>
+
+<b>Data:</b>
+
+${formatarData(evento.data)}
+
+</p>
+
+
+
+
+<p>
+
+<b>Horário:</b>
+
+${evento.inicio || "-"}
+
+às
+
+${evento.fim || "-"}
+
+</p>
+
+
+
+
+<p>
+
+<b>Local:</b>
+
+${escaparTexto(evento.local)}
+
+</p>
+
+
+
+
+<p>
+
+<b>Responsável:</b>
+
+${escaparTexto(evento.responsavel)}
+
+</p>
+
+
+
+
+<p>
+
+<b>Observações:</b>
+
+<br>
+
+${escaparTexto(evento.observacoes)}
+
+</p>
+
+
+
 
 <span class="status ${classe}">
 
@@ -182,116 +372,242 @@ ${evento.status}
 
 </span>
 
+
+
+
 <div class="botoes">
 
+
+
 <button
+
 class="editar"
+
 onclick="editarEvento('${item.id}')">
 
 ✏️ Editar
 
 </button>
 
+
+
+
 <button
+
 class="concluir"
+
 onclick="concluirEvento('${item.id}')">
 
 ✅ Concluir
 
 </button>
 
+
+
+
 <button
+
 class="excluir"
+
 onclick="excluirEvento('${item.id}')">
 
 🗑️ Excluir
 
 </button>
 
-</div>
+
 
 </div>
+
+
+
+</div>
+
+
 
 `;
 
-});
-  // =====================================
+}
+
+
+
+
+
+
+// =====================================
+// FORMATAR DATA
+// =====================================
+
+
+function formatarData(dataTexto){
+
+
+if(!dataTexto){
+
+return "-";
+
+}
+
+
+
+const partes=dataTexto.split("-");
+
+
+
+if(partes.length!==3){
+
+return dataTexto;
+
+}
+
+
+
+return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
+
+}
+
+
+
+
+
+
+// =====================================
+// PROTEGER TEXTO
+// =====================================
+
+
+function escaparTexto(texto){
+
+
+if(!texto){
+
+return "";
+
+}
+
+
+
+return texto
+
+.replaceAll("&","&amp;")
+
+.replaceAll("<","&lt;")
+
+.replaceAll(">","&gt;")
+
+.replaceAll('"',"&quot;")
+
+.replaceAll("'","&#039;");
+
+
+}
+
+
+
+
+
+
+// =====================================
+// CLASSE DO STATUS
+// =====================================
+
+
+function corStatus(status){
+
+
+switch(status){
+
+
+case "Em andamento":
+
+return "andamento";
+
+
+case "Concluído":
+
+return "concluido";
+
+
+case "Cancelado":
+
+return "cancelado";
+
+
+default:
+
+return "programado";
+
+
+}
+
+// =====================================
 // EDITAR EVENTO
 // =====================================
 
+
 window.editarEvento = async function(id){
+
 
 try{
 
 
 const referencia = doc(
+
 db,
+
 "agenda",
+
 id
+
 );
 
-
-// Busca os dados atuais do evento
-
-// Necessário importar getDoc na Parte 1
 
 
 const dados = await getDoc(referencia);
 
 
+
 if(!dados.exists()){
 
-alert("Evento não encontrado.");
+
+alert(
+"Evento não encontrado."
+);
+
 
 return;
+
 
 }
 
 
+
 const evento = dados.data();
+
 
 
 editando = id;
 
 
 
-titulo.value =
-evento.titulo || "";
+titulo.value = evento.titulo || "";
+
+tipo.value = evento.tipo || "";
+
+data.value = evento.data || "";
+
+inicio.value = evento.inicio || "";
+
+fim.value = evento.fim || "";
+
+local.value = evento.local || "";
+
+responsavel.value = evento.responsavel || "";
+
+observacoes.value = evento.observacoes || "";
 
 
-
-tipo.value =
-evento.tipo || "";
-
-
-
-data.value =
-evento.data || "";
-
-
-
-inicio.value =
-evento.inicio || "";
-
-
-
-fim.value =
-evento.fim || "";
-
-
-
-local.value =
-evento.local || "";
-
-
-
-responsavel.value =
-evento.responsavel || "";
-
-
-
-observacoes.value =
-evento.observacoes || "";
 
 
 
@@ -318,14 +634,19 @@ console.error(error);
 
 
 alert(
-"Erro ao editar evento."
+"Erro ao carregar evento."
 );
+
 
 
 }
 
 
+
 };
+
+
+
 
 
 
@@ -338,9 +659,10 @@ alert(
 window.concluirEvento = async function(id){
 
 
+
 const confirmar = confirm(
 
-"Finalizar este evento?"
+"Marcar este evento como concluído?"
 
 );
 
@@ -354,7 +676,9 @@ return;
 
 
 
+
 try{
+
 
 
 await updateDoc(
@@ -372,7 +696,9 @@ status:"Concluído"
 
 
 alert(
+
 "Evento concluído."
+
 );
 
 
@@ -380,12 +706,17 @@ alert(
 }catch(error){
 
 
+
 console.error(error);
 
 
+
 alert(
+
 "Erro ao concluir evento."
+
 );
+
 
 
 }
@@ -398,12 +729,15 @@ alert(
 
 
 
+
+
 // =====================================
 // EXCLUIR EVENTO
 // =====================================
 
 
 window.excluirEvento = async function(id){
+
 
 
 const confirmar = confirm(
@@ -422,7 +756,9 @@ return;
 
 
 
+
 try{
+
 
 
 await deleteDoc(
@@ -434,7 +770,9 @@ doc(db,"agenda",id)
 
 
 alert(
+
 "Evento excluído."
+
 );
 
 
@@ -442,23 +780,62 @@ alert(
 }catch(error){
 
 
+
 console.error(error);
 
 
+
 alert(
+
 "Erro ao excluir evento."
+
 );
+
 
 
 }
 
 
+
 };
+
+
+
+
+
+
+
 // =====================================
-// ALTERAR STATUS DO EVENTO
+// CANCELAR EDIÇÃO
 // =====================================
 
-window.alterarStatus = async function(id, novoStatus){
+
+window.cancelarEdicao = function(){
+
+
+
+editando = null;
+
+
+limparFormulario();
+
+
+
+alert(
+
+"Edição cancelada."
+
+);
+
+
+
+};
+// =====================================
+// ALTERAR STATUS MANUALMENTE
+// =====================================
+
+
+window.alterarStatus = async function(id, status){
 
 
 try{
@@ -470,7 +847,7 @@ doc(db,"agenda",id),
 
 {
 
-status:novoStatus
+status:status
 
 }
 
@@ -488,7 +865,7 @@ error
 
 
 alert(
-"Não foi possível alterar o status."
+"Erro ao atualizar status."
 );
 
 
@@ -502,63 +879,22 @@ alert(
 
 
 
-// =====================================
-// VERIFICAR EVENTOS VENCIDOS
-// =====================================
-
-
-function verificarEventosVencidos(){
-
-
-const hoje = new Date();
-
-hoje.setHours(0,0,0,0);
-
-
-
-const eventos = document.querySelectorAll(".evento");
-
-
-
-eventos.forEach((elemento)=>{
-
-
-
-const dataTexto = elemento
-.querySelector("p")
-?.innerText;
-
-
-
-if(!dataTexto){
-
-return;
-
-}
-
-
-
-});
-
-
-
-}
-
-
 
 
 
 // =====================================
-// FILTRO DE EVENTOS
+// FILTRO DE EVENTOS POR STATUS
 // =====================================
 
 
-window.filtrarEventos = function(status){
+window.filtrarEventos = function(statusSelecionado){
 
 
 
 const eventos = document.querySelectorAll(
+
 ".evento"
+
 );
 
 
@@ -567,29 +903,48 @@ eventos.forEach((evento)=>{
 
 
 
-const texto =
-evento.querySelector(".status")
+const status = evento
+
+.querySelector(".status")
+
 .innerText;
 
 
 
-if(status==="Todos"){
+if(
+
+statusSelecionado === "Todos"
+
+){
+
 
 evento.style.display="block";
 
+
 return;
+
 
 }
 
 
 
-if(texto===status){
+
+
+if(
+
+status === statusSelecionado
+
+){
+
 
 evento.style.display="block";
 
+
 }else{
 
+
 evento.style.display="none";
+
 
 }
 
@@ -598,323 +953,75 @@ evento.style.display="none";
 });
 
 
+
 };
 
 
 
 
 
+
+
 // =====================================
-// LIMPAR EDIÇÃO
+// VERIFICAR EVENTOS DO DIA
 // =====================================
 
 
-window.cancelarEdicao = function(){
+function verificarEventosHoje(){
 
 
 
-editando=null;
-
-
-limparFormulario();
+const hoje = new Date();
 
 
 
-alert(
-"Edição cancelada."
+const ano = hoje.getFullYear();
+
+const mes = String(
+hoje.getMonth()+1
+).padStart(2,"0");
+
+
+const dia = String(
+hoje.getDate()
+).padStart(2,"0");
+
+
+
+const dataAtual =
+
+`${ano}-${mes}-${dia}`;
+
+
+
+
+
+document.querySelectorAll(".evento")
+
+.forEach((evento)=>{
+
+
+
+const texto = evento.innerText;
+
+
+
+if(texto.includes(dataAtual)){
+
+
+evento.classList.add(
+
+"evento-hoje"
+
 );
 
 
 
-};
-
-
-
-
-
-// =====================================
-// CRIAR STATUS INICIAL
-// =====================================
-
-
-window.iniciarAgenda = function(){
-
-
-console.log(
-"Agenda LADRF iniciada."
-);
-
-
-};
-
-
-
-iniciarAgenda();
-// =====================================
-// TRATAMENTO DE DATAS
-// =====================================
-
-
-function formatarData(dataTexto){
-
-
-if(!dataTexto){
-
-return "-";
-
 }
 
 
 
-const partes = dataTexto.split("-");
-
-
-
-if(partes.length !== 3){
-
-return dataTexto;
-
-}
-
-
-
-return `${partes[2]}/${partes[1]}/${partes[0]}`;
-
-
-}
-
-
-
-
-
-// =====================================
-// PROTEÇÃO DE TEXTO (SEGURANÇA)
-// =====================================
-
-
-function escaparTexto(texto){
-
-
-if(!texto){
-
-return "";
-
-}
-
-
-return texto
-
-.replaceAll("&","&amp;")
-
-.replaceAll("<","&lt;")
-
-.replaceAll(">","&gt;")
-
-.replaceAll('"',"&quot;")
-
-.replaceAll("'","&#039;");
-
-
-}
-
-
-
-
-
-// =====================================
-// MELHORAR RENDERIZAÇÃO DOS EVENTOS
-// =====================================
-
-
-function corStatus(status){
-
-
-switch(status){
-
-
-case "Programado":
-
-return "programado";
-
-
-case "Em andamento":
-
-return "andamento";
-
-
-case "Concluído":
-
-return "concluido";
-
-
-case "Cancelado":
-
-return "cancelado";
-
-
-default:
-
-return "programado";
-
-
-}
-
-
-}
-
-
-
-
-
-// =====================================
-// ATUALIZAR LISTAGEM SEGURA
-// =====================================
-
-
-function renderizarEvento(item){
-
-
-const evento=item.data();
-
-
-
-const classe =
-corStatus(evento.status);
-
-
-
-return `
-
-<div class="evento">
-
-
-<h2>
-
-${escaparTexto(evento.titulo)}
-
-</h2>
-
-
-
-<p>
-
-<b>Tipo:</b>
-
-${escaparTexto(evento.tipo)}
-
-</p>
-
-
-
-<p>
-
-<b>Data:</b>
-
-${formatarData(evento.data)}
-
-</p>
-
-
-
-<p>
-
-<b>Horário:</b>
-
-${evento.inicio || "-"}
-
-às
-
-${evento.fim || "-"}
-
-</p>
-
-
-
-<p>
-
-<b>Local:</b>
-
-${escaparTexto(evento.local)}
-
-</p>
-
-
-
-<p>
-
-<b>Responsável:</b>
-
-${escaparTexto(evento.responsavel)}
-
-</p>
-
-
-
-<p>
-
-<b>Observações:</b><br>
-
-${escaparTexto(evento.observacoes)}
-
-</p>
-
-
-
-<span class="status ${classe}">
-
-${evento.status}
-
-</span>
-
-
-
-<div class="botoes">
-
-
-
-<button
-
-class="editar"
-
-onclick="editarEvento('${item.id}')">
-
-✏️ Editar
-
-</button>
-
-
-
-<button
-
-class="concluir"
-
-onclick="concluirEvento('${item.id}')">
-
-✅ Concluir
-
-</button>
-
-
-
-<button
-
-class="excluir"
-
-onclick="excluirEvento('${item.id}')">
-
-🗑️ Excluir
-
-</button>
-
-
-
-</div>
-
-
-
-</div>
-
-`;
+});
 
 
 
@@ -924,31 +1031,10 @@ onclick="excluirEvento('${item.id}')">
 
 
 
-// =====================================
-// ATUALIZAÇÃO AUTOMÁTICA DO STATUS
-// =====================================
-
-
-window.colocarEmAndamento = async function(id){
-
-
-await alterarStatus(
-
-id,
-
-"Em andamento"
-
-);
-
-
-};
-
-
-
 
 
 // =====================================
-// LIMPEZA AUTOMÁTICA DE EDIÇÃO
+// LIMPAR FORMULÁRIO AO SAIR DA PÁGINA
 // =====================================
 
 
@@ -970,8 +1056,401 @@ editando=null;
 
 
 
-console.log(
-"LADRF Agenda carregada com sucesso."
+
+
+
+// =====================================
+// BUSCA POR TEXTO
+// =====================================
+
+
+window.buscarEvento = function(texto){
+
+
+
+const eventos = document.querySelectorAll(
+
+".evento"
+
 );
 
+
+
+eventos.forEach((evento)=>{
+
+
+
+const conteudo = evento.innerText
+
+.toLowerCase();
+
+
+
+if(
+
+conteudo.includes(
+
+texto.toLowerCase()
+
+)
+
+){
+
+
+evento.style.display="block";
+
+
+}else{
+
+
+evento.style.display="none";
+
+
+}
+
+
+
 });
+
+
+
+};
+
+
+
+
+
+
+
+// =====================================
+// INICIALIZAÇÃO
+// =====================================
+
+
+setTimeout(()=>{
+
+
+verificarEventosHoje();
+
+
+
+},1000);
+
+
+
+console.log(
+
+"Agenda LADRF carregada."
+
+);
+// =====================================
+// VALIDAÇÃO DE DADOS
+// =====================================
+
+
+function validarEvento(){
+
+
+if(!titulo.value.trim()){
+
+
+alert(
+"Informe o título do evento."
+);
+
+
+titulo.focus();
+
+
+return false;
+
+
+}
+
+
+
+if(!data.value){
+
+
+alert(
+"Informe a data do evento."
+);
+
+
+data.focus();
+
+
+return false;
+
+
+}
+
+
+
+if(!inicio.value){
+
+
+alert(
+"Informe o horário inicial."
+);
+
+
+inicio.focus();
+
+
+return false;
+
+
+}
+
+
+
+return true;
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// AJUSTE DA FUNÇÃO DE SALVAR
+// =====================================
+
+
+const salvarOriginal = window.salvarEvento;
+
+
+
+window.salvarEvento = async function(){
+
+
+
+if(!validarEvento()){
+
+
+return;
+
+
+}
+
+
+
+await salvarOriginal();
+
+
+
+};
+
+
+
+
+
+
+
+// =====================================
+// LIMPEZA DE CARACTERES
+// =====================================
+
+
+function limparDados(texto){
+
+
+if(!texto){
+
+return "";
+
+}
+
+
+
+return texto.trim();
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// CAPITALIZAR TEXTOS
+// =====================================
+
+
+function formatarTexto(texto){
+
+
+if(!texto){
+
+return "";
+
+}
+
+
+
+return texto.charAt(0).toUpperCase()
+
++
+
+texto.slice(1);
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// ATUALIZAR CAMPOS ANTES DE SALVAR
+// =====================================
+
+
+titulo.addEventListener(
+
+"blur",
+
+()=>{
+
+titulo.value = formatarTexto(
+
+limparDados(titulo.value)
+
+);
+
+}
+
+);
+
+
+
+local.addEventListener(
+
+"blur",
+
+()=>{
+
+local.value = formatarTexto(
+
+limparDados(local.value)
+
+);
+
+}
+
+);
+
+
+
+responsavel.addEventListener(
+
+"blur",
+
+()=>{
+
+responsavel.value = formatarTexto(
+
+limparDados(responsavel.value)
+
+);
+
+}
+
+);
+
+
+
+
+
+
+
+// =====================================
+// TECLA ESC CANCELA EDIÇÃO
+// =====================================
+
+
+document.addEventListener(
+
+"keydown",
+
+(event)=>{
+
+
+if(event.key==="Escape"){
+
+
+editando=null;
+
+
+limparFormulario();
+
+
+}
+
+
+
+}
+
+);
+
+
+
+
+
+
+
+// =====================================
+// CONFIRMAÇÃO ANTES DE SAIR EM EDIÇÃO
+// =====================================
+
+
+window.addEventListener(
+
+"beforeunload",
+
+(event)=>{
+
+
+if(editando){
+
+
+event.preventDefault();
+
+
+event.returnValue="";
+
+
+}
+
+
+
+});
+
+
+
+
+
+
+
+// =====================================
+// FINALIZAÇÃO
+// =====================================
+
+
+console.log(
+
+"LADRF Connect Agenda 100% carregada."
+
+);
+
+}
