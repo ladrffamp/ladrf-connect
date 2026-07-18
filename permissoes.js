@@ -19,6 +19,10 @@ getDoc
 
 
 
+// =====================================
+// VERIFICAÇÃO DE PERMISSÕES
+// =====================================
+
 
 onAuthStateChanged(auth, async(usuario)=>{
 
@@ -28,6 +32,7 @@ if(!usuario){
 
 window.location.href="login.html";
 
+
 return;
 
 
@@ -35,8 +40,8 @@ return;
 
 
 
-try{
 
+try{
 
 
 const usuarioRef = doc(
@@ -61,8 +66,11 @@ if(!usuarioDoc.exists()){
 
 
 alert(
+
 "Usuário sem perfil cadastrado."
+
 );
+
 
 
 window.location.href="login.html";
@@ -76,7 +84,13 @@ return;
 
 
 
-const perfil = usuarioDoc.data().perfil;
+
+
+const dadosUsuario = usuarioDoc.data();
+
+
+
+const perfil = dadosUsuario.perfil;
 
 
 
@@ -89,6 +103,11 @@ const paginaAtual = window.location.pathname
 
 
 
+
+
+// =====================================
+// MAPA DE PERMISSÕES
+// =====================================
 
 
 const permissoes = {
@@ -132,6 +151,7 @@ admin:[
 
 
 
+
 recepcao:[
 
 
@@ -149,6 +169,7 @@ recepcao:[
 
 
 ],
+
 
 
 
@@ -185,14 +206,23 @@ membro:[
 
 
 
+
+// =====================================
+// VERIFICA PERFIL
+// =====================================
+
+
 if(!permissoes[perfil]){
 
 
 alert(
 
-"Perfil não reconhecido."
+"Perfil não reconhecido: "
+
++ perfil
 
 );
+
 
 
 window.location.href="index.html";
@@ -208,8 +238,13 @@ return;
 
 
 
+// =====================================
+// BLOQUEIO DE PÁGINA
+// =====================================
+
 
 if(!permissoes[perfil].includes(paginaAtual)){
+
 
 
 alert(
@@ -233,9 +268,49 @@ return;
 
 
 
+
+
+
+// =====================================
+// ESCONDER BOTÕES DO MENU
+// =====================================
+
+
+document
+
+.querySelectorAll("[data-perfil]")
+
+.forEach((item)=>{
+
+
+
+const permitido = item.dataset.perfil.split(" ");
+
+
+
+
+
+if(!permitido.includes(perfil)){
+
+
+item.style.display="none";
+
+
+}
+
+
+
+});
+
+
+
+
+
+
+
 console.log(
 
-"Acesso liberado:",
+"Permissão liberada:",
 
 perfil,
 
@@ -247,17 +322,27 @@ paginaAtual
 
 
 
+
 }catch(error){
 
 
-console.error(error);
+
+console.error(
+
+"Erro nas permissões:",
+
+error
+
+);
+
 
 
 alert(
 
-"Erro ao validar permissão."
+"Erro ao validar permissões."
 
 );
+
 
 
 }
