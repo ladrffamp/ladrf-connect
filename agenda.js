@@ -378,6 +378,17 @@ ${evento.status}
 <div class="botoes">
 
 
+<button
+
+class="salvar"
+
+onclick="abrirEscala('${item.id}')">
+
+👥 Escalar equipe
+
+</button>
+
+
 
 <button
 
@@ -388,7 +399,6 @@ onclick="editarEvento('${item.id}')">
 ✏️ Editar
 
 </button>
-
 
 
 
@@ -1439,6 +1449,22 @@ event.returnValue="";
 
 
 
+
+
+
+// =====================================
+// ABRIR ESCALA DA EQUIPE
+// =====================================
+
+window.abrirEscala = function(id){
+
+
+    window.location.href =
+
+    "gerenciar-acao.html?id=" + id;
+
+
+};
 
 
 
