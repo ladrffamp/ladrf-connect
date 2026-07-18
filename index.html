@@ -39,7 +39,6 @@ background:#eef3f7;
 }
 
 
-
 header{
 
 background:linear-gradient(90deg,#0B7A3B,#15A34A);
@@ -181,11 +180,13 @@ gap:25px;
 }
 
 
+
 .menu a{
 
 text-decoration:none;
 
 }
+
 
 
 .menu-card{
@@ -196,7 +197,7 @@ padding:30px;
 
 border-radius:18px;
 
-box-shadow:0 8px:20px rgba(0,0,0,.08);
+box-shadow:0 8px 20px rgba(0,0,0,.08);
 
 color:#222;
 
@@ -248,7 +249,9 @@ color:white;
 
 <header>
 
+
 <div class="logo">
+
 
 <i class="fa-solid fa-heart-pulse"></i>
 
@@ -271,10 +274,12 @@ Sistema de Gestão da Liga
 
 </div>
 
+
 </div>
 
 
 <div class="usuario">
+
 
 <h3 id="nomeUsuario">
 
@@ -289,13 +294,11 @@ Perfil
 
 </span>
 
+
 </div>
 
-<!-- ============================= -->
-<!-- CONTEÚDO PRINCIPAL -->
-<!-- ============================= -->
 
-
+</header>
 <div class="container">
 
 
@@ -312,7 +315,7 @@ Pacientes
 </h2>
 
 <div 
-class="numero" 
+class="numero"
 id="totalPacientes">
 
 0
@@ -334,7 +337,7 @@ Macas Ocupadas
 </h2>
 
 <div 
-class="numero" 
+class="numero"
 id="totalMacas">
 
 0
@@ -356,7 +359,7 @@ Atendimentos
 </h2>
 
 <div 
-class="numero" 
+class="numero"
 id="totalAtendimentos">
 
 0
@@ -378,7 +381,7 @@ Membros
 </h2>
 
 <div 
-class="numero" 
+class="numero"
 id="totalMembros">
 
 0
@@ -391,10 +394,7 @@ id="totalMembros">
 
 
 
-<!-- NOVO CARD AGENDA -->
-
 <div class="card">
-
 
 <i class="fa-solid fa-calendar-days"></i>
 
@@ -416,48 +416,84 @@ Carregando...
 
 
 
+<div class="card">
+
+<i class="fa-solid fa-calendar-check"></i>
+
+
+<h2>
+Eventos este mês
+</h2>
+
+
+<div 
+class="numero"
+id="eventosMes">
+
+0
+
+</div>
+
+
 </div>
 
 
 
 
 
+<div class="card">
 
-<!-- ============================= -->
-<!-- MENU -->
-<!-- ============================= -->
+<i class="fa-solid fa-user-doctor"></i>
+
+
+<h2>
+Membros Escalados
+</h2>
+
+
+<div 
+class="numero"
+id="membrosEscalados">
+
+0
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
 
 
 <div class="menu">
 
 
 
-
-
 <a href="cadastro.html" data-perfil="admin recepcao">
-
 
 <div class="menu-card">
 
-
 <i class="fa-solid fa-user-plus"></i>
-
 
 <h2>
 Cadastro
 </h2>
 
-
 <p>
 Cadastrar pacientes
 </p>
 
-
 </div>
 
-
 </a>
-
 
 
 
@@ -466,28 +502,21 @@ Cadastrar pacientes
 
 <a href="fila.html" data-perfil="admin recepcao membro">
 
-
 <div class="menu-card">
 
-
 <i class="fa-solid fa-list"></i>
-
 
 <h2>
 Fila
 </h2>
 
-
 <p>
 Pacientes aguardando
 </p>
 
-
 </div>
 
-
 </a>
-
 
 
 
@@ -496,28 +525,21 @@ Pacientes aguardando
 
 <a href="recepcao.html" data-perfil="admin recepcao">
 
-
 <div class="menu-card">
 
-
 <i class="fa-solid fa-desktop"></i>
-
 
 <h2>
 Recepção
 </h2>
 
-
 <p>
 Controle da recepção
 </p>
 
-
 </div>
 
-
 </a>
-
 
 
 
@@ -526,28 +548,21 @@ Controle da recepção
 
 <a href="painel.html" data-perfil="admin recepcao membro">
 
-
 <div class="menu-card">
 
-
 <i class="fa-solid fa-tv"></i>
-
 
 <h2>
 Painel
 </h2>
 
-
 <p>
 Chamada em tempo real
 </p>
 
-
 </div>
 
-
 </a>
-
 
 
 
@@ -556,28 +571,21 @@ Chamada em tempo real
 
 <a href="agenda.html" data-perfil="admin membro">
 
-
 <div class="menu-card">
 
-
 <i class="fa-solid fa-calendar-days"></i>
-
 
 <h2>
 Agenda
 </h2>
 
-
 <p>
 Eventos e ações LADRF
 </p>
 
-
 </div>
 
-
 </a>
-
 
 
 
@@ -586,28 +594,21 @@ Eventos e ações LADRF
 
 <a href="macas.html" data-perfil="admin membro">
 
-
 <div class="menu-card">
 
-
 <i class="fa-solid fa-bed"></i>
-
 
 <h2>
 Macas
 </h2>
 
-
 <p>
 Controle das macas
 </p>
 
-
 </div>
 
-
 </a>
-
 
 
 
@@ -616,28 +617,21 @@ Controle das macas
 
 <a href="atendimento.html" data-perfil="admin membro">
 
-
 <div class="menu-card">
 
-
 <i class="fa-solid fa-stethoscope"></i>
-
 
 <h2>
 Atendimento
 </h2>
 
-
 <p>
 Ficha de atendimento
 </p>
 
-
 </div>
 
-
 </a>
-
 
 
 
@@ -646,82 +640,61 @@ Ficha de atendimento
 
 <a href="historico.html" data-perfil="admin membro">
 
-
 <div class="menu-card">
 
-
 <i class="fa-solid fa-book-medical"></i>
-
 
 <h2>
 Histórico
 </h2>
 
-
 <p>
 Atendimentos realizados
 </p>
 
-
 </div>
 
-
 </a>
-<a href="membros.html" data-perfil="admin">
 
+
+
+
+
+
+<a href="membros.html" data-perfil="admin">
 
 <div class="menu-card">
 
-
 <i class="fa-solid fa-users"></i>
-
 
 <h2>
 Membros
 </h2>
 
-
 <p>
 Equipe LADRF
 </p>
 
-
 </div>
 
-
 </a>
-
-
-
-
-
-
-
 <a href="usuarios.html" data-perfil="admin">
-
 
 <div class="menu-card">
 
-
 <i class="fa-solid fa-user-shield"></i>
-
 
 <h2>
 Usuários
 </h2>
 
-
 <p>
 Gerenciar acessos
 </p>
 
-
 </div>
 
-
 </a>
-
-
 
 
 
@@ -729,29 +702,21 @@ Gerenciar acessos
 
 <a href="relatorios.html" data-perfil="admin">
 
-
 <div class="menu-card">
 
-
 <i class="fa-solid fa-chart-column"></i>
-
 
 <h2>
 Relatórios
 </h2>
 
-
 <p>
 Indicadores e estatísticas
 </p>
 
-
 </div>
 
-
 </a>
-
-
 
 
 
@@ -759,35 +724,28 @@ Indicadores e estatísticas
 
 <a href="#" id="btnSair">
 
-
 <div class="menu-card">
 
-
 <i class="fa-solid fa-right-from-bracket"></i>
-
 
 <h2>
 Sair
 </h2>
 
-
 <p>
 Encerrar sessão
 </p>
 
-
 </div>
-
 
 </a>
 
 
 
+</div>
 
 </div>
 
-
-</div>
 
 
 
@@ -798,6 +756,10 @@ Encerrar sessão
 
 
 import { auth, db } from "./firebase.js";
+
+
+import "./notificacoes.js";
+
 
 
 import {
@@ -824,7 +786,9 @@ query,
 
 orderBy,
 
-limit
+limit,
+
+where
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -839,7 +803,7 @@ limit
 
 document
 .getElementById("btnSair")
-.addEventListener("click",async(e)=>{
+.addEventListener("click", async(e)=>{
 
 
 e.preventDefault();
@@ -858,13 +822,12 @@ window.location.href="login.html";
 
 
 
-
 // ===============================
 // USUÁRIO LOGADO
 // ===============================
 
 
-onAuthStateChanged(auth,async(usuario)=>{
+onAuthStateChanged(auth, async(usuario)=>{
 
 
 if(!usuario){
@@ -880,13 +843,11 @@ return;
 
 
 
-
 const usuarioDoc = await getDoc(
 
 doc(db,"usuarios",usuario.uid)
 
 );
-
 
 
 
@@ -910,24 +871,19 @@ dados.perfil;
 
 
 
-
-
-const perfil=dados.perfil;
-
+const perfil = dados.perfil;
 
 
 
 
-document
-.querySelectorAll("[data-perfil]")
+document.querySelectorAll("[data-perfil]")
+
 .forEach(item=>{
-
 
 
 const permitido =
 
 item.dataset.perfil.split(" ");
-
 
 
 
@@ -944,21 +900,21 @@ item.style.display="none";
 });
 
 
-
 }
-
-
 
 
 
 carregarIndicadores();
 
-
 carregarProximoEvento();
 
+carregarEventosMes();
+
+carregarMembrosEscalados();
 
 
 });
+
 
 
 
@@ -975,7 +931,6 @@ carregarProximoEvento();
 async function carregarIndicadores(){
 
 
-
 const pacientes = await getDocs(
 
 collection(db,"pacientes")
@@ -983,12 +938,9 @@ collection(db,"pacientes")
 );
 
 
-
 document.getElementById("totalPacientes").innerHTML =
 
 pacientes.size;
-
-
 
 
 
@@ -1001,12 +953,9 @@ collection(db,"membros")
 );
 
 
-
 document.getElementById("totalMembros").innerHTML =
 
 membros.size;
-
-
 
 
 
@@ -1019,12 +968,9 @@ collection(db,"atendimentos")
 );
 
 
-
 document.getElementById("totalAtendimentos").innerHTML =
 
 atendimentos.size;
-
-
 
 
 
@@ -1037,19 +983,14 @@ collection(db,"macas")
 );
 
 
-
-let ocupadas=0;
+let ocupadas = 0;
 
 
 
 macas.forEach((item)=>{
 
 
-const dados=item.data();
-
-
-
-if(dados.ocupada===true){
+if(item.data().ocupada === true){
 
 
 ocupadas++;
@@ -1067,7 +1008,6 @@ document.getElementById("totalMacas").innerHTML =
 ocupadas + "/4";
 
 
-
 }
 
 
@@ -1077,36 +1017,23 @@ ocupadas + "/4";
 
 
 
-
 // ===============================
-// PRÓXIMO EVENTO DA AGENDA
+// PRÓXIMO EVENTO
 // ===============================
 
 
 async function carregarProximoEvento(){
 
 
-
-const area=document.getElementById(
+const area = document.getElementById(
 "proximoEvento"
 );
 
 
 
-if(!area){
+const eventos = await getDocs(
 
-return;
-
-}
-
-
-
-
-try{
-
-
-
-const consulta=query(
+query(
 
 collection(db,"agenda"),
 
@@ -1114,26 +1041,16 @@ orderBy("data"),
 
 limit(1)
 
-);
-
-
-
-const resultado=await getDocs(
-
-consulta
+)
 
 );
 
 
 
+if(eventos.empty){
 
 
-if(resultado.empty){
-
-
-area.innerHTML=
-
-"Sem eventos cadastrados";
+area.innerHTML="Sem eventos";
 
 
 return;
@@ -1143,74 +1060,174 @@ return;
 
 
 
-
-
-const evento=
-
-resultado.docs[0].data();
+const evento = eventos.docs[0].data();
 
 
 
+area.innerHTML = `
 
-
-area.innerHTML=`
-
-
-<p>
 
 <b>${evento.titulo}</b>
 
-</p>
-
-
-<p>
+<br>
 
 📅 ${evento.data}
 
-</p>
-
-
-<p>
+<br>
 
 ⏰ ${evento.inicio || "-"}
 
-</p>
-
-
-<p>
+<br>
 
 📍 ${evento.local || "-"}
 
-</p>
-
-
-<p>
+<br>
 
 👤 ${evento.responsavel || "-"}
-
-</p>
-
 
 `;
 
 
 
-
-}catch(error){
-
-
-
-console.error(error);
+}
 
 
 
-area.innerHTML=
 
-"Erro ao carregar agenda";
+
+
+
+
+// ===============================
+// EVENTOS DO MÊS
+// ===============================
+
+
+async function carregarEventosMes(){
+
+
+
+const hoje = new Date();
+
+
+const mesAtual = hoje.getMonth();
+
+const anoAtual = hoje.getFullYear();
+
+
+
+const eventos = await getDocs(
+
+collection(db,"agenda")
+
+);
+
+
+
+let total = 0;
+
+
+
+eventos.forEach((item)=>{
+
+
+const evento=item.data();
+
+
+
+if(evento.data){
+
+
+const data = new Date(evento.data);
+
+
+
+if(
+
+data.getMonth()===mesAtual &&
+
+data.getFullYear()===anoAtual
+
+){
+
+
+total++;
 
 
 }
 
+
+}
+
+
+
+});
+
+
+
+document.getElementById("eventosMes").innerHTML =
+
+total;
+
+
+}
+
+
+
+
+
+
+
+
+// ===============================
+// MEMBROS ESCALADOS
+// ===============================
+
+
+async function carregarMembrosEscalados(){
+
+
+
+const eventos = await getDocs(
+
+collection(db,"agenda")
+
+);
+
+
+
+let membros = [];
+
+
+
+eventos.forEach((item)=>{
+
+
+const evento=item.data();
+
+
+
+if(evento.responsavel){
+
+
+membros.push(evento.responsavel);
+
+
+}
+
+
+
+});
+
+
+
+membros=[...new Set(membros)];
+
+
+
+document.getElementById("membrosEscalados").innerHTML =
+
+membros.length;
 
 
 }
@@ -1223,4 +1240,3 @@ area.innerHTML=
 </body>
 
 </html>
-</header>
