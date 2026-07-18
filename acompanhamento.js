@@ -1,104 +1,299 @@
-import { db } from "./firebase.js";
+import { db, messaging } from "./firebase.js";
 
 import {
     doc,
-    onSnapshot
+    onSnapshot,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+import {
+    getToken,
+    onMessage
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
+
+
+
 const idPaciente = new URLSearchParams(window.location.search).get("id");
+
 
 const nome = document.getElementById("nome");
 const status = document.getElementById("status");
 const maca = document.getElementById("maca");
 const mensagem = document.getElementById("mensagem");
 
+
 let notificacaoEnviada = false;
 
-// Som simples gerado pelo navegador
-function tocarSom() {
-    try {
-        const audio = new Audio(
-            "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+
+
+// =====================================
+// REGISTRAR SERVICE WORKER
+// =====================================
+
+async function registrarServiceWorker(){
+
+    if("serviceWorker" in navigator){
+
+        const registro =
+        await navigator.serviceWorker.register(
+            "/ladrf-connect/firebase-messaging-sw.js"
         );
-        audio.play().catch(() => {});
-    } catch (e) {}
-}
 
-async function pedirPermissao() {
-    if (!("Notification" in window)) return;
-
-    if (Notification.permission === "default") {
-        await Notification.requestPermission();
-    }
-}
-
-function mostrarNotificacao(paciente) {
-
-    if (!("Notification" in window)) return;
-
-    if (Notification.permission !== "granted") return;
-
-    if (notificacaoEnviada) return;
-
-    notificacaoEnviada = true;
-
-    new Notification("LADRF Connect", {
-        body: `${paciente.nome}, chegou sua vez! Dirija-se ao atendimento.`,
-        icon: "https://ladrffamp.github.io/ladrf-connect/icon.png"
-    });
-
-    tocarSom();
-}
-
-async function iniciar() {
-
-    await pedirPermissao();
-
-    if (!idPaciente) {
-
-        nome.innerHTML = "Paciente não encontrado";
-        return;
+        console.log(
+            "Service Worker:",
+            registro
+        );
 
     }
 
-    const pacienteRef = doc(db, "pacientes", idPaciente);
+}
 
-    onSnapshot(pacienteRef, (snapshot) => {
 
-        if (!snapshot.exists()) {
 
-            nome.innerHTML = "Paciente não encontrado";
-            return;
 
-        }
+// =====================================
+// GERAR TOKEN DO PACIENTE
+// =====================================
 
-        const paciente = snapshot.data();
+async function salvarTokenPaciente(){
 
-        nome.innerHTML = paciente.nome || "-";
 
-        status.innerHTML = paciente.status || "-";
+try{
 
-        maca.innerHTML = paciente.maca
-            ? "MACA " + paciente.maca
-            : "-";
 
-        if (paciente.status === "Em atendimento") {
+await registrarServiceWorker();
 
-            mensagem.innerHTML =
-                "🔔 Chegou sua vez! Dirija-se ao atendimento.";
 
-            mostrarNotificacao(paciente);
 
-        } else {
+const permissao =
+await Notification.requestPermission();
 
-            notificacaoEnviada = false;
 
-            mensagem.innerHTML = "Aguarde sua vez.";
 
-        }
+if(permissao !== "granted"){
 
-    });
+console.log(
+"Notificação recusada"
+);
+
+return;
 
 }
+
+
+
+const token = await getToken(
+
+messaging,
+
+{
+
+vapidKey:
+"BLd1c09XUUZnB4WjZY0XvdCJs_wdLvxxUw_ey-sNTC8f7hUreUwY5x5rOsnWkrRwrj-G4KH1cj8LHtv-oR6jZe0"
+
+}
+
+);
+
+
+
+if(token){
+
+
+console.log(
+"Token paciente:",
+token
+);
+
+
+
+await updateDoc(
+
+doc(
+db,
+"pacientes",
+idPaciente
+),
+
+{
+
+fcmToken:token
+
+}
+
+);
+
+
+console.log(
+"Token salvo no paciente"
+);
+
+
+}
+
+
+
+}catch(error){
+
+
+console.error(
+"Erro FCM paciente:",
+error
+);
+
+
+}
+
+
+}
+
+
+
+
+// =====================================
+// MENSAGEM COM SITE ABERTO
+// =====================================
+
+onMessage(
+
+messaging,
+
+(payload)=>{
+
+
+console.log(
+"Mensagem recebida:",
+payload
+);
+
+
+new Notification(
+
+payload.notification.title,
+
+{
+
+body:
+payload.notification.body
+
+}
+
+);
+
+
+}
+
+);
+
+
+
+
+
+
+// =====================================
+// ACOMPANHAMENTO
+// =====================================
+
+async function iniciar(){
+
+
+if(!idPaciente){
+
+nome.innerHTML =
+"Paciente não encontrado";
+
+return;
+
+}
+
+
+
+await salvarTokenPaciente();
+
+
+
+const pacienteRef =
+doc(db,"pacientes",idPaciente);
+
+
+
+onSnapshot(
+
+pacienteRef,
+
+(snapshot)=>{
+
+
+if(!snapshot.exists()){
+
+nome.innerHTML =
+"Paciente não encontrado";
+
+return;
+
+}
+
+
+
+const paciente =
+snapshot.data();
+
+
+
+nome.innerHTML =
+paciente.nome || "-";
+
+
+
+status.innerHTML =
+paciente.status || "-";
+
+
+
+maca.innerHTML =
+paciente.maca
+?
+"MACA " + paciente.maca
+:
+"-";
+
+
+
+
+
+if(paciente.status === "Em atendimento"){
+
+
+mensagem.innerHTML =
+"🔔 Chegou sua vez! Dirija-se ao atendimento.";
+
+
+
+notificacaoEnviada = true;
+
+
+
+}else{
+
+
+notificacaoEnviada = false;
+
+
+mensagem.innerHTML =
+"Aguarde sua vez.";
+
+}
+
+
+
+}
+
+
+);
+
+
+}
+
+
 
 iniciar();
