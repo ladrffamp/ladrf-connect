@@ -72,7 +72,7 @@ messaging,
 {
 
 vapidKey:
-"SUA_CHAVE_VAPID"
+"BLd1c09XUUZnB4WjZY0XvdCJs_wdLvxxUw_ey-sNTC8f7hUreUwY5x5rOsnWkrRwrj-G4KH1cj8LHtv-oR6jZe0"
 
 }
 );
