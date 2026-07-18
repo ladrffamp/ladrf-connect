@@ -1,282 +1,178 @@
 // notificacoes.js
 
-
 import { auth, db, app } from "./firebase.js";
 
-
 import {
-onAuthStateChanged
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-
 import {
-getMessaging,
-getToken,
-onMessage
+    getMessaging,
+    getToken,
+    onMessage
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
 
-
 import {
-doc,
-updateDoc
+    doc,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
-
 const messaging = getMessaging(app);
-
-
 
 // =====================================
 // REGISTRAR SERVICE WORKER
 // =====================================
 
-async function registrarServiceWorker(){
+async function registrarServiceWorker() {
 
-    if("serviceWorker" in navigator){
+    if (!("serviceWorker" in navigator)) {
+        throw new Error("Service Worker não suportado.");
+    }
 
-        try{
+    try {
 
-            const registration =
-            await navigator.serviceWorker.register(
-                "/ladrf-connect/firebase-messaging-sw.js"
-            );
+        const registration = await navigator.serviceWorker.register(
+            "/ladrf-connect/firebase-messaging-sw.js"
+        );
 
+        console.log(
+            "✅ Service Worker registrado:",
+            registration
+        );
 
-            console.log(
-                "Service Worker registrado:",
-                registration
-            );
+        await navigator.serviceWorker.ready;
 
+        return registration;
 
-        }catch(error){
+    } catch (error) {
 
-            console.error(
-                "Erro Service Worker:",
-                error
-            );
+        console.error(
+            "❌ Erro ao registrar Service Worker:",
+            error
+        );
 
-        }
-
+        throw error;
     }
 
 }
-
-
-
-
 
 // =====================================
 // ATIVAR NOTIFICAÇÕES
 // =====================================
 
+async function ativarNotificacoes() {
 
-async function ativarNotificacoes(){
+    try {
 
+        const registration = await registrarServiceWorker();
 
-try{
+        const permissao = await Notification.requestPermission();
 
+        if (permissao !== "granted") {
 
-await registrarServiceWorker();
+            console.log("❌ Permissão negada.");
 
+            return;
+        }
 
+        const token = await getToken(
+            messaging,
+            {
+                vapidKey: "BLd1c09XUUZnB4WjZY0XvdCJs_wdLvxxUw_ey-sNTC8f7hUreUwY5x5rOsnWkrRwrj-G4KH1cj8LHtv-oR6jZe0",
+                serviceWorkerRegistration: registration
+            }
+        );
 
-const permissao =
-await Notification.requestPermission();
+        if (!token) {
 
+            console.log("❌ Nenhum token retornado.");
 
+            return;
+        }
 
-if(permissao !== "granted"){
+        console.log("✅ TOKEN FCM:");
+        console.log(token);
 
+        await salvarTokenUsuario(token);
 
-console.log(
-"Usuário recusou notificações."
-);
+    } catch (error) {
 
+        console.error(
+            "❌ Erro FCM:",
+            error
+        );
 
-return;
-
-
-}
-
-
-
-const token = await getToken(
-
-messaging,
-
-{
-
-
-vapidKey:
-
-"BLd1c09XUUZnB4WjZY0XvdCJs_wdLvxxUw_ey-sNTC8f7hUreUwY5x5rOsnWkrRwrj-G4KH1cj8LHtv-oR6jZe0"
-
-
-}
-
-);
-
-
-
-
-
-if(token){
-
-
-console.log(
-"TOKEN FCM:",
-token
-);
-
-
-
-salvarTokenUsuario(token);
-
+    }
 
 }
-
-
-}catch(error){
-
-
-console.error(
-"Erro FCM:",
-error
-);
-
-
-}
-
-
-}
-
-
-
-
-
-
 
 // =====================================
-// SALVAR TOKEN DO MEMBRO
+// SALVAR TOKEN DO USUÁRIO
 // =====================================
 
+function salvarTokenUsuario(token) {
 
-async function salvarTokenUsuario(token){
+    onAuthStateChanged(auth, async (usuario) => {
 
+        if (!usuario) {
 
-onAuthStateChanged(
+            console.log("Usuário não autenticado.");
 
-auth,
+            return;
 
-async(usuario)=>{
+        }
 
+        try {
 
-if(usuario){
+            await updateDoc(
+                doc(db, "usuarios", usuario.uid),
+                {
+                    tokenPush: token
+                }
+            );
 
+            console.log("✅ Token salvo no Firestore.");
 
-try{
+        } catch (error) {
 
+            console.error(
+                "Erro ao salvar token:",
+                error
+            );
 
-await updateDoc(
+        }
 
-doc(
-db,
-"usuarios",
-usuario.uid
-),
-
-
-{
-
-
-tokenPush:token
-
-
-}
-
-
-);
-
-
-
-console.log(
-"Token salvo."
-);
-
-
-
-}catch(error){
-
-
-console.error(
-"Erro ao salvar token:",
-error
-);
-
+    });
 
 }
-
-
-}
-
-
-
-}
-
-
-);
-
-
-}
-
-
-
-
-
-
 
 // =====================================
-// MENSAGEM COM SITE ABERTO
+// RECEBER MENSAGENS COM O SITE ABERTO
 // =====================================
 
+onMessage(messaging, (payload) => {
 
-onMessage(
+    console.log(
+        "📩 Mensagem recebida:",
+        payload
+    );
 
-messaging,
+    if (Notification.permission === "granted") {
 
-(payload)=>{
+        new Notification(
+            payload.notification.title,
+            {
+                body: payload.notification.body,
+                icon: "/ladrf-connect/icon-192.png"
+            }
+        );
 
+    }
 
-console.log(
-"Mensagem recebida:",
-payload
-);
+});
 
-
-
-new Notification(
-
-payload.notification.title,
-
-{
-
-
-body:
-payload.notification.body
-
-
-}
-
-);
-
-
-}
-
-);
-
-
-
-
+// =====================================
+// INICIAR
+// =====================================
 
 ativarNotificacoes();
