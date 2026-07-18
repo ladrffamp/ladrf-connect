@@ -4,42 +4,31 @@
 <head>
 
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Agenda LADRF Connect</title>
 
-
 <style>
 
 *{
-
+margin:0;
+padding:0;
 box-sizing:border-box;
-font-family:Arial;
-
+font-family:Arial,Helvetica,sans-serif;
 }
-
 
 body{
-
 background:#f4f6f9;
-
 padding:30px;
-
 }
-
-
 
 .btn-voltar{
 
 position:fixed;
-
 top:20px;
-
 left:20px;
 
 background:#0B7A3B;
-
 color:white;
 
 border:none;
@@ -50,19 +39,23 @@ border-radius:10px;
 
 cursor:pointer;
 
+font-size:15px;
+
 }
 
+.btn-voltar:hover{
 
+background:#075c2b;
+
+}
 
 .container{
 
-max-width:1000px;
+max-width:1200px;
 
 margin:auto;
 
 }
-
-
 
 .card{
 
@@ -78,23 +71,25 @@ margin-bottom:25px;
 
 }
 
-
-
-h1,h2{
+h1{
 
 color:#0B7A3B;
 
+margin-bottom:20px;
+
 }
 
-
-
-input,select,textarea{
+input,
+select,
+textarea{
 
 width:100%;
 
 padding:12px;
 
-margin-top:10px;
+margin-top:8px;
+
+margin-bottom:15px;
 
 border-radius:8px;
 
@@ -102,168 +97,209 @@ border:1px solid #ccc;
 
 }
 
-
-
 textarea{
 
 height:100px;
 
+resize:none;
+
 }
-
-
 
 button{
 
-margin-top:15px;
-
-padding:12px 20px;
-
-background:#0B7A3B;
-
-color:white;
-
 border:none;
+
+padding:12px 18px;
 
 border-radius:8px;
 
 cursor:pointer;
 
+color:white;
+
+font-size:15px;
+
 }
 
+.salvar{
 
+background:#0B7A3B;
+
+}
+
+.editar{
+
+background:#1976d2;
+
+}
+
+.excluir{
+
+background:#d32f2f;
+
+}
+
+.concluir{
+
+background:#ff9800;
+
+}
 
 .evento{
 
-background:#f4f4f4;
+background:white;
 
 padding:20px;
 
-border-radius:12px;
+border-radius:15px;
 
-margin-top:15px;
+margin-bottom:20px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
 
 }
 
+.evento h2{
 
+color:#0B7A3B;
+
+margin-bottom:10px;
+
+}
+
+.botoes{
+
+margin-top:20px;
+
+display:flex;
+
+gap:10px;
+
+flex-wrap:wrap;
+
+}
+
+.status{
+
+display:inline-block;
+
+padding:6px 12px;
+
+border-radius:20px;
+
+font-size:14px;
+
+font-weight:bold;
+
+margin-top:10px;
+
+}
+
+.programado{
+
+background:#d4edda;
+
+color:#155724;
+
+}
+
+.andamento{
+
+background:#fff3cd;
+
+color:#856404;
+
+}
+
+.concluido{
+
+background:#d1ecf1;
+
+color:#0c5460;
+
+}
+
+.cancelado{
+
+background:#f8d7da;
+
+color:#721c24;
+
+}
 
 </style>
 
-
 </head>
-
 
 <body>
 
-
-<button class="btn-voltar" onclick="window.location.href='index.html'">
+<button class="btn-voltar"
+onclick="window.location.href='index.html'">
 
 🏠 Menu Inicial
 
 </button>
 
-
-
 <div class="container">
-
-
-<h1>
-
-📅 Agenda LADRF
-
-</h1>
-
-
 
 <div class="card">
 
+<h1>Agenda LADRF</h1>
 
-<h2>
-
-Novo Evento
-
-</h2>
-
-
-<input id="titulo" placeholder="Nome do evento">
-
+<input id="titulo" placeholder="Título do evento">
 
 <select id="tipo">
 
-<option>Atendimento esportivo</option>
+<option>Atendimento</option>
+
+<option>Curso</option>
+
+<option>Palestra</option>
 
 <option>Reunião</option>
 
 <option>Treinamento</option>
 
-<option>Curso</option>
-
-<option>Congresso</option>
-
-<option>Ação social</option>
+<option>Ação Social</option>
 
 <option>Outro</option>
 
 </select>
 
+<input type="date" id="data">
 
-<input id="data" type="date">
+<input type="time" id="inicio">
 
-
-<input id="inicio" type="time">
-
-
-<input id="fim" type="time">
-
+<input type="time" id="fim">
 
 <input id="local" placeholder="Local">
 
-
 <input id="responsavel" placeholder="Responsável">
 
+<textarea
+id="observacoes"
+placeholder="Observações"></textarea>
 
-<textarea id="observacoes" placeholder="Observações"></textarea>
+<input type="hidden" id="eventoId">
 
+<button
+class="salvar"
+onclick="salvarEvento()">
 
-<button onclick="salvarEvento()">
-
-Cadastrar Evento
+💾 Salvar Evento
 
 </button>
 
-
 </div>
-
-
-
-
-<div class="card">
-
-
-<h2>
-
-Próximos eventos
-
-</h2>
-
 
 <div id="listaEventos">
 
 </div>
 
-
 </div>
-
-
-
-</div>
-
-
-
 
 <script type="module" src="agenda.js"></script>
-
 <script type="module" src="permissoes.js"></script>
-
 
 </body>
 
