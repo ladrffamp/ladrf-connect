@@ -18,7 +18,7 @@ serverTimestamp
 
 
 // =====================================
-// ID DA AÇÃO
+// PEGAR ID DA AÇÃO
 // =====================================
 
 const idAcao =
@@ -29,63 +29,135 @@ new URLSearchParams(window.location.search)
 
 
 
+console.log(
+"ID DA AÇÃO:",
+idAcao
+);
+
+
+
+if(!idAcao){
+
+
+    alert(
+        "Erro: ação não encontrada."
+    );
+
+
+    throw new Error(
+        "ID da ação ausente"
+    );
+
+
+}
+
+
+
 
 // =====================================
 // ELEMENTOS
 // =====================================
 
+
 const nomeAcao =
-document.getElementById("nomeAcao");
+
+document.getElementById(
+"nomeAcao"
+);
+
 
 
 const listaMembros =
-document.getElementById("listaMembros");
+
+document.getElementById(
+"listaMembros"
+);
+
 
 
 const botaoSalvar =
-document.getElementById("salvar");
+
+document.getElementById(
+"salvar"
+);
 
 
-
-// membros selecionados
-
-let membrosSelecionados = [];
 
 
 
 // =====================================
-// BUSCAR AÇÃO
+// CARREGAR NOME DA AÇÃO
 // =====================================
+
 
 async function carregarAcao(){
 
 
-const referencia =
-
-doc(
-db,
-"acoes",
-idAcao
-);
+    try{
 
 
-const resultado =
+        const referencia =
 
-await getDoc(
-referencia
-);
+        doc(
 
+            db,
 
+            "acoes",
 
-if(resultado.exists()){
+            idAcao
 
-
-nomeAcao.innerHTML =
-
-resultado.data().nome;
+        );
 
 
-}
+
+        const resultado =
+
+        await getDoc(
+            referencia
+        );
+
+
+
+        if(
+            resultado.exists()
+        ){
+
+
+            nomeAcao.innerHTML =
+
+            resultado.data().nome;
+
+
+        }
+
+
+        else{
+
+
+            nomeAcao.innerHTML =
+
+            "Ação não encontrada";
+
+
+        }
+
+
+
+    }
+
+    catch(error){
+
+
+        console.error(
+
+            "Erro ao carregar ação:",
+
+            error
+
+        );
+
+
+    }
 
 
 }
@@ -95,77 +167,127 @@ resultado.data().nome;
 
 
 // =====================================
-// BUSCAR MEMBROS
+// CARREGAR MEMBROS
 // =====================================
+
 
 async function carregarMembros(){
 
 
-const usuarios =
-
-await getDocs(
-
-collection(
-db,
-"usuarios"
-)
-
-);
+    try{
 
 
+        const usuarios =
 
-listaMembros.innerHTML="";
+        await getDocs(
 
+            collection(
 
+                db,
 
-usuarios.forEach(
+                "usuarios"
 
-(usuario)=>{
+            )
 
-
-const dados =
-usuario.data();
+        );
 
 
 
-if(dados.perfil === "membro"){
+        listaMembros.innerHTML = "";
 
 
 
-listaMembros.innerHTML += `
+        usuarios.forEach(
+
+            (usuario)=>{
 
 
-<div>
+                const dados =
 
-<input
-
-type="checkbox"
-
-value="${usuario.id}"
-
-data-nome="${dados.nome}"
-
->
-
-
-${dados.nome}
-
-
-</div>
-
-
-`;
+                usuario.data();
 
 
 
-}
+                if(
+                    dados.perfil === "membro"
+                ){
 
 
 
-}
+                    listaMembros.innerHTML += `
 
 
-);
+                    <div style="
+                    margin:10px;
+                    padding:10px;
+                    border:1px solid #ddd;
+                    border-radius:8px;
+                    ">
+
+
+                    <input
+
+                    type="checkbox"
+
+                    class="membro"
+
+                    value="${usuario.id}"
+
+                    data-nome="${dados.nome}"
+
+                    >
+
+
+                    ${dados.nome}
+
+
+                    </div>
+
+
+                    `;
+
+
+
+                }
+
+
+
+            }
+
+
+        );
+
+
+
+        if(
+            listaMembros.innerHTML === ""
+        ){
+
+
+            listaMembros.innerHTML =
+
+            "Nenhum membro encontrado.";
+
+
+        }
+
+
+
+    }
+
+    catch(error){
+
+
+        console.error(
+
+            "Erro ao buscar membros:",
+
+            error
+
+        );
+
+
+    }
 
 
 
@@ -179,79 +301,139 @@ ${dados.nome}
 // SALVAR ESCALA
 // =====================================
 
-botaoSalvar.onclick = async()=>{
+
+botaoSalvar.addEventListener(
+
+"click",
+
+async()=>{
 
 
-const selecionados =
-
-document.querySelectorAll(
-"input[type='checkbox']:checked"
-);
+    try{
 
 
+        const selecionados =
 
-for(const item of selecionados){
+        document.querySelectorAll(
 
+            ".membro:checked"
 
-
-const uid =
-item.value;
-
-
-const nome =
-item.dataset.nome;
+        );
 
 
 
-await setDoc(
+        if(
+            selecionados.length === 0
+        ){
 
 
-doc(
+            alert(
 
-db,
+                "Selecione pelo menos um membro."
 
-"acoes",
-
-idAcao,
-
-"participantes",
-
-uid
-
-),
+            );
 
 
-{
+            return;
 
 
-nome:nome,
+        }
 
 
-presenca:"Pendente",
 
 
-escaladoEm:
-serverTimestamp()
+        for(
+            const membro of selecionados
+        ){
+
+
+
+            await setDoc(
+
+
+                doc(
+
+                    db,
+
+                    "acoes",
+
+                    idAcao,
+
+                    "participantes",
+
+                    membro.value
+
+                ),
+
+
+                {
+
+
+                    nome:
+
+                    membro.dataset.nome,
+
+
+                    presenca:
+
+                    "Pendente",
+
+
+                    escaladoEm:
+
+                    serverTimestamp()
+
+
+                }
+
+
+            );
+
+
+
+        }
+
+
+
+        alert(
+
+            "Escala salva com sucesso!"
+
+        );
+
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(
+
+            "Erro ao salvar escala:",
+
+            error
+
+        );
+
+
+        alert(
+
+            "Erro ao salvar escala."
+
+        );
+
+
+    }
+
 
 
 }
 
-
 );
 
 
-
-}
-
-
-
-alert(
-"Escala salva com sucesso!"
-);
-
-
-
-};
 
 
 
@@ -259,6 +441,7 @@ alert(
 // =====================================
 // INICIAR
 // =====================================
+
 
 carregarAcao();
 
