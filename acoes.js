@@ -13,7 +13,7 @@ import {
 
 
 // =====================================
-// ELEMENTOS DA PÁGINA
+// ELEMENTOS
 // =====================================
 
 const nome = document.getElementById("nome");
@@ -31,7 +31,7 @@ document.getElementById("lista");
 
 
 // =====================================
-// SALVAR NOVA AÇÃO
+// CRIAR AÇÃO
 // =====================================
 
 botaoSalvar.addEventListener(
@@ -110,17 +110,10 @@ async()=>{
 
     catch(error){
 
-
         console.error(
             "Erro ao criar ação:",
             error
         );
-
-
-        alert(
-            "Erro ao salvar ação."
-        );
-
 
     }
 
@@ -164,7 +157,7 @@ async function carregarAcoes(){
         );
 
 
-        lista.innerHTML = "";
+        lista.innerHTML="";
 
 
         resultado.forEach(
@@ -176,7 +169,12 @@ async function carregarAcoes(){
                 documento.data();
 
 
+                const id =
+                documento.id;
+
+
                 lista.innerHTML += `
+
 
                 <div style="
                 border:1px solid #ccc;
@@ -184,6 +182,7 @@ async function carregarAcoes(){
                 margin:10px;
                 border-radius:10px;
                 ">
+
 
                 <h3>
                 ${acao.nome}
@@ -218,7 +217,15 @@ async function carregarAcoes(){
                 </p>
 
 
+                <button onclick="abrirEscala('${id}')">
+
+                👥 Selecionar membros
+
+                </button>
+
+
                 </div>
+
 
                 `;
 
@@ -240,12 +247,10 @@ async function carregarAcoes(){
 
     catch(error){
 
-
         console.error(
             "Erro ao listar ações:",
             error
         );
-
 
     }
 
@@ -254,11 +259,24 @@ async function carregarAcoes(){
 
 
 // =====================================
+// ABRIR ESCALA
+// =====================================
+
+window.abrirEscala = function(id){
+
+
+    window.location.href =
+    "gerenciar-acao.html?id=" + id;
+
+
+};
+
+
+// =====================================
 // LIMPAR FORMULÁRIO
 // =====================================
 
 function limparFormulario(){
-
 
     nome.value="";
     data.value="";
@@ -267,11 +285,11 @@ function limparFormulario(){
     local.value="";
     modalidade.value="";
 
-
 }
 
 
-
-// iniciar
+// =====================================
+// INICIAR
+// =====================================
 
 carregarAcoes();
