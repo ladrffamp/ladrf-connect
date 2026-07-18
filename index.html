@@ -20,22 +20,16 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
-
 <style>
-
 
 *{
 
 margin:0;
-
 padding:0;
-
 box-sizing:border-box;
-
 font-family:'Poppins',sans-serif;
 
 }
-
 
 
 body{
@@ -90,8 +84,6 @@ font-size:40px;
 
 font-size:30px;
 
-font-weight:700;
-
 }
 
 
@@ -99,24 +91,6 @@ font-weight:700;
 .usuario{
 
 text-align:right;
-
-}
-
-
-
-.usuario h3{
-
-font-size:18px;
-
-}
-
-
-
-.usuario span{
-
-font-size:14px;
-
-opacity:.9;
 
 }
 
@@ -147,6 +121,7 @@ margin-bottom:40px;
 }
 
 
+
 .card{
 
 background:white;
@@ -160,6 +135,7 @@ box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
 
+
 .card i{
 
 font-size:38px;
@@ -171,6 +147,7 @@ margin-bottom:15px;
 }
 
 
+
 .numero{
 
 font-size:34px;
@@ -180,6 +157,17 @@ font-weight:bold;
 color:#0B7A3B;
 
 }
+
+
+
+#proximoEvento{
+
+line-height:1.8;
+
+font-size:15px;
+
+}
+
 
 
 .menu{
@@ -200,7 +188,6 @@ text-decoration:none;
 }
 
 
-
 .menu-card{
 
 background:white;
@@ -209,11 +196,11 @@ padding:30px;
 
 border-radius:18px;
 
-box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-transition:.3s;
+box-shadow:0 8px:20px rgba(0,0,0,.08);
 
 color:#222;
+
+transition:.3s;
 
 }
 
@@ -235,11 +222,12 @@ color:white;
 
 font-size:42px;
 
-margin-bottom:15px;
-
 color:#0B7A3B;
 
+margin-bottom:15px;
+
 }
+
 
 
 .menu-card:hover i{
@@ -249,39 +237,18 @@ color:white;
 }
 
 
-
-.menu-card h2{
-
-font-size:22px;
-
-margin-bottom:10px;
-
-}
-
-
-.menu-card p{
-
-font-size:15px;
-
-opacity:.8;
-
-}
-
-
-
 </style>
 
 
 </head>
+
 
 <body>
 
 
 <header>
 
-
 <div class="logo">
-
 
 <i class="fa-solid fa-heart-pulse"></i>
 
@@ -304,14 +271,10 @@ Sistema de Gestão da Liga
 
 </div>
 
-
 </div>
 
 
-
-
 <div class="usuario">
-
 
 <h3 id="nomeUsuario">
 
@@ -326,22 +289,14 @@ Perfil
 
 </span>
 
-
 </div>
 
-
-
-</header>
-
-
-
-
+<!-- ============================= -->
+<!-- CONTEÚDO PRINCIPAL -->
+<!-- ============================= -->
 
 
 <div class="container">
-
-
-
 
 
 <div class="cards">
@@ -350,23 +305,19 @@ Perfil
 
 <div class="card">
 
-
 <i class="fa-solid fa-user-group"></i>
 
-
 <h2>
-
 Pacientes
-
 </h2>
 
-
-<div class="numero" id="totalPacientes">
+<div 
+class="numero" 
+id="totalPacientes">
 
 0
 
 </div>
-
 
 </div>
 
@@ -375,24 +326,20 @@ Pacientes
 
 
 <div class="card">
-
 
 <i class="fa-solid fa-bed"></i>
 
-
 <h2>
-
 Macas Ocupadas
-
 </h2>
 
-
-<div class="numero" id="totalMacas">
+<div 
+class="numero" 
+id="totalMacas">
 
 0
 
 </div>
-
 
 </div>
 
@@ -401,24 +348,20 @@ Macas Ocupadas
 
 
 <div class="card">
-
 
 <i class="fa-solid fa-stethoscope"></i>
 
-
 <h2>
-
 Atendimentos
-
 </h2>
 
-
-<div class="numero" id="totalAtendimentos">
+<div 
+class="numero" 
+id="totalAtendimentos">
 
 0
 
 </div>
-
 
 </div>
 
@@ -428,40 +371,71 @@ Atendimentos
 
 <div class="card">
 
-
 <i class="fa-solid fa-users"></i>
 
-
 <h2>
-
 Membros
-
 </h2>
 
-
-<div class="numero" id="totalMembros">
+<div 
+class="numero" 
+id="totalMembros">
 
 0
 
 </div>
 
-
-</div>
-
-
-
 </div>
 
 
 
 
+
+<!-- NOVO CARD AGENDA -->
+
+<div class="card">
+
+
+<i class="fa-solid fa-calendar-days"></i>
+
+
+<h2>
+Próximo Evento
+</h2>
+
+
+<div id="proximoEvento">
+
+Carregando...
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+<!-- ============================= -->
+<!-- MENU -->
+<!-- ============================= -->
 
 
 <div class="menu">
 
 
 
+
+
 <a href="cadastro.html" data-perfil="admin recepcao">
+
 
 <div class="menu-card">
 
@@ -470,20 +444,17 @@ Membros
 
 
 <h2>
-
 Cadastro
-
 </h2>
 
 
 <p>
-
-Cadastrar novos pacientes
-
+Cadastrar pacientes
 </p>
 
 
 </div>
+
 
 </a>
 
@@ -491,7 +462,10 @@ Cadastrar novos pacientes
 
 
 
+
+
 <a href="fila.html" data-perfil="admin recepcao membro">
+
 
 <div class="menu-card">
 
@@ -500,20 +474,17 @@ Cadastrar novos pacientes
 
 
 <h2>
-
 Fila
-
 </h2>
 
 
 <p>
-
-Pacientes aguardando atendimento
-
+Pacientes aguardando
 </p>
 
 
 </div>
+
 
 </a>
 
@@ -521,7 +492,10 @@ Pacientes aguardando atendimento
 
 
 
+
+
 <a href="recepcao.html" data-perfil="admin recepcao">
+
 
 <div class="menu-card">
 
@@ -530,20 +504,17 @@ Pacientes aguardando atendimento
 
 
 <h2>
-
 Recepção
-
 </h2>
 
 
 <p>
-
 Controle da recepção
-
 </p>
 
 
 </div>
+
 
 </a>
 
@@ -551,7 +522,10 @@ Controle da recepção
 
 
 
+
+
 <a href="painel.html" data-perfil="admin recepcao membro">
+
 
 <div class="menu-card">
 
@@ -560,202 +534,28 @@ Controle da recepção
 
 
 <h2>
-
 Painel
-
 </h2>
 
 
 <p>
-
-Chamada de pacientes em tempo real
-
+Chamada em tempo real
 </p>
 
 
 </div>
+
 
 </a>
 
 
 
 
-
-<a href="macas.html" data-perfil="admin membro">
-
-<div class="menu-card">
-
-
-<i class="fa-solid fa-bed"></i>
-
-
-<h2>
-
-Macas
-
-</h2>
-
-
-<p>
-
-Controle das macas
-
-</p>
-
-
-</div>
-
-</a>
-
-<a href="atendimento.html" data-perfil="admin membro">
-
-<div class="menu-card">
-
-
-<i class="fa-solid fa-stethoscope"></i>
-
-
-<h2>
-
-Atendimento
-
-</h2>
-
-
-<p>
-
-Realizar atendimento
-
-</p>
-
-
-</div>
-
-</a>
-
-
-
-
-
-<a href="historico.html" data-perfil="admin membro">
-
-<div class="menu-card">
-
-
-<i class="fa-solid fa-book-medical"></i>
-
-
-<h2>
-
-Histórico
-
-</h2>
-
-
-<p>
-
-Consultar atendimentos
-
-</p>
-
-
-</div>
-
-</a>
-
-
-
-
-
-<a href="membros.html" data-perfil="admin">
-
-<div class="menu-card">
-
-
-<i class="fa-solid fa-users"></i>
-
-
-<h2>
-
-Membros
-
-</h2>
-
-
-<p>
-
-Cadastro da equipe LADRF
-
-</p>
-
-
-</div>
-
-</a>
-
-
-
-
-
-<a href="usuarios.html" data-perfil="admin">
-
-<div class="menu-card">
-
-
-<i class="fa-solid fa-user-shield"></i>
-
-
-<h2>
-
-Usuários
-
-</h2>
-
-
-<p>
-
-Gerenciar acessos
-
-</p>
-
-
-</div>
-
-</a>
-
-
-
-
-
-<a href="relatorios.html" data-perfil="admin">
-
-<div class="menu-card">
-
-
-<i class="fa-solid fa-chart-column"></i>
-
-
-<h2>
-
-Relatórios
-
-</h2>
-
-
-<p>
-
-Indicadores e estatísticas
-
-</p>
-
-
-</div>
-
-</a>
 
 
 
 <a href="agenda.html" data-perfil="admin membro">
+
 
 <div class="menu-card">
 
@@ -764,24 +564,201 @@ Indicadores e estatísticas
 
 
 <h2>
-
 Agenda
-
 </h2>
 
 
 <p>
-
-Eventos, ações e compromissos da LADRF
-
+Eventos e ações LADRF
 </p>
 
 
 </div>
 
+
 </a>
 
+
+
+
+
+
+
+<a href="macas.html" data-perfil="admin membro">
+
+
+<div class="menu-card">
+
+
+<i class="fa-solid fa-bed"></i>
+
+
+<h2>
+Macas
+</h2>
+
+
+<p>
+Controle das macas
+</p>
+
+
+</div>
+
+
+</a>
+
+
+
+
+
+
+
+<a href="atendimento.html" data-perfil="admin membro">
+
+
+<div class="menu-card">
+
+
+<i class="fa-solid fa-stethoscope"></i>
+
+
+<h2>
+Atendimento
+</h2>
+
+
+<p>
+Ficha de atendimento
+</p>
+
+
+</div>
+
+
+</a>
+
+
+
+
+
+
+
+<a href="historico.html" data-perfil="admin membro">
+
+
+<div class="menu-card">
+
+
+<i class="fa-solid fa-book-medical"></i>
+
+
+<h2>
+Histórico
+</h2>
+
+
+<p>
+Atendimentos realizados
+</p>
+
+
+</div>
+
+
+</a>
+<a href="membros.html" data-perfil="admin">
+
+
+<div class="menu-card">
+
+
+<i class="fa-solid fa-users"></i>
+
+
+<h2>
+Membros
+</h2>
+
+
+<p>
+Equipe LADRF
+</p>
+
+
+</div>
+
+
+</a>
+
+
+
+
+
+
+
+<a href="usuarios.html" data-perfil="admin">
+
+
+<div class="menu-card">
+
+
+<i class="fa-solid fa-user-shield"></i>
+
+
+<h2>
+Usuários
+</h2>
+
+
+<p>
+Gerenciar acessos
+</p>
+
+
+</div>
+
+
+</a>
+
+
+
+
+
+
+
+<a href="relatorios.html" data-perfil="admin">
+
+
+<div class="menu-card">
+
+
+<i class="fa-solid fa-chart-column"></i>
+
+
+<h2>
+Relatórios
+</h2>
+
+
+<p>
+Indicadores e estatísticas
+</p>
+
+
+</div>
+
+
+</a>
+
+
+
+
+
+
+
 <a href="#" id="btnSair">
+
 
 <div class="menu-card">
 
@@ -790,32 +767,27 @@ Eventos, ações e compromissos da LADRF
 
 
 <h2>
-
 Sair
-
 </h2>
 
 
 <p>
-
 Encerrar sessão
-
 </p>
 
 
 </div>
+
 
 </a>
 
 
 
 
-
 </div>
 
 
 </div>
-
 
 
 
@@ -846,7 +818,13 @@ getDocs,
 
 doc,
 
-getDoc
+getDoc,
+
+query,
+
+orderBy,
+
+limit
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -854,8 +832,14 @@ getDoc
 
 
 
+// ===============================
+// SAIR
+// ===============================
 
-document.getElementById("btnSair").addEventListener("click",async(e)=>{
+
+document
+.getElementById("btnSair")
+.addEventListener("click",async(e)=>{
 
 
 e.preventDefault();
@@ -875,6 +859,10 @@ window.location.href="login.html";
 
 
 
+// ===============================
+// USUÁRIO LOGADO
+// ===============================
+
 
 onAuthStateChanged(auth,async(usuario)=>{
 
@@ -889,7 +877,6 @@ return;
 
 
 }
-
 
 
 
@@ -923,14 +910,24 @@ dados.perfil;
 
 
 
-const perfil = dados.perfil;
+
+
+const perfil=dados.perfil;
 
 
 
-document.querySelectorAll("[data-perfil]").forEach(item=>{
 
 
-const permitido = item.dataset.perfil.split(" ");
+document
+.querySelectorAll("[data-perfil]")
+.forEach(item=>{
+
+
+
+const permitido =
+
+item.dataset.perfil.split(" ");
+
 
 
 
@@ -957,6 +954,9 @@ item.style.display="none";
 carregarIndicadores();
 
 
+carregarProximoEvento();
+
+
 
 });
 
@@ -967,7 +967,13 @@ carregarIndicadores();
 
 
 
+// ===============================
+// INDICADORES
+// ===============================
+
+
 async function carregarIndicadores(){
+
 
 
 const pacientes = await getDocs(
@@ -977,9 +983,12 @@ collection(db,"pacientes")
 );
 
 
+
 document.getElementById("totalPacientes").innerHTML =
 
 pacientes.size;
+
+
 
 
 
@@ -992,9 +1001,11 @@ collection(db,"membros")
 );
 
 
+
 document.getElementById("totalMembros").innerHTML =
 
 membros.size;
+
 
 
 
@@ -1006,6 +1017,7 @@ const atendimentos = await getDocs(
 collection(db,"atendimentos")
 
 );
+
 
 
 document.getElementById("totalAtendimentos").innerHTML =
@@ -1026,16 +1038,22 @@ collection(db,"macas")
 
 
 
-let ocupadas = 0;
+let ocupadas=0;
 
 
 
-macas.forEach((maca)=>{
+macas.forEach((item)=>{
 
 
-if(maca.data().ocupada === true){
+const dados=item.data();
+
+
+
+if(dados.ocupada===true){
+
 
 ocupadas++;
+
 
 }
 
@@ -1054,10 +1072,155 @@ ocupadas + "/4";
 
 
 
-</script>
 
+
+
+
+
+
+// ===============================
+// PRÓXIMO EVENTO DA AGENDA
+// ===============================
+
+
+async function carregarProximoEvento(){
+
+
+
+const area=document.getElementById(
+"proximoEvento"
+);
+
+
+
+if(!area){
+
+return;
+
+}
+
+
+
+
+try{
+
+
+
+const consulta=query(
+
+collection(db,"agenda"),
+
+orderBy("data"),
+
+limit(1)
+
+);
+
+
+
+const resultado=await getDocs(
+
+consulta
+
+);
+
+
+
+
+
+if(resultado.empty){
+
+
+area.innerHTML=
+
+"Sem eventos cadastrados";
+
+
+return;
+
+
+}
+
+
+
+
+
+const evento=
+
+resultado.docs[0].data();
+
+
+
+
+
+area.innerHTML=`
+
+
+<p>
+
+<b>${evento.titulo}</b>
+
+</p>
+
+
+<p>
+
+📅 ${evento.data}
+
+</p>
+
+
+<p>
+
+⏰ ${evento.inicio || "-"}
+
+</p>
+
+
+<p>
+
+📍 ${evento.local || "-"}
+
+</p>
+
+
+<p>
+
+👤 ${evento.responsavel || "-"}
+
+</p>
+
+
+`;
+
+
+
+
+}catch(error){
+
+
+
+console.error(error);
+
+
+
+area.innerHTML=
+
+"Erro ao carregar agenda";
+
+
+}
+
+
+
+}
+
+
+
+</script>
 
 
 </body>
 
 </html>
+</header>
