@@ -1,30 +1,100 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+// firebase.js
 
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import { initializeApp } from 
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+
+
+import {
+
+getAuth
+
+} from 
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+
+getFirestore
+
+} from 
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+// =====================================
+// CONFIGURAÇÃO FIREBASE LADRF CONNECT
+// =====================================
 
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyC7hogEzFpAOzPiKsc7FkQnFrCOveZOfos",
 
-  authDomain: "ladrf-connect.firebaseapp.com",
+apiKey: "AIzaSyC7hogEzFpAOzPiKsc7FkQnFrCOveZOfos",
 
-  projectId: "ladrf-connect",
 
-  storageBucket: "ladrf-connect.firebasestorage.app",
+authDomain: "ladrf-connect.firebaseapp.com",
 
-  messagingSenderId: "863498841924",
 
-  appId: "1:863498841924:web:f3d97064e13cbdda893111"
+projectId: "ladrf-connect",
+
+
+storageBucket: "ladrf-connect.firebasestorage.app",
+
+
+messagingSenderId: "863498841924",
+
+
+appId: "1:863498841924:web:f3d97064e13cbdda893111",
+
+
+measurementId: "G-0Q9WM2KH35"
+
 
 };
+
+
+
+
+
+// =====================================
+// INICIALIZAÇÃO
+// =====================================
 
 
 const app = initializeApp(firebaseConfig);
 
 
-export const db = getFirestore(app);
 
-export const auth = getAuth(app);
+
+
+// =====================================
+// SERVIÇOS
+// =====================================
+
+
+const auth = getAuth(app);
+
+
+const db = getFirestore(app);
+
+
+
+
+
+
+// =====================================
+// EXPORTAR
+// =====================================
+
+
+export {
+
+
+app,
+
+auth,
+
+db
+
+};
