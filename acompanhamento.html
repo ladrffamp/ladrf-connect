@@ -7,42 +7,64 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LADRF Connect - Acompanhamento</title>
+<title>Acompanhamento - LADRF Connect</title>
 
 
 <style>
 
 *{
+
+margin:0;
+padding:0;
 box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
+font-family:Arial, Helvetica, sans-serif;
+
 }
 
 
 body{
 
-margin:0;
-padding:30px;
 background:#eef3f7;
 
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+min-height:100vh;
+
 }
+
 
 
 .container{
 
-max-width:500px;
-margin:auto;
+background:white;
+
+width:90%;
+
+max-width:450px;
+
+padding:30px;
+
+border-radius:20px;
+
+box-shadow:0 5px 20px rgba(0,0,0,.15);
+
+text-align:center;
 
 }
 
 
 
-.card{
+.logo{
 
-background:white;
-padding:30px;
-border-radius:20px;
-box-shadow:0 8px 20px rgba(0,0,0,.12);
-text-align:center;
+font-size:45px;
+
+color:#0B7A3B;
+
+margin-bottom:15px;
 
 }
 
@@ -52,37 +74,71 @@ h1{
 
 color:#0B7A3B;
 
+margin-bottom:10px;
+
+}
+
+
+
+h2{
+
+margin-top:25px;
+
+font-size:22px;
+
+}
+
+
+
+.card{
+
+margin-top:20px;
+
+background:#f4f6f9;
+
+padding:20px;
+
+border-radius:15px;
+
+}
+
+
+
+.label{
+
+color:#666;
+
+font-size:14px;
+
+}
+
+
+
+.valor{
+
+font-size:20px;
+
+font-weight:bold;
+
+color:#0B7A3B;
+
+margin-top:5px;
+
 }
 
 
 
 .status{
 
-font-size:28px;
+margin-top:25px;
+
+padding:15px;
+
+border-radius:12px;
+
 font-weight:bold;
-margin:25px 0;
 
-}
-
-
-
-.aguardando{
-
-color:#d89b00;
-
-}
-
-
-
-.atendimento{
-
-color:#1976d2;
-
-}
-
-
-
-.finalizado{
+background:#e8f5e9;
 
 color:#0B7A3B;
 
@@ -92,27 +148,14 @@ color:#0B7A3B;
 
 .info{
 
-background:#f5f5f5;
-padding:20px;
-border-radius:15px;
-font-size:17px;
-line-height:1.8;
-
-}
-
-
-button{
-
 margin-top:20px;
-padding:12px;
-width:100%;
-border:none;
-border-radius:10px;
-background:#0B7A3B;
-color:white;
-font-size:16px;
+
+font-size:14px;
+
+color:#555;
 
 }
+
 
 
 </style>
@@ -126,57 +169,132 @@ font-size:16px;
 
 <div class="container">
 
-<div class="card">
+
+<div class="logo">
+
+❤️
+
+</div>
 
 
 <h1>
+
 LADRF Connect
+
 </h1>
 
 
-<h2>
-Acompanhamento
-</h2>
+<p>
+
+Acompanhamento do atendimento
+
+</p>
 
 
 
-<div id="status" class="status">
+
+<div class="card">
+
+
+<div class="label">
+
+Paciente
+
+</div>
+
+
+<div 
+class="valor"
+id="nome">
 
 Carregando...
 
 </div>
 
 
-
-<div id="dados" class="info">
-
-</div>
-
-
-
-
-<button id="ativarSom">
-
-🔔 Ativar alerta sonoro
-
-</button>
-
-
-
-
-</div>
-
 </div>
 
 
 
 
 
-<audio id="somChamada" preload="auto">
+<div class="card">
 
-<source src="sons/chamada.mp3" type="audio/mpeg">
 
-</audio>
+<div class="label">
+
+Status
+
+</div>
+
+
+<div 
+class="valor"
+id="status">
+
+Carregando...
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="card">
+
+
+<div class="label">
+
+Maca
+
+</div>
+
+
+<div 
+class="valor"
+id="maca">
+
+-
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div 
+class="status"
+id="mensagem">
+
+Aguarde sua vez.
+
+</div>
+
+
+
+
+
+<div class="info">
+
+
+Você receberá uma notificação quando chegar sua vez de ser atendido.
+
+
+</div>
+
+
+
+
+</div>
+
+
 
 
 
@@ -186,6 +304,5 @@ Carregando...
 
 
 </body>
-
 
 </html>
