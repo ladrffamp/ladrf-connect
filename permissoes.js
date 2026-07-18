@@ -1,152 +1,267 @@
 import { auth, db } from "./firebase.js";
 
-import {
-  onAuthStateChanged,
-  signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-  doc,
-  getDoc
+
+onAuthStateChanged
+
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
+
+doc,
+
+getDoc
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-onAuthStateChanged(auth, async (usuario) => {
-
-  if (!usuario) {
-
-    window.location.href = "login.html";
-    return;
-
-  }
-
-  try {
-
-    const usuarioRef = doc(
-      db,
-      "usuarios",
-      usuario.uid
-    );
-
-    const usuarioDoc = await getDoc(usuarioRef);
-
-    if (!usuarioDoc.exists()) {
-
-      alert("Usuário sem perfil cadastrado.");
-
-      await signOut(auth);
-
-      window.location.href = "login.html";
-
-      return;
-
-    }
-
-    const perfil = usuarioDoc.data().perfil;
-
-    const paginaAtual = window.location.pathname
-      .split("/")
-      .pop();
-
-    const pagina = paginaAtual === ""
-      ? "index.html"
-      : paginaAtual;
-
-    console.log("USUÁRIO:", usuario.email);
-    console.log("PERFIL:", perfil);
-    console.log("PÁGINA:", pagina);
-
-    const permissoes = {
-
-      admin: [
-
-        "index.html",
-        "dashboard.html",
-        "cadastro.html",
-        "fila.html",
-        "recepcao.html",
-        "macas.html",
-        "atendimento.html",
-        "historico.html",
-        "usuarios.html",
-        "membros.html",
-        "relatorios.html",
-        "agenda.html",
-        "painel.html"
-
-      ],
 
 
 
-      recepcao: [
-
-        "index.html",
-        "dashboard.html",
-        "cadastro.html",
-        "fila.html",
-        "recepcao.html",
-        "painel.html"
-
-      ],
+onAuthStateChanged(auth, async(usuario)=>{
 
 
+if(!usuario){
 
-      membro: [
 
-        "index.html",
-        "dashboard.html",
-        "fila.html",
-        "macas.html",
-        "atendimento.html",
-        "historico.html",
-        "agenda.html",
-        "painel.html"
+window.location.href="login.html";
 
-      ]
+return;
 
-    };
+
+}
 
 
 
-    if (!permissoes[perfil]) {
-
-      alert(
-        "Perfil não reconhecido: " + perfil
-      );
-
-      window.location.href = "index.html";
-
-      return;
-
-    }
+try{
 
 
 
-    if (!permissoes[perfil].includes(pagina)) {
+const usuarioRef = doc(
 
-      alert(
-        "Sem permissão para: " + pagina
-      );
+db,
 
-      window.location.href = "index.html";
+"usuarios",
 
-      return;
+usuario.uid
 
-    }
+);
 
-    console.log("Acesso permitido");
 
-  } catch (erro) {
 
-    console.error(
-      "Erro nas permissões:",
-      erro
-    );
+const usuarioDoc = await getDoc(usuarioRef);
 
-    alert(
-      "Erro ao verificar permissões."
-    );
 
-  }
+
+
+
+if(!usuarioDoc.exists()){
+
+
+alert(
+"Usuário sem perfil cadastrado."
+);
+
+
+window.location.href="login.html";
+
+
+return;
+
+
+}
+
+
+
+
+const perfil = usuarioDoc.data().perfil;
+
+
+
+const paginaAtual = window.location.pathname
+
+.split("/")
+
+.pop();
+
+
+
+
+
+
+const permissoes = {
+
+
+
+
+admin:[
+
+
+"index.html",
+
+"dashboard.html",
+
+"cadastro.html",
+
+"fila.html",
+
+"recepcao.html",
+
+"macas.html",
+
+"atendimento.html",
+
+"historico.html",
+
+"usuarios.html",
+
+"membros.html",
+
+"relatorios.html",
+
+"painel.html",
+
+"agenda.html"
+
+
+],
+
+
+
+
+
+recepcao:[
+
+
+"index.html",
+
+"dashboard.html",
+
+"cadastro.html",
+
+"fila.html",
+
+"recepcao.html",
+
+"painel.html"
+
+
+],
+
+
+
+
+
+membro:[
+
+
+"index.html",
+
+"dashboard.html",
+
+"fila.html",
+
+"macas.html",
+
+"atendimento.html",
+
+"historico.html",
+
+"painel.html",
+
+"agenda.html"
+
+
+]
+
+
+
+};
+
+
+
+
+
+
+if(!permissoes[perfil]){
+
+
+alert(
+
+"Perfil não reconhecido."
+
+);
+
+
+window.location.href="index.html";
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+if(!permissoes[perfil].includes(paginaAtual)){
+
+
+alert(
+
+"Sem permissão para: "
+
++ paginaAtual
+
+);
+
+
+
+window.location.href="index.html";
+
+
+return;
+
+
+}
+
+
+
+
+console.log(
+
+"Acesso liberado:",
+
+perfil,
+
+paginaAtual
+
+);
+
+
+
+
+
+}catch(error){
+
+
+console.error(error);
+
+
+alert(
+
+"Erro ao validar permissão."
+
+);
+
+
+}
+
+
 
 });
