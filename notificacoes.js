@@ -1,50 +1,66 @@
 // notificacoes.js
 
 
-import { auth, db } from "./firebase.js";
+import { auth, db, app } from "./firebase.js";
 
 
 import {
-
 onAuthStateChanged
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 import {
-
 getMessaging,
-
 getToken,
-
 onMessage
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
 
 
 import {
-
 doc,
-
 updateDoc
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-
-
-// Configurar Firebase Messaging
-
-import {
-
-app
-
-} from "./firebase.js";
 
 
 
 const messaging = getMessaging(app);
 
+
+
+// =====================================
+// REGISTRAR SERVICE WORKER
+// =====================================
+
+async function registrarServiceWorker(){
+
+    if("serviceWorker" in navigator){
+
+        try{
+
+            const registration =
+            await navigator.serviceWorker.register(
+                "/ladrf-connect/firebase-messaging-sw.js"
+            );
+
+
+            console.log(
+                "Service Worker registrado:",
+                registration
+            );
+
+
+        }catch(error){
+
+            console.error(
+                "Erro Service Worker:",
+                error
+            );
+
+        }
+
+    }
+
+}
 
 
 
@@ -58,11 +74,15 @@ const messaging = getMessaging(app);
 async function ativarNotificacoes(){
 
 
-
 try{
 
 
-const permissao = await Notification.requestPermission();
+await registrarServiceWorker();
+
+
+
+const permissao =
+await Notification.requestPermission();
 
 
 
@@ -70,9 +90,7 @@ if(permissao !== "granted"){
 
 
 console.log(
-
 "Usuário recusou notificações."
-
 );
 
 
@@ -80,8 +98,6 @@ return;
 
 
 }
-
-
 
 
 
@@ -94,13 +110,12 @@ messaging,
 
 vapidKey:
 
-"SUA_CHAVE_VAPID"
+"BLd1c09XUUZnB4WjZY0XvdCJs_wdLvxxUw_ey-sNTC8f7hUreUwY5x5rOsnWkrRwrj-G4KH1cj8LHtv-oR6jZe0"
 
 
 }
 
 );
-
 
 
 
@@ -110,42 +125,31 @@ if(token){
 
 
 console.log(
-
-"TOKEN PUSH:",
-
+"TOKEN FCM:",
 token
-
 );
 
 
 
-salvarToken(token);
+salvarTokenUsuario(token);
 
 
 }
-
 
 
 }catch(error){
 
 
-
 console.error(
-
-"Erro ao ativar notificações:",
-
+"Erro FCM:",
 error
-
 );
 
 
-
 }
 
 
-
 }
-
 
 
 
@@ -154,32 +158,32 @@ error
 
 
 // =====================================
-// SALVAR TOKEN NO USUÁRIO
+// SALVAR TOKEN DO MEMBRO
 // =====================================
 
 
-async function salvarToken(token){
+async function salvarTokenUsuario(token){
 
 
+onAuthStateChanged(
 
-onAuthStateChanged(auth,async(usuario)=>{
+auth,
 
+async(usuario)=>{
 
 
 if(usuario){
 
 
+try{
+
 
 await updateDoc(
 
 doc(
-
 db,
-
 "usuarios",
-
 usuario.uid
-
 ),
 
 
@@ -197,23 +201,34 @@ tokenPush:token
 
 
 console.log(
-
-"Token salvo no usuário."
-
+"Token salvo."
 );
 
 
 
+}catch(error){
+
+
+console.error(
+"Erro ao salvar token:",
+error
+);
+
+
+}
+
+
 }
 
 
 
-});
+}
 
+
+);
 
 
 }
-
 
 
 
@@ -222,7 +237,7 @@ console.log(
 
 
 // =====================================
-// NOTIFICAÇÃO COM SITE ABERTO
+// MENSAGEM COM SITE ABERTO
 // =====================================
 
 
@@ -234,21 +249,26 @@ messaging,
 
 
 console.log(
-
 "Mensagem recebida:",
-
 payload
-
 );
 
 
 
-alert(
+new Notification(
 
-payload.notification.title
+payload.notification.title,
+
+{
+
+
+body:
+payload.notification.body
+
+
+}
 
 );
-
 
 
 }
@@ -258,9 +278,5 @@ payload.notification.title
 
 
 
-
-
-
-// iniciar
 
 ativarNotificacoes();
