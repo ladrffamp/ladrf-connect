@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Meu Painel - LADRF Connect</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f4f6f9;
+}
+
+header{
+background:#0B7A3B;
+color:white;
+padding:20px;
+text-align:center;
+}
+
+.container{
+max-width:1000px;
+margin:30px auto;
+padding:20px;
+}
+
+.card{
+background:white;
+padding:20px;
+border-radius:15px;
+box-shadow:0 3px 10px rgba(0,0,0,.15);
+margin-bottom:20px;
+}
+
+.btn-voltar{
+position:fixed;
+top:20px;
+left:20px;
+background:#0B7A3B;
+color:white;
+border:none;
+padding:12px 20px;
+border-radius:10px;
+cursor:pointer;
+}
+
+.btn-voltar:hover{
+background:#08602f;
+}
+
+.escala{
+background:white;
+padding:20px;
+border-radius:15px;
+margin-bottom:20px;
+box-shadow:0 3px 10px rgba(0,0,0,.12);
+}
+
+.escala h3{
+color:#0B7A3B;
+margin-bottom:10px;
+}
+
+.confirmar{
+background:#0B7A3B;
+color:white;
+border:none;
+padding:10px 15px;
+border-radius:8px;
+cursor:pointer;
+margin-top:15px;
+}
+
+.confirmado{
+background:#1e88e5;
+color:white;
+padding:8px 12px;
+border-radius:8px;
+display:inline-block;
+margin-top:10px;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<button
+class="btn-voltar"
+onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+<header>
+
+<h1>Meu Painel</h1>
+
+<p>Minhas Escalas e Participações</p>
+
+</header>
+
+<div class="container">
+
+<div class="card">
+
+<h2 id="boasVindas">
+
+Carregando...
+
+</h2>
+
+</div>
+
+<div id="listaEscalas">
+
+<div class="card">
+
+Carregando escalas...
+
+</div>
+
+</div>
+
+</div>
+
+<script type="module" src="meu-painel.js"></script>
+
+</body>
+
+</html>
