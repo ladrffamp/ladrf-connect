@@ -1469,6 +1469,29 @@ window.abrirEscala = function(id){
 
 
 // =====================================
+// FUNÇÕES GLOBAIS DOS BOTÕES
+// =====================================
+
+
+window.abrirEscala = function(id){
+
+
+    console.log(
+        "Abrindo escala:",
+        id
+    );
+
+
+    window.location.href =
+
+    "gerenciar-acao.html?id=" + id;
+
+
+};
+
+
+
+// =====================================
 // FINALIZAÇÃO
 // =====================================
 
@@ -1478,5 +1501,3 @@ console.log(
 "LADRF Connect Agenda 100% carregada."
 
 );
-
-}
