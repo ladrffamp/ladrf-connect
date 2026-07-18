@@ -27,6 +27,14 @@ const status =
 document.getElementById("status");
 
 
+const maca =
+document.getElementById("maca");
+
+
+const mensagem =
+document.getElementById("mensagem");
+
+
 
 
 // ================================
@@ -48,6 +56,7 @@ await Notification.requestPermission();
 if(permissao !== "granted"){
 
 console.log("Notificação recusada");
+
 return;
 
 }
@@ -96,7 +105,6 @@ console.log(
 );
 
 
-
 }
 
 
@@ -105,6 +113,7 @@ console.log(
 
 
 console.error(
+"Erro token:",
 erro
 );
 
@@ -121,12 +130,23 @@ erro
 
 
 
+
 // ================================
 // ACOMPANHAR PACIENTE
 // ================================
 
 
 async function carregarPaciente(){
+
+
+if(!idPaciente){
+
+nome.innerHTML="ID não encontrado";
+
+return;
+
+}
+
 
 
 const pacienteDoc =
@@ -140,6 +160,7 @@ idPaciente
 )
 
 );
+
 
 
 
@@ -157,18 +178,55 @@ return;
 
 
 
+
 const paciente =
 pacienteDoc.data();
 
 
 
+
+
 nome.innerHTML =
-paciente.nome;
+paciente.nome || "-";
 
 
 
 status.innerHTML =
-paciente.status;
+paciente.status || "-";
+
+
+
+maca.innerHTML =
+paciente.maca
+?
+"MACA " + paciente.maca
+:
+"-";
+
+
+
+
+
+if(
+paciente.status === "Em atendimento"
+){
+
+
+mensagem.innerHTML =
+
+"🔔 Chegou sua vez! Dirija-se ao atendimento.";
+
+
+}
+else{
+
+
+mensagem.innerHTML =
+
+"Aguarde sua vez.";
+
+
+}
 
 
 
@@ -176,8 +234,12 @@ paciente.status;
 
 
 
+
+
 // iniciar
 
+
 salvarTokenPush();
+
 
 carregarPaciente();
