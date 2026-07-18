@@ -27,7 +27,6 @@ appId: "1:863498841924:web:f3d97064e13cbdda893111"
 const messaging = firebase.messaging();
 
 
-
 messaging.onBackgroundMessage((payload)=>{
 
 
@@ -37,9 +36,7 @@ payload.notification.title,
 
 {
 
-body: payload.notification.body,
-
-icon: "/favicon.ico"
+body: payload.notification.body
 
 }
 
