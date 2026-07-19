@@ -14,11 +14,11 @@
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
 
 
 <style>
@@ -114,15 +114,11 @@ padding:35px;
 
 
 
-
-/* CARDS DO PAINEL */
-
-
 .cards{
 
 display:grid;
 
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
 
 gap:20px;
 
@@ -138,17 +134,9 @@ background:white;
 
 border-radius:18px;
 
-padding:18px;
-
-height:150px;
+padding:20px;
 
 box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-display:flex;
-
-flex-direction:column;
-
-justify-content:center;
 
 }
 
@@ -156,23 +144,11 @@ justify-content:center;
 
 .card i{
 
-font-size:28px;
+font-size:30px;
 
 color:#0B7A3B;
 
-margin-bottom:8px;
-
-}
-
-
-
-.card h2{
-
-font-size:17px;
-
-font-weight:600;
-
-margin-bottom:5px;
+margin-bottom:10px;
 
 }
 
@@ -180,7 +156,7 @@ margin-bottom:5px;
 
 .numero{
 
-font-size:28px;
+font-size:30px;
 
 font-weight:bold;
 
@@ -190,24 +166,11 @@ color:#0B7A3B;
 
 
 
-#proximoEvento{
-
-font-size:13px;
-
-line-height:1.4;
-
-}
-
-
-
-/* MENU */
-
-
 .menu{
 
 display:grid;
 
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
 
 gap:25px;
 
@@ -219,8 +182,6 @@ gap:25px;
 
 text-decoration:none;
 
-display:block;
-
 }
 
 
@@ -229,7 +190,7 @@ display:block;
 
 background:white;
 
-padding:30px;
+padding:25px;
 
 border-radius:18px;
 
@@ -239,15 +200,13 @@ color:#222;
 
 transition:.3s;
 
-height:100%;
-
 }
 
 
 
 .menu-card:hover{
 
-transform:translateY(-8px);
+transform:translateY(-6px);
 
 background:#0B7A3B;
 
@@ -259,7 +218,7 @@ color:white;
 
 .menu-card i{
 
-font-size:42px;
+font-size:38px;
 
 color:#0B7A3B;
 
@@ -279,42 +238,7 @@ color:white;
 
 .menu-card h2{
 
-margin-bottom:10px;
-
-}
-
-
-
-.menu-card p{
-
-line-height:1.5;
-
-}
-/* RESPONSIVIDADE */
-
-@media(max-width:900px){
-
-
-.cards{
-
-grid-template-columns:repeat(2,1fr);
-
-}
-
-
-}
-
-
-
-@media(max-width:500px){
-
-
-.cards{
-
-grid-template-columns:1fr;
-
-}
-
+margin-bottom:8px;
 
 }
 
@@ -326,9 +250,10 @@ text-align:center;
 
 padding:30px;
 
-color:#555;
+color:#666;
 
 }
+
 
 
 </style>
@@ -337,9 +262,7 @@ color:#555;
 </head>
 
 
-
 <body>
-
 
 
 <header>
@@ -384,28 +307,17 @@ Perfil
 </div>
 
 
-</header>
-
-
-
-
-
 <div class="container">
 
 
-
-<!-- PAINEL DE INDICADORES -->
-
-
 <div class="cards">
-
 
 
 <div class="card">
 
 <i class="fa-solid fa-user-group"></i>
 
-<h2>Pacientes</h2>
+<h3>Pacientes</h3>
 
 <div class="numero" id="totalPacientes">
 
@@ -422,7 +334,7 @@ Perfil
 
 <i class="fa-solid fa-bed"></i>
 
-<h2>Macas Ocupadas</h2>
+<h3>Macas Ocupadas</h3>
 
 <div class="numero" id="totalMacas">
 
@@ -439,7 +351,7 @@ Perfil
 
 <i class="fa-solid fa-stethoscope"></i>
 
-<h2>Atendimentos</h2>
+<h3>Atendimentos</h3>
 
 <div class="numero" id="totalAtendimentos">
 
@@ -456,7 +368,7 @@ Perfil
 
 <i class="fa-solid fa-users"></i>
 
-<h2>Membros</h2>
+<h3>Membros</h3>
 
 <div class="numero" id="totalMembros">
 
@@ -473,7 +385,7 @@ Perfil
 
 <i class="fa-solid fa-calendar-days"></i>
 
-<h2>Próximo Evento</h2>
+<h3>Próximo Evento</h3>
 
 <div id="proximoEvento">
 
@@ -490,7 +402,7 @@ Carregando...
 
 <i class="fa-solid fa-calendar-check"></i>
 
-<h2>Eventos este mês</h2>
+<h3>Eventos este mês</h3>
 
 <div class="numero" id="eventosMes">
 
@@ -507,7 +419,7 @@ Carregando...
 
 <i class="fa-solid fa-user-doctor"></i>
 
-<h2>Membros Escalados</h2>
+<h3>Membros Escalados</h3>
 
 <div class="numero" id="membrosEscalados">
 
@@ -523,9 +435,6 @@ Carregando...
 
 
 
-
-
-<!-- MENU PRINCIPAL -->
 
 
 <div class="menu">
@@ -640,9 +549,6 @@ Carregando...
 </div>
 
 </a>
-
-
-
 <a href="historico.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -771,224 +677,12 @@ Carregando...
 
 
 </div>
-</a>
-
-
-
-
-<a href="fila.html" data-perfil="admin recepcao membro">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-list"></i>
-
-<h2>Fila</h2>
-
-<p>Pacientes aguardando</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="recepcao.html" data-perfil="admin recepcao">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-desktop"></i>
-
-<h2>Recepção</h2>
-
-<p>Controle da recepção</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="painel.html" data-perfil="admin recepcao membro">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-tv"></i>
-
-<h2>Painel</h2>
-
-<p>Chamada em tempo real</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="agenda.html" data-perfil="admin membro">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-calendar-days"></i>
-
-<h2>Agenda</h2>
-
-<p>Eventos e ações LADRF</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="macas.html" data-perfil="admin membro">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-bed"></i>
-
-<h2>Macas</h2>
-
-<p>Controle das macas</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="atendimento.html" data-perfil="admin membro">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-stethoscope"></i>
-
-<h2>Atendimento</h2>
-
-<p>Ficha de atendimento</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="historico.html" data-perfil="admin membro">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-book-medical"></i>
-
-<h2>Histórico</h2>
-
-<p>Atendimentos realizados</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="membros.html" data-perfil="admin">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-users"></i>
-
-<h2>Membros</h2>
-
-<p>Equipe LADRF</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="meu-painel.html" data-perfil="admin membro">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-id-badge"></i>
-
-<h2>Meu Painel</h2>
-
-<p>Minhas escalas e presenças</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="usuarios.html" data-perfil="admin">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-user-shield"></i>
-
-<h2>Usuários</h2>
-
-<p>Gerenciar acessos</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="relatorios.html" data-perfil="admin">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-chart-column"></i>
-
-<h2>Relatórios</h2>
-
-<p>Indicadores e estatísticas</p>
-
-</div>
-
-</a>
-
-
-
-
-<a href="#" id="btnSair">
-
-<div class="menu-card">
-
-<i class="fa-solid fa-right-from-bracket"></i>
-
-<h2>Sair</h2>
-
-<p>Encerrar sessão</p>
-
-</div>
-
-</a>
-
 
 
 </div>
-</div>
-
-
-
-<!-- RODAPÉ -->
 
 
 <footer>
-
 
 <p>
 
@@ -996,29 +690,16 @@ LADRF Connect 2.0 © 2026
 
 </p>
 
-
 <p>
 
 Liga Acadêmica de Desporto e Reabilitação na Fisioterapia
 
 </p>
 
-
 </footer>
-
-
-
-</div>
-
-
-
-
-
-<!-- FIREBASE AUTENTICAÇÃO -->
-
+<!-- Firebase -->
 
 <script type="module">
-
 
 import { auth } from "./firebase.js";
 
@@ -1039,24 +720,22 @@ from
 
 
 
+// Controle de login
+
 onAuthStateChanged(auth,(usuario)=>{
 
 
 if(!usuario){
 
-
 window.location.href="login.html";
 
-
 return;
-
 
 }
 
 
 
 const nome = usuario.displayName || usuario.email;
-
 
 
 document.getElementById("nomeUsuario").innerText = nome;
@@ -1069,11 +748,17 @@ document.getElementById("nomeUsuario").innerText = nome;
 
 
 
+// Botão sair
+
 const btnSair = document.getElementById("btnSair");
 
 
 
-btnSair.addEventListener("click",()=>{
+btnSair.addEventListener("click",(e)=>{
+
+
+e.preventDefault();
+
 
 
 signOut(auth)
@@ -1090,7 +775,10 @@ window.location.href="login.html";
 .catch((erro)=>{
 
 
-console.log("Erro ao sair:",erro);
+console.log(
+"Erro ao sair:",
+erro
+);
 
 
 });
@@ -1104,26 +792,13 @@ console.log("Erro ao sair:",erro);
 
 
 
-
-
-<!-- CONTROLE DE PERMISSÕES -->
-
+<!-- Controle de permissões -->
 
 <script type="module" src="permissoes.js"></script>
-
-
-
-
-
-<!-- DADOS DO PAINEL -->
-
-
-<script type="module" src="dashboard.js"></script>
-
-
 
 
 
 </body>
 
 </html>
+</header>
