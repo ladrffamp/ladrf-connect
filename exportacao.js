@@ -20,7 +20,7 @@ from
 
 
 // ===============================
-// COLEÇÕES FIREBASE
+// COLEÇÕES
 // ===============================
 
 
@@ -30,13 +30,10 @@ const pacientesRef = collection(db,"pacientes");
 
 const atendimentosRef = collection(db,"atendimentos");
 
-const movimentacoesRef = collection(db,"movimentacoes");
-
-
 
 
 // ===============================
-// VARIÁVEIS GLOBAIS
+// VARIÁVEIS
 // ===============================
 
 
@@ -46,38 +43,22 @@ let pacientes = [];
 
 let atendimentos = [];
 
-let movimentacoes = [];
+
+
+
+// ===============================
+// ELEMENTOS
+// ===============================
+
+
+const tabelaEventos = document.getElementById("tabelaEventos");
+
 
 
 
 
 // ===============================
-// ELEMENTOS DA PÁGINA
-// ===============================
-
-
-const tabelaEventos = document.getElementById(
-"tabelaEventos"
-);
-
-
-const totalEventos = document.getElementById(
-"totalEventos"
-);
-
-
-const totalPacientes = document.getElementById(
-"totalPacientes"
-);
-
-
-const totalAtendimentos = document.getElementById(
-"totalAtendimentos"
-);
-
-
-// ===============================
-// CARREGAR EVENTOS
+// EVENTOS FIREBASE
 // ===============================
 
 
@@ -106,23 +87,13 @@ id:doc.id,
 });
 
 
-atualizarTabelaEventos();
-
-
-atualizarResumo();
+atualizarTabela();
 
 
 }
 
-);
-
-
-
-
-
-
 // ===============================
-// CARREGAR PACIENTES
+// PACIENTES FIREBASE
 // ===============================
 
 
@@ -151,10 +122,7 @@ id:doc.id,
 });
 
 
-atualizarTabelaEventos();
-
-
-atualizarResumo();
+atualizarTabela();
 
 
 }
@@ -167,7 +135,7 @@ atualizarResumo();
 
 
 // ===============================
-// CARREGAR ATENDIMENTOS
+// ATENDIMENTOS FIREBASE
 // ===============================
 
 
@@ -196,10 +164,7 @@ id:doc.id,
 });
 
 
-atualizarTabelaEventos();
-
-
-atualizarResumo();
+atualizarTabela();
 
 
 }
@@ -211,48 +176,13 @@ atualizarResumo();
 
 
 
+
 // ===============================
-// CARREGAR MOVIMENTAÇÕES
-// ===============================
-
-
-onSnapshot(
-
-movimentacoesRef,
-
-(snapshot)=>{
-
-
-movimentacoes=[];
-
-
-snapshot.forEach((doc)=>{
-
-
-movimentacoes.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
-
-});
-
-
-atualizarResumo();
-
-
-}
-
-);
-// ===============================
-// ATUALIZAR TABELA DE EVENTOS
+// TABELA DE EVENTOS
 // ===============================
 
 
-function atualizarTabelaEventos(){
+function atualizarTabela(){
 
 
 if(!tabelaEventos){
@@ -286,15 +216,16 @@ Nenhum evento encontrado
 
 return;
 
-
 }
+
+
 
 
 
 eventos.forEach((evento)=>{
 
 
-const qtdPacientes = pacientes.filter(
+const quantidadePacientes = pacientes.filter(
 
 (p)=>p.evento === evento.nome
 
@@ -302,7 +233,7 @@ const qtdPacientes = pacientes.filter(
 
 
 
-const qtdAtendimentos = atendimentos.filter(
+const quantidadeAtendimentos = atendimentos.filter(
 
 (a)=>a.evento === evento.nome
 
@@ -310,8 +241,8 @@ const qtdAtendimentos = atendimentos.filter(
 
 
 
-tabelaEventos.innerHTML += `
 
+tabelaEventos.innerHTML += `
 
 <tr>
 
@@ -323,67 +254,27 @@ ${evento.nome || "Sem nome"}
 </td>
 
 
-
 <td>
 
-${qtdPacientes}
+${quantidadePacientes}
 
 </td>
 
 
-
 <td>
 
-${qtdAtendimentos}
+${quantidadeAtendimentos}
 
 </td>
 
 
 </tr>
 
-
 `;
 
 
+
 });
-
-
-}
-
-
-
-
-// ===============================
-// ATUALIZAR RESUMO
-// ===============================
-
-
-function atualizarResumo(){
-
-
-
-if(totalEventos){
-
-totalEventos.innerText = eventos.length;
-
-}
-
-
-
-if(totalPacientes){
-
-totalPacientes.innerText = pacientes.length;
-
-}
-
-
-
-if(totalAtendimentos){
-
-totalAtendimentos.innerText = atendimentos.length;
-
-}
-
 
 
 }
@@ -450,7 +341,7 @@ pdf.text(
 
 pdf.text(
 
-"Eventos: " + eventos.length,
+"Total de eventos: " + eventos.length,
 
 20,
 
@@ -462,7 +353,7 @@ pdf.text(
 
 pdf.text(
 
-"Pacientes: " + pacientes.length,
+"Total de pacientes: " + pacientes.length,
 
 20,
 
@@ -474,23 +365,11 @@ pdf.text(
 
 pdf.text(
 
-"Atendimentos: " + atendimentos.length,
+"Total de atendimentos: " + atendimentos.length,
 
 20,
 
 95
-
-);
-
-
-
-pdf.text(
-
-"Movimentações de estoque: " + movimentacoes.length,
-
-20,
-
-110
 
 );
 
@@ -511,6 +390,7 @@ pdf.save(
 
 
 
+
 // ===============================
 // GERAR EXCEL
 // ===============================
@@ -520,7 +400,8 @@ document.getElementById("gerarExcel")
 .addEventListener("click",()=>{
 
 
-const dadosEventos = eventos.map((evento)=>{
+
+const dados = eventos.map((evento)=>{
 
 
 return {
@@ -528,19 +409,20 @@ return {
 
 Evento:evento.nome || "",
 
+
 Data:evento.data || "",
 
 
 Pacientes: pacientes.filter(
 
-p=>p.evento===evento.nome
+p=>p.evento === evento.nome
 
 ).length,
 
 
 Atendimentos: atendimentos.filter(
 
-a=>a.evento===evento.nome
+a=>a.evento === evento.nome
 
 ).length
 
@@ -552,11 +434,7 @@ a=>a.evento===evento.nome
 
 
 
-const planilha = XLSX.utils.json_to_sheet(
-
-dadosEventos
-
-);
+const planilha = XLSX.utils.json_to_sheet(dados);
 
 
 
@@ -587,13 +465,8 @@ arquivo,
 
 
 });
-
-
-
-
-
 // ===============================
-// ATUALIZAR DADOS
+// BOTÃO ATUALIZAR
 // ===============================
 
 
@@ -601,9 +474,7 @@ document.getElementById("carregarDados")
 .addEventListener("click",()=>{
 
 
-atualizarTabelaEventos();
-
-atualizarResumo();
+atualizarTabela();
 
 
 alert(
@@ -614,3 +485,16 @@ alert(
 
 
 });
+
+
+
+
+// ===============================
+// FINALIZAÇÃO
+// ===============================
+
+
+// O Firebase mantém os dados
+// atualizados automaticamente
+// através do onSnapshot().
+);
