@@ -4,7 +4,8 @@ import {
   collection,
   onSnapshot,
   addDoc,
-  Timestamp
+  Timestamp,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -44,6 +45,7 @@ onSnapshot(
 
       const dados = doc.data();
 
+
       membros.push({
         id: doc.id,
         ...dados
@@ -62,7 +64,6 @@ onSnapshot(
 );
 
 
-
 // ===============================
 // CARREGAR EVENTOS
 // ===============================
@@ -72,6 +73,7 @@ onSnapshot(
   (snapshot) => {
 
     eventos = [];
+
 
     selectEvento.innerHTML = `
       <option value="">
@@ -83,6 +85,7 @@ onSnapshot(
     snapshot.forEach((doc) => {
 
       const dados = doc.data();
+
 
       eventos.push({
         id: doc.id,
@@ -96,11 +99,11 @@ onSnapshot(
         </option>
       `;
 
+
     });
 
   }
 );
-
 
 
 // ===============================
@@ -108,55 +111,80 @@ onSnapshot(
 // ===============================
 
 selectEvento.addEventListener(
-  "change",
-  () => {
+"change",
+()=>{
 
-    const evento = eventos.find(
-      e => e.id === selectEvento.value
+
+const evento = eventos.find(
+e => e.id === selectEvento.value
+);
+
+
+if(!evento){
+
+cargaHoraria.value="";
+return;
+
+}
+
+
+if(evento.inicio && evento.fim){
+
+
+const inicio = evento.inicio.split(":");
+const fim = evento.fim.split(":");
+
+
+const minutosInicio =
+Number(inicio[0])*60+
+Number(inicio[1]);
+
+
+const minutosFim =
+Number(fim[0])*60+
+Number(fim[1]);
+
+
+const total =
+minutosFim-minutosInicio;
+
+
+if(total>0){
+
+cargaHoraria.value =
+(total/60)+" horas";
+
+}
+
+
+}
+
+// ===============================
+// GERAR NÚMERO DO CERTIFICADO
+// ===============================
+
+async function gerarNumeroCertificado(){
+
+  const ano = new Date().getFullYear();
+
+
+  const certificados =
+    await getDocs(
+      collection(db,"certificados")
     );
 
 
-    if (!evento) {
-
-      cargaHoraria.value = "";
-
-      return;
-
-    }
+  const quantidade =
+    certificados.size + 1;
 
 
-    if (evento.inicio && evento.fim) {
+  const numero =
+    String(quantidade).padStart(4,"0");
 
 
-      const inicio = evento.inicio.split(":");
-      const fim = evento.fim.split(":");
+  return `LADRF-${ano}-${numero}`;
 
-
-      const minutosInicio =
-        Number(inicio[0]) * 60 +
-        Number(inicio[1]);
-
-
-      const minutosFim =
-        Number(fim[0]) * 60 +
-        Number(fim[1]);
-
-
-      const total =
-        minutosFim - minutosInicio;
-
-
-      if (total > 0) {
-
-        cargaHoraria.value =
-          (total / 60) + " horas";
-
-      }
-
-    }
-
-  }
-);
+}
 
 
 
@@ -165,290 +193,358 @@ selectEvento.addEventListener(
 // ===============================
 
 gerarCertificado.addEventListener(
-  "click",
-  async () => {
+"click",
+async()=>{
 
 
-    const membroId =
-      selectMembro.value;
+const membroId =
+selectMembro.value;
 
 
-    const eventoId =
-      selectEvento.value;
+const eventoId =
+selectEvento.value;
 
 
-    const carga =
-      cargaHoraria.value;
+const carga =
+cargaHoraria.value;
 
 
 
-    if (!membroId || !eventoId || !carga) {
+if(
+!membroId ||
+!eventoId ||
+!carga
+){
 
-      alert("Preencha todos os campos.");
 
-      return;
+alert(
+"Preencha todos os campos."
+);
 
-    }
 
+return;
 
 
-    const membro =
-      membros.find(
-        m => m.id === membroId
-      );
+}
 
 
 
-    const evento =
-      eventos.find(
-        e => e.id === eventoId
-      );
+const membro =
+membros.find(
+m=>m.id===membroId
+);
 
 
 
-    const data =
-      new Date()
-      .toLocaleDateString("pt-BR");
+const evento =
+eventos.find(
+e=>e.id===eventoId
+);
 
 
 
-    await addDoc(
-      collection(db, "certificados"),
-      {
+if(!membro || !evento){
 
-        membro: membro.nome,
 
-        evento: evento.titulo,
+alert(
+"Erro ao localizar dados."
+);
 
-        cargaHoraria: carga,
 
-        dataEmissao: data,
+return;
 
-        criadoEm: Timestamp.now()
 
-      }
-    );
+}
 
 
 
-    // ===============================
-    // PDF HORIZONTAL
-    // ===============================
+const data =
+new Date()
+.toLocaleDateString("pt-BR");
 
 
-    const { jsPDF } =
-      window.jspdf;
 
+const numeroCertificado =
+await gerarNumeroCertificado();
 
 
-    const pdf =
-      new jsPDF({
 
-        orientation:"landscape",
 
-        unit:"mm",
+// SALVAR FIRESTORE
 
-        format:"a4"
+await addDoc(
+collection(db,"certificados"),
+{
 
-      });
 
+numeroCertificado,
 
 
-    const largura = 297;
+membro:
+membro.nome,
 
-    const altura = 210;
 
+evento:
+evento.titulo,
 
 
-    // BORDA
+cargaHoraria:
+carga,
 
-    pdf.setLineWidth(1);
 
-    pdf.rect(
-      10,
-      10,
-      largura - 20,
-      altura - 20
-    );
+dataEmissao:
+data,
 
 
+criadoEm:
+Timestamp.now()
 
-    // TÍTULO
 
-    pdf.setFont(
-      "helvetica",
-      "bold"
-    );
+}
 
+);
 
-    pdf.setFontSize(30);
 
 
-    pdf.text(
-      "LADRF",
-      largura / 2,
-      45,
-      {
-        align:"center"
-      }
-    );
 
+// ===============================
+// CRIAR PDF HORIZONTAL
+// ===============================
 
 
-    pdf.setFontSize(24);
+const {jsPDF} =
+window.jspdf;
 
 
-    pdf.text(
-      "CERTIFICADO",
-      largura / 2,
-      65,
-      {
-        align:"center"
-      }
-    );
 
+const pdf =
+new jsPDF({
 
+orientation:"landscape",
 
-    pdf.setFont(
-      "helvetica",
-      "normal"
-    );
+unit:"mm",
 
+format:"a4"
 
-    pdf.setFontSize(16);
+});
 
 
-    pdf.text(
-      "Certificamos que",
-      largura / 2,
-      90,
-      {
-        align:"center"
-      }
-    );
+const largura =
+297;
 
 
+const altura =
+210;
 
-    pdf.setFont(
-      "helvetica",
-      "bold"
-    );
 
 
-    pdf.setFontSize(22);
+pdf.setLineWidth(1);
 
 
-    pdf.text(
-      membro.nome,
-      largura / 2,
-      110,
-      {
-        align:"center"
-      }
-    );
+pdf.rect(
+10,
+10,
+277,
+190
+);
 
 
 
-    pdf.setFont(
-      "helvetica",
-      "normal"
-    );
+// TÍTULO
 
+pdf.setFont(
+"helvetica",
+"bold"
+);
 
-    pdf.setFontSize(16);
 
+pdf.setFontSize(28);
 
-    pdf.text(
-      "participou da atividade:",
-      largura / 2,
-      130,
-      {
-        align:"center"
-      }
-    );
 
+pdf.text(
+"LADRF",
+largura/2,
+45,
+{
+align:"center"
+}
+);
 
 
-    pdf.setFont(
-      "helvetica",
-      "bold"
-    );
 
+pdf.setFontSize(24);
 
-    pdf.setFontSize(18);
 
+pdf.text(
+"CERTIFICADO",
+largura/2,
+65,
+{
+align:"center"
+}
+);
 
-    pdf.text(
-      evento.titulo,
-      largura / 2,
-      145,
-      {
-        align:"center"
-      }
-    );
 
 
+// NÚMERO
 
-    pdf.setFont(
-      "helvetica",
-      "normal"
-    );
+pdf.setFont(
+"helvetica",
+"normal"
+);
 
 
-    pdf.setFontSize(15);
+pdf.setFontSize(12);
 
 
-    pdf.text(
-      `Carga horária: ${carga}`,
-      largura / 2,
-      160,
-      {
-        align:"center"
-      }
-    );
+pdf.text(
+`Certificado nº ${numeroCertificado}`,
+largura/2,
+78,
+{
+align:"center"
+}
+);
 
 
 
-    pdf.text(
-      `Emitido em: ${data}`,
-      60,
-      185
-    );
+pdf.setFontSize(16);
 
 
+pdf.text(
+"Certificamos que",
+largura/2,
+100,
+{
+align:"center"
+}
+);
 
-    pdf.line(
-      190,
-      180,
-      260,
-      180
-    );
 
 
+pdf.setFont(
+"helvetica",
+"bold"
+);
 
-    pdf.text(
-      "Coordenação LADRF",
-      225,
-      190,
-      {
-        align:"center"
-      }
-    );
 
+pdf.setFontSize(22);
 
 
-    pdf.save(
-      `Certificado_${membro.nome}.pdf`
-    );
+pdf.text(
+membro.nome,
+largura/2,
+120,
+{
+align:"center"
+}
+);
+pdf.setFont(
+"helvetica",
+"normal"
+);
 
 
+pdf.setFontSize(16);
 
-    alert(
-      "Certificado gerado!"
-    );
 
+pdf.text(
+"participou da atividade:",
+largura/2,
+140,
+{
+align:"center"
+}
+);
 
-  }
+
+
+pdf.setFont(
+"helvetica",
+"bold"
+);
+
+
+pdf.setFontSize(18);
+
+
+pdf.text(
+evento.titulo,
+largura/2,
+155,
+{
+align:"center"
+}
+);
+
+
+
+pdf.setFont(
+"helvetica",
+"normal"
+);
+
+
+pdf.setFontSize(14);
+
+
+
+pdf.text(
+`Carga horária: ${carga}`,
+largura/2,
+170,
+{
+align:"center"
+}
+);
+
+
+
+pdf.text(
+`Emitido em: ${data}`,
+60,
+190
+);
+
+
+
+
+pdf.line(
+190,
+185,
+260,
+185
+);
+
+
+
+pdf.text(
+"Coordenação LADRF",
+225,
+195,
+{
+align:"center"
+}
+);
+
+
+
+
+// BAIXAR PDF
+
+pdf.save(
+`Certificado_${membro.nome}.pdf`
+);
+
+
+
+alert(
+"Certificado gerado com sucesso!"
+);
+
+
+
+}
 );
 
 
@@ -457,55 +553,98 @@ gerarCertificado.addEventListener(
 // LISTAR CERTIFICADOS
 // ===============================
 
+
 onSnapshot(
-  collection(db, "certificados"),
-  (snapshot) => {
+collection(db,"certificados"),
+(snapshot)=>{
 
 
-    listaCertificados.innerHTML = "";
-
-
-
-    if(snapshot.empty){
-
-      listaCertificados.innerHTML = `
-        <tr>
-          <td colspan="4">
-            Nenhum certificado emitido.
-          </td>
-        </tr>
-      `;
-
-      return;
-
-    }
+listaCertificados.innerHTML="";
 
 
 
-    snapshot.forEach((doc)=>{
-
-      const c = doc.data();
+if(snapshot.empty){
 
 
-      listaCertificados.innerHTML += `
+listaCertificados.innerHTML=`
 
-        <tr>
+<tr>
 
-          <td>${c.membro || "-"}</td>
+<td colspan="4">
 
-          <td>${c.evento || "-"}</td>
+Nenhum certificado emitido.
 
-          <td>${c.dataEmissao || "-"}</td>
+</td>
 
-          <td>Emitido</td>
+</tr>
 
-        </tr>
-
-      `;
+`;
 
 
-    });
+return;
+
+}
 
 
-  }
+
+
+snapshot.forEach(
+(doc)=>{
+
+
+const c =
+doc.data();
+
+
+
+listaCertificados.innerHTML += `
+
+<tr>
+
+<td>
+${c.numeroCertificado || "-"}
+</td>
+
+
+<td>
+${c.membro || "-"}
+</td>
+
+
+<td>
+${c.evento || "-"}
+</td>
+
+
+<td>
+${c.dataEmissao || "-"}
+</td>
+
+
+</tr>
+
+`;
+
+
+
+});
+
+
+}
 );
+// ===============================
+// FINALIZAÇÃO
+// ===============================
+
+
+// Mantém o sistema ativo em tempo real
+// Firestore atualiza automaticamente:
+// - membros
+// - eventos
+// - certificados
+
+
+console.log(
+"LADRF Certificados carregado com sucesso!"
+);
+});
