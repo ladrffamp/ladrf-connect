@@ -25,23 +25,16 @@
 
 
 *{
-
 margin:0;
-
 padding:0;
-
 box-sizing:border-box;
-
 font-family:'Poppins',sans-serif;
-
 }
 
 
 
 body{
-
 background:#eef3f7;
-
 }
 
 
@@ -156,14 +149,6 @@ margin-bottom:10px;
 
 
 
-.card h3{
-
-font-size:16px;
-
-}
-
-
-
 .numero{
 
 font-size:30px;
@@ -171,10 +156,6 @@ font-size:30px;
 font-weight:bold;
 
 color:#0B7A3B;
-
-}
-
-
 
 /* MENU */
 
@@ -271,8 +252,8 @@ color:#666;
 }
 
 
-</style>
 
+</style>
 
 </head>
 
@@ -280,7 +261,9 @@ color:#666;
 <body>
 
 
+
 <header>
+
 
 
 <div class="logo">
@@ -299,6 +282,7 @@ color:#666;
 
 
 </div>
+
 
 
 <div class="usuario">
@@ -320,7 +304,13 @@ Perfil
 
 </div>
 
-  <div class="container">
+
+
+</header>
+
+
+
+<div class="container">
 
 
 <div class="cards">
@@ -442,9 +432,7 @@ Carregando...
 
 
 
-
 <div class="menu">
-
 
 
 <a href="cadastro.html" data-perfil="admin recepcao">
@@ -508,9 +496,6 @@ Carregando...
 </div>
 
 </a>
-
-
-
 <a href="agenda.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -556,6 +541,9 @@ Carregando...
 </div>
 
 </a>
+
+
+
 <a href="historico.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -569,7 +557,6 @@ Carregando...
 </div>
 
 </a>
-
 
 
 
@@ -589,7 +576,6 @@ Carregando...
 
 
 
-
 <a href="movimentacoes.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -603,7 +589,6 @@ Carregando...
 </div>
 
 </a>
-
 
 
 
@@ -623,7 +608,6 @@ Carregando...
 
 
 
-
 <a href="meu-painel.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -637,7 +621,6 @@ Carregando...
 </div>
 
 </a>
-
 
 
 
@@ -657,7 +640,6 @@ Carregando...
 
 
 
-
 <a href="relatorios.html" data-perfil="admin">
 
 <div class="menu-card">
@@ -671,7 +653,6 @@ Carregando...
 </div>
 
 </a>
-
 
 
 
@@ -729,7 +710,7 @@ from
 
 
 
-// VERIFICAR LOGIN
+// VERIFICAR USUÁRIO LOGADO
 
 onAuthStateChanged(auth,(usuario)=>{
 
@@ -756,17 +737,16 @@ usuario.displayName || usuario.email;
 
 
 
-// SAIR DA CONTA
-
+// BOTÃO SAIR
 
 const btnSair = document.getElementById("btnSair");
 
 
 
-btnSair.addEventListener("click",(e)=>{
+btnSair.addEventListener("click",(evento)=>{
 
 
-e.preventDefault();
+evento.preventDefault();
 
 
 
@@ -801,13 +781,15 @@ erro
 
 
 
-<!-- SISTEMA DE PERMISSÕES -->
+
+<!-- CONTROLE DE PERMISSÕES -->
 
 <script type="module" src="permissoes.js"></script>
+
 
 
 
 </body>
 
 </html>
-</header>
+}
