@@ -108,7 +108,8 @@ onSnapshot(
     });
 
 
-  }
+    }
+);
   
 // ===============================
 // PREENCHER CARGA HORÁRIA
