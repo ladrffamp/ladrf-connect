@@ -106,11 +106,20 @@ return;
 
 }
 
+let qtdPresentes=0;
+let qtdAusentes=0;
+let qtdPendentes=0;
+
 membros.forEach((membro)=>{
 
-listaPresenca.innerHTML+=`
+membro.statusPresenca="Pendente";
+membro.hora="—";
 
-<tr>
+qtdPendentes++;
+
+const linha=document.createElement("tr");
+
+linha.innerHTML=`
 
 <td>
 
@@ -124,7 +133,7 @@ ${membro.curso}
 
 </td>
 
-<td>
+<td class="status">
 
 <span class="status pendente">
 
@@ -134,7 +143,7 @@ Pendente
 
 </td>
 
-<td>
+<td class="hora">
 
 —
 
@@ -156,15 +165,93 @@ Pendente
 
 </td>
 
-</tr>
-
 `;
+
+const btnPresente=linha.querySelector(".presente");
+const btnAusente=linha.querySelector(".ausente");
+
+const status=linha.querySelector(".status span");
+const hora=linha.querySelector(".hora");
+
+btnPresente.onclick=()=>{
+
+if(membro.statusPresenca==="Pendente"){
+
+qtdPendentes--;
+
+}
+
+if(membro.statusPresenca==="Ausente"){
+
+qtdAusentes--;
+
+}
+
+if(membro.statusPresenca!=="Presente"){
+
+qtdPresentes++;
+
+}
+
+membro.statusPresenca="Presente";
+
+status.innerHTML="Presente";
+status.className="status presente";
+
+hora.innerHTML=new Date().toLocaleTimeString(
+"pt-BR",
+{
+hour:"2-digit",
+minute:"2-digit"
+}
+);
+
+presentes.innerHTML=qtdPresentes;
+ausentes.innerHTML=qtdAusentes;
+pendentes.innerHTML=qtdPendentes;
+
+};
+
+btnAusente.onclick=()=>{
+
+if(membro.statusPresenca==="Pendente"){
+
+qtdPendentes--;
+
+}
+
+if(membro.statusPresenca==="Presente"){
+
+qtdPresentes--;
+
+}
+
+if(membro.statusPresenca!=="Ausente"){
+
+qtdAusentes++;
+
+}
+
+membro.statusPresenca="Ausente";
+
+status.innerHTML="Ausente";
+status.className="status ausente";
+
+hora.innerHTML="—";
+
+presentes.innerHTML=qtdPresentes;
+ausentes.innerHTML=qtdAusentes;
+pendentes.innerHTML=qtdPendentes;
+
+};
+
+listaPresenca.appendChild(linha);
 
 });
 
 totalMembros.innerHTML=membros.length;
-presentes.innerHTML=0;
-pendentes.innerHTML=membros.length;
-ausentes.innerHTML=0;
+presentes.innerHTML=qtdPresentes;
+ausentes.innerHTML=qtdAusentes;
+pendentes.innerHTML=qtdPendentes;
 
 }
