@@ -177,6 +177,10 @@ tabelaEventos.innerHTML += `
 
 // PDF
 
+// ===============================
+// GERAR PDF PROFISSIONAL
+// ===============================
+
 document.getElementById("gerarPDF").onclick=()=>{
 
 
@@ -186,12 +190,167 @@ const { jsPDF } = window.jspdf;
 const pdf = new jsPDF();
 
 
+
+pdf.setFontSize(20);
+
 pdf.text(
 "LADRF Connect 2.0",
 20,
 20
 );
 
+
+
+pdf.setFontSize(14);
+
+pdf.text(
+"Relatório de Atividades",
+20,
+35
+);
+
+
+
+pdf.setFontSize(11);
+
+
+pdf.text(
+"Liga Acadêmica de Desporto e Reabilitação na Fisioterapia",
+20,
+48
+);
+
+
+
+pdf.line(
+20,
+55,
+190,
+55
+);
+
+
+
+
+pdf.setFontSize(13);
+
+
+pdf.text(
+"Resumo Geral",
+20,
+70
+);
+
+
+
+pdf.setFontSize(12);
+
+
+pdf.text(
+"Data de emissão: " + new Date().toLocaleDateString(),
+20,
+85
+);
+
+
+
+pdf.text(
+"Eventos cadastrados: " + eventos.length,
+20,
+100
+);
+
+
+
+pdf.text(
+"Pacientes registrados: " + pacientes.length,
+20,
+115
+);
+
+
+
+pdf.text(
+"Atendimentos realizados: " + atendimentos.length,
+20,
+130
+);
+
+
+
+
+
+pdf.text(
+"Estatísticas por evento",
+20,
+155
+);
+
+
+
+let y = 170;
+
+
+
+eventos.forEach((evento)=>{
+
+
+let totalPacientes = pacientes.filter(
+p=>p.evento===evento.nome
+).length;
+
+
+let totalAtendimentos = atendimentos.filter(
+a=>a.evento===evento.nome
+).length;
+
+
+
+pdf.text(
+`${evento.nome}: ${totalPacientes} pacientes | ${totalAtendimentos} atendimentos`,
+20,
+y
+);
+
+
+
+y += 10;
+
+
+
+if(y > 280){
+
+pdf.addPage();
+
+y=20;
+
+}
+
+
+
+});
+
+
+
+
+pdf.setFontSize(10);
+
+
+pdf.text(
+"Documento gerado automaticamente pelo LADRF Connect 2.0",
+20,
+290
+);
+
+
+
+pdf.save(
+"Relatorio_LADRF_Connect.pdf"
+);
+
+
+
+};
 
 pdf.text(
 "Relatório de atendimentos",
