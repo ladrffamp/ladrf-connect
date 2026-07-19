@@ -6,9 +6,9 @@ import {
     onSnapshot,
     query,
     orderBy,
-    serverTimestampdoc,
+    serverTimestamp,
+    doc,
     updateDoc
-}
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const materiaisRef = collection(db, "materiais");
