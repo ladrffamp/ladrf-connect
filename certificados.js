@@ -5,9 +5,10 @@ import {
   onSnapshot,
   addDoc,
   Timestamp,
-  getDocs
+  getDocs,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 // ELEMENTOS
 
@@ -780,7 +781,7 @@ ${c.dataEmissao || "-"}
 
 }
 );
-  // ===============================
+// ===============================
 // FINALIZAÇÃO
 // ===============================
 
@@ -796,3 +797,147 @@ console.log(
 "LADRF Certificados carregado com sucesso!"
 );
 });
+// ===============================
+// EMITIR CERTIFICADOS PARA TODOS
+// ===============================
+
+if (emitirTodos) {
+
+emitirTodos.addEventListener(
+"click",
+async()=>{
+
+
+const eventoId =
+selectEvento.value;
+
+
+const carga =
+cargaHoraria.value;
+
+
+
+if(!eventoId || !carga){
+
+alert(
+"Selecione um evento primeiro."
+);
+
+return;
+
+}
+
+
+
+const evento =
+eventos.find(
+e=>e.id===eventoId
+);
+
+
+
+const membrosAtivos =
+membros.filter(
+m=>m.status==="Ativo"
+);
+
+
+
+if(membrosAtivos.length===0){
+
+alert(
+"Nenhum membro ativo encontrado."
+);
+
+return;
+
+}
+
+
+
+const existentes =
+await getDocs(
+collection(db,"certificados")
+);
+
+
+
+let numero =
+existentes.size + 1;
+
+
+
+for(
+const membro of membrosAtivos
+){
+
+
+const duplicado =
+await getDocs(
+query(
+collection(db,"certificados"),
+where(
+"membro",
+"==",
+membro.nome
+),
+where(
+"evento",
+"==",
+evento.titulo
+)
+)
+);
+
+
+
+if(duplicado.empty){
+
+
+await addDoc(
+collection(db,"certificados"),
+{
+
+numeroCertificado:
+`LADRF-${new Date().getFullYear()}-${String(numero).padStart(4,"0")}`,
+
+membro:
+membro.nome,
+
+evento:
+evento.titulo,
+
+cargaHoraria:
+carga,
+
+dataEmissao:
+new Date()
+.toLocaleDateString("pt-BR"),
+
+criadoEm:
+Timestamp.now()
+
+}
+
+);
+
+
+numero++;
+
+}
+
+
+}
+
+
+
+alert(
+"Certificados emitidos para todos os membros ativos!"
+);
+
+
+}
+
+);
+
+}
