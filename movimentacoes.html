@@ -9,7 +9,6 @@
 <title>Movimentações | LADRF Connect</title>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
-
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -47,12 +46,23 @@ justify-content:space-between;
 
 align-items:center;
 
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+
 }
 
 
 header h1{
 
 font-size:28px;
+
+}
+
+
+header p{
+
+font-size:14px;
+
+opacity:.9;
 
 }
 
@@ -66,6 +76,7 @@ margin:auto;
 padding:35px;
 
 }
+
 
 
 .botao{
@@ -101,15 +112,15 @@ box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
 
+
 table{
 
 width:100%;
 
 border-collapse:collapse;
 
-margin-top:20px;
-
 }
+
 
 
 thead{
@@ -121,7 +132,8 @@ color:white;
 }
 
 
-th,td{
+
+th{
 
 padding:16px;
 
@@ -130,11 +142,15 @@ text-align:left;
 }
 
 
+
 td{
+
+padding:16px;
 
 border-bottom:1px solid #eee;
 
 }
+
 
 
 .entrada{
@@ -146,6 +162,7 @@ font-weight:bold;
 }
 
 
+
 .saida{
 
 color:#dc3545;
@@ -155,6 +172,7 @@ font-weight:bold;
 }
 
 
+
 footer{
 
 text-align:center;
@@ -162,6 +180,20 @@ text-align:center;
 padding:30px;
 
 color:#666;
+
+}
+
+
+
+@media(max-width:800px){
+
+table{
+
+display:block;
+
+overflow-x:auto;
+
+}
 
 }
 
@@ -188,11 +220,16 @@ Movimentações
 
 </h1>
 
+
 <p>
+
 Histórico do estoque LADRF
+
 </p>
 
+
 </div>
+
 
 
 <button class="botao" onclick="window.location='materiais.html'">
@@ -205,6 +242,8 @@ Materiais
 
 
 </header>
+
+
 
 
 <div class="container">
@@ -232,7 +271,9 @@ Materiais
 
 </tr>
 
+
 </thead>
+
 
 
 <tbody id="listaMovimentacoes">
@@ -252,10 +293,32 @@ Carregando...
 </tbody>
 
 
+
 </table>
 
 
+
 </div>
 
-  
+
 </div>
+
+
+
+
+
+<footer>
+
+LADRF Connect 2.0 • Histórico de Estoque
+
+</footer>
+
+
+
+
+<script type="module" src="movimentacoes.js"></script>
+
+
+</body>
+
+</html>
