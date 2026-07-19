@@ -3,7 +3,8 @@ import { db } from "./firebase.js";
 import {
 collection,
 addDoc,
-Timestamp
+Timestamp,
+onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
