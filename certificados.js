@@ -8,16 +8,16 @@ import {
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// ELEMENTOS DA PÁGINA
+// ELEMENTOS
 
 const selectMembro = document.getElementById("membro");
 const selectEvento = document.getElementById("evento");
+const cargaHoraria = document.getElementById("cargaHoraria");
 const gerarCertificado = document.getElementById("gerarCertificado");
 const listaCertificados = document.getElementById("listaCertificados");
-const cargaHoraria = document.getElementById("cargaHoraria");
 
 
-// ARRAYS
+// DADOS
 
 let membros = [];
 let eventos = [];
@@ -28,10 +28,11 @@ let eventos = [];
 // ===============================
 
 onSnapshot(
-  collection(db, "membros"),
-  (snapshot) => {
+  collection(db,"membros"),
+  (snapshot)=>{
 
     membros = [];
+
 
     selectMembro.innerHTML = `
       <option value="">
@@ -40,12 +41,13 @@ onSnapshot(
     `;
 
 
-    snapshot.forEach((doc) => {
+    snapshot.forEach((doc)=>{
 
       const dados = doc.data();
 
+
       membros.push({
-        id: doc.id,
+        id:doc.id,
         ...dados
       });
 
@@ -56,6 +58,7 @@ onSnapshot(
         </option>
       `;
 
+
     });
 
 
@@ -63,15 +66,18 @@ onSnapshot(
 );
 
 
+
 // ===============================
 // CARREGAR EVENTOS
 // ===============================
 
 onSnapshot(
-  collection(db, "agenda"),
-  (snapshot) => {
+  collection(db,"agenda"),
+  (snapshot)=>{
+
 
     eventos = [];
+
 
     selectEvento.innerHTML = `
       <option value="">
@@ -80,13 +86,14 @@ onSnapshot(
     `;
 
 
-    snapshot.forEach((doc) => {
+    snapshot.forEach((doc)=>{
+
 
       const dados = doc.data();
 
 
       eventos.push({
-        id: doc.id,
+        id:doc.id,
         ...dados
       });
 
@@ -102,267 +109,401 @@ onSnapshot(
 
 
   }
-  import { db } from "./firebase.js";
-
-import {
-  collection,
-  onSnapshot,
-  addDoc,
-  Timestamp
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-// ELEMENTOS DA PÁGINA
-
-const selectMembro = document.getElementById("membro");
-const selectEvento = document.getElementById("evento");
-const gerarCertificado = document.getElementById("gerarCertificado");
-const listaCertificados = document.getElementById("listaCertificados");
-const cargaHoraria = document.getElementById("cargaHoraria");
-
-
-// ARRAYS
-
-let membros = [];
-let eventos = [];
-
-
+  
 // ===============================
-// CARREGAR MEMBROS
+// PREENCHER CARGA HORÁRIA
+// AUTOMATICAMENTE PELO EVENTO
 // ===============================
 
-onSnapshot(
-  collection(db, "membros"),
-  (snapshot) => {
-
-    membros = [];
-
-    selectMembro.innerHTML = `
-      <option value="">
-        Selecione o membro
-      </option>
-    `;
+selectEvento.addEventListener(
+  "change",
+  ()=>{
 
 
-    snapshot.forEach((doc) => {
-
-      const dados = doc.data();
-
-      membros.push({
-        id: doc.id,
-        ...dados
-      });
+    const eventoSelecionado =
+      eventos.find(
+        e => e.id === selectEvento.value
+      );
 
 
-      selectMembro.innerHTML += `
-        <option value="${doc.id}">
-          ${dados.nome}
-        </option>
-      `;
+    if(!eventoSelecionado){
 
-    });
+      cargaHoraria.value = "";
+
+      return;
+
+    }
+
+
+
+    if(
+      eventoSelecionado.inicio &&
+      eventoSelecionado.fim
+    ){
+
+
+      const inicio =
+        eventoSelecionado.inicio.split(":");
+
+
+      const fim =
+        eventoSelecionado.fim.split(":");
+
+
+
+      const minutosInicio =
+        Number(inicio[0]) * 60 +
+        Number(inicio[1]);
+
+
+      const minutosFim =
+        Number(fim[0]) * 60 +
+        Number(fim[1]);
+
+
+
+      const totalMinutos =
+        minutosFim - minutosInicio;
+
+
+
+      if(totalMinutos > 0){
+
+
+        const horas =
+          totalMinutos / 60;
+
+
+        cargaHoraria.value =
+          horas + " horas";
+
+
+      }
+
+
+    }
+
 
 
   }
 );
 
 
+
 // ===============================
-// CARREGAR EVENTOS
+// GERAR CERTIFICADO
 // ===============================
 
-onSnapshot(
-  collection(db, "agenda"),
-  (snapshot) => {
-
-    eventos = [];
-
-    selectEvento.innerHTML = `
-      <option value="">
-        Selecione o evento
-      </option>
-    `;
+gerarCertificado.addEventListener(
+  "click",
+  async()=>{
 
 
-    snapshot.forEach((doc) => {
-
-      const dados = doc.data();
-
-
-      eventos.push({
-        id: doc.id,
-        ...dados
-      });
+    const membroId =
+      selectMembro.value;
 
 
-      selectEvento.innerHTML += `
-        <option value="${doc.id}">
-          ${dados.titulo}
-        </option>
-      `;
+    const eventoId =
+      selectEvento.value;
 
 
-    });
+    const carga =
+      cargaHoraria.value;
+
+
+
+    if(
+      !membroId ||
+      !eventoId ||
+      !carga
+    ){
+
+      alert(
+        "Preencha todos os campos."
+      );
+
+      return;
+
+    }
+
+
+
+    const membro =
+      membros.find(
+        m => m.id === membroId
+      );
+
+
+
+    const evento =
+      eventos.find(
+        e => e.id === eventoId
+      );
+
+
+
+    if(
+      !membro ||
+      !evento
+    ){
+
+      alert(
+        "Erro ao encontrar dados."
+      );
+
+      return;
+
+    }
+
+
+
+    const data =
+      new Date()
+      .toLocaleDateString("pt-BR");
+
+
+
+    await addDoc(
+      collection(db,"certificados"),
+      {
+
+        membro:
+          membro.nome,
+
+        evento:
+          evento.titulo,
+
+        cargaHoraria:
+          carga,
+
+        dataEmissao:
+          data,
+
+        criadoEm:
+          Timestamp.now()
+
+      }
+    );
+
+
+
+    const { jsPDF } =
+      window.jspdf;
+
+
+    const pdf =
+      new jsPDF();
+
+
+    pdf.setFontSize(24);
+
+
+    pdf.text(
+      "CERTIFICADO",
+      105,
+      35,
+      {
+        align:"center"
+      }
+    );
+
+    
+// ===============================
+// PREENCHER CARGA HORÁRIA
+// AUTOMATICAMENTE PELO EVENTO
+// ===============================
+
+selectEvento.addEventListener(
+  "change",
+  ()=>{
+
+
+    const eventoSelecionado =
+      eventos.find(
+        e => e.id === selectEvento.value
+      );
+
+
+    if(!eventoSelecionado){
+
+      cargaHoraria.value = "";
+
+      return;
+
+    }
+
+
+
+    if(
+      eventoSelecionado.inicio &&
+      eventoSelecionado.fim
+    ){
+
+
+      const inicio =
+        eventoSelecionado.inicio.split(":");
+
+
+      const fim =
+        eventoSelecionado.fim.split(":");
+
+
+
+      const minutosInicio =
+        Number(inicio[0]) * 60 +
+        Number(inicio[1]);
+
+
+      const minutosFim =
+        Number(fim[0]) * 60 +
+        Number(fim[1]);
+
+
+
+      const totalMinutos =
+        minutosFim - minutosInicio;
+
+
+
+      if(totalMinutos > 0){
+
+
+        const horas =
+          totalMinutos / 60;
+
+
+        cargaHoraria.value =
+          horas + " horas";
+
+
+      }
+
+
+    }
+
 
 
   }
 );
 
-    pdf.setFont(
-      "helvetica",
-      "normal"
-    );
 
 
-    pdf.setFontSize(14);
+// ===============================
+// GERAR CERTIFICADO
+// ===============================
+
+gerarCertificado.addEventListener(
+  "click",
+  async()=>{
 
 
-    pdf.text(
-      "Certificamos que",
-      105,
-      60,
+    const membroId =
+      selectMembro.value;
+
+
+    const eventoId =
+      selectEvento.value;
+
+
+    const carga =
+      cargaHoraria.value;
+
+
+
+    if(
+      !membroId ||
+      !eventoId ||
+      !carga
+    ){
+
+      alert(
+        "Preencha todos os campos."
+      );
+
+      return;
+
+    }
+
+
+
+    const membro =
+      membros.find(
+        m => m.id === membroId
+      );
+
+
+
+    const evento =
+      eventos.find(
+        e => e.id === eventoId
+      );
+
+
+
+    if(
+      !membro ||
+      !evento
+    ){
+
+      alert(
+        "Erro ao encontrar dados."
+      );
+
+      return;
+
+    }
+
+
+
+    const data =
+      new Date()
+      .toLocaleDateString("pt-BR");
+
+
+
+    await addDoc(
+      collection(db,"certificados"),
       {
-        align:"center"
-      }
-    );
 
+        membro:
+          membro.nome,
 
-    pdf.setFont(
-      "helvetica",
-      "bold"
-    );
+        evento:
+          evento.titulo,
 
+        cargaHoraria:
+          carga,
 
-    pdf.setFontSize(18);
+        dataEmissao:
+          data,
 
+        criadoEm:
+          Timestamp.now()
 
-    pdf.text(
-      membro.nome,
-      105,
-      80,
-      {
-        align:"center"
-      }
-    );
-
-
-
-    pdf.setFont(
-      "helvetica",
-      "normal"
-    );
-
-
-    pdf.setFontSize(14);
-
-
-    pdf.text(
-      "participou da atividade:",
-      105,
-      100,
-      {
-        align:"center"
-      }
-    );
-
-
-
-    pdf.setFont(
-      "helvetica",
-      "bold"
-    );
-
-
-    pdf.setFontSize(16);
-
-
-    pdf.text(
-      evento.titulo,
-      105,
-      120,
-      {
-        align:"center"
-      }
-    );
-
-
-
-    pdf.setFont(
-      "helvetica",
-      "normal"
-    );
-
-
-    pdf.setFontSize(14);
-
-
-    pdf.text(
-      `Carga horária: ${carga}`,
-      105,
-      145,
-      {
-        align:"center"
-      }
-    );
-
-
-
-    pdf.text(
-      "Liga Acadêmica de Desporto e Reabilitação na Fisioterapia",
-      105,
-      175,
-      {
-        align:"center"
       }
     );
 
 
 
+    const { jsPDF } =
+      window.jspdf;
+
+
+    const pdf =
+      new jsPDF();
+
+
+    pdf.setFontSize(24);
+
+
     pdf.text(
-      `Data de emissão: ${data}`,
+      "CERTIFICADO",
       105,
-      190,
+      35,
       {
         align:"center"
       }
     );
-
-
-
-    pdf.line(
-      60,
-      230,
-      150,
-      230
-    );
-
-
-
-    pdf.text(
-      "Coordenação LADRF",
-      105,
-      245,
-      {
-        align:"center"
-      }
-    );
-
-
-
-    pdf.save(
-      `Certificado_${membro.nome}.pdf`
-    );
-
-
-
-    alert(
-      "Certificado gerado com sucesso!"
-    );
-
-
-  }
-
-);
 
 // ===============================
 // HISTÓRICO DE CERTIFICADOS
@@ -374,6 +515,7 @@ onSnapshot(
 
 
     listaCertificados.innerHTML = "";
+
 
 
     if(snapshot.empty){
@@ -450,7 +592,6 @@ onSnapshot(
 
 
     });
-
 
 
   }
