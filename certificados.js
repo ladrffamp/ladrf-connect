@@ -5,9 +5,7 @@ import {
   onSnapshot,
   addDoc,
   Timestamp,
-  getDocs,
-  query,
-  where
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -17,7 +15,6 @@ const selectMembro = document.getElementById("membro");
 const selectEvento = document.getElementById("evento");
 const cargaHoraria = document.getElementById("cargaHoraria");
 const gerarCertificado = document.getElementById("gerarCertificado");
-const emitirTodos = document.getElementById("emitirTodos");
 const listaCertificados = document.getElementById("listaCertificados");
 
 
@@ -32,12 +29,10 @@ let eventos = [];
 // ===============================
 
 onSnapshot(
-  collection(db,"membros"),
-  (snapshot)=>{
-
+  collection(db, "membros"),
+  (snapshot) => {
 
     membros = [];
-
 
     selectMembro.innerHTML = `
       <option value="">
@@ -46,18 +41,15 @@ onSnapshot(
     `;
 
 
-
-    snapshot.forEach((doc)=>{
-
+    snapshot.forEach((doc) => {
 
       const dados = doc.data();
 
 
       membros.push({
-        id:doc.id,
+        id: doc.id,
         ...dados
       });
-
 
 
       selectMembro.innerHTML += `
@@ -66,13 +58,10 @@ onSnapshot(
         </option>
       `;
 
-
     });
-
 
   }
 );
-
 
 
 // ===============================
@@ -80,9 +69,8 @@ onSnapshot(
 // ===============================
 
 onSnapshot(
-  collection(db,"agenda"),
-  (snapshot)=>{
-
+  collection(db, "agenda"),
+  (snapshot) => {
 
     eventos = [];
 
@@ -94,18 +82,15 @@ onSnapshot(
     `;
 
 
-
-    snapshot.forEach((doc)=>{
-
+    snapshot.forEach((doc) => {
 
       const dados = doc.data();
 
 
       eventos.push({
-        id:doc.id,
+        id: doc.id,
         ...dados
       });
-
 
 
       selectEvento.innerHTML += `
@@ -117,9 +102,11 @@ onSnapshot(
 
     });
 
-
   }
-  // ===============================
+);
+
+
+// ===============================
 // CARGA HORÁRIA AUTOMÁTICA
 // ===============================
 
@@ -128,107 +115,82 @@ selectEvento.addEventListener(
 ()=>{
 
 
-const evento =
-eventos.find(
-e=>e.id===selectEvento.value
+const evento = eventos.find(
+e => e.id === selectEvento.value
 );
-
 
 
 if(!evento){
 
 cargaHoraria.value="";
-
 return;
 
 }
 
 
-
-if(
-evento.inicio &&
-evento.fim
-){
+if(evento.inicio && evento.fim){
 
 
-const inicio =
-evento.inicio.split(":");
+const inicio = evento.inicio.split(":");
+const fim = evento.fim.split(":");
 
 
-const fim =
-evento.fim.split(":");
-
-
-
-const inicioMinutos =
+const minutosInicio =
 Number(inicio[0])*60+
 Number(inicio[1]);
 
 
-
-const fimMinutos =
+const minutosFim =
 Number(fim[0])*60+
 Number(fim[1]);
 
 
-
 const total =
-fimMinutos-inicioMinutos;
-
+minutosFim-minutosInicio;
 
 
 if(total>0){
 
-
 cargaHoraria.value =
 (total/60)+" horas";
 
-
 }
 
 
 }
 
 
-
-});
-
-
-
-// ===============================
-// GERAR NÚMERO CERTIFICADO
+  // ===============================
+// GERAR NÚMERO DO CERTIFICADO
 // ===============================
 
-async function gerarNumero(){
+async function gerarNumeroCertificado(){
+
+  const ano = new Date().getFullYear();
 
 
-const ano =
-new Date().getFullYear();
+  const certificados =
+    await getDocs(
+      collection(db,"certificados")
+    );
 
 
-
-const certificados =
-await getDocs(
-collection(db,"certificados")
-);
+  const quantidade =
+    certificados.size + 1;
 
 
+  const numero =
+    String(quantidade).padStart(4,"0");
 
-return (
-"LADRF-" +
-ano +
-"-" +
-String(certificados.size+1)
-.padStart(4,"0")
-);
 
+  return `LADRF-${ano}-${numero}`;
 
 }
 
 
 
 // ===============================
-// GERAR CERTIFICADO INDIVIDUAL
+// GERAR CERTIFICADO
 // ===============================
 
 gerarCertificado.addEventListener(
@@ -263,6 +225,7 @@ alert(
 
 return;
 
+
 }
 
 
@@ -281,8 +244,18 @@ e=>e.id===eventoId
 
 
 
-const numero =
-await gerarNumero();
+if(!membro || !evento){
+
+
+alert(
+"Erro ao localizar dados."
+);
+
+
+return;
+
+
+}
 
 
 
@@ -292,32 +265,52 @@ new Date()
 
 
 
+const numeroCertificado =
+await gerarNumeroCertificado();
+
+
+
+
+// SALVAR FIRESTORE
+
 await addDoc(
 collection(db,"certificados"),
 {
 
-numeroCertificado:
-numero,
+
+numeroCertificado,
+
 
 membro:
 membro.nome,
 
+
 evento:
 evento.titulo,
+
 
 cargaHoraria:
 carga,
 
+
 dataEmissao:
 data,
 
+
 criadoEm:
 Timestamp.now()
+
 
 }
 
 );
 
+
+
+
+// ===============================
+// CRIAR PDF HORIZONTAL
+// ===============================
 
 
 const {jsPDF} =
@@ -341,6 +334,11 @@ const largura =
 297;
 
 
+const altura =
+210;
+
+
+
 pdf.setLineWidth(1);
 
 
@@ -351,6 +349,14 @@ pdf.rect(
 190
 );
 
+
+
+// TÍTULO
+
+pdf.setFont(
+"helvetica",
+"bold"
+);
 
 
 pdf.setFontSize(28);
@@ -381,13 +387,21 @@ align:"center"
 
 
 
+// NÚMERO
+
+pdf.setFont(
+"helvetica",
+"normal"
+);
+
+
 pdf.setFontSize(12);
 
 
 pdf.text(
-`Certificado nº ${numero}`,
+`Certificado nº ${numeroCertificado}`,
 largura/2,
-80,
+78,
 {
 align:"center"
 }
@@ -406,7 +420,10 @@ largura/2,
 align:"center"
 }
 );
-  pdf.setFont(
+
+
+
+pdf.setFont(
 "helvetica",
 "bold"
 );
@@ -423,10 +440,7 @@ largura/2,
 align:"center"
 }
 );
-
-
-
-pdf.setFont(
+  pdf.setFont(
 "helvetica",
 "normal"
 );
@@ -475,6 +489,7 @@ pdf.setFont(
 pdf.setFontSize(14);
 
 
+
 pdf.text(
 `Carga horária: ${carga}`,
 largura/2,
@@ -491,6 +506,7 @@ pdf.text(
 60,
 190
 );
+
 
 
 
@@ -514,6 +530,9 @@ align:"center"
 
 
 
+
+// BAIXAR PDF
+
 pdf.save(
 `Certificado_${membro.nome}.pdf`
 );
@@ -532,174 +551,23 @@ alert(
 
 
 // ===============================
-// EMITIR PARA TODOS OS MEMBROS
-// ===============================
-
-if(emitirTodos){
-
-
-emitirTodos.addEventListener(
-"click",
-async()=>{
-
-
-const eventoId =
-selectEvento.value;
-
-
-const carga =
-cargaHoraria.value;
-
-
-
-if(
-!eventoId ||
-!carga
-){
-
-alert(
-"Selecione um evento."
-);
-
-return;
-
-}
-
-
-
-const evento =
-eventos.find(
-e=>e.id===eventoId
-);
-
-
-
-const membrosAtivos =
-membros.filter(
-m=>m.status==="Ativo"
-);
-
-
-
-if(membrosAtivos.length===0){
-
-alert(
-"Nenhum membro ativo encontrado."
-);
-
-return;
-
-}
-
-
-
-const certificados =
-await getDocs(
-collection(db,"certificados")
-);
-
-
-
-let numero =
-certificados.size+1;
-
-
-
-for(
-const membro of membrosAtivos
-){
-
-
-const existe =
-await getDocs(
-query(
-collection(db,"certificados"),
-where(
-"membro",
-"==",
-membro.nome
-),
-where(
-"evento",
-"==",
-evento.titulo
-)
-)
-);
-
-
-
-if(existe.empty){
-
-
-await addDoc(
-collection(db,"certificados"),
-{
-
-numeroCertificado:
-`LADRF-${new Date().getFullYear()}-${String(numero).padStart(4,"0")}`,
-
-membro:
-membro.nome,
-
-evento:
-evento.titulo,
-
-cargaHoraria:
-carga,
-
-dataEmissao:
-new Date()
-.toLocaleDateString("pt-BR"),
-
-criadoEm:
-Timestamp.now()
-
-}
-
-);
-
-
-
-numero++;
-
-
-}
-
-
-
-}
-
-
-
-alert(
-"Certificados emitidos para os membros ativos!"
-);
-
-
-
-}
-);
-
-
-}
-  // ===============================
 // LISTAR CERTIFICADOS
 // ===============================
+
 
 onSnapshot(
 collection(db,"certificados"),
 (snapshot)=>{
 
 
-listaCertificados.innerHTML = "";
+listaCertificados.innerHTML="";
 
 
 
 if(snapshot.empty){
 
 
-listaCertificados.innerHTML = `
+listaCertificados.innerHTML=`
 
 <tr>
 
@@ -713,16 +581,19 @@ Nenhum certificado emitido.
 
 `;
 
+
 return;
 
 }
 
 
 
-snapshot.forEach((doc)=>{
+
+snapshot.forEach(
+(doc)=>{
 
 
-const certificado =
+const c =
 doc.data();
 
 
@@ -732,22 +603,22 @@ listaCertificados.innerHTML += `
 <tr>
 
 <td>
-${certificado.numeroCertificado || "-"}
+${c.numeroCertificado || "-"}
 </td>
 
 
 <td>
-${certificado.membro || "-"}
+${c.membro || "-"}
 </td>
 
 
 <td>
-${certificado.evento || "-"}
+${c.evento || "-"}
 </td>
 
 
 <td>
-${certificado.dataEmissao || "-"}
+${c.dataEmissao || "-"}
 </td>
 
 
@@ -762,10 +633,19 @@ ${certificado.dataEmissao || "-"}
 
 }
 );
+  // ===============================
+// FINALIZAÇÃO
+// ===============================
 
+
+// Mantém o sistema ativo em tempo real
+// Firestore atualiza automaticamente:
+// - membros
+// - eventos
+// - certificados
 
 
 console.log(
-"LADRF Certificados atualizado com sucesso!"
+"LADRF Certificados carregado com sucesso!"
 );
-);
+});
