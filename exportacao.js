@@ -385,12 +385,29 @@ pdf.save("relatorio_ladrf.pdf");
 
 // EXCEL
 
+// ===============================
+// GERAR EXCEL COMPLETO
+// ===============================
+
 document.getElementById("gerarExcel").onclick=()=>{
 
 
-const dados = eventos.map(evento=>({
+const arquivo = XLSX.utils.book_new();
 
-Evento:evento.nome || "",
+
+
+// ===============================
+// ABA EVENTOS
+// ===============================
+
+const dadosEventos = eventos.map((evento)=>{
+
+
+return {
+
+Evento: evento.nome || "",
+
+Data: evento.data || "",
 
 Pacientes: pacientes.filter(
 p=>p.evento===evento.nome
@@ -400,20 +417,181 @@ Atendimentos: atendimentos.filter(
 a=>a.evento===evento.nome
 ).length
 
-}));
+};
 
 
-const planilha = XLSX.utils.json_to_sheet(dados);
+});
 
 
-const arquivo = XLSX.utils.book_new();
+const abaEventos = XLSX.utils.json_to_sheet(dadosEventos);
 
 
 XLSX.utils.book_append_sheet(
 arquivo,
-planilha,
+abaEventos,
 "Eventos"
 );
+
+
+
+
+
+// ===============================
+// ABA PACIENTES
+// ===============================
+
+
+const dadosPacientes = pacientes.map((paciente)=>{
+
+
+return {
+
+
+Nome: paciente.nome || "",
+
+WhatsApp: paciente.whatsapp || "",
+
+Modalidade: paciente.modalidade || "",
+
+Queixa: paciente.queixa || "",
+
+Evento: paciente.evento || "",
+
+Status: paciente.status || ""
+
+
+};
+
+
+});
+
+
+
+const abaPacientes = XLSX.utils.json_to_sheet(dadosPacientes);
+
+
+
+XLSX.utils.book_append_sheet(
+arquivo,
+abaPacientes,
+"Pacientes"
+);
+
+
+
+
+
+
+// ===============================
+// ABA ATENDIMENTOS
+// ===============================
+
+
+const dadosAtendimentos = atendimentos.map((atendimento)=>{
+
+
+return {
+
+
+Paciente: atendimento.paciente || "",
+
+Evento: atendimento.evento || "",
+
+Data: atendimento.data || "",
+
+Membro: atendimento.membro || "",
+
+Observação: atendimento.observacao || ""
+
+
+};
+
+
+});
+
+
+
+const abaAtendimentos = XLSX.utils.json_to_sheet(dadosAtendimentos);
+
+
+
+XLSX.utils.book_append_sheet(
+arquivo,
+abaAtendimentos,
+"Atendimentos"
+);
+
+
+
+
+
+
+// ===============================
+// ABA MATERIAIS
+// ===============================
+
+
+const materiaisRef = collection(db,"materiais");
+
+
+
+onSnapshot(
+materiaisRef,
+(snapshot)=>{
+
+
+let materiais=[];
+
+
+snapshot.forEach((doc)=>{
+
+
+materiais.push({
+
+Material: doc.data().nome || "",
+
+Categoria: doc.data().categoria || "",
+
+Quantidade: doc.data().quantidade || 0,
+
+EstoqueMinimo: doc.data().minimo || 0,
+
+Unidade: doc.data().unidade || ""
+
+
+});
+
+
+});
+
+
+
+const abaMateriais = XLSX.utils.json_to_sheet(materiais);
+
+
+
+XLSX.utils.book_append_sheet(
+arquivo,
+abaMateriais,
+"Materiais"
+);
+
+
+
+XLSX.writeFile(
+arquivo,
+"Relatorio_LADRF_Completo.xlsx"
+);
+
+
+
+}
+
+);
+
+
+
+};
 
 
 XLSX.writeFile(
