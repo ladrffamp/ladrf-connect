@@ -62,6 +62,7 @@ onSnapshot(
 );
 
 
+
 // ===============================
 // CARREGAR EVENTOS
 // ===============================
@@ -99,6 +100,7 @@ onSnapshot(
 
   }
 );
+
 
 
 // ===============================
@@ -180,11 +182,7 @@ gerarCertificado.addEventListener(
 
 
 
-    if (
-      !membroId ||
-      !eventoId ||
-      !carga
-    ) {
+    if (!membroId || !eventoId || !carga) {
 
       alert("Preencha todos os campos.");
 
@@ -218,24 +216,24 @@ gerarCertificado.addEventListener(
       collection(db, "certificados"),
       {
 
-        membro:
-          membro.nome,
+        membro: membro.nome,
 
-        evento:
-          evento.titulo,
+        evento: evento.titulo,
 
-        cargaHoraria:
-          carga,
+        cargaHoraria: carga,
 
-        dataEmissao:
-          data,
+        dataEmissao: data,
 
-        criadoEm:
-          Timestamp.now()
+        criadoEm: Timestamp.now()
 
       }
     );
 
+
+
+    // ===============================
+    // PDF HORIZONTAL
+    // ===============================
 
 
     const { jsPDF } =
@@ -244,58 +242,76 @@ gerarCertificado.addEventListener(
 
 
     const pdf =
-      new jsPDF();
+      new jsPDF({
+
+        orientation:"landscape",
+
+        unit:"mm",
+
+        format:"a4"
+
+      });
+
+
+
+    const largura = 297;
+
+    const altura = 210;
+
+
+
+    // BORDA
+
+    pdf.setLineWidth(1);
+
+    pdf.rect(
+      10,
+      10,
+      largura - 20,
+      altura - 20
+    );
+
+
+
+    // TÍTULO
+
+    pdf.setFont(
+      "helvetica",
+      "bold"
+    );
+
+
+    pdf.setFontSize(30);
+
+
+    pdf.text(
+      "LADRF",
+      largura / 2,
+      45,
+      {
+        align:"center"
+      }
+    );
 
 
 
     pdf.setFontSize(24);
 
+
     pdf.text(
       "CERTIFICADO",
-      105,
-      35,
+      largura / 2,
+      65,
       {
         align:"center"
       }
     );
 
 
-    pdf.setFontSize(14);
 
-
-    pdf.text(
-      "Certificamos que",
-      105,
-      60,
-      {
-        align:"center"
-      }
-    );
-
-
-    pdf.setFontSize(18);
-
-
-    pdf.text(
-      membro.nome,
-      105,
-      80,
-      {
-        align:"center"
-      }
-    );
-
-
-    pdf.setFontSize(14);
-
-
-    pdf.text(
-      "participou da atividade:",
-      105,
-      100,
-      {
-        align:"center"
-      }
+    pdf.setFont(
+      "helvetica",
+      "normal"
     );
 
 
@@ -303,21 +319,68 @@ gerarCertificado.addEventListener(
 
 
     pdf.text(
-      evento.titulo,
-      105,
-      120,
+      "Certificamos que",
+      largura / 2,
+      90,
       {
         align:"center"
       }
     );
 
 
-    pdf.setFontSize(14);
+
+    pdf.setFont(
+      "helvetica",
+      "bold"
+    );
+
+
+    pdf.setFontSize(22);
 
 
     pdf.text(
-      `Carga horária: ${carga}`,
-      105,
+      membro.nome,
+      largura / 2,
+      110,
+      {
+        align:"center"
+      }
+    );
+
+
+
+    pdf.setFont(
+      "helvetica",
+      "normal"
+    );
+
+
+    pdf.setFontSize(16);
+
+
+    pdf.text(
+      "participou da atividade:",
+      largura / 2,
+      130,
+      {
+        align:"center"
+      }
+    );
+
+
+
+    pdf.setFont(
+      "helvetica",
+      "bold"
+    );
+
+
+    pdf.setFontSize(18);
+
+
+    pdf.text(
+      evento.titulo,
+      largura / 2,
       145,
       {
         align:"center"
@@ -325,19 +388,47 @@ gerarCertificado.addEventListener(
     );
 
 
+
+    pdf.setFont(
+      "helvetica",
+      "normal"
+    );
+
+
+    pdf.setFontSize(15);
+
+
     pdf.text(
-      "Liga Acadêmica de Desporto e Reabilitação na Fisioterapia",
-      105,
-      175,
+      `Carga horária: ${carga}`,
+      largura / 2,
+      160,
       {
         align:"center"
       }
     );
 
 
+
     pdf.text(
       `Emitido em: ${data}`,
-      105,
+      60,
+      185
+    );
+
+
+
+    pdf.line(
+      190,
+      180,
+      260,
+      180
+    );
+
+
+
+    pdf.text(
+      "Coordenação LADRF",
+      225,
       190,
       {
         align:"center"
@@ -345,9 +436,11 @@ gerarCertificado.addEventListener(
     );
 
 
+
     pdf.save(
       `Certificado_${membro.nome}.pdf`
     );
+
 
 
     alert(
@@ -370,6 +463,7 @@ onSnapshot(
 
 
     listaCertificados.innerHTML = "";
+
 
 
     if(snapshot.empty){
