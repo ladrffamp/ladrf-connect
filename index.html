@@ -159,11 +159,13 @@ color:#0B7A3B;
 
 /* MENU */
 
+/* MENU PRINCIPAL */
+
 .menu{
 
 display:grid;
 
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+grid-template-columns:repeat(4,1fr);
 
 gap:25px;
 
@@ -208,6 +210,80 @@ transform:translateY(-6px);
 background:#0B7A3B;
 
 color:white;
+
+}
+
+
+
+.menu-card i{
+
+font-size:38px;
+
+color:#0B7A3B;
+
+margin-bottom:15px;
+
+}
+
+
+
+.menu-card:hover i{
+
+color:white;
+
+}
+
+
+
+.menu-card h2{
+
+font-size:20px;
+
+margin-bottom:8px;
+
+}
+
+
+
+.menu-card p{
+
+font-size:14px;
+
+}
+
+
+
+@media(max-width:1100px){
+
+.menu{
+
+grid-template-columns:repeat(3,1fr);
+
+}
+
+}
+
+
+
+@media(max-width:800px){
+
+.menu{
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+}
+
+
+
+@media(max-width:500px){
+
+.menu{
+
+grid-template-columns:1fr;
+
+}
 
 }
 
