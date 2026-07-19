@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Modalidades | LADRF Connect</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+box-sizing:border-box;
+font-family:Poppins,sans-serif;
+}
+
+body{
+background:#eef3f7;
+margin:0;
+}
+
+
+header{
+
+background:#0B7A3B;
+color:white;
+padding:25px 40px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+
+}
+
+
+.container{
+
+padding:35px;
+max-width:1000px;
+margin:auto;
+
+}
+
+
+.card{
+
+background:white;
+padding:25px;
+border-radius:18px;
+box-shadow:0 8px 20px #0002;
+margin-bottom:25px;
+
+}
+
+
+input,button{
+
+padding:12px;
+border-radius:10px;
+border:1px solid #ddd;
+
+}
+
+
+button{
+
+background:#0B7A3B;
+color:white;
+cursor:pointer;
+border:none;
+
+}
+
+
+table{
+
+width:100%;
+border-collapse:collapse;
+
+}
+
+
+td,th{
+
+padding:15px;
+border-bottom:1px solid #eee;
+text-align:left;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+<h1>
+Modalidades
+</h1>
+
+<button onclick="location.href='index.html'">
+Início
+</button>
+
+</header>
+
+
+
+<div class="container">
+
+
+<div class="card">
+
+<h2>
+Cadastrar modalidade
+</h2>
+
+<br>
+
+
+<input id="nomeModalidade" placeholder="Ex: Futebol">
+
+
+<button id="salvarModalidade">
+Salvar
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h2>
+Modalidades cadastradas
+</h2>
+
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>
+Nome
+</th>
+
+<th>
+Ações
+</th>
+
+</tr>
+
+</thead>
+
+
+<tbody id="listaModalidades">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+<script type="module" src="modalidades.js"></script>
+
+
+</body>
+
+</html>
