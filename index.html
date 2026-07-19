@@ -8,15 +8,20 @@
 
 <title>LADRF Connect 2.0</title>
 
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
+
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
+
+
 <style>
+
 
 *{
 margin:0;
@@ -25,131 +30,258 @@ box-sizing:border-box;
 font-family:'Poppins',sans-serif;
 }
 
+
 body{
+
 background:#eef3f7;
+
 }
+
+
 
 header{
+
 background:linear-gradient(90deg,#0B7A3B,#15A34A);
+
 color:white;
+
 padding:25px 40px;
+
 display:flex;
+
 justify-content:space-between;
+
 align-items:center;
+
 box-shadow:0 4px 15px rgba(0,0,0,.15);
+
 }
+
+
 
 .logo{
+
 display:flex;
+
 align-items:center;
+
 gap:15px;
+
 }
+
+
 
 .logo i{
+
 font-size:40px;
+
 }
+
+
 
 .logo h1{
+
 font-size:30px;
+
 }
+
+
 
 .usuario{
+
 text-align:right;
+
 }
+
+
 
 .container{
+
 max-width:1400px;
+
 margin:auto;
+
 padding:40px;
+
 }
+
+
 
 .cards{
+
 display:grid;
+
 grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+
 gap:25px;
+
 margin-bottom:40px;
+
 }
+
+
 
 .card{
+
 background:white;
+
 border-radius:18px;
+
 padding:25px;
+
 box-shadow:0 8px 20px rgba(0,0,0,.08);
+
 }
+
+
 
 .card i{
+
 font-size:38px;
+
 color:#0B7A3B;
+
 margin-bottom:15px;
+
 }
+
+
 
 .numero{
+
 font-size:34px;
+
 font-weight:bold;
+
 color:#0B7A3B;
+
 }
+
+
 
 #proximoEvento{
+
 line-height:1.8;
+
 font-size:15px;
+
 }
+
 
 .menu{
+
 display:grid;
+
 grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+
 gap:25px;
+
 }
+
+
 
 .menu a{
+
 text-decoration:none;
+
 display:block;
+
 }
+
+
 
 .menu-card{
+
 background:white;
+
 padding:30px;
+
 border-radius:18px;
+
 box-shadow:0 8px 20px rgba(0,0,0,.08);
+
 color:#222;
+
 transition:.3s;
+
 height:100%;
+
 }
+
+
 
 .menu-card:hover{
+
 transform:translateY(-8px);
+
 background:#0B7A3B;
+
 color:white;
+
 }
+
 
 .menu-card i{
+
 font-size:42px;
+
 color:#0B7A3B;
+
 margin-bottom:15px;
+
 }
+
 
 .menu-card:hover i{
+
 color:white;
+
 }
+
 
 .menu-card h2{
+
 margin-bottom:10px;
+
 }
 
+
 .menu-card p{
+
 line-height:1.5;
+
 }
+
+
+footer{
+
+text-align:center;
+
+padding:30px;
+
+color:#555;
+
+}
+
 
 </style>
 
+
 </head>
+
+
 
 <body>
 
+
 <header>
+
 
 <div class="logo">
 
+
 <i class="fa-solid fa-heart-pulse"></i>
+
 
 <div>
 
@@ -159,23 +291,39 @@ line-height:1.5;
 
 </div>
 
+
 </div>
+
+
 
 <div class="usuario">
 
+
 <h3 id="nomeUsuario">
+
 Carregando...
+
 </h3>
 
+
 <span id="perfilUsuario">
+
 Perfil
+
 </span>
+
 
 </div>
 
+
 </header>
 
-<div class="container">
+
+<!-- DASHBOARD -->
+
+<div class="cards">
+
+
 <div class="card">
 
 <i class="fa-solid fa-user-group"></i>
@@ -286,12 +434,19 @@ Carregando...
 
 </div>
 
+
 </div>
 
 
 
+
+
+<!-- MENU PRINCIPAL -->
+
+
 <div class="menu">
-  <div class="menu">
+
+
 
 <a href="cadastro.html" data-perfil="admin recepcao">
 
@@ -306,6 +461,7 @@ Carregando...
 </div>
 
 </a>
+
 
 
 
@@ -325,6 +481,7 @@ Carregando...
 
 
 
+
 <a href="recepcao.html" data-perfil="admin recepcao">
 
 <div class="menu-card">
@@ -338,6 +495,7 @@ Carregando...
 </div>
 
 </a>
+
 
 
 
@@ -357,6 +515,7 @@ Carregando...
 
 
 
+
 <a href="agenda.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -372,7 +531,6 @@ Carregando...
 </a>
 
 
-
 <a href="macas.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -386,6 +544,7 @@ Carregando...
 </div>
 
 </a>
+
 
 
 
@@ -405,6 +564,7 @@ Carregando...
 
 
 
+
 <a href="historico.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -418,6 +578,7 @@ Carregando...
 </div>
 
 </a>
+
 
 
 
@@ -437,6 +598,7 @@ Carregando...
 
 
 
+
 <a href="meu-painel.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -450,6 +612,7 @@ Carregando...
 </div>
 
 </a>
+
 
 
 
@@ -469,6 +632,7 @@ Carregando...
 
 
 
+
 <a href="relatorios.html" data-perfil="admin">
 
 <div class="menu-card">
@@ -482,6 +646,7 @@ Carregando...
 </div>
 
 </a>
+
 
 
 
@@ -499,13 +664,13 @@ Carregando...
 
 </a>
 
-</div>
-
-</div>
-</div>
 
 
-<!-- Rodapé -->
+</div>
+
+
+</div>
+<!-- RODAPÉ -->
 
 <footer>
 
@@ -521,39 +686,72 @@ Liga Acadêmica de Desporto e Reabilitação na Fisioterapia
 
 
 
-<!-- Firebase -->
+</div>
+
+
+
+
+<!-- FIREBASE AUTENTICAÇÃO -->
 
 <script type="module">
 
+
 import { auth } from "./firebase.js";
 
-import { 
+
+import {
+
 onAuthStateChanged,
+
 signOut
-} from 
+
+}
+
+from
+
 "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 
-// Controle de sessão
 
-onAuthStateChanged(auth, (usuario)=>{
+// Verifica usuário logado
+
+onAuthStateChanged(auth,(usuario)=>{
 
 
 if(!usuario){
 
+
 window.location.href="login.html";
 
+
+return;
+
+
 }
+
+
+
+// Nome do usuário
+
+const nome = usuario.displayName || usuario.email;
+
+
+document.getElementById("nomeUsuario").innerText = nome;
+
 
 
 });
 
 
 
+
+
 // Botão sair
 
+
 const btnSair = document.getElementById("btnSair");
+
 
 
 btnSair.addEventListener("click",()=>{
@@ -563,14 +761,18 @@ signOut(auth)
 
 .then(()=>{
 
+
 window.location.href="login.html";
+
 
 })
 
 
 .catch((erro)=>{
 
-console.log("Erro ao sair:", erro);
+
+console.log("Erro ao sair:",erro);
+
 
 });
 
@@ -583,13 +785,24 @@ console.log("Erro ao sair:", erro);
 
 
 
-<!-- Controle de permissões -->
+
+
+<!-- CONTROLE DE PERMISSÕES -->
+
 
 <script type="module" src="permissoes.js"></script>
+
+
+
+<!-- DASHBOARD FIRESTORE -->
+
+
+<script type="module" src="dashboard.js"></script>
+
 
 
 
 </body>
 
 </html>
-<div class="cards">
+<div class="container">
