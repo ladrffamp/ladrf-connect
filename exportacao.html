@@ -23,29 +23,22 @@
 
 <style>
 
-
 *{
 
 margin:0;
-
 padding:0;
-
 box-sizing:border-box;
-
 font-family:'Poppins',sans-serif;
 
 }
 
 
-
 body{
 
 background:#eef3f7;
-
 color:#333;
 
 }
-
 
 
 header{
@@ -65,7 +58,6 @@ align-items:center;
 }
 
 
-
 header h1{
 
 font-size:28px;
@@ -73,12 +65,11 @@ font-size:28px;
 }
 
 
-
 .botao{
 
-background:white;
+background:#0B7A3B;
 
-color:#0B7A3B;
+color:white;
 
 padding:12px 20px;
 
@@ -93,6 +84,12 @@ font-weight:600;
 }
 
 
+.botao:hover{
+
+background:#09632f;
+
+}
+
 
 .container{
 
@@ -103,7 +100,6 @@ margin:auto;
 padding:35px;
 
 }
-
 
 
 .grid{
@@ -119,7 +115,6 @@ margin-bottom:30px;
 }
 
 
-
 .card{
 
 background:white;
@@ -133,7 +128,6 @@ box-shadow:0 8px 20px rgba(0,0,0,.08);
 }
 
 
-
 .card i{
 
 font-size:35px;
@@ -145,7 +139,6 @@ margin-bottom:15px;
 }
 
 
-
 .card h2{
 
 font-size:20px;
@@ -155,7 +148,50 @@ margin-bottom:10px;
 }
 
 
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+
+th{
+
+padding:15px;
+
+text-align:left;
+
+}
+
+
+td{
+
+padding:15px;
+
+border-bottom:1px solid #eee;
+
+}
+
+
+@media(max-width:700px){
+
+table{
+
+display:block;
+
+overflow-x:auto;
+
+white-space:nowrap;
+
+}
+
+}
+
+
 </style>
+
 
 </head>
 
@@ -176,11 +212,13 @@ Exportação
 
 </h1>
 
+
 <p>
 
 Relatórios e estatísticas LADRF
 
 </p>
+
 
 </div>
 
@@ -193,17 +231,24 @@ Início
 
 </button>
 
-
-</header>
-
-
 <div class="container">
 
-  <div class="card">
+
+<div class="grid">
+
+
+
+<div class="card">
 
 <i class="fa-solid fa-file-pdf"></i>
 
-<h2>Relatório PDF</h2>
+
+<h2>
+
+Relatório PDF
+
+</h2>
+
 
 <p>
 
@@ -229,11 +274,18 @@ Gerar PDF
 
 
 
+
 <div class="card">
 
 <i class="fa-solid fa-file-excel"></i>
 
-<h2>Relatório Excel</h2>
+
+<h2>
+
+Relatório Excel
+
+</h2>
+
 
 <p>
 
@@ -259,11 +311,18 @@ Gerar Excel
 
 
 
+
 <div class="card">
 
 <i class="fa-solid fa-chart-line"></i>
 
-<h2>Estatísticas</h2>
+
+<h2>
+
+Estatísticas
+
+</h2>
+
 
 <p>
 
@@ -287,7 +346,9 @@ Atualizar
 </div>
 
 
+
 </div>
+
 
 
 
@@ -307,8 +368,7 @@ Estatísticas por evento
 <br>
 
 
-
-<table style="width:100%;border-collapse:collapse;">
+<table>
 
 
 <thead>
@@ -316,21 +376,21 @@ Estatísticas por evento
 <tr style="background:#0B7A3B;color:white;">
 
 
-<th style="padding:15px;text-align:left;">
+<th>
 
 Evento
 
 </th>
 
 
-<th style="padding:15px;text-align:left;">
+<th>
 
 Pacientes
 
 </th>
 
 
-<th style="padding:15px;text-align:left;">
+<th>
 
 Atendimentos
 
@@ -349,7 +409,7 @@ Atendimentos
 
 <tr>
 
-<td colspan="3" style="padding:20px;text-align:center;">
+<td colspan="3" style="text-align:center">
 
 Carregando dados...
 
@@ -365,415 +425,21 @@ Carregando dados...
 
 
 </div>
-<style>
+</div>
 
-table th,
-table td{
 
-border-bottom:1px solid #eee;
 
-}
-
-
-table td{
-
-padding:15px;
-
-}
-
-
-@media(max-width:700px){
-
-table{
-
-display:block;
-
-overflow-x:auto;
-
-white-space:nowrap;
-
-}
-
-}
-
-</style>
-
-
-
-
-<script type="module">
-
-
-import { db } from "./firebase.js";
-
-
-import {
-
-
-collection,
-
-onSnapshot,
-
-query,
-
-orderBy
-
-
-}
-
-from
-
-
-"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
-
-
-
-const tabelaEventos = document.getElementById("tabelaEventos");
-
-
-
-// COLEÇÕES FIREBASE
-
-
-const eventosRef = collection(db,"eventos");
-
-const pacientesRef = collection(db,"pacientes");
-
-const atendimentosRef = collection(db,"atendimentos");
-
-
-
-
-let eventos=[];
-
-let pacientes=[];
-
-let atendimentos=[];
-
-
-
-
-
-// CARREGAR EVENTOS
-
-
-onSnapshot(
-
-query(eventosRef,orderBy("data")),
-
-(snapshot)=>{
-
-
-eventos=[];
-
-
-snapshot.forEach((doc)=>{
-
-
-eventos.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
-
-});
-
-
-
-atualizarTabela();
-
-
-}
-
-);
-
-
-
-
-
-// CARREGAR PACIENTES
-
-
-onSnapshot(
-
-pacientesRef,
-
-(snapshot)=>{
-
-
-pacientes=[];
-
-
-snapshot.forEach((doc)=>{
-
-
-pacientes.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
-
-});
-
-
-
-atualizarTabela();
-
-
-}
-
-);
-
-
-
-
-
-// CARREGAR ATENDIMENTOS
-
-
-onSnapshot(
-
-atendimentosRef,
-
-(snapshot)=>{
-
-
-atendimentos=[];
-
-
-snapshot.forEach((doc)=>{
-
-
-atendimentos.push({
-
-id:doc.id,
-
-...doc.data()
-
-});
-
-
-});
-
-
-
-atualizarTabela();
-
-
-}
-
-);
-
-
-
-
-
-function atualizarTabela(){
-
-
-tabelaEventos.innerHTML="";
-
-
-
-if(eventos.length===0){
-
-
-tabelaEventos.innerHTML=`
-
-<tr>
-
-<td colspan="3" style="text-align:center;padding:20px">
-
-Nenhum evento encontrado
-
-</td>
-
-</tr>
-
-`;
-
-
-return;
-
-
-}
-
-
-
-
-eventos.forEach((evento)=>{
-
-
-
-const totalPacientes = pacientes.filter(
-
-
-p=>p.evento===evento.nome
-
-
-).length;
-
-
-
-
-const totalAtendimentos = atendimentos.filter(
-
-
-a=>a.evento===evento.nome
-
-
-).length;
-
-
-
-
-tabelaEventos.innerHTML += `
-
-
-<tr>
-
-
-<td>
-
-${evento.nome || "Evento"}
-
-</td>
-
-
-<td>
-
-${totalPacientes}
-
-</td>
-
-
-<td>
-
-${totalAtendimentos}
-
-</td>
-
-
-</tr>
-
-
-`;
-
-
-
-});
-
-
-
-}
-
-
-
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 
-class="grid">
-<script>
+<script type="module" src="exportacao.js"></script>
 
-
-document.getElementById("gerarPDF").onclick=function(){
-
-
-const { jsPDF } = window.jspdf;
-
-
-const pdf = new jsPDF();
-
-
-pdf.text(
-"LADRF Connect 2.0",
-20,
-20
-);
-
-
-pdf.text(
-"Relatório de Atendimentos",
-20,
-35
-);
-
-
-pdf.text(
-"Gerado em: " + new Date().toLocaleDateString(),
-20,
-50
-);
-
-
-pdf.save(
-"relatorio_ladrf.pdf"
-);
-
-
-};
-
-
-
-
-
-document.getElementById("gerarExcel").onclick=function(){
-
-
-const dados=[
-
-{
-Relatorio:"LADRF Connect",
-Data:new Date().toLocaleDateString()
-}
-
-];
-
-
-const planilha=XLSX.utils.json_to_sheet(dados);
-
-
-const arquivo=XLSX.utils.book_new();
-
-
-XLSX.utils.book_append_sheet(
-arquivo,
-planilha,
-"Relatorio"
-);
-
-
-XLSX.writeFile(
-arquivo,
-"relatorio_ladrf.xlsx"
-);
-
-
-};
-
-
-
-document.getElementById("carregarDados").onclick=function(){
-
-alert("Dados atualizados!");
-
-};
-
-
-
-</script>
 
 
 </body>
 
 </html>
+</header>
