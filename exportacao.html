@@ -55,6 +55,8 @@ justify-content:space-between;
 
 align-items:center;
 
+box-shadow:0 5px 15px rgba(0,0,0,.15);
+
 }
 
 
@@ -69,7 +71,7 @@ font-size:28px;
 
 background:#0B7A3B;
 
-color:#fff;
+color:white;
 
 padding:12px 22px;
 
@@ -88,13 +90,6 @@ display:inline-flex;
 align-items:center;
 
 gap:8px;
-
-}
-
-
-.botao:hover{
-
-background:#09632f;
 
 }
 
@@ -160,9 +155,6 @@ font-size:20px;
 
 margin-bottom:10px;
 
-}
-
-
 table{
 
 width:100%;
@@ -186,6 +178,17 @@ td{
 padding:15px;
 
 border-bottom:1px solid #eee;
+
+}
+
+
+@media(max-width:900px){
+
+.grid{
+
+grid-template-columns:1fr;
+
+}
 
 }
 
@@ -246,6 +249,11 @@ Início
 
 </button>
 
+
+</header>
+
+
+
 <div class="container">
 
 
@@ -289,7 +297,6 @@ Gerar PDF
 
 
 
-
 <div class="card">
 
 <i class="fa-solid fa-file-excel"></i>
@@ -322,7 +329,6 @@ Gerar Excel
 
 
 </div>
-
 
 
 
@@ -363,11 +369,6 @@ Atualizar
 
 
 </div>
-
-
-
-
-
 <div class="card">
 
 
@@ -440,7 +441,10 @@ Carregando dados...
 
 
 </div>
+
+
 </div>
+
 
 
 
@@ -457,4 +461,4 @@ Carregando dados...
 </body>
 
 </html>
-</header>
+}
