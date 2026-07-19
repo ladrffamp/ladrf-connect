@@ -18,6 +18,56 @@ const qrArea = document.getElementById("qrcode");
 
 
 
+// ===============================
+// CARREGAR MODALIDADES
+// ===============================
+
+
+const selectModalidade = document.getElementById("modalidade");
+
+
+onSnapshot(
+
+collection(db,"modalidades"),
+
+(snapshot)=>{
+
+
+selectModalidade.innerHTML = `
+
+<option value="">
+Selecione
+</option>
+
+`;
+
+
+
+snapshot.forEach((doc)=>{
+
+
+const modalidade = doc.data();
+
+
+
+selectModalidade.innerHTML += `
+
+<option value="${modalidade.nome}">
+
+${modalidade.nome}
+
+</option>
+
+`;
+
+
+
+});
+
+
+}
+
+);
 console.log(
 "QRCode disponível:",
 typeof QRCode
