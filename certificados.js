@@ -7,13 +7,21 @@ import {
   Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+// ELEMENTOS DA PÁGINA
+
 const selectMembro = document.getElementById("membro");
 const selectEvento = document.getElementById("evento");
-const gerar = document.getElementById("gerarCertificado");
-const lista = document.getElementById("listaCertificados");
+const gerarCertificado = document.getElementById("gerarCertificado");
+const listaCertificados = document.getElementById("listaCertificados");
+const cargaHoraria = document.getElementById("cargaHoraria");
+
+
+// ARRAYS
 
 let membros = [];
 let eventos = [];
+
 
 // ===============================
 // CARREGAR MEMBROS
@@ -31,6 +39,7 @@ onSnapshot(
       </option>
     `;
 
+
     snapshot.forEach((doc) => {
 
       const dados = doc.data();
@@ -40,16 +49,19 @@ onSnapshot(
         ...dados
       });
 
+
       selectMembro.innerHTML += `
-        <option value="${dados.nome}">
+        <option value="${doc.id}">
           ${dados.nome}
         </option>
       `;
 
     });
 
+
   }
 );
+
 
 // ===============================
 // CARREGAR EVENTOS
@@ -65,6 +77,32 @@ onSnapshot(
       <option value="">
         Selecione o evento
       </option>
+    `;
+
+
+    snapshot.forEach((doc) => {
+
+      const dados = doc.data();
+
+
+      eventos.push({
+        id: doc.id,
+        ...dados
+      });
+
+
+      selectEvento.innerHTML += `
+        <option value="${doc.id}">
+          ${dados.titulo}
+        </option>
+      `;
+
+
+    });
+
+
+  }
+  import { db } from "./firebase.js";
 
 import {
   collection,
@@ -73,13 +111,21 @@ import {
   Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+// ELEMENTOS DA PÁGINA
+
 const selectMembro = document.getElementById("membro");
 const selectEvento = document.getElementById("evento");
-const gerar = document.getElementById("gerarCertificado");
-const lista = document.getElementById("listaCertificados");
+const gerarCertificado = document.getElementById("gerarCertificado");
+const listaCertificados = document.getElementById("listaCertificados");
+const cargaHoraria = document.getElementById("cargaHoraria");
+
+
+// ARRAYS
 
 let membros = [];
 let eventos = [];
+
 
 // ===============================
 // CARREGAR MEMBROS
@@ -97,6 +143,7 @@ onSnapshot(
       </option>
     `;
 
+
     snapshot.forEach((doc) => {
 
       const dados = doc.data();
@@ -106,16 +153,19 @@ onSnapshot(
         ...dados
       });
 
+
       selectMembro.innerHTML += `
-        <option value="${dados.nome}">
+        <option value="${doc.id}">
           ${dados.nome}
         </option>
       `;
 
     });
 
+
   }
 );
+
 
 // ===============================
 // CARREGAR EVENTOS
@@ -132,251 +182,277 @@ onSnapshot(
         Selecione o evento
       </option>
     `;
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(14);
-  pdf.text("participou da atividade:", 105, 100, { align: "center" });
 
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(16);
-  pdf.text(evento, 105, 120, { align: "center" });
-
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(14);
-  pdf.text(`Carga horária: ${carga} horas`, 105, 145, { align: "center" });
-
-  pdf.text(
-    "Liga Acadêmica de Desporto e Reabilitação na Fisioterapia",
-    105,
-    175,
-    { align: "center" }
-  );
-
-  pdf.text(`Data de emissão: ${data}`, 105, 190, {
-    align: "center"
-  });
-
-  pdf.line(55, 235, 155, 235);
-
-  pdf.text("Coordenação LADRF", 105, 245, {
-    align: "center"
-  });
-
-  pdf.save(`Certificado_${nome}.pdf`);
-
-  alert("Certificado emitido com sucesso!");
-
-};
-
-// ===============================
-// HISTÓRICO DE CERTIFICADOS
-// ===============================
-
-onSnapshot(
-  collection(db, "certificados"),
-  (snapshot) => {
-
-    lista.innerHTML = "";
-
-    if (snapshot.empty) {
-
-      lista.innerHTML = `
-        <tr>
-          <td colspan="4" style="text-align:center;padding:20px;">
-            Nenhum certificado emitido.
-          </td>
-        </tr>
-      `;
-
-      return;
-    }
-      snapshot.forEach((doc) => {
-
-      const c = doc.data();
-
-      lista.innerHTML += `
-        <tr>
-          <td>${c.nome}</td>
-          <td>${c.evento}</td>
-          <td>${c.data}</td>
-          <td>
-            <span style="
-              color:#0B7A3B;
-              font-weight:600;
-            ">
-              Emitido
-            </span>
-          </td>
-        </tr>
-      `;
-
-    });
-
-  }
-);
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(24);
-
-  pdf.text("CERTIFICADO", 105, 35, {
-    align: "center"
-  });
-
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(14);
-
-  pdf.text(
-    "Certificamos que",
-    105,
-    60,
-    { align: "center" }
-  );
-
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(18);
-
-  pdf.text(
-    membro.nome,
-    105,
-    80,
-    { align: "center" }
-  );
-
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(14);
-
-  pdf.text(
-    "participou do evento",
-    105,
-    100,
-    { align: "center" }
-  );
-
-  pdf.setFont("helvetica", "bold");
-  pdf.setFontSize(17);
-
-  pdf.text(
-    evento.titulo,
-    105,
-    120,
-    { align: "center" }
-  );
-
-  pdf.setFont("helvetica", "normal");
-  pdf.setFontSize(14);
-
-  pdf.text(
-    `Carga horária: ${carga} horas`,
-    105,
-    145,
-    { align: "center" }
-  );
-
-  pdf.text(
-    "Liga Acadêmica de Desporto e Reabilitação na Fisioterapia",
-    105,
-    170,
-    { align: "center" }
-  );
-
-  pdf.text(
-    `Emitido em ${data}`,
-    105,
-    185,
-    { align: "center" }
-  );
-
-  pdf.line(60, 235, 150, 235);
-
-  pdf.text(
-    "Coordenação LADRF",
-    105,
-    245,
-    { align: "center" }
-  );
-
-  pdf.save(`Certificado_${membro.nome}.pdf`);
-
-  alert("Certificado gerado com sucesso!");
-
-});
-// ======================================
-// HISTÓRICO DE CERTIFICADOS
-// ======================================
-
-onSnapshot(
-  collection(db, "certificados"),
-  (snapshot) => {
-
-    lista.innerHTML = "";
-
-    if (snapshot.empty) {
-
-      lista.innerHTML = `
-        <tr>
-          <td colspan="4" style="text-align:center;padding:20px;">
-            Nenhum certificado emitido.
-          </td>
-        </tr>
-      `;
-
-      return;
-
-    }
 
     snapshot.forEach((doc) => {
 
-      const cert = doc.data();
+      const dados = doc.data();
 
-      lista.innerHTML += `
-        <tr>
-          <td>${cert.membro ?? "-"}</td>
-          <td>${cert.evento ?? "-"}</td>
-          <td>${cert.dataEmissao ?? "-"}</td>
-          <td>
-            <span style="color:#0B7A3B;font-weight:600;">
-              Emitido
-            </span>
-          </td>
-        </tr>
+
+      eventos.push({
+        id: doc.id,
+        ...dados
+      });
+
+
+      selectEvento.innerHTML += `
+        <option value="${doc.id}">
+          ${dados.titulo}
+        </option>
       `;
+
 
     });
 
+
   }
 );
-// ======================================
-// PREENCHER CARGA HORÁRIA AUTOMATICAMENTE
-// ======================================
 
-selectEvento.addEventListener("change", () => {
+    pdf.setFont(
+      "helvetica",
+      "normal"
+    );
 
-  const evento = eventos.find(e => e.id === selectEvento.value);
 
-  if (!evento) return;
+    pdf.setFontSize(14);
 
-  // Se existir um campo "cargaHoraria" no documento
-  if (evento.cargaHoraria) {
-    inputCarga.value = evento.cargaHoraria;
-    return;
+
+    pdf.text(
+      "Certificamos que",
+      105,
+      60,
+      {
+        align:"center"
+      }
+    );
+
+
+    pdf.setFont(
+      "helvetica",
+      "bold"
+    );
+
+
+    pdf.setFontSize(18);
+
+
+    pdf.text(
+      membro.nome,
+      105,
+      80,
+      {
+        align:"center"
+      }
+    );
+
+
+
+    pdf.setFont(
+      "helvetica",
+      "normal"
+    );
+
+
+    pdf.setFontSize(14);
+
+
+    pdf.text(
+      "participou da atividade:",
+      105,
+      100,
+      {
+        align:"center"
+      }
+    );
+
+
+
+    pdf.setFont(
+      "helvetica",
+      "bold"
+    );
+
+
+    pdf.setFontSize(16);
+
+
+    pdf.text(
+      evento.titulo,
+      105,
+      120,
+      {
+        align:"center"
+      }
+    );
+
+
+
+    pdf.setFont(
+      "helvetica",
+      "normal"
+    );
+
+
+    pdf.setFontSize(14);
+
+
+    pdf.text(
+      `Carga horária: ${carga}`,
+      105,
+      145,
+      {
+        align:"center"
+      }
+    );
+
+
+
+    pdf.text(
+      "Liga Acadêmica de Desporto e Reabilitação na Fisioterapia",
+      105,
+      175,
+      {
+        align:"center"
+      }
+    );
+
+
+
+    pdf.text(
+      `Data de emissão: ${data}`,
+      105,
+      190,
+      {
+        align:"center"
+      }
+    );
+
+
+
+    pdf.line(
+      60,
+      230,
+      150,
+      230
+    );
+
+
+
+    pdf.text(
+      "Coordenação LADRF",
+      105,
+      245,
+      {
+        align:"center"
+      }
+    );
+
+
+
+    pdf.save(
+      `Certificado_${membro.nome}.pdf`
+    );
+
+
+
+    alert(
+      "Certificado gerado com sucesso!"
+    );
+
+
   }
 
-  // Calcula usando início e fim
-  if (evento.inicio && evento.fim) {
+);
 
-    const [hi, mi] = evento.inicio.split(":").map(Number);
-    const [hf, mf] = evento.fim.split(":").map(Number);
+// ===============================
+// HISTÓRICO DE CERTIFICADOS
+// ===============================
 
-    const inicio = hi * 60 + mi;
-    const fim = hf * 60 + mf;
+onSnapshot(
+  collection(db,"certificados"),
+  (snapshot)=>{
 
-    if (fim > inicio) {
 
-      const horas = ((fim - inicio) / 60).toFixed(1);
+    listaCertificados.innerHTML = "";
 
-      inputCarga.value = horas.replace(".0", "");
+
+    if(snapshot.empty){
+
+
+      listaCertificados.innerHTML = `
+
+        <tr>
+
+          <td colspan="4" style="
+            text-align:center;
+            padding:20px;
+          ">
+
+            Nenhum certificado emitido.
+
+          </td>
+
+        </tr>
+
+      `;
+
+
+      return;
 
     }
 
-  }
 
-});
-    `;
+
+    snapshot.forEach((doc)=>{
+
+
+      const certificado =
+        doc.data();
+
+
+
+      listaCertificados.innerHTML += `
+
+        <tr>
+
+          <td>
+            ${certificado.membro || "-"}
+          </td>
+
+
+          <td>
+            ${certificado.evento || "-"}
+          </td>
+
+
+          <td>
+            ${certificado.dataEmissao || "-"}
+          </td>
+
+
+          <td>
+
+            <span style="
+              color:#0B7A3B;
+              font-weight:bold;
+            ">
+
+              Emitido
+
+            </span>
+
+          </td>
+
+
+        </tr>
+
+      `;
+
+
+    });
+
+
+
+  }
+);
+);
