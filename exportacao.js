@@ -367,10 +367,47 @@ pdf.text(
 
 
 pdf.text(
-"Estatísticas por evento",
+"Estatísticas por modalidade",
 20,
-155
+170
 );
+
+
+let yModalidade = 185;
+
+
+const modalidades = [...new Set(
+pacientes.map(p=>p.modalidade)
+)];
+
+
+modalidades.forEach((modalidade)=>{
+
+
+const total = pacientes.filter(
+
+p=>p.modalidade===modalidade
+
+).length;
+
+
+
+pdf.text(
+
+`${modalidade}: ${total} pacientes`,
+
+20,
+
+yModalidade
+
+);
+
+
+
+yModalidade += 10;
+
+
+});
 
 
 
