@@ -516,6 +516,30 @@ Nome:p.nome || "",
 
 WhatsApp:p.whatsapp || "",
 
+Idade:p.idade || "",
+
+Modalidade:p.modalidade || "",
+
+Queixa:p.queixa || "",
+
+Status:p.status || "",
+
+Evento:p.evento || ""
+
+
+};
+
+
+});
+
+
+return {
+
+
+Nome:p.nome || "",
+
+WhatsApp:p.whatsapp || "",
+
 Modalidade:p.modalidade || "",
 
 Queixa:p.queixa || "",
