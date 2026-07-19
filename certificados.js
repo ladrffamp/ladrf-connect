@@ -65,7 +65,6 @@ onSnapshot(
       <option value="">
         Selecione o evento
       </option>
-import { db } from "./firebase.js";
 
 import {
   collection,
