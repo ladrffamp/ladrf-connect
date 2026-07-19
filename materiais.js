@@ -27,11 +27,7 @@ const pesquisa = document.getElementById("pesquisa");
 
 const btnNovo = document.getElementById("novoMaterial");
 
-btnNovo.onclick = function(){
 
-    document.getElementById("modalMaterial").style.display = "flex";
-
-};
 
 const btnSalvar = document.getElementById("salvarMaterial");
 
