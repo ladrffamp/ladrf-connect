@@ -682,12 +682,8 @@ ${totalAtendimentos}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 
+class="grid">
 <script>
-
-
-// ==============================
-// GERAR PDF
-// ==============================
 
 
 document.getElementById("gerarPDF").onclick=function(){
@@ -699,102 +695,29 @@ const { jsPDF } = window.jspdf;
 const pdf = new jsPDF();
 
 
-
-pdf.setFontSize(18);
-
 pdf.text(
-
 "LADRF Connect 2.0",
-
 20,
-
 20
-
 );
 
 
-
-pdf.setFontSize(14);
-
 pdf.text(
-
 "Relatório de Atendimentos",
-
 20,
-
 35
-
 );
 
 
-
-pdf.setFontSize(12);
-
-
 pdf.text(
-
-"Relatório gerado pelo sistema LADRF Connect",
-
+"Gerado em: " + new Date().toLocaleDateString(),
 20,
-
 50
-
 );
-
-
-
-pdf.text(
-
-"Data: " + new Date().toLocaleDateString(),
-
-20,
-
-65
-
-);
-
-
-
-pdf.text(
-
-"Total de eventos analisados: " + eventos.length,
-
-20,
-
-80
-
-);
-
-
-
-pdf.text(
-
-"Total de pacientes: " + pacientes.length,
-
-20,
-
-95
-
-);
-
-
-
-pdf.text(
-
-"Total de atendimentos: " + atendimentos.length,
-
-20,
-
-110
-
-);
-
 
 
 pdf.save(
-
 "relatorio_ladrf.pdf"
-
 );
 
 
@@ -802,90 +725,55 @@ pdf.save(
 
 
 
-
-
-// ==============================
-// GERAR EXCEL
-// ==============================
 
 
 document.getElementById("gerarExcel").onclick=function(){
 
 
+const dados=[
 
-const dadosEventos = eventos.map((evento)=>{
+{
+Relatorio:"LADRF Connect",
+Data:new Date().toLocaleDateString()
+}
 
-
-return{
-
-
-Evento:evento.nome || "",
-
-
-Data:evento.data || "",
+];
 
 
-Pacientes: pacientes.filter(
-
-p=>p.evento===evento.nome
-
-).length,
+const planilha=XLSX.utils.json_to_sheet(dados);
 
 
-Atendimentos: atendimentos.filter(
-
-a=>a.evento===evento.nome
-
-).length
-
-
-};
-
-
-});
-
-
-
-const planilha = XLSX.utils.json_to_sheet(dadosEventos);
-
-
-
-const arquivo = XLSX.utils.book_new();
-
+const arquivo=XLSX.utils.book_new();
 
 
 XLSX.utils.book_append_sheet(
-
 arquivo,
-
 planilha,
-
-"Eventos"
-
+"Relatorio"
 );
-
 
 
 XLSX.writeFile(
-
 arquivo,
-
 "relatorio_ladrf.xlsx"
-
 );
-
 
 
 };
 
+
+
+document.getElementById("carregarDados").onclick=function(){
+
+alert("Dados atualizados!");
+
+};
 
 
 
 </script>
 
 
-
 </body>
 
 </html>
-<div class="grid">
