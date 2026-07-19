@@ -15,6 +15,7 @@ const selectMembro = document.getElementById("membro");
 const selectEvento = document.getElementById("evento");
 const cargaHoraria = document.getElementById("cargaHoraria");
 const gerarCertificado = document.getElementById("gerarCertificado");
+const emitirTodos = document.getElementById("emitirTodos");
 const listaCertificados = document.getElementById("listaCertificados");
 
 
