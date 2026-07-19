@@ -109,7 +109,7 @@ ${dados.nome}
 
 onSnapshot(
 
-collection(db,"eventos"),
+collection(db,"agenda"),
 
 (snapshot)=>{
 
