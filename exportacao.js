@@ -171,6 +171,8 @@ id:doc.id,
 
 
 }
+
+);
 // ===============================
 // ATUALIZAR TABELA DE EVENTOS
 // ===============================
@@ -669,5 +671,4 @@ alert("Dados atualizados com sucesso!");
 
 
 
-};
 };
