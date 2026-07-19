@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Exportação | LADRF Connect</title>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
+<style>
+
+
+*{
+
+margin:0;
+
+padding:0;
+
+box-sizing:border-box;
+
+font-family:'Poppins',sans-serif;
+
+}
+
+
+
+body{
+
+background:#eef3f7;
+
+color:#333;
+
+}
+
+
+
+header{
+
+background:linear-gradient(90deg,#0B7A3B,#15A34A);
+
+color:white;
+
+padding:25px 40px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+}
+
+
+
+header h1{
+
+font-size:28px;
+
+}
+
+
+
+.botao{
+
+background:white;
+
+color:#0B7A3B;
+
+padding:12px 20px;
+
+border:none;
+
+border-radius:12px;
+
+cursor:pointer;
+
+font-weight:600;
+
+}
+
+
+
+.container{
+
+max-width:1300px;
+
+margin:auto;
+
+padding:35px;
+
+}
+
+
+
+.grid{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+
+gap:20px;
+
+margin-bottom:30px;
+
+}
+
+
+
+.card{
+
+background:white;
+
+padding:25px;
+
+border-radius:18px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+
+
+.card i{
+
+font-size:35px;
+
+color:#0B7A3B;
+
+margin-bottom:15px;
+
+}
+
+
+
+.card h2{
+
+font-size:20px;
+
+margin-bottom:10px;
+
+}
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header>
+
+
+<div>
+
+<h1>
+
+<i class="fa-solid fa-file-export"></i>
+
+Exportação
+
+</h1>
+
+<p>
+
+Relatórios e estatísticas LADRF
+
+</p>
+
+</div>
+
+
+<button class="botao" onclick="window.location='index.html'">
+
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</button>
+
+
+</header>
+
+
+<div class="container">
+
+  <div class="card">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+<h2>Relatório PDF</h2>
+
+<p>
+
+Gerar relatório completo dos atendimentos
+
+</p>
+
+
+<br>
+
+
+<button class="botao" id="gerarPDF">
+
+<i class="fa-solid fa-download"></i>
+
+Gerar PDF
+
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+<i class="fa-solid fa-file-excel"></i>
+
+<h2>Relatório Excel</h2>
+
+<p>
+
+Exportar dados para planilha
+
+</p>
+
+
+<br>
+
+
+<button class="botao" id="gerarExcel">
+
+<i class="fa-solid fa-table"></i>
+
+Gerar Excel
+
+</button>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+<i class="fa-solid fa-chart-line"></i>
+
+<h2>Estatísticas</h2>
+
+<p>
+
+Análise dos eventos LADRF
+
+</p>
+
+
+<br>
+
+
+<button class="botao" id="carregarDados">
+
+<i class="fa-solid fa-chart-column"></i>
+
+Atualizar
+
+</button>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="card">
+
+
+<h2>
+
+<i class="fa-solid fa-calendar-days"></i>
+
+Estatísticas por evento
+
+</h2>
+
+
+<br>
+
+
+
+<table style="width:100%;border-collapse:collapse;">
+
+
+<thead>
+
+<tr style="background:#0B7A3B;color:white;">
+
+
+<th style="padding:15px;text-align:left;">
+
+Evento
+
+</th>
+
+
+<th style="padding:15px;text-align:left;">
+
+Pacientes
+
+</th>
+
+
+<th style="padding:15px;text-align:left;">
+
+Atendimentos
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody id="tabelaEventos">
+
+
+<tr>
+
+<td colspan="3" style="padding:20px;text-align:center;">
+
+Carregando dados...
+
+</td>
+
+</tr>
+
+
+</tbody>
+
+
+</table>
+
+
+</div>
+<style>
+
+table th,
+table td{
+
+border-bottom:1px solid #eee;
+
+}
+
+
+table td{
+
+padding:15px;
+
+}
+
+
+@media(max-width:700px){
+
+table{
+
+display:block;
+
+overflow-x:auto;
+
+white-space:nowrap;
+
+}
+
+}
+
+</style>
+
+
+
+
+<script type="module">
+
+
+import { db } from "./firebase.js";
+
+
+import {
+
+
+collection,
+
+onSnapshot,
+
+query,
+
+orderBy
+
+
+}
+
+from
+
+
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+
+const tabelaEventos = document.getElementById("tabelaEventos");
+
+
+
+// COLEÇÕES FIREBASE
+
+
+const eventosRef = collection(db,"eventos");
+
+const pacientesRef = collection(db,"pacientes");
+
+const atendimentosRef = collection(db,"atendimentos");
+
+
+
+
+let eventos=[];
+
+let pacientes=[];
+
+let atendimentos=[];
+
+
+
+
+
+// CARREGAR EVENTOS
+
+
+onSnapshot(
+
+query(eventosRef,orderBy("data")),
+
+(snapshot)=>{
+
+
+eventos=[];
+
+
+snapshot.forEach((doc)=>{
+
+
+eventos.push({
+
+id:doc.id,
+
+...doc.data()
+
+});
+
+
+});
+
+
+
+atualizarTabela();
+
+
+}
+
+);
+
+
+
+
+
+// CARREGAR PACIENTES
+
+
+onSnapshot(
+
+pacientesRef,
+
+(snapshot)=>{
+
+
+pacientes=[];
+
+
+snapshot.forEach((doc)=>{
+
+
+pacientes.push({
+
+id:doc.id,
+
+...doc.data()
+
+});
+
+
+});
+
+
+
+atualizarTabela();
+
+
+}
+
+);
+
+
+
+
+
+// CARREGAR ATENDIMENTOS
+
+
+onSnapshot(
+
+atendimentosRef,
+
+(snapshot)=>{
+
+
+atendimentos=[];
+
+
+snapshot.forEach((doc)=>{
+
+
+atendimentos.push({
+
+id:doc.id,
+
+...doc.data()
+
+});
+
+
+});
+
+
+
+atualizarTabela();
+
+
+}
+
+);
+
+
+
+
+
+function atualizarTabela(){
+
+
+tabelaEventos.innerHTML="";
+
+
+
+if(eventos.length===0){
+
+
+tabelaEventos.innerHTML=`
+
+<tr>
+
+<td colspan="3" style="text-align:center;padding:20px">
+
+Nenhum evento encontrado
+
+</td>
+
+</tr>
+
+`;
+
+
+return;
+
+
+}
+
+
+
+
+eventos.forEach((evento)=>{
+
+
+
+const totalPacientes = pacientes.filter(
+
+
+p=>p.evento===evento.nome
+
+
+).length;
+
+
+
+
+const totalAtendimentos = atendimentos.filter(
+
+
+a=>a.evento===evento.nome
+
+
+).length;
+
+
+
+
+tabelaEventos.innerHTML += `
+
+
+<tr>
+
+
+<td>
+
+${evento.nome || "Evento"}
+
+</td>
+
+
+<td>
+
+${totalPacientes}
+
+</td>
+
+
+<td>
+
+${totalAtendimentos}
+
+</td>
+
+
+</tr>
+
+
+`;
+
+
+
+});
+
+
+
+}
+
+
+
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
+<script>
+
+
+// ==============================
+// GERAR PDF
+// ==============================
+
+
+document.getElementById("gerarPDF").onclick=function(){
+
+
+const { jsPDF } = window.jspdf;
+
+
+const pdf = new jsPDF();
+
+
+
+pdf.setFontSize(18);
+
+pdf.text(
+
+"LADRF Connect 2.0",
+
+20,
+
+20
+
+);
+
+
+
+pdf.setFontSize(14);
+
+pdf.text(
+
+"Relatório de Atendimentos",
+
+20,
+
+35
+
+);
+
+
+
+pdf.setFontSize(12);
+
+
+pdf.text(
+
+"Relatório gerado pelo sistema LADRF Connect",
+
+20,
+
+50
+
+);
+
+
+
+pdf.text(
+
+"Data: " + new Date().toLocaleDateString(),
+
+20,
+
+65
+
+);
+
+
+
+pdf.text(
+
+"Total de eventos analisados: " + eventos.length,
+
+20,
+
+80
+
+);
+
+
+
+pdf.text(
+
+"Total de pacientes: " + pacientes.length,
+
+20,
+
+95
+
+);
+
+
+
+pdf.text(
+
+"Total de atendimentos: " + atendimentos.length,
+
+20,
+
+110
+
+);
+
+
+
+pdf.save(
+
+"relatorio_ladrf.pdf"
+
+);
+
+
+};
+
+
+
+
+
+// ==============================
+// GERAR EXCEL
+// ==============================
+
+
+document.getElementById("gerarExcel").onclick=function(){
+
+
+
+const dadosEventos = eventos.map((evento)=>{
+
+
+return{
+
+
+Evento:evento.nome || "",
+
+
+Data:evento.data || "",
+
+
+Pacientes: pacientes.filter(
+
+p=>p.evento===evento.nome
+
+).length,
+
+
+Atendimentos: atendimentos.filter(
+
+a=>a.evento===evento.nome
+
+).length
+
+
+};
+
+
+});
+
+
+
+const planilha = XLSX.utils.json_to_sheet(dadosEventos);
+
+
+
+const arquivo = XLSX.utils.book_new();
+
+
+
+XLSX.utils.book_append_sheet(
+
+arquivo,
+
+planilha,
+
+"Eventos"
+
+);
+
+
+
+XLSX.writeFile(
+
+arquivo,
+
+"relatorio_ladrf.xlsx"
+
+);
+
+
+
+};
+
+
+
+
+</script>
+
+
+
+</body>
+
+</html>
+<div class="grid">
