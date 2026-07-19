@@ -1,13 +1,980 @@
-<a href="materiais.html" data-perfil="admin membro">
+<!DOCTYPE html>
+<html lang="pt-BR">
 
-<div class="menu-card">
+<head>
 
-<i class="fa-solid fa-boxes-stacked"></i>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<h2>Materiais</h2>
+<title>Materiais | LADRF Connect</title>
 
-<p>Controle de estoque</p>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Poppins',sans-serif;
+}
+
+body{
+background:#eef3f7;
+color:#333;
+}
+
+header{
+
+background:linear-gradient(90deg,#0B7A3B,#15A34A);
+
+color:#fff;
+
+padding:20px 35px;
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+box-shadow:0 5px 15px rgba(0,0,0,.12);
+
+}
+
+header h1{
+
+font-size:28px;
+
+}
+
+header p{
+
+opacity:.9;
+
+font-size:14px;
+
+}
+
+.container{
+
+max-width:1400px;
+
+margin:auto;
+
+padding:35px;
+
+}
+
+.topo{
+
+display:flex;
+
+justify-content:space-between;
+
+align-items:center;
+
+margin-bottom:30px;
+
+gap:20px;
+
+flex-wrap:wrap;
+
+}
+
+.busca{
+
+position:relative;
+
+flex:1;
+
+min-width:280px;
+
+}
+
+.busca input{
+
+width:100%;
+
+padding:14px 18px 14px 45px;
+
+border:none;
+
+border-radius:12px;
+
+font-size:15px;
+
+box-shadow:0 5px 15px rgba(0,0,0,.08);
+
+outline:none;
+
+}
+
+.busca i{
+
+position:absolute;
+
+left:16px;
+
+top:15px;
+
+color:#666;
+
+}
+
+.botoes{
+
+display:flex;
+
+gap:12px;
+
+flex-wrap:wrap;
+
+}
+
+.botao{
+
+background:#0B7A3B;
+
+color:#fff;
+
+padding:13px 22px;
+
+border:none;
+
+border-radius:12px;
+
+cursor:pointer;
+
+font-size:15px;
+
+font-weight:600;
+
+transition:.3s;
+
+}
+
+.botao:hover{
+
+background:#0d9448;
+
+}
+
+.resumo{
+
+display:grid;
+
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+
+gap:20px;
+
+margin-bottom:35px;
+
+}
+
+.card{
+
+background:white;
+
+padding:22px;
+
+border-radius:16px;
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.card i{
+
+font-size:34px;
+
+color:#0B7A3B;
+
+margin-bottom:12px;
+
+}
+
+.card h3{
+
+font-size:17px;
+
+margin-bottom:8px;
+
+}
+
+.numero{
+
+font-size:30px;
+
+font-weight:bold;
+
+color:#0B7A3B;
+
+}
+
+.tabela{
+
+background:#fff;
+
+border-radius:18px;
+
+overflow:hidden;
+
+box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+table{
+
+width:100%;
+
+border-collapse:collapse;
+
+}
+
+thead{
+
+background:#0B7A3B;
+
+color:#fff;
+
+}
+
+th{
+
+padding:18px;
+
+text-align:left;
+
+font-size:15px;
+
+}
+
+td{
+
+padding:18px;
+
+border-bottom:1px solid #eee;
+
+font-size:15px;
+
+}
+
+tbody tr:hover{
+
+background:#f8f8f8;
+
+}
+
+.status{
+
+padding:6px 12px;
+
+border-radius:30px;
+
+font-size:13px;
+
+font-weight:600;
+
+display:inline-block;
+
+}
+
+.normal{
+
+background:#d4edda;
+
+color:#155724;
+
+}
+
+.baixo{
+
+background:#fff3cd;
+
+color:#856404;
+
+}
+
+.esgotado{
+
+background:#f8d7da;
+
+color:#721c24;
+
+}
+
+.acoes{
+
+display:flex;
+
+gap:8px;
+
+}
+
+.btn-icon{
+
+border:none;
+
+padding:10px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+color:white;
+
+font-size:14px;
+
+}
+
+.entrada{
+
+background:#0B7A3B;
+
+}
+
+.saida{
+
+background:#dc3545;
+
+}
+
+.editar{
+
+background:#0d6efd;
+
+}
+
+.excluir{
+
+background:#6c757d;
+
+}
+
+footer{
+
+text-align:center;
+
+padding:30px;
+
+color:#666;
+
+}
+
+@media(max-width:900px){
+
+table{
+
+display:block;
+
+overflow-x:auto;
+
+white-space:nowrap;
+
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<div>
+
+<h1><i class="fa-solid fa-boxes-stacked"></i> Materiais</h1>
+
+<p>Controle de estoque da LADRF</p>
 
 </div>
 
-</a>
+<div>
+
+<button class="botao" onclick="window.location='index.html'">
+
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</button>
+
+</div>
+
+</header>
+
+<div class="container">
+
+<div class="topo">
+
+<div class="busca">
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<input
+type="text"
+id="pesquisa"
+placeholder="Pesquisar material...">
+
+</div>
+
+<div class="botoes">
+
+<button class="botao" id="novoMaterial">
+
+<i class="fa-solid fa-plus"></i>
+
+Novo Material
+
+</button>
+
+</div>
+<!-- RESUMO -->
+
+<div class="resumo">
+
+<div class="card">
+
+<i class="fa-solid fa-box"></i>
+
+<h3>Total de Materiais</h3>
+
+<div class="numero" id="totalMateriais">
+
+0
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<i class="fa-solid fa-triangle-exclamation"></i>
+
+<h3>Estoque Baixo</h3>
+
+<div class="numero" id="estoqueBaixo">
+
+0
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<i class="fa-solid fa-circle-xmark"></i>
+
+<h3>Esgotados</h3>
+
+<div class="numero" id="esgotados">
+
+0
+
+</div>
+
+</div>
+
+
+
+<div class="card">
+
+<i class="fa-solid fa-arrow-right-arrow-left"></i>
+
+<h3>Movimentações</h3>
+
+<div class="numero" id="movimentacoesHoje">
+
+0
+
+</div>
+
+</div>
+
+</div>
+
+
+
+
+<!-- TABELA -->
+
+<div class="tabela">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Material</th>
+
+<th>Categoria</th>
+
+<th>Quantidade</th>
+
+<th>Mínimo</th>
+
+<th>Unidade</th>
+
+<th>Status</th>
+
+<th>Ações</th>
+
+</tr>
+
+</thead>
+
+<tbody id="listaMateriais">
+
+<tr>
+
+<td colspan="7" style="text-align:center;padding:35px;">
+
+Carregando materiais...
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+
+
+
+
+<!-- MODAL -->
+
+<div id="modalMaterial" style="display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,.45);
+justify-content:center;
+align-items:center;
+z-index:999;">
+
+<div style="
+background:white;
+width:95%;
+max-width:550px;
+border-radius:18px;
+padding:30px;
+">
+
+<h2 style="margin-bottom:20px;">
+
+Novo Material
+
+</h2>
+
+
+
+<div style="display:flex;flex-direction:column;gap:15px;">
+
+
+<input
+
+id="nome"
+
+type="text"
+
+placeholder="Nome do material"
+
+style="padding:14px;border:1px solid #ddd;border-radius:10px;">
+
+
+<select
+
+id="categoria"
+
+style="padding:14px;border:1px solid #ddd;border-radius:10px;">
+
+<option value="">Categoria</option>
+
+<option>Bandagens</option>
+
+<option>Crioterapia</option>
+
+<option>Kinesio Tape</option>
+
+<option>EPIs</option>
+
+<option>Medicamentos</option>
+
+<option>Equipamentos</option>
+
+<option>Outros</option>
+
+</select>
+
+
+
+<input
+
+id="quantidade"
+
+type="number"
+
+placeholder="Quantidade"
+
+style="padding:14px;border:1px solid #ddd;border-radius:10px;">
+
+
+<input
+
+id="minimo"
+
+type="number"
+
+placeholder="Estoque mínimo"
+
+style="padding:14px;border:1px solid #ddd;border-radius:10px;">
+
+
+<select
+
+id="unidade"
+
+style="padding:14px;border:1px solid #ddd;border-radius:10px;">
+
+<option>unidades</option>
+
+<option>rolos</option>
+
+<option>caixas</option>
+
+<option>pares</option>
+
+<option>frascos</option>
+
+<option>kg</option>
+
+<option>litros</option>
+
+</select>
+
+</div>
+
+
+
+<div style="
+display:flex;
+justify-content:flex-end;
+gap:10px;
+margin-top:25px;">
+
+<button
+
+class="botao"
+
+style="background:#6c757d;"
+
+onclick="fecharModal()">
+
+Cancelar
+
+</button>
+
+
+
+<button
+
+class="botao"
+
+id="salvarMaterial">
+
+Salvar
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+
+<footer>
+
+LADRF Connect 2.0 • Controle de Materiais
+
+</footer>
+<script type="module">
+
+import { db } from "./firebase.js";
+
+import {
+
+collection,
+
+addDoc,
+
+onSnapshot,
+
+query,
+
+orderBy
+
+}
+
+from
+
+"https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+const tabela = document.getElementById("listaMateriais");
+
+const totalMateriais = document.getElementById("totalMateriais");
+
+const estoqueBaixo = document.getElementById("estoqueBaixo");
+
+const esgotados = document.getElementById("esgotados");
+
+const movimentacoesHoje = document.getElementById("movimentacoesHoje");
+
+const modal = document.getElementById("modalMaterial");
+
+
+
+window.fecharModal = function(){
+
+modal.style.display="none";
+
+}
+
+
+
+document.getElementById("novoMaterial").onclick=()=>{
+
+modal.style.display="flex";
+
+};
+
+
+
+const materiaisRef = collection(db,"materiais");
+
+
+
+onSnapshot(
+
+query(materiaisRef,orderBy("nome")),
+
+(snapshot)=>{
+
+
+tabela.innerHTML="";
+
+
+let total=0;
+
+let baixo=0;
+
+let zero=0;
+
+
+
+snapshot.forEach((doc)=>{
+
+
+const material=doc.data();
+
+
+total++;
+
+
+
+let status="normal";
+
+let texto="Normal";
+
+
+
+if(material.quantidade<=0){
+
+status="esgotado";
+
+texto="Esgotado";
+
+zero++;
+
+}
+
+else if(material.quantidade<=material.minimo){
+
+status="baixo";
+
+texto="Baixo";
+
+baixo++;
+
+}
+
+
+
+tabela.innerHTML+=`
+
+<tr>
+
+<td>${material.nome}</td>
+
+<td>${material.categoria}</td>
+
+<td>${material.quantidade}</td>
+
+<td>${material.minimo}</td>
+
+<td>${material.unidade}</td>
+
+<td>
+
+<span class="status ${status}">
+
+${texto}
+
+</span>
+
+</td>
+
+<td class="acoes">
+
+<button
+
+class="btn-icon entrada"
+
+onclick="entrada('${doc.id}')">
+
+<i class="fa-solid fa-plus"></i>
+
+</button>
+
+<button
+
+class="btn-icon saida"
+
+onclick="saida('${doc.id}')">
+
+<i class="fa-solid fa-minus"></i>
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+
+
+});
+
+
+
+totalMateriais.innerText=total;
+
+estoqueBaixo.innerText=baixo;
+
+esgotados.innerText=zero;
+
+
+
+});
+
+
+
+document.getElementById("salvarMaterial").onclick=async()=>{
+
+
+const nome=document.getElementById("nome").value.trim();
+
+const categoria=document.getElementById("categoria").value;
+
+const quantidade=Number(document.getElementById("quantidade").value);
+
+const minimo=Number(document.getElementById("minimo").value);
+
+const unidade=document.getElementById("unidade").value;
+
+
+
+if(nome===""){
+
+alert("Informe o nome do material.");
+
+return;
+
+}
+
+
+
+await addDoc(
+
+materiaisRef,
+
+{
+
+nome,
+
+categoria,
+
+quantidade,
+
+minimo,
+
+unidade
+
+}
+
+);
+
+
+
+document.getElementById("nome").value="";
+
+document.getElementById("categoria").value="";
+
+document.getElementById("quantidade").value="";
+
+document.getElementById("minimo").value="";
+
+document.getElementById("unidade").selectedIndex=0;
+
+
+
+fecharModal();
+
+
+
+};
+
+
+
+movimentacoesHoje.innerText="--";
+
+</script>
+<script type="module" src="materiais.js"></script>
+
+</body>
+</html>
+
+</div>
