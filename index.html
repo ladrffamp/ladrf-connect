@@ -114,6 +114,8 @@ padding:35px;
 
 
 
+/* DASHBOARD */
+
 .cards{
 
 display:grid;
@@ -154,6 +156,14 @@ margin-bottom:10px;
 
 
 
+.card h3{
+
+font-size:16px;
+
+}
+
+
+
 .numero{
 
 font-size:30px;
@@ -165,6 +175,8 @@ color:#0B7A3B;
 }
 
 
+
+/* MENU */
 
 .menu{
 
@@ -181,6 +193,8 @@ gap:25px;
 .menu a{
 
 text-decoration:none;
+
+display:block;
 
 }
 
@@ -199,6 +213,8 @@ box-shadow:0 8px 20px rgba(0,0,0,.08);
 color:#222;
 
 transition:.3s;
+
+height:100%;
 
 }
 
@@ -255,7 +271,6 @@ color:#666;
 }
 
 
-
 </style>
 
 
@@ -286,7 +301,6 @@ color:#666;
 </div>
 
 
-
 <div class="usuario">
 
 
@@ -306,8 +320,7 @@ Perfil
 
 </div>
 
-
-<div class="container">
+  <div class="container">
 
 
 <div class="cards">
@@ -329,7 +342,6 @@ Perfil
 
 
 
-
 <div class="card">
 
 <i class="fa-solid fa-bed"></i>
@@ -343,7 +355,6 @@ Perfil
 </div>
 
 </div>
-
 
 
 
@@ -363,7 +374,6 @@ Perfil
 
 
 
-
 <div class="card">
 
 <i class="fa-solid fa-users"></i>
@@ -377,7 +387,6 @@ Perfil
 </div>
 
 </div>
-
 
 
 
@@ -397,7 +406,6 @@ Carregando...
 
 
 
-
 <div class="card">
 
 <i class="fa-solid fa-calendar-check"></i>
@@ -411,7 +419,6 @@ Carregando...
 </div>
 
 </div>
-
 
 
 
@@ -436,8 +443,8 @@ Carregando...
 
 
 
-
 <div class="menu">
+
 
 
 <a href="cadastro.html" data-perfil="admin recepcao">
@@ -565,6 +572,7 @@ Carregando...
 
 
 
+
 <a href="materiais.html" data-perfil="admin membro">
 
 <div class="menu-card">
@@ -578,6 +586,7 @@ Carregando...
 </div>
 
 </a>
+
 
 
 
@@ -597,6 +606,7 @@ Carregando...
 
 
 
+
 <a href="membros.html" data-perfil="admin">
 
 <div class="menu-card">
@@ -610,6 +620,7 @@ Carregando...
 </div>
 
 </a>
+
 
 
 
@@ -629,6 +640,7 @@ Carregando...
 
 
 
+
 <a href="usuarios.html" data-perfil="admin">
 
 <div class="menu-card">
@@ -642,6 +654,7 @@ Carregando...
 </div>
 
 </a>
+
 
 
 
@@ -661,6 +674,7 @@ Carregando...
 
 
 
+
 <a href="#" id="btnSair">
 
 <div class="menu-card">
@@ -676,29 +690,25 @@ Carregando...
 </a>
 
 
+
 </div>
 
 
 </div>
+
 
 
 <footer>
 
 <p>
-
 LADRF Connect 2.0 © 2026
-
 </p>
 
 <p>
-
 Liga Acadêmica de Desporto e Reabilitação na Fisioterapia
-
 </p>
 
 </footer>
-<!-- Firebase -->
-
 <script type="module">
 
 import { auth } from "./firebase.js";
@@ -719,8 +729,7 @@ from
 
 
 
-
-// Controle de login
+// VERIFICAR LOGIN
 
 onAuthStateChanged(auth,(usuario)=>{
 
@@ -735,10 +744,9 @@ return;
 
 
 
-const nome = usuario.displayName || usuario.email;
+document.getElementById("nomeUsuario").innerText =
 
-
-document.getElementById("nomeUsuario").innerText = nome;
+usuario.displayName || usuario.email;
 
 
 
@@ -748,7 +756,8 @@ document.getElementById("nomeUsuario").innerText = nome;
 
 
 
-// Botão sair
+// SAIR DA CONTA
+
 
 const btnSair = document.getElementById("btnSair");
 
@@ -771,7 +780,6 @@ window.location.href="login.html";
 
 })
 
-
 .catch((erro)=>{
 
 
@@ -792,7 +800,8 @@ erro
 
 
 
-<!-- Controle de permissões -->
+
+<!-- SISTEMA DE PERMISSÕES -->
 
 <script type="module" src="permissoes.js"></script>
 
