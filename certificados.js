@@ -552,6 +552,152 @@ alert(
 
 
 // ===============================
+// EMITIR PARA TODOS OS MEMBROS
+// ===============================
+
+emitirTodos.addEventListener(
+"click",
+async()=>{
+
+
+const eventoId =
+selectEvento.value;
+
+
+const carga =
+cargaHoraria.value;
+
+
+
+if(!eventoId || !carga){
+
+alert(
+"Selecione um evento e aguarde a carga horária."
+);
+
+return;
+
+}
+
+
+
+const evento =
+eventos.find(
+e=>e.id===eventoId
+);
+
+
+
+if(!evento){
+
+alert(
+"Evento não encontrado."
+);
+
+return;
+
+}
+
+
+
+const membrosAtivos =
+membros.filter(
+m=>m.status==="Ativo"
+);
+
+
+
+if(membrosAtivos.length===0){
+
+alert(
+"Nenhum membro ativo encontrado."
+);
+
+return;
+
+}
+
+
+
+const ano =
+new Date().getFullYear();
+
+
+
+const certificados =
+await getDocs(
+collection(db,"certificados")
+);
+
+
+
+let contador =
+certificados.size + 1;
+
+
+
+for(
+const membro of membrosAtivos
+){
+
+
+const numero =
+`LADRF-${ano}-${String(contador).padStart(4,"0")}`;
+
+
+
+await addDoc(
+collection(db,"certificados"),
+{
+
+
+numeroCertificado:
+numero,
+
+
+membro:
+membro.nome,
+
+
+evento:
+evento.titulo,
+
+
+cargaHoraria:
+carga,
+
+
+dataEmissao:
+new Date()
+.toLocaleDateString("pt-BR"),
+
+
+criadoEm:
+Timestamp.now()
+
+
+}
+
+);
+
+
+
+contador++;
+
+
+}
+
+
+
+alert(
+`${membrosAtivos.length} certificados emitidos!`
+);
+
+
+
+}
+);
+// ===============================
 // LISTAR CERTIFICADOS
 // ===============================
 
