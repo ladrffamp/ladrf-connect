@@ -1,4 +1,4 @@
-  import { db } from "./firebase.js";
+import { db } from "./firebase.js";
 
 import {
 collection,
@@ -12,35 +12,52 @@ orderBy
 const eventosRef = collection(db,"eventos");
 const pacientesRef = collection(db,"pacientes");
 const atendimentosRef = collection(db,"atendimentos");
+const materiaisRef = collection(db,"materiais");
+
 
 
 let eventos = [];
 let pacientes = [];
 let atendimentos = [];
+let materiais = [];
+
+
 
 const tabelaEventos = document.getElementById("tabelaEventos");
 
 
 
 
+// ===============================
 // EVENTOS
+// ===============================
+
 
 onSnapshot(
-query(eventosRef, orderBy("data")),
+query(eventosRef,orderBy("data")),
 (snapshot)=>{
+
 
 eventos=[];
 
+
 snapshot.forEach((doc)=>{
 
+
 eventos.push({
+
 id:doc.id,
+
 ...doc.data()
-});
 
 });
+
+
+});
+
 
 atualizarTabela();
+
 
 }
 
@@ -49,25 +66,36 @@ atualizarTabela();
 
 
 
+// ===============================
 // PACIENTES
+// ===============================
+
 
 onSnapshot(
 pacientesRef,
 (snapshot)=>{
 
+
 pacientes=[];
+
 
 snapshot.forEach((doc)=>{
 
+
 pacientes.push({
+
 id:doc.id,
+
 ...doc.data()
+
 });
+
 
 });
 
 
 atualizarTabela();
+
 
 }
 
@@ -76,26 +104,36 @@ atualizarTabela();
 
 
 
+// ===============================
 // ATENDIMENTOS
+// ===============================
+
 
 onSnapshot(
 atendimentosRef,
 (snapshot)=>{
+
 
 atendimentos=[];
 
 
 snapshot.forEach((doc)=>{
 
+
 atendimentos.push({
+
 id:doc.id,
+
 ...doc.data()
+
 });
+
 
 });
 
 
 atualizarTabela();
+
 
 }
 
@@ -104,20 +142,56 @@ atualizarTabela();
 
 
 
-// TABELA
+// ===============================
+// MATERIAIS
+// ===============================
+
+
+onSnapshot(
+materiaisRef,
+(snapshot)=>{
+
+
+materiais=[];
+
+
+snapshot.forEach((doc)=>{
+
+
+materiais.push({
+
+id:doc.id,
+
+...doc.data()
+
+});
+
+
+});
+
+
+}
+// ===============================
+// ATUALIZAR TABELA DE EVENTOS
+// ===============================
+
 
 function atualizarTabela(){
 
 
 if(!tabelaEventos){
+
 return;
+
 }
 
 
 tabelaEventos.innerHTML="";
 
 
+
 if(eventos.length===0){
+
 
 tabelaEventos.innerHTML=`
 
@@ -139,17 +213,24 @@ return;
 
 
 
+
 eventos.forEach((evento)=>{
 
 
-let totalPacientes = pacientes.filter(
+const totalPacientes = pacientes.filter(
+
 p=>p.evento===evento.nome
+
 ).length;
 
 
-let totalAtendimentos = atendimentos.filter(
+
+const totalAtendimentos = atendimentos.filter(
+
 a=>a.evento===evento.nome
+
 ).length;
+
 
 
 
@@ -167,6 +248,8 @@ tabelaEventos.innerHTML += `
 
 `;
 
+
+
 });
 
 
@@ -175,11 +258,10 @@ tabelaEventos.innerHTML += `
 
 
 
-// PDF
-
 // ===============================
 // GERAR PDF PROFISSIONAL
 // ===============================
+
 
 document.getElementById("gerarPDF").onclick=()=>{
 
@@ -187,11 +269,14 @@ document.getElementById("gerarPDF").onclick=()=>{
 const { jsPDF } = window.jspdf;
 
 
+
 const pdf = new jsPDF();
 
 
 
+
 pdf.setFontSize(20);
+
 
 pdf.text(
 "LADRF Connect 2.0",
@@ -202,6 +287,7 @@ pdf.text(
 
 
 pdf.setFontSize(14);
+
 
 pdf.text(
 "Relatório de Atividades",
@@ -247,7 +333,7 @@ pdf.setFontSize(12);
 
 
 pdf.text(
-"Data de emissão: " + new Date().toLocaleDateString(),
+"Data: "+new Date().toLocaleDateString(),
 20,
 85
 );
@@ -255,7 +341,7 @@ pdf.text(
 
 
 pdf.text(
-"Eventos cadastrados: " + eventos.length,
+"Eventos: "+eventos.length,
 20,
 100
 );
@@ -263,7 +349,7 @@ pdf.text(
 
 
 pdf.text(
-"Pacientes registrados: " + pacientes.length,
+"Pacientes: "+pacientes.length,
 20,
 115
 );
@@ -271,12 +357,10 @@ pdf.text(
 
 
 pdf.text(
-"Atendimentos realizados: " + atendimentos.length,
+"Atendimentos: "+atendimentos.length,
 20,
 130
 );
-
-
 
 
 
@@ -288,37 +372,46 @@ pdf.text(
 
 
 
-let y = 170;
+let y=170;
 
 
 
 eventos.forEach((evento)=>{
 
 
-let totalPacientes = pacientes.filter(
+const qtdPacientes = pacientes.filter(
+
 p=>p.evento===evento.nome
+
 ).length;
 
 
-let totalAtendimentos = atendimentos.filter(
+
+const qtdAtendimentos = atendimentos.filter(
+
 a=>a.evento===evento.nome
+
 ).length;
 
 
 
 pdf.text(
-`${evento.nome}: ${totalPacientes} pacientes | ${totalAtendimentos} atendimentos`,
+
+`${evento.nome}: ${qtdPacientes} pacientes | ${qtdAtendimentos} atendimentos`,
+
 20,
+
 y
+
 );
 
 
 
-y += 10;
+y+=10;
 
 
 
-if(y > 280){
+if(y>280){
 
 pdf.addPage();
 
@@ -327,20 +420,7 @@ y=20;
 }
 
 
-
 });
-
-
-
-
-pdf.setFontSize(10);
-
-
-pdf.text(
-"Documento gerado automaticamente pelo LADRF Connect 2.0",
-20,
-290
-);
 
 
 
@@ -351,48 +431,17 @@ pdf.save(
 
 
 };
-
-pdf.text(
-"Relatório de atendimentos",
-20,
-35
-);
-
-
-pdf.text(
-"Pacientes: " + pacientes.length,
-20,
-50
-);
-
-
-pdf.text(
-"Atendimentos: " + atendimentos.length,
-20,
-65
-);
-
-
-
-pdf.save("relatorio_ladrf.pdf");
-
-
-};
-
-
-
-
-
-// EXCEL
-
 // ===============================
 // GERAR EXCEL COMPLETO
 // ===============================
 
+
 document.getElementById("gerarExcel").onclick=()=>{
 
 
+
 const arquivo = XLSX.utils.book_new();
+
 
 
 
@@ -400,22 +449,29 @@ const arquivo = XLSX.utils.book_new();
 // ABA EVENTOS
 // ===============================
 
+
 const dadosEventos = eventos.map((evento)=>{
 
 
 return {
 
-Evento: evento.nome || "",
 
-Data: evento.data || "",
+Evento:evento.nome || "",
 
-Pacientes: pacientes.filter(
+Data:evento.data || "",
+
+Pacientes:pacientes.filter(
+
 p=>p.evento===evento.nome
+
 ).length,
 
-Atendimentos: atendimentos.filter(
+Atendimentos:atendimentos.filter(
+
 a=>a.evento===evento.nome
+
 ).length
+
 
 };
 
@@ -423,14 +479,21 @@ a=>a.evento===evento.nome
 });
 
 
+
 const abaEventos = XLSX.utils.json_to_sheet(dadosEventos);
 
 
+
 XLSX.utils.book_append_sheet(
+
 arquivo,
+
 abaEventos,
+
 "Eventos"
+
 );
+
 
 
 
@@ -441,23 +504,23 @@ abaEventos,
 // ===============================
 
 
-const dadosPacientes = pacientes.map((paciente)=>{
+const dadosPacientes = pacientes.map((p)=>{
 
 
 return {
 
 
-Nome: paciente.nome || "",
+Nome:p.nome || "",
 
-WhatsApp: paciente.whatsapp || "",
+WhatsApp:p.whatsapp || "",
 
-Modalidade: paciente.modalidade || "",
+Modalidade:p.modalidade || "",
 
-Queixa: paciente.queixa || "",
+Queixa:p.queixa || "",
 
-Evento: paciente.evento || "",
+Status:p.status || "",
 
-Status: paciente.status || ""
+Evento:p.evento || ""
 
 
 };
@@ -472,9 +535,13 @@ const abaPacientes = XLSX.utils.json_to_sheet(dadosPacientes);
 
 
 XLSX.utils.book_append_sheet(
+
 arquivo,
+
 abaPacientes,
+
 "Pacientes"
+
 );
 
 
@@ -487,21 +554,21 @@ abaPacientes,
 // ===============================
 
 
-const dadosAtendimentos = atendimentos.map((atendimento)=>{
+const dadosAtendimentos = atendimentos.map((a)=>{
 
 
 return {
 
 
-Paciente: atendimento.paciente || "",
+Paciente:a.paciente || "",
 
-Evento: atendimento.evento || "",
+Evento:a.evento || "",
 
-Data: atendimento.data || "",
+Data:a.data || "",
 
-Membro: atendimento.membro || "",
+Membro:a.membro || "",
 
-Observação: atendimento.observacao || ""
+Observacao:a.observacao || ""
 
 
 };
@@ -516,9 +583,13 @@ const abaAtendimentos = XLSX.utils.json_to_sheet(dadosAtendimentos);
 
 
 XLSX.utils.book_append_sheet(
+
 arquivo,
+
 abaAtendimentos,
+
 "Atendimentos"
+
 );
 
 
@@ -531,87 +602,72 @@ abaAtendimentos,
 // ===============================
 
 
-const materiaisRef = collection(db,"materiais");
+const dadosMateriais = materiais.map((m)=>{
 
 
-
-onSnapshot(
-materiaisRef,
-(snapshot)=>{
+return {
 
 
-let materiais=[];
+Material:m.nome || "",
+
+Categoria:m.categoria || "",
+
+Quantidade:m.quantidade || 0,
+
+Unidade:m.unidade || "",
+
+EstoqueMinimo:m.minimo || 0
 
 
-snapshot.forEach((doc)=>{
-
-
-materiais.push({
-
-Material: doc.data().nome || "",
-
-Categoria: doc.data().categoria || "",
-
-Quantidade: doc.data().quantidade || 0,
-
-EstoqueMinimo: doc.data().minimo || 0,
-
-Unidade: doc.data().unidade || ""
-
-
-});
+};
 
 
 });
 
 
 
-const abaMateriais = XLSX.utils.json_to_sheet(materiais);
+const abaMateriais = XLSX.utils.json_to_sheet(dadosMateriais);
 
 
 
 XLSX.utils.book_append_sheet(
+
 arquivo,
+
 abaMateriais,
+
 "Materiais"
+
 );
 
 
 
+
 XLSX.writeFile(
+
 arquivo,
+
 "Relatorio_LADRF_Completo.xlsx"
-);
-
-
-
-}
 
 );
 
 
 
 };
+// ===============================
+// ATUALIZAR ESTATÍSTICAS
+// ===============================
 
-
-XLSX.writeFile(
-arquivo,
-"relatorio_ladrf.xlsx"
-);
-
-
-};
-
-
-
-
-
-// ATUALIZAR
 
 document.getElementById("carregarDados").onclick=()=>{
 
+
 atualizarTabela();
 
-alert("Dados atualizados!");
+
+alert("Dados atualizados com sucesso!");
+
+
 
 };
+);
