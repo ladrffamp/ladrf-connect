@@ -1,11 +1,8 @@
 import { db } from "./firebase.js";
 
 import {
-    collection,
-    doc,
-    setDoc,
-    onSnapshot,
-    Timestamp
+collection,
+onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const selectEvento = document.getElementById("evento");
@@ -19,483 +16,322 @@ const ausentes = document.getElementById("ausentes");
 let membros = [];
 let eventos = [];
 
-// Guarda as presenças carregadas
-let registrosPresenca = {};
-
-// Guarda o listener ativo da coleção "presencas"
-let unsubscribePresencas = null;
-
-// =====================================================
+// ==========================
 // CARREGAR EVENTOS
-// =====================================================
+// ==========================
 
-onSnapshot(collection(db, "agenda"), (snapshot) => {
+onSnapshot(
+collection(db,"agenda"),
+(snapshot)=>{
 
-    eventos = [];
+eventos=[];
 
-    selectEvento.innerHTML = `
-        <option value="">
-            Selecione um evento
-        </option>
-    `;
+selectEvento.innerHTML=`
+<option value="">
+Selecione um evento
+</option>
+`;
 
-    snapshot.forEach((documento) => {
+snapshot.forEach((doc)=>{
 
-        const evento = documento.data();
+const evento=doc.data();
 
-        eventos.push({
-            id: documento.id,
-            ...evento
-        });
+eventos.push({
+id:doc.id,
+...evento
+});
 
-        selectEvento.innerHTML += `
-            <option value="${documento.id}">
-                ${evento.titulo}
-            </option>
-        `;
-
-    });
+selectEvento.innerHTML+=`
+<option value="${doc.id}">
+${evento.titulo}
+</option>
+`;
 
 });
 
-// =====================================================
+}
+);
+
+// ==========================
 // CARREGAR MEMBROS
-// =====================================================
+// ==========================
 
-onSnapshot(collection(db, "membros"), (snapshot) => {
+onSnapshot(
+collection(db,"membros"),
+(snapshot)=>{
 
-    membros = [];
+membros=[];
 
-    snapshot.forEach((documento) => {
+snapshot.forEach((doc)=>{
 
-        const membro = documento.data();
+const membro=doc.data();
 
-        if (membro.status === "Ativo") {
+if(membro.status==="Ativo"){
 
-            membros.push({
-                id: documento.id,
-                ...membro
-            });
+membros.push({
 
-        }
-
-    });
-
-    carregarPresencas();
+id:doc.id,
+...membro
 
 });
 
-// =====================================================
-// CARREGAR PRESENÇAS
-// =====================================================
-
-function carregarPresencas() {
-
-    const eventoId = selectEvento.value;
-
-    // Remove o listener anterior
-    if (unsubscribePresencas) {
-        unsubscribePresencas();
-        unsubscribePresencas = null;
-    }
-
-    registrosPresenca = {};
-
-    if (!eventoId) {
-
-        atualizarTabela();
-        return;
-
-    }
-
-    unsubscribePresencas = onSnapshot(
-        collection(db, "presencas"),
-        (snapshot) => {
-
-            registrosPresenca = {};
-
-            snapshot.forEach((documento) => {
-
-                const dados = documento.data();
-
-                if (dados.eventoId === eventoId) {
-                    registrosPresenca[dados.membroId] = dados.status;
-                }
-
-            });
-
-            atualizarTabela();
-
-        }
-    );
-
 }
 
-// =====================================================
-// SALVAR PRESENÇA
-// =====================================================
+});
 
-async function salvarPresenca(membro, status) {
-
-    const eventoId = selectEvento.value;
-
-    if (!eventoId) {
-
-        alert("Selecione um evento primeiro.");
-        return;
-
-    }
-
-    const evento = eventos.find(e => e.id === eventoId);
-
-    const idPresenca = `${eventoId}_${membro.id}`;
-
-    await setDoc(
-        doc(collection(db, "presencas"), idPresenca),
-        {
-            eventoId,
-            evento: evento?.titulo || "",
-            membroId: membro.id,
-            membro: membro.nome,
-            status,
-
-            horaCheckin:
-                status === "Presente"
-                    ? new Date().toLocaleTimeString("pt-BR", {
-                          hour: "2-digit",
-                          minute: "2-digit"
-                      })
-                    : null,
-
-            criadoEm: Timestamp.now()
-        }
-    );
-
-    console.log("Presença salva:", membro.nome, status);
+atualizarTabela();
 
 }
+);
 
-// =====================================================
+// ==========================
 // ATUALIZAR TABELA
-// =====================================================
-// =====================================================
-// ATUALIZAR TABELA
-// =====================================================
+// ==========================
 
-function atualizarTabela() {
+function atualizarTabela(){
 
-    listaPresenca.innerHTML = "";
+listaPresenca.innerHTML="";
 
-    if (membros.length === 0) {
+if(membros.length===0){
 
-        listaPresenca.innerHTML = `
-            <tr>
-                <td colspan="4">
-                    Nenhum membro encontrado.
-                </td>
-            </tr>
-        `;
+listaPresenca.innerHTML=`
+<tr>
+<td colspan="5">
+Nenhum membro encontrado.
+</td>
+</tr>
+`;
 
-        atualizarResumo();
-        return;
-
-    }
-
-
-    membros.forEach((membro) => {
-
-        const status =
-            registrosPresenca[membro.id] || "Pendente";
-
-
-        let classeStatus = "";
-
-        if (status === "Presente") {
-            classeStatus = "presente";
-        }
-
-        else if (status === "Ausente") {
-            classeStatus = "ausente";
-        }
-
-        else {
-            classeStatus = "pendente";
-        }
-
-
-        listaPresenca.innerHTML += `
-
-            <tr>
-
-                <td>
-                    ${membro.nome || "Sem nome"}
-                </td>
-
-
-                <td>
-                    <span class="status ${classeStatus}">
-                        ${status}
-                    </span>
-                </td>
-
-
-                <td>
-
-                    <button
-                        class="btn-presente"
-                        data-id="${membro.id}">
-                        Presente
-                    </button>
-
-
-                    <button
-                        class="btn-ausente"
-                        data-id="${membro.id}">
-                        Ausente
-                    </button>
-
-                </td>
-
-            </tr>
-
-        `;
-
-    });
-
-
-    adicionarEventosBotoes();
-
-    atualizarResumo();
+return;
 
 }
 
+membros.forEach((membro)=>{
 
-// =====================================================
-// EVENTOS DOS BOTÕES
-// =====================================================
+listaPresenca.innerHTML+=`
 
-function adicionarEventosBotoes() {
+<tr>
 
+<td>
 
-    document
-    .querySelectorAll(".btn-presente")
-    .forEach((botao) => {
+${membro.nome}
 
+</td>
 
-        botao.onclick = () => {
+<td>
 
+${membro.curso}
 
-            const membro = membros.find(
-                m => m.id === botao.dataset.id
-            );
+</td>
 
+<td>
 
-            if (membro) {
+<span class="status pendente">
 
-                salvarPresenca(
-                    membro,
-                    "Presente"
-                );
+Pendente
 
-            }
+</span>
 
-        };
+</td>
 
+<td>
 
-    });
+—
 
+</td>
 
+<td>
 
-    document
-    .querySelectorAll(".btn-ausente")
-    .forEach((botao) => {
+<button class="presente">
 
+✔ Presente
 
-        botao.onclick = () => {
+</button>
 
+<button class="ausente">
 
-            const membro = membros.find(
-                m => m.id === botao.dataset.id
-            );
+❌ Ausente
 
+</button>
 
-            if (membro) {
+</td>
 
-                salvarPresenca(
-                    membro,
-                    "Ausente"
-                );
+</tr>
 
-            }
+`;
 
-        };
+});
 
+totalMembros.innerHTML=membros.length;
+presentes.innerHTML=0;
+pendentes.innerHTML=membros.length;
+ausentes.innerHTML=0;
 
-    });
+}
+function atualizarTabela(){
 
+listaPresenca.innerHTML="";
+
+if(membros.length===0){
+
+listaPresenca.innerHTML=`
+<tr>
+<td colspan="5">
+Nenhum membro encontrado.
+</td>
+</tr>
+`;
+
+return;
 
 }
 
+let qtdPresentes=0;
+let qtdAusentes=0;
+let qtdPendentes=0;
 
-// =====================================================
-// RESUMO DOS DADOS
-// =====================================================
+membros.forEach((membro)=>{
 
-function atualizarResumo() {
+membro.statusPresenca="Pendente";
+membro.hora="—";
 
+qtdPendentes++;
 
-    const valores =
-        Object.values(registrosPresenca);
+const linha=document.createElement("tr");
 
+linha.innerHTML=`
 
-    const total =
-        membros.length;
+<td>
 
+${membro.nome}
 
-    const totalPresentes =
-        valores.filter(
-            item => item === "Presente"
-        ).length;
+</td>
 
+<td>
 
-    const totalAusentes =
-        valores.filter(
-            item => item === "Ausente"
-        ).length;
+${membro.curso}
 
+</td>
 
-    const totalPendentes =
-        total -
-        totalPresentes -
-        totalAusentes;
+<td class="status">
 
+<span class="status pendente">
 
+Pendente
 
-    if (totalMembros) {
+</span>
 
-        totalMembros.textContent = total;
+</td>
 
-    }
+<td class="hora">
 
+—
 
-    if (presentes) {
+</td>
 
-        presentes.textContent = totalPresentes;
+<td>
 
-    }
+<button class="presente">
 
+✔ Presente
 
-    if (ausentes) {
+</button>
 
-        ausentes.textContent = totalAusentes;
+<button class="ausente">
 
-    }
+❌ Ausente
 
+</button>
 
-    if (pendentes) {
+</td>
 
-        pendentes.textContent = totalPendentes;
+`;
 
-    }
+const btnPresente=linha.querySelector(".presente");
+const btnAusente=linha.querySelector(".ausente");
 
+const status=linha.querySelector(".status span");
+const hora=linha.querySelector(".hora");
+
+btnPresente.onclick=()=>{
+
+if(membro.statusPresenca==="Pendente"){
+
+qtdPendentes--;
 
 }
-// =====================================================
-// TROCA DE EVENTO
-// =====================================================
 
-selectEvento.addEventListener(
-    "change",
-    () => {
+if(membro.statusPresenca==="Ausente"){
 
-        registrosPresenca = {};
+qtdAusentes--;
 
-        carregarPresencas();
+}
 
-    }
+if(membro.statusPresenca!=="Presente"){
+
+qtdPresentes++;
+
+}
+
+membro.statusPresenca="Presente";
+
+status.innerHTML="Presente";
+status.className="status presente";
+
+hora.innerHTML=new Date().toLocaleTimeString(
+"pt-BR",
+{
+hour:"2-digit",
+minute:"2-digit"
+}
 );
 
+presentes.innerHTML=qtdPresentes;
+ausentes.innerHTML=qtdAusentes;
+pendentes.innerHTML=qtdPendentes;
 
-// =====================================================
-// INICIALIZAÇÃO
-// =====================================================
+};
 
-function iniciarModuloFrequencia() {
+btnAusente.onclick=()=>{
 
+if(membro.statusPresenca==="Pendente"){
 
-    if (!selectEvento) {
-
-        console.error(
-            "Elemento evento não encontrado."
-        );
-
-        return;
-
-    }
-
-
-    if (!listaPresenca) {
-
-        console.error(
-            "Elemento listaPresenca não encontrado."
-        );
-
-        return;
-
-    }
-
-
-    atualizarTabela();
-
+qtdPendentes--;
 
 }
 
+if(membro.statusPresenca==="Presente"){
 
+qtdPresentes--;
 
+}
 
-// =====================================================
-// EXECUTAR
-// =====================================================
+if(membro.statusPresenca!=="Ausente"){
 
-iniciarModuloFrequencia();
-// =====================================================
-// LIMPEZA E SEGURANÇA DO LISTENER
-// =====================================================
+qtdAusentes++;
 
-window.addEventListener(
-    "beforeunload",
-    () => {
+}
 
-        if (unsubscribePresencas) {
+membro.statusPresenca="Ausente";
 
-            unsubscribePresencas();
+status.innerHTML="Ausente";
+status.className="status ausente";
 
-        }
+hora.innerHTML="—";
 
-    }
-);
+presentes.innerHTML=qtdPresentes;
+ausentes.innerHTML=qtdAusentes;
+pendentes.innerHTML=qtdPendentes;
 
+};
 
-// =====================================================
-// CORREÇÃO DE RECARREGAMENTO
-// =====================================================
+listaPresenca.appendChild(linha);
 
-selectEvento.addEventListener(
-    "change",
-    function () {
+});
 
-        carregarPresencas();
-
-    }
-);
-
-
-// =====================================================
-// PRIMEIRA CARGA
-// =====================================================
-
-if (membros.length > 0) {
-
-    atualizarTabela();
+totalMembros.innerHTML=membros.length;
+presentes.innerHTML=qtdPresentes;
+ausentes.innerHTML=qtdAusentes;
+pendentes.innerHTML=qtdPendentes;
 
 }
