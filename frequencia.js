@@ -142,7 +142,6 @@ id:documento.id,
 atualizarTabela();
 
 
-}
 
 // ==========================
 // CARREGAR PRESENÇAS DO FIRESTORE
