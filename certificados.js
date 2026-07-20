@@ -138,28 +138,30 @@ const fim = evento.fim.split(":");
 
 
 const minutosInicio =
-Number(inicio[0])*60+
+Number(inicio[0]) * 60 +
 Number(inicio[1]);
 
 
 const minutosFim =
-Number(fim[0])*60+
+Number(fim[0]) * 60 +
 Number(fim[1]);
 
 
 const total =
-minutosFim-minutosInicio;
+minutosFim - minutosInicio;
 
 
-if(total>0){
+if(total > 0){
 
 cargaHoraria.value =
-(total/60)+" horas";
+(total / 60) + " horas";
 
 }
 
 }
 
+
+}
 );
 
 
