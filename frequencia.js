@@ -679,13 +679,13 @@ cursor:pointer;
 
 
 
-linha.querySelector(".presente").onclick = ()=>{
+linha.querySelector(".presente").onclick = async ()=>{
+
 
 alert("Botão confirmar funcionando");
 
-};
 
-salvarPresenca(
+await salvarPresenca(
 membro,
 "Presente"
 );
@@ -695,33 +695,25 @@ membro,
 
 
 
-linha.querySelector(".ausente").onclick = ()=>{
+linha.querySelector(".ausente").onclick = async ()=>{
+
 
 alert("Botão ausente funcionando");
 
-};
 
-salvarPresenca(
+await salvarPresenca(
 membro,
 "Ausente"
 );
 
 
 };
-
-
+  
 console.log("Linha criada:", linha);
 console.log("Botão presente:", linha.querySelector(".presente"));
 
 
 listaPresenca.appendChild(linha);
-
-
-linha.querySelector(".presente").addEventListener("click", function(){
-
-alert("CLIQUE FUNCIONOU");
-
-});
 
 
 
