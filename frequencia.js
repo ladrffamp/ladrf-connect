@@ -94,18 +94,13 @@ onSnapshot(
 collection(db,"membros"),
 (snapshot)=>{
 
-
 membros=[];
-
 
 snapshot.forEach((doc)=>{
 
-
 const membro = doc.data();
 
-
 if(membro.status==="Ativo"){
-
 
 membros.push({
 
@@ -115,19 +110,17 @@ id:doc.id,
 
 });
 
-
 }
-
 
 });
 
-
 carregarPresencas();
-
 
 }
 
-  // ==========================
+);
+
+// ==========================
 // CARREGAR PRESENÇAS DO FIRESTORE
 // ==========================
 
@@ -640,4 +633,3 @@ console.log(
 "LADRF Frequência carregado!"
 
 );
-); SÓ TENHO ISSO
