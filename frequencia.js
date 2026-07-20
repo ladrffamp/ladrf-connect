@@ -358,6 +358,11 @@ linha.querySelector(".hora");
 btnPresente.onclick = async()=>{
 
 
+if(membro.statusPresenca==="Presente"){
+return;
+}
+
+
 if(membro.statusPresenca==="Pendente"){
 
 qtdPendentes--;
