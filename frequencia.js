@@ -797,7 +797,7 @@ ${c.dataEmissao || "-"}
 console.log(
 "LADRF Certificados carregado com sucesso!"
 );
-});
+
 // ===============================
 // EMITIR CERTIFICADOS PARA TODOS
 // ===============================
