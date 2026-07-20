@@ -686,6 +686,10 @@ cursor:pointer;
 
 linha.querySelector(".presente").onclick = ()=>{
 
+alert("Botão confirmar funcionando");
+
+};
+
 salvarPresenca(
 membro,
 "Presente"
@@ -697,6 +701,10 @@ membro,
 
 
 linha.querySelector(".ausente").onclick = ()=>{
+
+alert("Botão ausente funcionando");
+
+};
 
 salvarPresenca(
 membro,
