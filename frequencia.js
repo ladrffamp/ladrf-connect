@@ -23,14 +23,9 @@ let eventos = [];
 
 let registrosPresenca = {};
 
+let eventoSelecionado = localStorage.getItem("eventoFrequencia") || "";
 
-// controla o listener das presenças
-let cancelarPresencas = null;
-
-
-// guarda evento selecionado
-let eventoAtual = localStorage.getItem("eventoSelecionado") || "";
-
+let listenerPresencas = null;
 
 
 // ==========================
@@ -42,10 +37,10 @@ collection(db,"agenda"),
 (snapshot)=>{
 
 
-eventos=[];
+eventos = [];
 
 
-selectEvento.innerHTML=`
+selectEvento.innerHTML = `
 
 <option value="">
 Selecione um evento
@@ -84,11 +79,12 @@ ${evento.titulo}
 });
 
 
-// recupera evento após atualizar página
 
-if(eventoAtual){
+// mantém evento após atualizar página
 
-selectEvento.value = eventoAtual;
+if(eventoSelecionado){
+
+selectEvento.value = eventoSelecionado;
 
 carregarPresencas();
 
@@ -105,20 +101,18 @@ carregarPresencas();
 // CARREGAR MEMBROS
 // ==========================
 
-
 onSnapshot(
 collection(db,"membros"),
 (snapshot)=>{
 
 
-membros=[];
+membros = [];
 
 
 snapshot.forEach((documento)=>{
 
 
 const membro = documento.data();
-
 
 
 if(membro.status==="Ativo"){
@@ -142,7 +136,7 @@ id:documento.id,
 atualizarTabela();
 
 
-
+}
 // ==========================
 // CARREGAR PRESENÇAS DO FIRESTORE
 // ==========================
@@ -167,27 +161,17 @@ return;
 
 
 
-// salva evento escolhido
+// evita vários listeners ao trocar evento
 
-localStorage.setItem(
-"eventoSelecionado",
-eventoId
-);
+if(listenerPresencas){
 
-
-
-// remove listener antigo
-
-if(cancelarPresencas){
-
-cancelarPresencas();
+listenerPresencas();
 
 }
 
 
 
-
-cancelarPresencas = onSnapshot(
+listenerPresencas = onSnapshot(
 
 collection(db,"presencas"),
 
@@ -221,13 +205,15 @@ registrosPresenca[dados.membroId] = dados;
 atualizarTabela();
 
 
-
 }
 
 );
 
 
 }
+
+
+
 // ==========================
 // SALVAR PRESENÇA
 // ==========================
@@ -245,10 +231,7 @@ const eventoId = selectEvento.value;
 if(!eventoId){
 
 
-alert(
-"Selecione um evento primeiro."
-);
-
+alert("Selecione um evento primeiro.");
 
 return;
 
@@ -262,9 +245,7 @@ e=>e.id===eventoId
 
 
 
-const idPresenca =
-
-eventoId + "_" + membro.id;
+const idPresenca = eventoId + "_" + membro.id;
 
 
 
@@ -329,18 +310,6 @@ Timestamp.now()
 {
 merge:true
 }
-
-);
-
-
-
-console.log(
-
-"Presença salva",
-
-membro.nome,
-
-status
 
 );
 
@@ -458,9 +427,7 @@ ${statusAtual}
 
 <td class="hora">
 
-
 ${registro?.horaCheckin || "—"}
-
 
 </td>
 
@@ -520,7 +487,6 @@ cursor:pointer;
 </button>
 
 
-
 </td>
 
 
@@ -537,37 +503,24 @@ linha.querySelector(".ausente");
 
 
 
-let salvando = false;
-
-
-
 btnPresente.onclick = async()=>{
 
 
-if(salvando){
+if(registrosPresenca[membro.id]?.status==="Presente"){
 
 return;
 
 }
 
 
-salvando = true;
-
 
 btnPresente.disabled = true;
-
-btnAusente.disabled = true;
-
 
 
 await salvarPresenca(
 membro,
 "Presente"
 );
-
-
-
-salvando = false;
 
 
 };
@@ -577,30 +530,21 @@ salvando = false;
 btnAusente.onclick = async()=>{
 
 
-if(salvando){
+if(registrosPresenca[membro.id]?.status==="Ausente"){
 
 return;
 
 }
 
 
-salvando = true;
-
-
-btnPresente.disabled = true;
 
 btnAusente.disabled = true;
-
 
 
 await salvarPresenca(
 membro,
 "Ausente"
 );
-
-
-
-salvando = false;
 
 
 };
@@ -631,13 +575,9 @@ qtdAusentes;
 
 
 }
-
-
-
 // ==========================
 // TROCAR EVENTO
 // ==========================
-
 
 selectEvento.addEventListener(
 
@@ -646,12 +586,12 @@ selectEvento.addEventListener(
 ()=>{
 
 
-eventoAtual = selectEvento.value;
+eventoSelecionado = selectEvento.value;
 
 
 localStorage.setItem(
-"eventoSelecionado",
-eventoAtual
+"eventoFrequencia",
+eventoSelecionado
 );
 
 
@@ -668,9 +608,7 @@ carregarPresencas();
 // FINALIZAÇÃO
 // ==========================
 
-
 console.log(
-
 "LADRF Frequência carregado!"
-
+);
 );
