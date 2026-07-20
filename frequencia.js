@@ -368,6 +368,13 @@ const btnAusente =
 linha.querySelector(".ausente");
 
 
+console.log(
+"Botões encontrados:",
+btnPresente,
+btnAusente
+);
+
+
 const status =
 linha.querySelector(".status span");
 
