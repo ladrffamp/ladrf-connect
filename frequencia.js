@@ -498,8 +498,6 @@ ${registro?.horaCheckin || "—"}
 
 class="presente"
 
-${statusAtual==="Presente" ? "disabled" : ""}
-
 >
 
 ✔ Confirmar
@@ -507,12 +505,9 @@ ${statusAtual==="Presente" ? "disabled" : ""}
 </button>
 
 
-
 <button
 
 class="ausente"
-
-${statusAtual==="Ausente" ? "disabled" : ""}
 
 >
 
