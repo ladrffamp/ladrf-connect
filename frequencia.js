@@ -715,9 +715,16 @@ membro,
 };
 
 
+console.log("Linha criada:", linha);
+console.log("Botão presente:", linha.querySelector(".presente"));
+
 
 listaPresenca.appendChild(linha);
 
+
+linha.querySelector(".presente").addEventListener("click", function(){
+
+alert("CLIQUE FUNCIONOU");
 
 });
 
