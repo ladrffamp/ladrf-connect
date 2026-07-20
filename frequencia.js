@@ -9,8 +9,6 @@ Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// ELEMENTOS
-
 const selectEvento = document.getElementById("evento");
 const listaPresenca = document.getElementById("listaPresenca");
 
@@ -19,8 +17,6 @@ const presentes = document.getElementById("presentes");
 const pendentes = document.getElementById("pendentes");
 const ausentes = document.getElementById("ausentes");
 
-
-// DADOS
 
 let membros = [];
 let eventos = [];
@@ -34,9 +30,7 @@ onSnapshot(
 collection(db,"agenda"),
 (snapshot)=>{
 
-
 eventos=[];
-
 
 selectEvento.innerHTML=`
 
@@ -50,7 +44,7 @@ Selecione um evento
 snapshot.forEach((doc)=>{
 
 
-const evento=doc.data();
+const evento = doc.data();
 
 
 eventos.push({
@@ -75,6 +69,7 @@ ${evento.titulo}
 
 
 }
+
 );
 
 
@@ -82,6 +77,7 @@ ${evento.titulo}
 // ==========================
 // CARREGAR MEMBROS
 // ==========================
+
 
 onSnapshot(
 collection(db,"membros"),
@@ -94,7 +90,7 @@ membros=[];
 snapshot.forEach((doc)=>{
 
 
-const membro=doc.data();
+const membro = doc.data();
 
 
 if(membro.status==="Ativo"){
@@ -115,14 +111,19 @@ id:doc.id,
 });
 
 
-montarTabela();
+atualizarTabela();
 
 
 }
+
 );
-  // ==========================
+
+
+
+// ==========================
 // SALVAR PRESENÇA
 // ==========================
+
 
 async function salvarPresenca(
 membro,
@@ -146,12 +147,12 @@ return;
 
 
 const evento = eventos.find(
-e => e.id === eventoId
+e=>e.id===eventoId
 );
 
 
 
-const idPresenca = 
+const idPresenca =
 eventoId + "_" + membro.id;
 
 
@@ -165,16 +166,22 @@ idPresenca
 
 {
 
+
 eventoId:eventoId,
+
 
 evento:
 evento?.titulo || "",
 
+
+
 membroId:
 membro.id,
 
+
 membro:
 membro.nome,
+
 
 status:
 status,
@@ -202,10 +209,11 @@ null,
 criadoEm:
 Timestamp.now()
 
+
 }
 
-);
 
+);
 
 
 console.log(
@@ -215,22 +223,19 @@ status
 );
 
 
-}
+  // ==========================
+// ATUALIZAR TABELA
 // ==========================
-// MONTAR TABELA
-// ==========================
 
-function montarTabela(){
+function atualizarTabela(){
 
-
-listaPresenca.innerHTML = "";
+listaPresenca.innerHTML="";
 
 
+if(membros.length===0){
 
-if(membros.length === 0){
 
-
-listaPresenca.innerHTML = `
+listaPresenca.innerHTML=`
 
 <tr>
 
@@ -253,11 +258,15 @@ return;
 
 let qtdPresentes = 0;
 let qtdAusentes = 0;
-let qtdPendentes = membros.length;
+let qtdPendentes = 0;
 
 
 
 membros.forEach((membro)=>{
+
+
+qtdPendentes++;
+
 
 
 const linha = document.createElement("tr");
@@ -266,63 +275,50 @@ const linha = document.createElement("tr");
 
 linha.innerHTML = `
 
+
 <td>
+
 ${membro.nome}
+
 </td>
 
 
 <td>
+
 ${membro.curso || "-"}
+
 </td>
 
 
 <td class="status">
 
 <span class="status pendente">
+
 Pendente
+
 </span>
 
 </td>
 
 
 <td class="hora">
+
 —
+
 </td>
 
 
 <td>
 
 
-<button
-type="button"
-class="presente"
-style="
-background:#16a34a;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-">
+<button class="presente">
 
-✔ Confirmar
+✔ Presente
 
 </button>
 
 
-<button
-type="button"
-class="ausente"
-style="
-background:#dc2626;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-">
+<button class="ausente">
 
 ❌ Ausente
 
@@ -330,6 +326,7 @@ font-weight:bold;
 
 
 </td>
+
 
 `;
 
@@ -352,17 +349,39 @@ linha.querySelector(".hora");
 
 
 
+
 // ==========================
-// CONFIRMAR PRESENÇA
+// BOTÃO PRESENTE
 // ==========================
 
 
 btnPresente.onclick = async()=>{
 
 
+if(membro.statusPresenca==="Pendente"){
+
 qtdPendentes--;
 
+}
+
+
+if(membro.statusPresenca==="Ausente"){
+
+qtdAusentes--;
+
+}
+
+
+
+if(membro.statusPresenca!=="Presente"){
+
 qtdPresentes++;
+
+}
+
+
+
+membro.statusPresenca="Presente";
 
 
 
@@ -371,8 +390,7 @@ status.innerHTML="Presente";
 status.className="status presente";
 
 
-
-hora.innerHTML =
+const horario =
 new Date().toLocaleTimeString(
 "pt-BR",
 {
@@ -383,11 +401,15 @@ minute:"2-digit"
 
 
 
+hora.innerHTML=horario;
+
+
+
 presentes.innerHTML=qtdPresentes;
 
-pendentes.innerHTML=qtdPendentes;
-
 ausentes.innerHTML=qtdAusentes;
+
+pendentes.innerHTML=qtdPendentes;
 
 
 
@@ -402,17 +424,41 @@ membro,
 
 
 
+
+
 // ==========================
-// AUSENTE
+// BOTÃO AUSENTE
 // ==========================
 
 
 btnAusente.onclick = async()=>{
 
 
+if(membro.statusPresenca==="Pendente"){
+
 qtdPendentes--;
 
+}
+
+
+
+if(membro.statusPresenca==="Presente"){
+
+qtdPresentes--;
+
+}
+
+
+
+if(membro.statusPresenca!=="Ausente"){
+
 qtdAusentes++;
+
+}
+
+
+
+membro.statusPresenca="Ausente";
 
 
 
@@ -427,9 +473,9 @@ hora.innerHTML="—";
 
 presentes.innerHTML=qtdPresentes;
 
-pendentes.innerHTML=qtdPendentes;
-
 ausentes.innerHTML=qtdAusentes;
+
+pendentes.innerHTML=qtdPendentes;
 
 
 
@@ -444,42 +490,55 @@ membro,
 
 
 
+
 listaPresenca.appendChild(linha);
+
 
 
 });
 
 
 
-totalMembros.innerHTML=membros.length;
+totalMembros.innerHTML =
+membros.length;
 
-presentes.innerHTML=qtdPresentes;
 
-pendentes.innerHTML=qtdPendentes;
+presentes.innerHTML =
+qtdPresentes;
 
-ausentes.innerHTML=qtdAusentes;
+
+pendentes.innerHTML =
+qtdPendentes;
+
+
+ausentes.innerHTML =
+qtdAusentes;
+
 
 
 }
+
+
+
 // ==========================
-// TROCA DE EVENTO
+// ATUALIZAÇÃO AO TROCAR EVENTO
 // ==========================
+
 
 selectEvento.addEventListener(
 "change",
 ()=>{
 
-montarTabela();
+
+atualizarTabela();
+
 
 }
 );
 
 
 
-// ==========================
-// FINALIZAÇÃO
-// ==========================
-
 console.log(
-"LADRF Frequência carregado com sucesso!"
+"LADRF Frequência carregado!"
 );
+}
