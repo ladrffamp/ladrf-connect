@@ -2,7 +2,10 @@ import { db } from "./firebase.js";
 
 import {
 collection,
-onSnapshot
+doc,
+setDoc,
+onSnapshot,
+Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const selectEvento = document.getElementById("evento");
