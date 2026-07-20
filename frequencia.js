@@ -1,826 +1,351 @@
 import { db } from "./firebase.js";
 
 import {
-  collection,
-  onSnapshot,
-  addDoc,
-  Timestamp,
-  getDocs,
-  query,
-  where
+collection,
+doc,
+setDoc,
+onSnapshot,
+Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// ELEMENTOS
 
-const selectMembro = document.getElementById("membro");
 const selectEvento = document.getElementById("evento");
-const cargaHoraria = document.getElementById("cargaHoraria");
-const gerarCertificado = document.getElementById("gerarCertificado");
-const emitirTodos = document.getElementById("emitirTodos");
-const listaCertificados = document.getElementById("listaCertificados");
+const listaPresenca = document.getElementById("listaPresenca");
 
+const totalMembros = document.getElementById("totalMembros");
+const presentes = document.getElementById("presentes");
+const pendentes = document.getElementById("pendentes");
+const ausentes = document.getElementById("ausentes");
 
-// DADOS
 
 let membros = [];
 let eventos = [];
 
 
-// ===============================
-// CARREGAR MEMBROS
-// ===============================
+// NOVO:
+// Guarda as presenças carregadas do Firestore
 
-onSnapshot(
-  collection(db, "membros"),
-  (snapshot) => {
-
-    membros = [];
-
-    selectMembro.innerHTML = `
-      <option value="">
-        Selecione o membro
-      </option>
-    `;
+let registrosPresenca = {};
 
 
-    snapshot.forEach((doc) => {
 
-      const dados = doc.data();
-
-
-      membros.push({
-        id: doc.id,
-        ...dados
-      });
-
-
-      selectMembro.innerHTML += `
-        <option value="${doc.id}">
-          ${dados.nome}
-        </option>
-      `;
-
-    });
-
-  }
-);
-
-
-// ===============================
+// ==========================
 // CARREGAR EVENTOS
-// ===============================
+// ==========================
 
 onSnapshot(
-  collection(db, "agenda"),
-  (snapshot) => {
-
-    eventos = [];
-
-
-    selectEvento.innerHTML = `
-      <option value="">
-        Selecione o evento
-      </option>
-    `;
-
-
-    snapshot.forEach((doc) => {
-
-      const dados = doc.data();
-
-
-      eventos.push({
-        id: doc.id,
-        ...dados
-      });
-
-
-      selectEvento.innerHTML += `
-        <option value="${doc.id}">
-          ${dados.titulo}
-        </option>
-      `;
-
-
-    });
-
-  }
-);
-
-
-// ===============================
-// CARGA HORÁRIA AUTOMÁTICA
-// ===============================
-
-selectEvento.addEventListener(
-"change",
-()=>{
-
-
-const evento = eventos.find(
-e => e.id === selectEvento.value
-);
-
-
-if(!evento){
-
-cargaHoraria.value="";
-return;
-
-}
-
-
-if(evento.inicio && evento.fim){
-
-
-const inicio = evento.inicio.split(":");
-const fim = evento.fim.split(":");
-
-
-const minutosInicio =
-Number(inicio[0])*60+
-Number(inicio[1]);
-
-
-const minutosFim =
-Number(fim[0])*60+
-Number(fim[1]);
-
-
-const total =
-minutosFim-minutosInicio;
-
-
-if(total>0){
-
-cargaHoraria.value =
-(total/60)+" horas";
-
-}
-
-}
-
-);
-
-
-  // ===============================
-// GERAR NÚMERO DO CERTIFICADO
-// ===============================
-
-async function gerarNumeroCertificado(){
-
-  const ano = new Date().getFullYear();
-
-
-  const certificados =
-    await getDocs(
-      collection(db,"certificados")
-    );
-
-
-  const quantidade =
-    certificados.size + 1;
-
-
-  const numero =
-    String(quantidade).padStart(4,"0");
-
-
-  return `LADRF-${ano}-${numero}`;
-
-}
-
-
-
-// ===============================
-// GERAR CERTIFICADO
-// ===============================
-
-gerarCertificado.addEventListener(
-"click",
-async()=>{
-
-
-const membroId =
-selectMembro.value;
-
-
-const eventoId =
-selectEvento.value;
-
-
-const carga =
-cargaHoraria.value;
-
-
-
-if(
-!membroId ||
-!eventoId ||
-!carga
-){
-
-
-alert(
-"Preencha todos os campos."
-);
-
-
-return;
-
-
-}
-
-
-
-const membro =
-membros.find(
-m=>m.id===membroId
-);
-
-
-
-const evento =
-eventos.find(
-e=>e.id===eventoId
-);
-
-
-
-if(!membro || !evento){
-
-
-alert(
-"Erro ao localizar dados."
-);
-
-
-return;
-
-
-}
-
-
-
-const data =
-new Date()
-.toLocaleDateString("pt-BR");
-
-
-
-const numeroCertificado =
-await gerarNumeroCertificado();
-
-
-
-
-// SALVAR FIRESTORE
-
-await addDoc(
-collection(db,"certificados"),
-{
-
-
-numeroCertificado,
-
-
-membro:
-membro.nome,
-
-
-evento:
-evento.titulo,
-
-
-cargaHoraria:
-carga,
-
-
-dataEmissao:
-data,
-
-
-criadoEm:
-Timestamp.now()
-
-
-}
-
-);
-
-
-
-
-// ===============================
-// CRIAR PDF HORIZONTAL
-// ===============================
-
-
-const {jsPDF} =
-window.jspdf;
-
-
-
-const pdf =
-new jsPDF({
-
-orientation:"landscape",
-
-unit:"mm",
-
-format:"a4"
-
-});
-
-
-const largura =
-297;
-
-
-const altura =
-210;
-
-
-
-pdf.setLineWidth(1);
-
-
-pdf.rect(
-10,
-10,
-277,
-190
-);
-
-
-
-// TÍTULO
-
-pdf.setFont(
-"helvetica",
-"bold"
-);
-
-
-pdf.setFontSize(28);
-
-
-pdf.text(
-"LADRF",
-largura/2,
-45,
-{
-align:"center"
-}
-);
-
-
-
-pdf.setFontSize(24);
-
-
-pdf.text(
-"CERTIFICADO",
-largura/2,
-65,
-{
-align:"center"
-}
-);
-
-
-
-// NÚMERO
-
-pdf.setFont(
-"helvetica",
-"normal"
-);
-
-
-pdf.setFontSize(12);
-
-
-pdf.text(
-`Certificado nº ${numeroCertificado}`,
-largura/2,
-78,
-{
-align:"center"
-}
-);
-
-
-
-pdf.setFontSize(16);
-
-
-pdf.text(
-"Certificamos que",
-largura/2,
-100,
-{
-align:"center"
-}
-);
-
-
-
-pdf.setFont(
-"helvetica",
-"bold"
-);
-
-
-pdf.setFontSize(22);
-
-
-pdf.text(
-membro.nome,
-largura/2,
-120,
-{
-align:"center"
-}
-);
-  pdf.setFont(
-"helvetica",
-"normal"
-);
-
-
-pdf.setFontSize(16);
-
-
-pdf.text(
-"participou da atividade:",
-largura/2,
-140,
-{
-align:"center"
-}
-);
-
-
-
-pdf.setFont(
-"helvetica",
-"bold"
-);
-
-
-pdf.setFontSize(18);
-
-
-pdf.text(
-evento.titulo,
-largura/2,
-155,
-{
-align:"center"
-}
-);
-
-
-
-pdf.setFont(
-"helvetica",
-"normal"
-);
-
-
-pdf.setFontSize(14);
-
-
-
-pdf.text(
-`Carga horária: ${carga}`,
-largura/2,
-170,
-{
-align:"center"
-}
-);
-
-
-
-pdf.text(
-`Emitido em: ${data}`,
-60,
-190
-);
-
-
-
-
-pdf.line(
-190,
-185,
-260,
-185
-);
-
-
-
-pdf.text(
-"Coordenação LADRF",
-225,
-195,
-{
-align:"center"
-}
-);
-
-
-
-
-// BAIXAR PDF
-
-pdf.save(
-`Certificado_${membro.nome}.pdf`
-);
-
-
-
-alert(
-"Certificado gerado com sucesso!"
-);
-
-
-
-}
-);
-
-
-
-// ===============================
-// EMITIR PARA TODOS OS MEMBROS
-// ===============================
-
-emitirTodos.addEventListener(
-"click",
-async()=>{
-
-
-const eventoId =
-selectEvento.value;
-
-
-const carga =
-cargaHoraria.value;
-
-
-
-if(!eventoId || !carga){
-
-alert(
-"Selecione um evento e aguarde a carga horária."
-);
-
-return;
-
-}
-
-
-
-const evento =
-eventos.find(
-e=>e.id===eventoId
-);
-
-
-
-if(!evento){
-
-alert(
-"Evento não encontrado."
-);
-
-return;
-
-}
-
-
-
-const membrosAtivos =
-membros.filter(
-m=>m.status==="Ativo"
-);
-
-
-
-if(membrosAtivos.length===0){
-
-alert(
-"Nenhum membro ativo encontrado."
-);
-
-return;
-
-}
-
-
-
-const ano =
-new Date().getFullYear();
-
-
-
-const certificados =
-await getDocs(
-collection(db,"certificados")
-);
-
-
-
-let contador =
-certificados.size + 1;
-
-
-
-for(
-const membro of membrosAtivos
-){
-
-
-const numero =
-`LADRF-${ano}-${String(contador).padStart(4,"0")}`;
-
-
-
-await addDoc(
-collection(db,"certificados"),
-{
-
-
-numeroCertificado:
-numero,
-
-
-membro:
-membro.nome,
-
-
-evento:
-evento.titulo,
-
-
-cargaHoraria:
-carga,
-
-
-dataEmissao:
-new Date()
-.toLocaleDateString("pt-BR"),
-
-
-criadoEm:
-Timestamp.now()
-
-
-}
-
-);
-
-
-
-contador++;
-
-
-}
-
-
-
-alert(
-`${membrosAtivos.length} certificados emitidos!`
-);
-
-
-
-}
-);
-// ===============================
-// LISTAR CERTIFICADOS
-// ===============================
-
-
-onSnapshot(
-collection(db,"certificados"),
+collection(db,"agenda"),
 (snapshot)=>{
 
 
-listaCertificados.innerHTML="";
+eventos=[];
 
 
+selectEvento.innerHTML=`
 
-if(snapshot.empty){
-
-
-listaCertificados.innerHTML=`
-
-<tr>
-
-<td colspan="4">
-
-Nenhum certificado emitido.
-
-</td>
-
-</tr>
+<option value="">
+Selecione um evento
+</option>
 
 `;
 
 
-return;
 
-}
-
+snapshot.forEach((doc)=>{
 
 
-
-snapshot.forEach(
-(doc)=>{
+const evento = doc.data();
 
 
-const c =
-doc.data();
+eventos.push({
+
+id:doc.id,
+
+...evento
+
+});
 
 
 
-listaCertificados.innerHTML += `
+selectEvento.innerHTML += `
 
-<tr>
-
-<td>
-${c.numeroCertificado || "-"}
-</td>
-
-
-<td>
-${c.membro || "-"}
-</td>
-
-
-<td>
-${c.evento || "-"}
-</td>
-
-
-<td>
-${c.dataEmissao || "-"}
-</td>
-
-
-</tr>
+<option value="${doc.id}">
+${evento.titulo}
+</option>
 
 `;
-
 
 
 });
 
 
 }
-);
-// ===============================
-// FINALIZAÇÃO
-// ===============================
 
-
-// Mantém o sistema ativo em tempo real
-// Firestore atualiza automaticamente:
-// - membros
-// - eventos
-// - certificados
-
-
-console.log(
-"LADRF Certificados carregado com sucesso!"
 );
 
 
 
+// ==========================
+// CARREGAR MEMBROS
+// ==========================
 
 
-const evento =
-eventos.find(
+onSnapshot(
+collection(db,"membros"),
+(snapshot)=>{
+
+
+membros=[];
+
+
+snapshot.forEach((doc)=>{
+
+
+const membro = doc.data();
+
+
+if(membro.status==="Ativo"){
+
+
+membros.push({
+
+id:doc.id,
+
+...membro
+
+});
+
+
+}
+
+
+});
+
+
+carregarPresencas();
+
+
+}
+
+  // ==========================
+// CARREGAR PRESENÇAS DO FIRESTORE
+// ==========================
+
+
+function carregarPresencas(){
+
+
+const eventoId = selectEvento.value;
+
+
+
+if(!eventoId){
+
+
+registrosPresenca = {};
+
+atualizarTabela();
+
+return;
+
+
+}
+
+
+
+onSnapshot(
+
+collection(db,"presencas"),
+
+(snapshot)=>{
+
+
+registrosPresenca = {};
+
+
+
+snapshot.forEach((doc)=>{
+
+
+const dados = doc.data();
+
+
+
+if(dados.eventoId === eventoId){
+
+
+registrosPresenca[dados.membroId] = dados.status;
+
+
+}
+
+
+
+});
+
+
+
+atualizarTabela();
+
+
+
+}
+
+);
+
+
+
+}
+
+
+
+
+
+// ==========================
+// SALVAR PRESENÇA
+// ==========================
+
+
+async function salvarPresenca(
+membro,
+status
+){
+
+
+
+const eventoId = selectEvento.value;
+
+
+
+if(!eventoId){
+
+
+alert(
+"Selecione um evento primeiro."
+);
+
+
+return;
+
+
+}
+
+
+
+const evento = eventos.find(
 e=>e.id===eventoId
 );
 
 
 
-const membrosAtivos =
-membros.filter(
-m=>m.status==="Ativo"
+const idPresenca =
+
+eventoId + "_" + membro.id;
+
+
+
+
+await setDoc(
+
+doc(
+collection(db,"presencas"),
+idPresenca
+),
+
+{
+
+
+eventoId:eventoId,
+
+
+evento:
+evento?.titulo || "",
+
+
+
+membroId:
+membro.id,
+
+
+
+membro:
+membro.nome,
+
+
+
+status:status,
+
+
+
+horaCheckin:
+
+
+status==="Presente"
+
+?
+
+new Date().toLocaleTimeString(
+"pt-BR",
+{
+hour:"2-digit",
+minute:"2-digit"
+}
+)
+
+:
+
+null,
+
+
+
+criadoEm:
+Timestamp.now()
+
+
+}
+
+
 );
 
 
 
-if(membrosAtivos.length===0){
-
-alert(
-"Nenhum membro ativo encontrado."
+console.log(
+"Presença salva",
+membro.nome,
+status
 );
+
+
+}
+// ==========================
+// ATUALIZAR TABELA
+// ==========================
+
+
+function atualizarTabela(){
+
+
+listaPresenca.innerHTML="";
+
+
+
+if(membros.length===0){
+
+
+listaPresenca.innerHTML=`
+
+<tr>
+
+<td colspan="5">
+
+Nenhum membro encontrado.
+
+</td>
+
+</tr>
+
+`;
+
 
 return;
 
@@ -828,87 +353,291 @@ return;
 
 
 
-const existentes =
-await getDocs(
-collection(db,"certificados")
+let qtdPresentes = 0;
+let qtdAusentes = 0;
+let qtdPendentes = 0;
+
+
+
+membros.forEach((membro)=>{
+
+
+const statusAtual =
+registrosPresenca[membro.id] || "Pendente";
+
+
+
+if(statusAtual==="Presente"){
+
+qtdPresentes++;
+
+}
+
+
+else if(statusAtual==="Ausente"){
+
+qtdAusentes++;
+
+}
+
+
+else{
+
+qtdPendentes++;
+
+}
+
+
+
+
+const linha = document.createElement("tr");
+
+
+
+linha.innerHTML = `
+
+
+<td>
+
+${membro.nome}
+
+</td>
+
+
+
+<td>
+
+${membro.curso || "-"}
+
+</td>
+
+
+
+<td class="status">
+
+
+<span class="status ${statusAtual.toLowerCase()}">
+
+${statusAtual}
+
+</span>
+
+
+</td>
+
+
+
+<td class="hora">
+
+
+${statusAtual==="Presente"
+
+?
+
+"Registrado"
+
+:
+
+"—"
+
+}
+
+
+</td>
+
+
+
+<td>
+
+
+<button
+
+class="presente"
+
+style="
+
+background:#16a34a;
+
+color:white;
+
+border:none;
+
+padding:8px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+">
+
+✔ Confirmar
+
+</button>
+
+
+
+<button
+
+class="ausente"
+
+style="
+
+background:#dc2626;
+
+color:white;
+
+border:none;
+
+padding:8px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+">
+
+❌ Ausente
+
+</button>
+
+
+
+</td>
+
+
+`;
+
+
+
+const btnPresente =
+linha.querySelector(".presente");
+
+
+
+const btnAusente =
+linha.querySelector(".ausente");
+
+
+
+
+
+btnPresente.onclick = async()=>{
+
+
+if(registrosPresenca[membro.id]==="Presente"){
+
+return;
+
+}
+
+
+
+registrosPresenca[membro.id]="Presente";
+
+
+atualizarTabela();
+
+
+
+await salvarPresenca(
+membro,
+"Presente"
 );
 
 
-
-let numero =
-existentes.size + 1;
+};
 
 
 
-for(
-const membro of membrosAtivos
-){
 
 
-const duplicado =
-await getDocs(
-query(
-collection(db,"certificados"),
-where(
-"membro",
-"==",
-membro.nome
-),
-where(
-"evento",
-"==",
-evento.titulo
-)
-)
+
+btnAusente.onclick = async()=>{
+
+
+if(registrosPresenca[membro.id]==="Ausente"){
+
+return;
+
+}
+
+
+
+registrosPresenca[membro.id]="Ausente";
+
+
+atualizarTabela();
+
+
+
+await salvarPresenca(
+membro,
+"Ausente"
 );
 
 
+};
 
-if(duplicado.empty){
 
 
-await addDoc(
-collection(db,"certificados"),
-{
 
-numeroCertificado:
-`LADRF-${new Date().getFullYear()}-${String(numero).padStart(4,"0")}`,
+listaPresenca.appendChild(linha);
 
-membro:
-membro.nome,
 
-evento:
-evento.titulo,
 
-cargaHoraria:
-carga,
+});
 
-dataEmissao:
-new Date()
-.toLocaleDateString("pt-BR"),
 
-criadoEm:
-Timestamp.now()
+
+
+totalMembros.innerHTML =
+membros.length;
+
+
+presentes.innerHTML =
+qtdPresentes;
+
+
+pendentes.innerHTML =
+qtdPendentes;
+
+
+ausentes.innerHTML =
+qtdAusentes;
+
+
+
+}
+// ==========================
+// TROCAR EVENTO
+// ==========================
+
+
+selectEvento.addEventListener(
+
+"change",
+
+()=>{
+
+
+carregarPresencas();
+
 
 }
 
 );
 
 
-numero++;
-
-}
 
 
-}
+// ==========================
+// FINALIZAÇÃO
+// ==========================
 
 
+console.log(
 
-alert(
-"Certificados emitidos para todos os membros ativos!"
-);
-
-
-}
+"LADRF Frequência carregado!"
 
 );
+); SÓ TENHO ISSO
