@@ -276,14 +276,42 @@ const linha = document.createElement("tr");
 linha.innerHTML = `
 
 
-<td>
+<td style="display:flex;gap:10px;">
 
-${membro.nome}
+<button 
+class="presente"
+style="
+background:#16a34a;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+">
+
+✔ Confirmar
+
+</button>
+
+
+<button 
+class="ausente"
+style="
+background:#dc2626;
+color:white;
+border:none;
+padding:8px 12px;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+">
+
+❌ Recusar
+
+</button>
 
 </td>
-
-
-<td>
 
 ${membro.curso || "-"}
 
