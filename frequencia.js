@@ -22,6 +22,13 @@ let membros = [];
 let eventos = [];
 
 
+// NOVO:
+// Guarda as presenças carregadas do Firestore
+
+let registrosPresenca = {};
+
+
+
 // ==========================
 // CARREGAR EVENTOS
 // ==========================
@@ -30,7 +37,9 @@ onSnapshot(
 collection(db,"agenda"),
 (snapshot)=>{
 
+
 eventos=[];
+
 
 selectEvento.innerHTML=`
 
@@ -39,6 +48,7 @@ Selecione um evento
 </option>
 
 `;
+
 
 
 snapshot.forEach((doc)=>{
@@ -54,6 +64,7 @@ id:doc.id,
 ...evento
 
 });
+
 
 
 selectEvento.innerHTML += `
@@ -111,12 +122,82 @@ id:doc.id,
 });
 
 
+carregarPresencas();
+
+
+}
+
+  // ==========================
+// CARREGAR PRESENÇAS DO FIRESTORE
+// ==========================
+
+
+function carregarPresencas(){
+
+
+const eventoId = selectEvento.value;
+
+
+
+if(!eventoId){
+
+
+registrosPresenca = {};
+
 atualizarTabela();
+
+return;
+
+
+}
+
+
+
+onSnapshot(
+
+collection(db,"presencas"),
+
+(snapshot)=>{
+
+
+registrosPresenca = {};
+
+
+
+snapshot.forEach((doc)=>{
+
+
+const dados = doc.data();
+
+
+
+if(dados.eventoId === eventoId){
+
+
+registrosPresenca[dados.membroId] = dados.status;
+
+
+}
+
+
+
+});
+
+
+
+atualizarTabela();
+
 
 
 }
 
 );
+
+
+
+}
+
+
 
 
 
@@ -131,16 +212,21 @@ status
 ){
 
 
+
 const eventoId = selectEvento.value;
 
 
+
 if(!eventoId){
+
 
 alert(
 "Selecione um evento primeiro."
 );
 
+
 return;
+
 
 }
 
@@ -153,7 +239,9 @@ e=>e.id===eventoId
 
 
 const idPresenca =
+
 eventoId + "_" + membro.id;
+
 
 
 
@@ -179,15 +267,18 @@ membroId:
 membro.id,
 
 
+
 membro:
 membro.nome,
 
 
-status:
-status,
+
+status:status,
+
 
 
 horaCheckin:
+
 
 status==="Presente"
 
@@ -206,6 +297,7 @@ minute:"2-digit"
 null,
 
 
+
 criadoEm:
 Timestamp.now()
 
@@ -216,6 +308,7 @@ Timestamp.now()
 );
 
 
+
 console.log(
 "Presença salva",
 membro.nome,
@@ -223,13 +316,17 @@ status
 );
 
 
-  // ==========================
+}
+// ==========================
 // ATUALIZAR TABELA
 // ==========================
 
+
 function atualizarTabela(){
 
+
 listaPresenca.innerHTML="";
+
 
 
 if(membros.length===0){
@@ -265,7 +362,31 @@ let qtdPendentes = 0;
 membros.forEach((membro)=>{
 
 
+const statusAtual =
+registrosPresenca[membro.id] || "Pendente";
+
+
+
+if(statusAtual==="Presente"){
+
+qtdPresentes++;
+
+}
+
+
+else if(statusAtual==="Ausente"){
+
+qtdAusentes++;
+
+}
+
+
+else{
+
 qtdPendentes++;
+
+}
+
 
 
 
@@ -283,6 +404,7 @@ ${membro.nome}
 </td>
 
 
+
 <td>
 
 ${membro.curso || "-"}
@@ -290,39 +412,94 @@ ${membro.curso || "-"}
 </td>
 
 
+
 <td class="status">
 
-<span class="status pendente">
 
-Pendente
+<span class="status ${statusAtual.toLowerCase()}">
+
+${statusAtual}
 
 </span>
 
+
 </td>
+
 
 
 <td class="hora">
 
-—
+
+${statusAtual==="Presente"
+
+?
+
+"Registrado"
+
+:
+
+"—"
+
+}
+
 
 </td>
+
 
 
 <td>
 
 
-<button class="presente">
+<button
 
-✔ Presente
+class="presente"
+
+style="
+
+background:#16a34a;
+
+color:white;
+
+border:none;
+
+padding:8px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+">
+
+✔ Confirmar
 
 </button>
 
 
-<button class="ausente">
+
+<button
+
+class="ausente"
+
+style="
+
+background:#dc2626;
+
+color:white;
+
+border:none;
+
+padding:8px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+">
 
 ❌ Ausente
 
 </button>
+
 
 
 </td>
@@ -336,85 +513,29 @@ const btnPresente =
 linha.querySelector(".presente");
 
 
+
 const btnAusente =
 linha.querySelector(".ausente");
 
 
-const status =
-linha.querySelector(".status span");
 
-
-const hora =
-linha.querySelector(".hora");
-
-
-
-
-// ==========================
-// BOTÃO PRESENTE
-// ==========================
 
 
 btnPresente.onclick = async()=>{
 
 
-if(membro.statusPresenca==="Presente"){
+if(registrosPresenca[membro.id]==="Presente"){
+
 return;
-}
-
-
-if(membro.statusPresenca==="Pendente"){
-
-qtdPendentes--;
-
-}
-
-
-if(membro.statusPresenca==="Ausente"){
-
-qtdAusentes--;
 
 }
 
 
 
-if(membro.statusPresenca!=="Presente"){
-
-qtdPresentes++;
-
-}
+registrosPresenca[membro.id]="Presente";
 
 
-
-membro.statusPresenca="Presente";
-
-
-
-status.innerHTML="Presente";
-
-status.className="status presente";
-
-
-const horario =
-new Date().toLocaleTimeString(
-"pt-BR",
-{
-hour:"2-digit",
-minute:"2-digit"
-}
-);
-
-
-
-hora.innerHTML=horario;
-
-
-
-presentes.innerHTML=qtdPresentes;
-
-ausentes.innerHTML=qtdAusentes;
-
-pendentes.innerHTML=qtdPendentes;
+atualizarTabela();
 
 
 
@@ -424,60 +545,28 @@ membro,
 );
 
 
-
 };
 
 
 
 
 
-// ==========================
-// BOTÃO AUSENTE
-// ==========================
-
 
 btnAusente.onclick = async()=>{
 
 
-if(membro.statusPresenca==="Ausente"){
+if(registrosPresenca[membro.id]==="Ausente"){
+
 return;
-}
-
-
-if(membro.statusPresenca==="Pendente"){
-
-qtdPendentes--;
 
 }
 
 
 
-if(membro.statusPresenca!=="Ausente"){
-
-qtdAusentes++;
-
-}
+registrosPresenca[membro.id]="Ausente";
 
 
-
-membro.statusPresenca="Ausente";
-
-
-
-status.innerHTML="Ausente";
-
-status.className="status ausente";
-
-
-hora.innerHTML="—";
-
-
-
-presentes.innerHTML=qtdPresentes;
-
-ausentes.innerHTML=qtdAusentes;
-
-pendentes.innerHTML=qtdPendentes;
+atualizarTabela();
 
 
 
@@ -485,7 +574,6 @@ await salvarPresenca(
 membro,
 "Ausente"
 );
-
 
 
 };
@@ -498,6 +586,7 @@ listaPresenca.appendChild(linha);
 
 
 });
+
 
 
 
@@ -519,28 +608,36 @@ qtdAusentes;
 
 
 }
-
-
-
 // ==========================
-// ATUALIZAÇÃO AO TROCAR EVENTO
+// TROCAR EVENTO
 // ==========================
 
 
 selectEvento.addEventListener(
+
 "change",
+
 ()=>{
 
 
-atualizarTabela();
+carregarPresencas();
 
 
 }
+
 );
 
+
+
+
+// ==========================
+// FINALIZAÇÃO
+// ==========================
 
 
 console.log(
+
 "LADRF Frequência carregado!"
+
 );
-}
+);
