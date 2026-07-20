@@ -560,17 +560,6 @@ qtdAusentes;
 // ==========================
 
 
-selectEvento.addEventListener(
-"change",
-()=>{
-
-
-atualizarTabela();
-
-
-}
-);
-
 
 
 console.log(
