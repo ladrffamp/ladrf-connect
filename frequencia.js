@@ -23,19 +23,19 @@ let eventos = [];
 
 let registrosPresenca = {};
 
-let unsubscribePresencas = null;
+
+// controla o listener das presenças
+let cancelarPresencas = null;
 
 
-// guarda evento escolhido mesmo após recarregar
-let eventoSelecionado =
-localStorage.getItem("eventoFrequencia") || "";
+// guarda evento selecionado
+let eventoAtual = localStorage.getItem("eventoSelecionado") || "";
 
 
 
 // ==========================
 // CARREGAR EVENTOS
 // ==========================
-
 
 onSnapshot(
 collection(db,"agenda"),
@@ -71,7 +71,7 @@ id:documento.id,
 
 
 
-selectEvento.innerHTML +=`
+selectEvento.innerHTML += `
 
 <option value="${documento.id}">
 ${evento.titulo}
@@ -84,11 +84,11 @@ ${evento.titulo}
 });
 
 
-// restaura evento escolhido
+// recupera evento após atualizar página
 
-if(eventoSelecionado){
+if(eventoAtual){
 
-selectEvento.value = eventoSelecionado;
+selectEvento.value = eventoAtual;
 
 carregarPresencas();
 
@@ -117,7 +117,8 @@ membros=[];
 snapshot.forEach((documento)=>{
 
 
-const membro=documento.data();
+const membro = documento.data();
+
 
 
 if(membro.status==="Ativo"){
@@ -142,16 +143,20 @@ atualizarTabela();
 
 
 }
+
 // ==========================
-// CARREGAR PRESENÇAS
+// CARREGAR PRESENÇAS DO FIRESTORE
 // ==========================
 
 function carregarPresencas(){
 
+
 const eventoId = selectEvento.value;
 
 
+
 if(!eventoId){
+
 
 registrosPresenca = {};
 
@@ -162,23 +167,28 @@ return;
 }
 
 
-// salva o evento escolhido
+
+// salva evento escolhido
+
 localStorage.setItem(
-"eventoFrequencia",
+"eventoSelecionado",
 eventoId
 );
 
 
 
-if(unsubscribePresencas){
+// remove listener antigo
 
-unsubscribePresencas();
+if(cancelarPresencas){
+
+cancelarPresencas();
 
 }
 
 
 
-unsubscribePresencas = onSnapshot(
+
+cancelarPresencas = onSnapshot(
 
 collection(db,"presencas"),
 
@@ -212,55 +222,34 @@ registrosPresenca[dados.membroId] = dados;
 atualizarTabela();
 
 
-}
-
-);
-
-
-}
-
-
-
-// ==========================
-// TROCAR EVENTO
-// ==========================
-
-
-selectEvento.addEventListener(
-
-"change",
-
-()=>{
-
-
-eventoSelecionado = selectEvento.value;
-
-
-localStorage.setItem(
-"eventoFrequencia",
-eventoSelecionado
-);
-
-
-carregarPresencas();
-
 
 }
 
 );
+
+
+}
 // ==========================
 // SALVAR PRESENÇA
 // ==========================
 
-async function salvarPresenca(membro, status){
+async function salvarPresenca(
+membro,
+status
+){
 
 
 const eventoId = selectEvento.value;
 
 
+
 if(!eventoId){
 
-alert("Selecione um evento primeiro.");
+
+alert(
+"Selecione um evento primeiro."
+);
+
 
 return;
 
@@ -280,14 +269,10 @@ eventoId + "_" + membro.id;
 
 
 
-try{
-
-
 await setDoc(
 
 doc(
-db,
-"presencas",
+collection(db,"presencas"),
 idPresenca
 ),
 
@@ -346,36 +331,19 @@ Timestamp.now()
 merge:true
 }
 
-
 );
 
 
 
 console.log(
-"Presença salva:",
+
+"Presença salva",
+
 membro.nome,
+
 status
+
 );
-
-
-
-}
-
-catch(erro){
-
-
-console.error(
-"Erro ao salvar presença:",
-erro
-);
-
-
-alert(
-"Erro ao registrar presença."
-);
-
-
-}
 
 
 }
@@ -423,12 +391,11 @@ let qtdPendentes = 0;
 membros.forEach((membro)=>{
 
 
-const registro =
-registrosPresenca[membro.id];
-
+const registro = registrosPresenca[membro.id];
 
 
 const statusAtual =
+
 registro?.status || "Pendente";
 
 
@@ -453,17 +420,19 @@ qtdPendentes++;
 
 
 
-const linha=document.createElement("tr");
+const linha = document.createElement("tr");
 
 
 
-linha.innerHTML=`
+linha.innerHTML = `
+
 
 <td>
 
 ${membro.nome}
 
 </td>
+
 
 
 <td>
@@ -473,7 +442,9 @@ ${membro.curso || "-"}
 </td>
 
 
-<td>
+
+<td class="status">
+
 
 <span class="status ${statusAtual.toLowerCase()}">
 
@@ -481,14 +452,19 @@ ${statusAtual}
 
 </span>
 
+
 </td>
 
 
-<td>
+
+<td class="hora">
+
 
 ${registro?.horaCheckin || "—"}
 
+
 </td>
+
 
 
 <td>
@@ -498,25 +474,56 @@ ${registro?.horaCheckin || "—"}
 
 class="presente"
 
->
+style="
+
+background:#16a34a;
+
+color:white;
+
+border:none;
+
+padding:8px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+">
 
 ✔ Confirmar
 
 </button>
 
 
+
 <button
 
 class="ausente"
 
->
+style="
+
+background:#dc2626;
+
+color:white;
+
+border:none;
+
+padding:8px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+">
 
 ❌ Ausente
 
 </button>
 
 
+
 </td>
+
 
 `;
 
@@ -531,11 +538,27 @@ linha.querySelector(".ausente");
 
 
 
+let salvando = false;
+
+
+
 btnPresente.onclick = async()=>{
 
 
+if(salvando){
+
+return;
+
+}
+
+
+salvando = true;
+
+
 btnPresente.disabled = true;
+
 btnAusente.disabled = true;
+
 
 
 await salvarPresenca(
@@ -544,8 +567,8 @@ membro,
 );
 
 
-btnPresente.disabled = false;
-btnAusente.disabled = false;
+
+salvando = false;
 
 
 };
@@ -555,8 +578,20 @@ btnAusente.disabled = false;
 btnAusente.onclick = async()=>{
 
 
+if(salvando){
+
+return;
+
+}
+
+
+salvando = true;
+
+
 btnPresente.disabled = true;
+
 btnAusente.disabled = true;
+
 
 
 await salvarPresenca(
@@ -565,8 +600,8 @@ membro,
 );
 
 
-btnPresente.disabled = false;
-btnAusente.disabled = false;
+
+salvando = false;
 
 
 };
@@ -597,4 +632,47 @@ qtdAusentes;
 
 
 }
+
+
+
+// ==========================
+// TROCAR EVENTO
+// ==========================
+
+
+selectEvento.addEventListener(
+
+"change",
+
+()=>{
+
+
+eventoAtual = selectEvento.value;
+
+
+localStorage.setItem(
+"eventoSelecionado",
+eventoAtual
+);
+
+
+carregarPresencas();
+
+
+}
+
+);
+
+
+
+// ==========================
+// FINALIZAÇÃO
+// ==========================
+
+
+console.log(
+
+"LADRF Frequência carregado!"
+
+);
 );
