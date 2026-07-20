@@ -600,6 +600,12 @@ return;
 membros.forEach((membro)=>{
 
 
+if(!membro.statusPresenca){
+
+membro.statusPresenca="Pendente";
+
+}
+
 const linha = document.createElement("tr");
 
 
