@@ -902,7 +902,20 @@ erro
 
 <script type="module" src="permissoes.js"></script>
 
+<script>
+function atualizarHora() {
 
+    const hora = document.getElementById("horaAtual");
+
+    if (hora) {
+        hora.innerHTML = new Date().toLocaleTimeString("pt-BR");
+    }
+
+}
+
+setInterval(atualizarHora, 1000);
+atualizarHora();
+</script>
 
 
 </body>
