@@ -439,17 +439,14 @@ membro,
 btnAusente.onclick = async()=>{
 
 
-if(membro.statusPresenca==="Pendente"){
-
-qtdPendentes--;
-
+if(membro.statusPresenca==="Ausente"){
+return;
 }
 
 
+if(membro.statusPresenca==="Pendente"){
 
-if(membro.statusPresenca==="Presente"){
-
-qtdPresentes--;
+qtdPendentes--;
 
 }
 
