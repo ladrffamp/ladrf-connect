@@ -1,13 +1,12 @@
 import { db } from "./firebase.js";
 
 import {
-collection,
-doc,
-setDoc,
-onSnapshot,
-Timestamp
+    collection,
+    doc,
+    setDoc,
+    onSnapshot,
+    Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 const selectEvento = document.getElementById("evento");
 const listaPresenca = document.getElementById("listaPresenca");
@@ -17,626 +16,486 @@ const presentes = document.getElementById("presentes");
 const pendentes = document.getElementById("pendentes");
 const ausentes = document.getElementById("ausentes");
 
-
 let membros = [];
 let eventos = [];
 
-
-// NOVO:
-// Guarda as presenças carregadas do Firestore
-
+// Guarda as presenças carregadas
 let registrosPresenca = {};
 
+// Guarda o listener ativo da coleção "presencas"
+let unsubscribePresencas = null;
 
-
-// ==========================
+// =====================================================
 // CARREGAR EVENTOS
-// ==========================
+// =====================================================
 
-onSnapshot(
-collection(db,"agenda"),
-(snapshot)=>{
+onSnapshot(collection(db, "agenda"), (snapshot) => {
 
+    eventos = [];
 
-eventos=[];
+    selectEvento.innerHTML = `
+        <option value="">
+            Selecione um evento
+        </option>
+    `;
 
+    snapshot.forEach((documento) => {
 
-selectEvento.innerHTML=`
+        const evento = documento.data();
 
-<option value="">
-Selecione um evento
-</option>
+        eventos.push({
+            id: documento.id,
+            ...evento
+        });
 
-`;
+        selectEvento.innerHTML += `
+            <option value="${documento.id}">
+                ${evento.titulo}
+            </option>
+        `;
 
-
-
-snapshot.forEach((doc)=>{
-
-
-const evento = doc.data();
-
-
-eventos.push({
-
-id:doc.id,
-
-...evento
+    });
 
 });
 
-
-
-selectEvento.innerHTML += `
-
-<option value="${doc.id}">
-${evento.titulo}
-</option>
-
-`;
-
-
-});
-
-
-}
-
-);
-
-
-
-// ==========================
+// =====================================================
 // CARREGAR MEMBROS
-// ==========================
+// =====================================================
 
+onSnapshot(collection(db, "membros"), (snapshot) => {
 
-onSnapshot(
-collection(db,"membros"),
-(snapshot)=>{
+    membros = [];
 
+    snapshot.forEach((documento) => {
 
-membros=[];
+        const membro = documento.data();
 
+        if (membro.status === "Ativo") {
 
-snapshot.forEach((doc)=>{
+            membros.push({
+                id: documento.id,
+                ...membro
+            });
 
+        }
 
-const membro = doc.data();
+    });
 
-
-if(membro.status==="Ativo"){
-
-
-membros.push({
-
-id:doc.id,
-
-...membro
+    carregarPresencas();
 
 });
 
+// =====================================================
+// CARREGAR PRESENÇAS
+// =====================================================
+
+function carregarPresencas() {
+
+    const eventoId = selectEvento.value;
+
+    // Remove o listener anterior
+    if (unsubscribePresencas) {
+        unsubscribePresencas();
+        unsubscribePresencas = null;
+    }
+
+    registrosPresenca = {};
+
+    if (!eventoId) {
+
+        atualizarTabela();
+        return;
+
+    }
+
+    unsubscribePresencas = onSnapshot(
+        collection(db, "presencas"),
+        (snapshot) => {
+
+            registrosPresenca = {};
+
+            snapshot.forEach((documento) => {
+
+                const dados = documento.data();
+
+                if (dados.eventoId === eventoId) {
+                    registrosPresenca[dados.membroId] = dados.status;
+                }
+
+            });
+
+            atualizarTabela();
+
+        }
+    );
 
 }
 
-
-});
-
-
-carregarPresencas();
-
-
-}
-
-  // ==========================
-// CARREGAR PRESENÇAS DO FIRESTORE
-// ==========================
-
-
-function carregarPresencas(){
-
-
-const eventoId = selectEvento.value;
-
-
-
-if(!eventoId){
-
-
-registrosPresenca = {};
-
-atualizarTabela();
-
-return;
-
-
-}
-
-
-
-onSnapshot(
-
-collection(db,"presencas"),
-
-(snapshot)=>{
-
-
-registrosPresenca = {};
-
-
-
-snapshot.forEach((doc)=>{
-
-
-const dados = doc.data();
-
-
-
-if(dados.eventoId === eventoId){
-
-
-registrosPresenca[dados.membroId] = dados.status;
-
-
-}
-
-
-
-});
-
-
-
-atualizarTabela();
-
-
-
-}
-
-);
-
-
-
-}
-
-
-
-
-
-// ==========================
+// =====================================================
 // SALVAR PRESENÇA
-// ==========================
+// =====================================================
 
+async function salvarPresenca(membro, status) {
 
-async function salvarPresenca(
-membro,
-status
-){
+    const eventoId = selectEvento.value;
 
+    if (!eventoId) {
 
+        alert("Selecione um evento primeiro.");
+        return;
 
-const eventoId = selectEvento.value;
+    }
 
+    const evento = eventos.find(e => e.id === eventoId);
 
+    const idPresenca = `${eventoId}_${membro.id}`;
 
-if(!eventoId){
+    await setDoc(
+        doc(collection(db, "presencas"), idPresenca),
+        {
+            eventoId,
+            evento: evento?.titulo || "",
+            membroId: membro.id,
+            membro: membro.nome,
+            status,
 
+            horaCheckin:
+                status === "Presente"
+                    ? new Date().toLocaleTimeString("pt-BR", {
+                          hour: "2-digit",
+                          minute: "2-digit"
+                      })
+                    : null,
 
-alert(
-"Selecione um evento primeiro."
-);
+            criadoEm: Timestamp.now()
+        }
+    );
 
-
-return;
-
-
-}
-
-
-
-const evento = eventos.find(
-e=>e.id===eventoId
-);
-
-
-
-const idPresenca =
-
-eventoId + "_" + membro.id;
-
-
-
-
-await setDoc(
-
-doc(
-collection(db,"presencas"),
-idPresenca
-),
-
-{
-
-
-eventoId:eventoId,
-
-
-evento:
-evento?.titulo || "",
-
-
-
-membroId:
-membro.id,
-
-
-
-membro:
-membro.nome,
-
-
-
-status:status,
-
-
-
-horaCheckin:
-
-
-status==="Presente"
-
-?
-
-new Date().toLocaleTimeString(
-"pt-BR",
-{
-hour:"2-digit",
-minute:"2-digit"
-}
-)
-
-:
-
-null,
-
-
-
-criadoEm:
-Timestamp.now()
-
+    console.log("Presença salva:", membro.nome, status);
 
 }
 
-
-);
-
-
-
-console.log(
-"Presença salva",
-membro.nome,
-status
-);
-
-
-}
-// ==========================
+// =====================================================
 // ATUALIZAR TABELA
-// ==========================
+// =====================================================
+// =====================================================
+// ATUALIZAR TABELA
+// =====================================================
+
+function atualizarTabela() {
+
+    listaPresenca.innerHTML = "";
+
+    if (membros.length === 0) {
+
+        listaPresenca.innerHTML = `
+            <tr>
+                <td colspan="4">
+                    Nenhum membro encontrado.
+                </td>
+            </tr>
+        `;
+
+        atualizarResumo();
+        return;
+
+    }
 
 
-function atualizarTabela(){
+    membros.forEach((membro) => {
+
+        const status =
+            registrosPresenca[membro.id] || "Pendente";
 
 
-listaPresenca.innerHTML="";
+        let classeStatus = "";
+
+        if (status === "Presente") {
+            classeStatus = "presente";
+        }
+
+        else if (status === "Ausente") {
+            classeStatus = "ausente";
+        }
+
+        else {
+            classeStatus = "pendente";
+        }
 
 
+        listaPresenca.innerHTML += `
 
-if(membros.length===0){
+            <tr>
 
-
-listaPresenca.innerHTML=`
-
-<tr>
-
-<td colspan="5">
-
-Nenhum membro encontrado.
-
-</td>
-
-</tr>
-
-`;
+                <td>
+                    ${membro.nome || "Sem nome"}
+                </td>
 
 
-return;
+                <td>
+                    <span class="status ${classeStatus}">
+                        ${status}
+                    </span>
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="btn-presente"
+                        data-id="${membro.id}">
+                        Presente
+                    </button>
+
+
+                    <button
+                        class="btn-ausente"
+                        data-id="${membro.id}">
+                        Ausente
+                    </button>
+
+                </td>
+
+            </tr>
+
+        `;
+
+    });
+
+
+    adicionarEventosBotoes();
+
+    atualizarResumo();
 
 }
 
 
+// =====================================================
+// EVENTOS DOS BOTÕES
+// =====================================================
 
-let qtdPresentes = 0;
-let qtdAusentes = 0;
-let qtdPendentes = 0;
-
-
-
-membros.forEach((membro)=>{
+function adicionarEventosBotoes() {
 
 
-const statusAtual =
-registrosPresenca[membro.id] || "Pendente";
+    document
+    .querySelectorAll(".btn-presente")
+    .forEach((botao) => {
+
+
+        botao.onclick = () => {
+
+
+            const membro = membros.find(
+                m => m.id === botao.dataset.id
+            );
+
+
+            if (membro) {
+
+                salvarPresenca(
+                    membro,
+                    "Presente"
+                );
+
+            }
+
+        };
+
+
+    });
 
 
 
-if(statusAtual==="Presente"){
+    document
+    .querySelectorAll(".btn-ausente")
+    .forEach((botao) => {
 
-qtdPresentes++;
+
+        botao.onclick = () => {
+
+
+            const membro = membros.find(
+                m => m.id === botao.dataset.id
+            );
+
+
+            if (membro) {
+
+                salvarPresenca(
+                    membro,
+                    "Ausente"
+                );
+
+            }
+
+        };
+
+
+    });
+
 
 }
 
 
-else if(statusAtual==="Ausente"){
+// =====================================================
+// RESUMO DOS DADOS
+// =====================================================
 
-qtdAusentes++;
+function atualizarResumo() {
 
-}
 
+    const valores =
+        Object.values(registrosPresenca);
 
-else{
 
-qtdPendentes++;
+    const total =
+        membros.length;
 
-}
 
+    const totalPresentes =
+        valores.filter(
+            item => item === "Presente"
+        ).length;
 
 
+    const totalAusentes =
+        valores.filter(
+            item => item === "Ausente"
+        ).length;
 
-const linha = document.createElement("tr");
 
+    const totalPendentes =
+        total -
+        totalPresentes -
+        totalAusentes;
 
 
-linha.innerHTML = `
 
+    if (totalMembros) {
 
-<td>
+        totalMembros.textContent = total;
 
-${membro.nome}
+    }
 
-</td>
 
+    if (presentes) {
 
+        presentes.textContent = totalPresentes;
 
-<td>
+    }
 
-${membro.curso || "-"}
 
-</td>
+    if (ausentes) {
 
+        ausentes.textContent = totalAusentes;
 
+    }
 
-<td class="status">
 
+    if (pendentes) {
 
-<span class="status ${statusAtual.toLowerCase()}">
+        pendentes.textContent = totalPendentes;
 
-${statusAtual}
-
-</span>
-
-
-</td>
-
-
-
-<td class="hora">
-
-
-${statusAtual==="Presente"
-
-?
-
-"Registrado"
-
-:
-
-"—"
-
-}
-
-
-</td>
-
-
-
-<td>
-
-
-<button
-
-class="presente"
-
-style="
-
-background:#16a34a;
-
-color:white;
-
-border:none;
-
-padding:8px 12px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-">
-
-✔ Confirmar
-
-</button>
-
-
-
-<button
-
-class="ausente"
-
-style="
-
-background:#dc2626;
-
-color:white;
-
-border:none;
-
-padding:8px 12px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-">
-
-❌ Ausente
-
-</button>
-
-
-
-</td>
-
-
-`;
-
-
-
-const btnPresente =
-linha.querySelector(".presente");
-
-
-
-const btnAusente =
-linha.querySelector(".ausente");
-
-
-
-
-
-btnPresente.onclick = async()=>{
-
-
-if(registrosPresenca[membro.id]==="Presente"){
-
-return;
-
-}
-
-
-
-registrosPresenca[membro.id]="Presente";
-
-
-atualizarTabela();
-
-
-
-await salvarPresenca(
-membro,
-"Presente"
-);
-
-
-};
-
-
-
-
-
-
-btnAusente.onclick = async()=>{
-
-
-if(registrosPresenca[membro.id]==="Ausente"){
-
-return;
-
-}
-
-
-
-registrosPresenca[membro.id]="Ausente";
-
-
-atualizarTabela();
-
-
-
-await salvarPresenca(
-membro,
-"Ausente"
-);
-
-
-};
-
-
-
-
-listaPresenca.appendChild(linha);
-
-
-
-});
-
-
-
-
-totalMembros.innerHTML =
-membros.length;
-
-
-presentes.innerHTML =
-qtdPresentes;
-
-
-pendentes.innerHTML =
-qtdPendentes;
-
-
-ausentes.innerHTML =
-qtdAusentes;
-
+    }
 
 
 }
-// ==========================
-// TROCAR EVENTO
-// ==========================
-
+// =====================================================
+// TROCA DE EVENTO
+// =====================================================
 
 selectEvento.addEventListener(
+    "change",
+    () => {
 
-"change",
+        registrosPresenca = {};
 
-()=>{
+        carregarPresencas();
+
+    }
+);
 
 
-carregarPresencas();
+// =====================================================
+// INICIALIZAÇÃO
+// =====================================================
+
+function iniciarModuloFrequencia() {
+
+
+    if (!selectEvento) {
+
+        console.error(
+            "Elemento evento não encontrado."
+        );
+
+        return;
+
+    }
+
+
+    if (!listaPresenca) {
+
+        console.error(
+            "Elemento listaPresenca não encontrado."
+        );
+
+        return;
+
+    }
+
+
+    atualizarTabela();
 
 
 }
 
+
+
+
+// =====================================================
+// EXECUTAR
+// =====================================================
+
+iniciarModuloFrequencia();
+// =====================================================
+// LIMPEZA E SEGURANÇA DO LISTENER
+// =====================================================
+
+window.addEventListener(
+    "beforeunload",
+    () => {
+
+        if (unsubscribePresencas) {
+
+            unsubscribePresencas();
+
+        }
+
+    }
 );
 
 
+// =====================================================
+// CORREÇÃO DE RECARREGAMENTO
+// =====================================================
 
+selectEvento.addEventListener(
+    "change",
+    function () {
 
-// ==========================
-// FINALIZAÇÃO
-// ==========================
+        carregarPresencas();
 
-
-console.log(
-
-"LADRF Frequência carregado!"
-
+    }
 );
+
+
+// =====================================================
+// PRIMEIRA CARGA
+// =====================================================
+
+if (membros.length > 0) {
+
+    atualizarTabela();
+
+}
