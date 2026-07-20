@@ -246,3 +246,19 @@ ${paciente.modalidade || ""}
 
 
 });
+
+function atualizarHora(){
+
+    const hora = document.getElementById("horaAtual");
+
+    if(hora){
+
+        hora.textContent = new Date().toLocaleTimeString("pt-BR");
+
+    }
+
+}
+
+setInterval(atualizarHora,1000);
+
+atualizarHora();
