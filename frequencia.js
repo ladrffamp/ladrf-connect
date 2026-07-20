@@ -570,3 +570,151 @@ console.log(
 "LADRF Frequência carregado!"
 );
 }
+// ==========================
+// ATUALIZAR TABELA
+// ==========================
+
+function atualizarTabela(){
+
+listaPresenca.innerHTML = "";
+
+
+if(membros.length === 0){
+
+listaPresenca.innerHTML = `
+
+<tr>
+
+<td colspan="5">
+
+Nenhum membro encontrado.
+
+</td>
+
+</tr>
+
+`;
+
+return;
+
+}
+
+
+
+membros.forEach((membro)=>{
+
+
+const linha = document.createElement("tr");
+
+
+linha.innerHTML = `
+
+<td>
+${membro.nome}
+</td>
+
+
+<td>
+${membro.curso || "-"}
+</td>
+
+
+<td>
+
+<span class="status pendente">
+Pendente
+</span>
+
+</td>
+
+
+<td>
+—
+</td>
+
+
+<td>
+
+
+<button
+type="button"
+class="presente"
+style="
+background:#16a34a;
+color:white;
+padding:8px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+">
+
+✔ Confirmar
+
+</button>
+
+
+
+<button
+type="button"
+class="ausente"
+style="
+background:#dc2626;
+color:white;
+padding:8px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+">
+
+❌ Ausente
+
+</button>
+
+
+</td>
+
+`;
+
+
+
+linha.querySelector(".presente").onclick = ()=>{
+
+salvarPresenca(
+membro,
+"Presente"
+);
+
+
+};
+
+
+
+linha.querySelector(".ausente").onclick = ()=>{
+
+salvarPresenca(
+membro,
+"Ausente"
+);
+
+
+};
+
+
+
+listaPresenca.appendChild(linha);
+
+
+});
+
+
+
+totalMembros.innerHTML = membros.length;
+
+presentes.innerHTML = 0;
+
+pendentes.innerHTML = membros.length;
+
+ausentes.innerHTML = 0;
+
+
+}
