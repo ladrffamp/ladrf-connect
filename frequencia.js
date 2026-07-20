@@ -338,20 +338,20 @@ Pendente
 
 <td>
 
-
-<button class="presente">
-
-✔ Presente
-
+<button
+type="button"
+class="presente"
+>
+✔ Confirmar
 </button>
 
 
-<button class="ausente">
-
+<button
+type="button"
+class="ausente"
+>
 ❌ Ausente
-
 </button>
-
 
 </td>
 
