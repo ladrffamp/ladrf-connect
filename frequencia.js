@@ -534,15 +534,18 @@ linha.querySelector(".ausente");
 btnPresente.onclick = async()=>{
 
 
-btnPresente.disabled=true;
-
-btnAusente.disabled=true;
+btnPresente.disabled = true;
+btnAusente.disabled = true;
 
 
 await salvarPresenca(
 membro,
 "Presente"
 );
+
+
+btnPresente.disabled = false;
+btnAusente.disabled = false;
 
 
 };
@@ -552,15 +555,18 @@ membro,
 btnAusente.onclick = async()=>{
 
 
-btnPresente.disabled=true;
-
-btnAusente.disabled=true;
+btnPresente.disabled = true;
+btnAusente.disabled = true;
 
 
 await salvarPresenca(
 membro,
 "Ausente"
 );
+
+
+btnPresente.disabled = false;
+btnAusente.disabled = false;
 
 
 };
