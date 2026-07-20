@@ -483,4 +483,3 @@ montarTabela();
 console.log(
 "LADRF Frequência carregado com sucesso!"
 );
-);
