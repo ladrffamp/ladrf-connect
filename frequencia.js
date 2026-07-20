@@ -9,30 +9,48 @@ Timestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+// ELEMENTOS
+
 const selectEvento = document.getElementById("evento");
+
 const listaPresenca = document.getElementById("listaPresenca");
 
+
 const totalMembros = document.getElementById("totalMembros");
+
 const presentes = document.getElementById("presentes");
+
 const pendentes = document.getElementById("pendentes");
+
 const ausentes = document.getElementById("ausentes");
 
 
+
+// DADOS
+
 let membros = [];
+
 let eventos = [];
+
+
 
 
 // ==========================
 // CARREGAR EVENTOS
 // ==========================
 
+
 onSnapshot(
+
 collection(db,"agenda"),
+
 (snapshot)=>{
 
-eventos=[];
 
-selectEvento.innerHTML=`
+eventos = [];
+
+
+selectEvento.innerHTML = `
 
 <option value="">
 Selecione um evento
@@ -41,19 +59,22 @@ Selecione um evento
 `;
 
 
+
 snapshot.forEach((doc)=>{
 
 
 const evento = doc.data();
 
 
+
 eventos.push({
 
-id:doc.id,
+id: doc.id,
 
 ...evento
 
 });
+
 
 
 selectEvento.innerHTML += `
@@ -65,12 +86,14 @@ ${evento.titulo}
 `;
 
 
+
 });
 
 
 }
 
 );
+
 
 
 
@@ -80,11 +103,14 @@ ${evento.titulo}
 
 
 onSnapshot(
+
 collection(db,"membros"),
+
 (snapshot)=>{
 
 
-membros=[];
+membros = [];
+
 
 
 snapshot.forEach((doc)=>{
@@ -93,12 +119,13 @@ snapshot.forEach((doc)=>{
 const membro = doc.data();
 
 
-if(membro.status==="Ativo"){
+
+if(membro.status === "Ativo"){
 
 
 membros.push({
 
-id:doc.id,
+id: doc.id,
 
 ...membro
 
@@ -108,18 +135,15 @@ id:doc.id,
 }
 
 
+
 });
 
 
-atualizarTabela();
+
+montarTabela();
 
 
 }
-
-);
-
-
-
 // ==========================
 // SALVAR PRESENÇA
 // ==========================
@@ -132,6 +156,7 @@ status
 
 
 const eventoId = selectEvento.value;
+
 
 
 if(!eventoId){
@@ -147,13 +172,15 @@ return;
 
 
 const evento = eventos.find(
-e=>e.id===eventoId
+e => e.id === eventoId
 );
 
 
 
 const idPresenca =
+
 eventoId + "_" + membro.id;
+
 
 
 
@@ -171,25 +198,36 @@ eventoId:eventoId,
 
 
 evento:
+
 evento?.titulo || "",
 
 
 
 membroId:
+
 membro.id,
 
 
+
 membro:
+
 membro.nome,
 
 
+
 status:
+
+
+
 status,
+
 
 
 horaCheckin:
 
-status==="Presente"
+
+
+status === "Presente"
 
 ?
 
@@ -206,36 +244,46 @@ minute:"2-digit"
 null,
 
 
+
 criadoEm:
+
 Timestamp.now()
 
 
 }
 
-
 );
+
 
 
 console.log(
+
 "Presença salva",
+
 membro.nome,
+
 status
+
 );
 
 
-  // ==========================
-// ATUALIZAR TABELA
+}
+// ==========================
+// MONTAR TABELA
 // ==========================
 
-function atualizarTabela(){
 
-listaPresenca.innerHTML="";
-
-
-if(membros.length===0){
+function montarTabela(){
 
 
-listaPresenca.innerHTML=`
+listaPresenca.innerHTML = "";
+
+
+
+if(membros.length === 0){
+
+
+listaPresenca.innerHTML = `
 
 <tr>
 
@@ -257,16 +305,15 @@ return;
 
 
 let qtdPresentes = 0;
+
 let qtdAusentes = 0;
-let qtdPendentes = 0;
+
+let qtdPendentes = membros.length;
+
 
 
 
 membros.forEach((membro)=>{
-
-
-qtdPendentes++;
-
 
 
 const linha = document.createElement("tr");
@@ -276,49 +323,23 @@ const linha = document.createElement("tr");
 linha.innerHTML = `
 
 
-<td style="display:flex;gap:10px;">
+<td>
 
-<button 
-class="presente"
-style="
-background:#16a34a;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-">
-
-✔ Confirmar
-
-</button>
-
-
-<button 
-class="ausente"
-style="
-background:#dc2626;
-color:white;
-border:none;
-padding:8px 12px;
-border-radius:8px;
-cursor:pointer;
-font-weight:bold;
-">
-
-❌ Recusar
-
-</button>
+${membro.nome}
 
 </td>
+
+
+
+<td>
 
 ${membro.curso || "-"}
 
 </td>
 
 
-<td class="status">
+
+<td>
 
 <span class="status pendente">
 
@@ -329,6 +350,7 @@ Pendente
 </td>
 
 
+
 <td class="hora">
 
 —
@@ -336,22 +358,69 @@ Pendente
 </td>
 
 
+
 <td>
 
+
 <button
+
 type="button"
+
 class="presente"
->
+
+style="
+
+background:#16a34a;
+
+color:white;
+
+border:none;
+
+padding:8px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+">
+
 ✔ Confirmar
+
 </button>
+
 
 
 <button
+
 type="button"
+
 class="ausente"
->
+
+style="
+
+background:#dc2626;
+
+color:white;
+
+border:none;
+
+padding:8px 12px;
+
+border-radius:8px;
+
+cursor:pointer;
+
+font-weight:bold;
+
+">
+
 ❌ Ausente
+
 </button>
+
+
 
 </td>
 
@@ -361,71 +430,48 @@ class="ausente"
 
 
 const btnPresente =
+
 linha.querySelector(".presente");
 
 
+
 const btnAusente =
+
 linha.querySelector(".ausente");
 
 
-console.log(
-"Botões encontrados:",
-btnPresente,
-btnAusente
-);
-
 
 const status =
-linha.querySelector(".status span");
+
+linha.querySelector(".status");
+
 
 
 const hora =
+
 linha.querySelector(".hora");
 
 
 
 
-// ==========================
-// BOTÃO PRESENTE
-// ==========================
-
 
 btnPresente.onclick = async()=>{
 
 
-if(membro.statusPresenca==="Pendente"){
-
 qtdPendentes--;
-
-}
-
-
-if(membro.statusPresenca==="Ausente"){
-
-qtdAusentes--;
-
-}
-
-
-
-if(membro.statusPresenca!=="Presente"){
 
 qtdPresentes++;
 
-}
+
+
+status.innerHTML = "Presente";
+
+status.className = "status presente";
 
 
 
-membro.statusPresenca="Presente";
+hora.innerHTML =
 
-
-
-status.innerHTML="Presente";
-
-status.className="status presente";
-
-
-const horario =
 new Date().toLocaleTimeString(
 "pt-BR",
 {
@@ -436,21 +482,20 @@ minute:"2-digit"
 
 
 
-hora.innerHTML=horario;
+presentes.innerHTML = qtdPresentes;
 
+pendentes.innerHTML = qtdPendentes;
 
-
-presentes.innerHTML=qtdPresentes;
-
-ausentes.innerHTML=qtdAusentes;
-
-pendentes.innerHTML=qtdPendentes;
+ausentes.innerHTML = qtdAusentes;
 
 
 
 await salvarPresenca(
+
 membro,
+
 "Presente"
+
 );
 
 
@@ -459,70 +504,46 @@ membro,
 
 
 
-
-
-// ==========================
-// BOTÃO AUSENTE
-// ==========================
 
 
 btnAusente.onclick = async()=>{
 
 
-if(membro.statusPresenca==="Pendente"){
-
 qtdPendentes--;
-
-}
-
-
-
-if(membro.statusPresenca==="Presente"){
-
-qtdPresentes--;
-
-}
-
-
-
-if(membro.statusPresenca!=="Ausente"){
 
 qtdAusentes++;
 
-}
+
+
+status.innerHTML = "Ausente";
+
+status.className = "status ausente";
 
 
 
-membro.statusPresenca="Ausente";
+hora.innerHTML = "—";
 
 
 
-status.innerHTML="Ausente";
+presentes.innerHTML = qtdPresentes;
 
-status.className="status ausente";
+pendentes.innerHTML = qtdPendentes;
 
-
-hora.innerHTML="—";
-
-
-
-presentes.innerHTML=qtdPresentes;
-
-ausentes.innerHTML=qtdAusentes;
-
-pendentes.innerHTML=qtdPendentes;
+ausentes.innerHTML = qtdAusentes;
 
 
 
 await salvarPresenca(
+
 membro,
+
 "Ausente"
+
 );
 
 
 
 };
-
 
 
 
@@ -534,196 +555,47 @@ listaPresenca.appendChild(linha);
 
 
 
-totalMembros.innerHTML =
-membros.length;
+totalMembros.innerHTML = membros.length;
 
+presentes.innerHTML = qtdPresentes;
 
-presentes.innerHTML =
-qtdPresentes;
+pendentes.innerHTML = qtdPendentes;
 
-
-pendentes.innerHTML =
-qtdPendentes;
-
-
-ausentes.innerHTML =
-qtdAusentes;
+ausentes.innerHTML = qtdAusentes;
 
 
 
 }
+// ==========================
+// ATUALIZAR AO TROCAR EVENTO
+// ==========================
+
+
+selectEvento.addEventListener(
+
+"change",
+
+()=>{
+
+
+montarTabela();
+
+
+}
+
+);
+
 
 
 
 // ==========================
-// ATUALIZAÇÃO AO TROCAR EVENTO
+// FINALIZAÇÃO
 // ==========================
-
-
 
 
 console.log(
-"LADRF Frequência carregado!"
+
+"LADRF Frequência carregado com sucesso!"
+
 );
-}
-// ==========================
-// ATUALIZAR TABELA
-// ==========================
-
-function atualizarTabela(){
-
-listaPresenca.innerHTML = "";
-
-
-if(membros.length === 0){
-
-listaPresenca.innerHTML = `
-
-<tr>
-
-<td colspan="5">
-
-Nenhum membro encontrado.
-
-</td>
-
-</tr>
-
-`;
-
-return;
-
-}
-
-
-
-membros.forEach((membro)=>{
-
-
-if(!membro.statusPresenca){
-
-membro.statusPresenca="Pendente";
-
-}
-
-const linha = document.createElement("tr");
-
-
-linha.innerHTML = `
-
-<td>
-${membro.nome}
-</td>
-
-
-<td>
-${membro.curso || "-"}
-</td>
-
-
-<td>
-
-<span class="status pendente">
-Pendente
-</span>
-
-</td>
-
-
-<td>
-—
-</td>
-
-
-<td>
-
-
-<button
-type="button"
-class="presente"
-style="
-background:#16a34a;
-color:white;
-padding:8px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-">
-
-✔ Confirmar
-
-</button>
-
-
-
-<button
-type="button"
-class="ausente"
-style="
-background:#dc2626;
-color:white;
-padding:8px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-">
-
-❌ Ausente
-
-</button>
-
-
-</td>
-
-`;
-
-
-
-linha.querySelector(".presente").onclick = async ()=>{
-
-
-alert("Botão confirmar funcionando");
-
-
-await salvarPresenca(
-membro,
-"Presente"
 );
-
-
-};
-
-
-
-linha.querySelector(".ausente").onclick = async ()=>{
-
-
-alert("Botão ausente funcionando");
-
-
-await salvarPresenca(
-membro,
-"Ausente"
-);
-
-
-};
-  
-console.log("Linha criada:", linha);
-console.log("Botão presente:", linha.querySelector(".presente"));
-
-
-listaPresenca.appendChild(linha);
-
-
-
-totalMembros.innerHTML = membros.length;
-
-presentes.innerHTML = 0;
-
-pendentes.innerHTML = membros.length;
-
-ausentes.innerHTML = 0;
-
-
-}
