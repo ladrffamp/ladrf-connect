@@ -799,7 +799,6 @@ ${c.dataEmissao || "-"}
 console.log(
 "LADRF Certificados carregado com sucesso!"
 );
-});
 
 
 
