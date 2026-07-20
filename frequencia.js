@@ -798,35 +798,7 @@ console.log(
 "LADRF Certificados carregado com sucesso!"
 );
 
-// ===============================
-// EMITIR CERTIFICADOS PARA TODOS
-// ===============================
 
-if (emitirTodos) {
-
-emitirTodos.addEventListener(
-"click",
-async()=>{
-
-
-const eventoId =
-selectEvento.value;
-
-
-const carga =
-cargaHoraria.value;
-
-
-
-if(!eventoId || !carga){
-
-alert(
-"Selecione um evento primeiro."
-);
-
-return;
-
-}
 
 
 
