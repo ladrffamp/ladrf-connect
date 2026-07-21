@@ -228,21 +228,42 @@ botao.dataset.membro
 console.log(botao.dataset.acao);
 console.log(botao.dataset.membro);
   
+const referencia = doc(
+
+db,
+
+"acoes",
+
+botao.dataset.acao,
+
+"participantes",
+
+botao.dataset.membro
+
+);
+
+console.log(botao.dataset.acao);
+console.log(botao.dataset.membro);
+
 await updateDoc(
 
-  alert("Presença atualizada!");
-  
 referencia,
 
 {
 
-presenca:"Confirmada",
+presenca: "Confirmada",
 
-confirmadoEm:serverTimestamp()
+confirmadoEm: serverTimestamp()
 
 }
 
 );
+
+alert("Presença atualizada!");
+
+botao.innerHTML = "✅ Presença Confirmada";
+
+botao.disabled = true;
 
 
 
