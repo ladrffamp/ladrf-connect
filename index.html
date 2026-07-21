@@ -809,16 +809,6 @@ Liga Acadêmica de Desporto e Reabilitação na Fisioterapia
 
 </footer>
 <footer>
-
-<p>
-LADRF Connect 2.0 © 2026
-</p>
-
-<p>
-Liga Acadêmica de Desporto e Reabilitação na Fisioterapia
-</p>
-
-</footer>
 <script type="module">
 
 import { auth } from "./firebase.js";
@@ -866,10 +856,14 @@ usuario.displayName || usuario.email;
 
 
 
+
 // BOTÃO SAIR
 
 const btnSair = document.getElementById("btnSair");
 
+
+
+if(btnSair){
 
 
 btnSair.addEventListener("click",(evento)=>{
@@ -904,6 +898,9 @@ erro
 });
 
 
+}
+
+
 
 </script>
 
@@ -915,20 +912,43 @@ erro
 
 <script type="module" src="permissoes.js"></script>
 
+
+
+
+
 <script>
-function atualizarHora() {
 
-    const hora = document.getElementById("horaAtual");
 
-    if (hora) {
-        hora.innerHTML = new Date().toLocaleTimeString("pt-BR");
-    }
+function atualizarHora(){
+
+
+const hora = document.getElementById("horaAtual");
+
+
+if(hora){
+
+
+hora.innerHTML = new Date()
+
+.toLocaleTimeString("pt-BR");
+
 
 }
 
-setInterval(atualizarHora, 1000);
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
 atualizarHora();
+
+
+
 </script>
+
 
 
 </body>
