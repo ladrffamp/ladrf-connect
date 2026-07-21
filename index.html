@@ -33,61 +33,58 @@
 <header class="topbar">
 
 
-    <a href="index.html" class="btn-inicio">
+<a href="index.html" class="btn-inicio">
 
-        <i class="fa-solid fa-house"></i>
+<i class="fa-solid fa-house"></i>
 
-        Início
+Início
 
-    </a>
-
-
-
-    <div class="logo">
-
-        <i class="fa-solid fa-heart-pulse"></i>
-
-        <div>
-
-            <h1>LADRF Connect</h1>
-
-            <p>Sistema de Gestão da Liga</p>
-
-        </div>
-
-    </div>
+</a>
 
 
 
+<div class="logo">
 
-    <div class="usuario-info">
+<i class="fa-solid fa-heart-pulse"></i>
 
+<div>
 
-        <strong id="nomeUsuario">
+<h1>LADRF Connect</h1>
 
-            Carregando...
+<p>Sistema de Gestão da Liga</p>
 
-        </strong>
+</div>
 
-
-
-        <span id="perfilUsuario">
-
-            Perfil
-
-        </span>
+</div>
 
 
 
-        <small id="horaAtual">
 
-            --:--:--
-
-        </small>
+<div class="usuario-info">
 
 
-    </div>
+<strong id="nomeUsuario">
 
+Carregando...
+
+</strong>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<small id="horaAtual">
+
+--:--:--
+
+</small>
+
+
+</div>
 
 
 </header>
@@ -97,8 +94,6 @@
 
 
 <main class="container">
-
-
 
 
 
@@ -125,136 +120,75 @@ Visão geral das atividades da LADRF.
 
 
 
-
-
 <section class="cards">
 
 
 
 <div class="card">
 
-
 <i class="fa-solid fa-user-group"></i>
 
-
-<h3>
-
-Pacientes
-
-</h3>
-
+<h3>Pacientes</h3>
 
 <div class="numero" id="totalPacientes">
-
 0
-
 </div>
 
-
 </div>
-
-
-
 
 
 
 
 <div class="card">
-
 
 <i class="fa-solid fa-bed"></i>
 
-
-<h3>
-
-Macas Ocupadas
-
-</h3>
-
+<h3>Macas Ocupadas</h3>
 
 <div class="numero" id="totalMacas">
-
 0
-
 </div>
 
-
 </div>
-
-
-
 
 
 
 
 <div class="card">
-
 
 <i class="fa-solid fa-stethoscope"></i>
 
-
-<h3>
-
-Atendimentos
-
-</h3>
-
+<h3>Atendimentos</h3>
 
 <div class="numero" id="totalAtendimentos">
-
 0
-
 </div>
 
-
 </div>
-
-
-
 
 
 
 
 <div class="card">
-
 
 <i class="fa-solid fa-users"></i>
 
-
-<h3>
-
-Membros
-
-</h3>
-
+<h3>Membros</h3>
 
 <div class="numero" id="totalMembros">
-
 0
-
 </div>
 
-
 </div>
-
-
-
 
 
 
 
 <div class="card">
 
-
 <i class="fa-solid fa-calendar-days"></i>
 
-
-<h3>
-
-Próximo Evento
-
-</h3>
-
+<h3>Próximo Evento</h3>
 
 <div id="proximoEvento">
 
@@ -262,541 +196,185 @@ Carregando...
 
 </div>
 
-
 </div>
-
-
 
 
 
 </section>
-
-
-/* MENU PRINCIPAL */
-
-.menu{
-
-display:grid;
-
-grid-template-columns:repeat(4,1fr);
-
-gap:25px;
-
-}
-
-
-
-.menu a{
-
-text-decoration:none;
-
-display:block;
-
-}
-
-
-
-.menu-card{
-
-background:white;
-
-padding:25px;
-
-border-radius:18px;
-
-box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-color:#222;
-
-transition:.3s;
-
-height:100%;
-
-}
-
-
-
-.menu-card:hover{
-
-transform:translateY(-6px);
-
-background:#0B7A3B;
-
-color:white;
-
-}
-
-
-
-.menu-card i{
-
-font-size:38px;
-
-color:#0B7A3B;
-
-margin-bottom:15px;
-
-}
-
-
-
-.menu-card:hover i{
-
-color:white;
-
-}
-
-
-
-.menu-card h2{
-
-font-size:20px;
-
-margin-bottom:8px;
-
-}
-
-
-
-.menu-card p{
-
-font-size:14px;
-
-}
-
-
-
-@media(max-width:1100px){
-
-.menu{
-
-grid-template-columns:repeat(3,1fr);
-
-}
-
-}
-
-
-
-@media(max-width:800px){
-
-.menu{
-
-grid-template-columns:repeat(2,1fr);
-
-}
-
-}
-
-
-
-@media(max-width:500px){
-
-.menu{
-
-grid-template-columns:1fr;
-
-}
-
-}
-
-
-
-.menu-card i{
-
-font-size:38px;
-
-color:#0B7A3B;
-
-margin-bottom:15px;
-
-}
-
-
-
-.menu-card:hover i{
-
-color:white;
-
-}
-
-
-
-.menu-card h2{
-
-margin-bottom:8px;
-
-}
-
-
-
-footer{
-
-text-align:center;
-
-padding:30px;
-
-color:#666;
-
-}
-
-
-
-</style>
-
-</head>
-
-
-<body>
-
-
-
-<header>
-
-    <div class="logo">
-
-        <i class="fa-solid fa-heart-pulse"></i>
-
-        <div class="marca">
-            <h1>LADRF Connect</h1>
-            <p>Sistema de Gestão da Liga</p>
-        </div>
-
-    </div>
-
-    <div class="usuario">
-
-        <h3 id="nomeUsuario">
-            Carregando...
-        </h3>
-
-        <span id="perfilUsuario">
-            Perfil
-        </span>
-
-        <p id="horaAtual"></p>
-
-    </div>
-
-</header>
-
-
-
-<div class="container">
-
-
-<div class="cards">
-
-    <div class="card">
-        <i class="fa-solid fa-user-group"></i>
-        <h3>Pacientes</h3>
-        <div class="numero" id="totalPacientes">0</div>
-    </div>
-
-    <div class="card">
-        <i class="fa-solid fa-bed"></i>
-        <h3>Macas Ocupadas</h3>
-        <div class="numero" id="totalMacas">0</div>
-    </div>
-
-    <div class="card">
-        <i class="fa-solid fa-stethoscope"></i>
-        <h3>Atendimentos</h3>
-        <div class="numero" id="totalAtendimentos">0</div>
-    </div>
-
-    <div class="card">
-        <i class="fa-solid fa-users"></i>
-        <h3>Membros</h3>
-        <div class="numero" id="totalMembros">0</div>
-    </div>
-
-    <div class="card">
-        <i class="fa-solid fa-calendar-days"></i>
-        <h3>Próximo Evento</h3>
-        <div id="proximoEvento">Carregando...</div>
-    </div>
-
-</div>
-
 <section class="menu">
 
 
 <a href="cadastro.html" data-perfil="admin recepcao">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-user-plus"></i>
-
 <h2>Cadastro</h2>
-
 <p>Cadastrar pacientes</p>
-
 </div>
-
 </a>
 
 
 
 <a href="fila.html" data-perfil="admin recepcao membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-list"></i>
-
 <h2>Fila</h2>
-
 <p>Pacientes aguardando</p>
-
 </div>
-
 </a>
 
 
 
 <a href="recepcao.html" data-perfil="admin recepcao">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-desktop"></i>
-
 <h2>Recepção</h2>
-
 <p>Controle da recepção</p>
-
 </div>
-
 </a>
 
 
 
 <a href="painel.html" data-perfil="admin recepcao membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-tv"></i>
-
 <h2>Painel</h2>
-
 <p>Chamada em tempo real</p>
-
 </div>
-
 </a>
 
 
 
 <a href="agenda.html" data-perfil="admin membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-calendar-days"></i>
-
 <h2>Agenda</h2>
-
 <p>Eventos e ações LADRF</p>
-
 </div>
-
 </a>
 
 
 
 <a href="macas.html" data-perfil="admin membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-bed"></i>
-
 <h2>Macas</h2>
-
 <p>Controle das macas</p>
-
 </div>
-
 </a>
 
 
 
 <a href="atendimento.html" data-perfil="admin membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-stethoscope"></i>
-
 <h2>Atendimento</h2>
-
 <p>Ficha de atendimento</p>
-
 </div>
-
 </a>
 
 
 
 <a href="historico.html" data-perfil="admin membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-book-medical"></i>
-
 <h2>Histórico</h2>
-
 <p>Atendimentos realizados</p>
-
 </div>
-
 </a>
 
 
 
 <a href="materiais.html" data-perfil="admin membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-boxes-stacked"></i>
-
 <h2>Materiais</h2>
-
 <p>Controle de estoque</p>
-
 </div>
-
 </a>
 
 
 
 <a href="membros.html" data-perfil="admin">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-users"></i>
-
 <h2>Membros</h2>
-
 <p>Equipe LADRF</p>
-
 </div>
-
 </a>
 
 
 
 <a href="meu-painel.html" data-perfil="admin membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-id-badge"></i>
-
 <h2>Meu Painel</h2>
-
 <p>Minhas escalas e presenças</p>
-
 </div>
-
 </a>
 
 
 
 <a href="frequencia.html" data-perfil="admin membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-user-check"></i>
-
 <h2>Frequência</h2>
-
 <p>Presença dos membros</p>
-
 </div>
-
 </a>
 
 
 
 <a href="usuarios.html" data-perfil="admin">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-user-shield"></i>
-
 <h2>Usuários</h2>
-
 <p>Gerenciar acessos</p>
-
 </div>
-
 </a>
 
 
 
 <a href="relatorios.html" data-perfil="admin">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-chart-column"></i>
-
 <h2>Relatórios</h2>
-
 <p>Indicadores e estatísticas</p>
-
 </div>
-
 </a>
 
 
 
 <a href="certificados.html" data-perfil="admin">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-certificate"></i>
-
 <h2>Certificados</h2>
-
 <p>Emitir certificados</p>
-
 </div>
-
 </a>
 
 
 
 <a href="exportacao.html" data-perfil="admin membro">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-file-export"></i>
-
 <h2>Exportação</h2>
-
 <p>Relatórios e dados</p>
-
 </div>
-
 </a>
 
 
 
 <a href="#" id="btnSair">
-
 <div class="menu-card">
-
 <i class="fa-solid fa-right-from-bracket"></i>
-
 <h2>Sair</h2>
-
 <p>Encerrar sessão</p>
-
 </div>
-
 </a>
 
 
+
 </section>
-
-
-
 <footer>
 
 <p>
@@ -808,7 +386,14 @@ Liga Acadêmica de Desporto e Reabilitação na Fisioterapia
 </p>
 
 </footer>
-<footer>
+
+
+
+</main>
+
+
+
+
 <script type="module">
 
 import { auth } from "./firebase.js";
@@ -829,6 +414,7 @@ from
 
 
 
+
 // VERIFICAR USUÁRIO LOGADO
 
 onAuthStateChanged(auth,(usuario)=>{
@@ -844,10 +430,14 @@ return;
 
 
 
-document.getElementById("nomeUsuario").innerText =
+const nome = document.getElementById("nomeUsuario");
 
-usuario.displayName || usuario.email;
 
+if(nome){
+
+nome.innerText = usuario.displayName || usuario.email;
+
+}
 
 
 });
@@ -902,6 +492,8 @@ erro
 
 
 
+
+
 </script>
 
 
@@ -948,6 +540,7 @@ atualizarHora();
 
 
 </script>
+
 
 
 
