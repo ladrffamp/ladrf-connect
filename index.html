@@ -21,216 +21,255 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
-<style>
+<link rel="stylesheet" href="styles.css">
 
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
+</head>
 
 
+<body>
 
-body{
-background:#eef3f7;
-}
 
+<header class="topbar">
 
 
-header{
+    <a href="index.html" class="btn-inicio">
 
-background:linear-gradient(90deg,#0B7A3B,#15A34A);
+        <i class="fa-solid fa-house"></i>
 
-color:white;
+        Início
 
-padding:25px 40px;
+    </a>
 
-display:flex;
 
-justify-content:space-between;
 
-align-items:center;
+    <div class="logo">
 
-box-shadow:0 4px 15px rgba(0,0,0,.15);
+        <i class="fa-solid fa-heart-pulse"></i>
 
-}
+        <div>
 
+            <h1>LADRF Connect</h1>
 
+            <p>Sistema de Gestão da Liga</p>
 
-.logo{
+        </div>
 
-display:flex;
+    </div>
 
-align-items:center;
 
-gap:15px;
 
-}
 
+    <div class="usuario-info">
 
 
-.logo i{
+        <strong id="nomeUsuario">
 
-font-size:40px;
+            Carregando...
 
-}
+        </strong>
 
 
 
-.logo h1{
+        <span id="perfilUsuario">
 
-font-size:30px;
+            Perfil
 
-}
+        </span>
 
 
 
-.usuario{
+        <small id="horaAtual">
 
-text-align:right;
+            --:--:--
 
-}
+        </small>
 
 
+    </div>
 
-.container{
 
-max-width:1400px;
 
-margin:auto;
+</header>
 
-padding:35px;
 
-}
 
 
 
-/* DASHBOARD */
+<main class="container">
 
-.cards{
 
-    display:grid;
 
-    grid-template-columns:repeat(5,1fr);
 
-    gap:20px;
 
-    margin-bottom:35px;
+<section class="page-title">
 
-}
 
-@media(max-width:1200px){
+<h1>
 
-    .cards{
+🏠 Dashboard
 
-        grid-template-columns:repeat(3,1fr);
+</h1>
 
-    }
 
-}
+<p>
 
-@media(max-width:800px){
+Visão geral das atividades da LADRF.
 
-    .cards{
+</p>
 
-        grid-template-columns:repeat(2,1fr);
 
-    }
+</section>
 
-}
 
-@media(max-width:500px){
 
-    .cards{
 
-        grid-template-columns:1fr;
 
-    }
 
-}
 
+<section class="cards">
 
-.card{
 
-    background:white;
 
-    border-radius:18px;
+<div class="card">
 
-    padding:22px;
 
-    box-shadow:0 8px 20px rgba(0,0,0,.08);
+<i class="fa-solid fa-user-group"></i>
 
-    min-height:160px;
 
-    display:flex;
+<h3>
 
-    flex-direction:column;
+Pacientes
 
-    justify-content:center;
+</h3>
 
-    transition:.25s;
 
-}
+<div class="numero" id="totalPacientes">
 
-.card:hover{
+0
 
-    transform:translateY(-5px);
+</div>
 
-    box-shadow:0 12px 28px rgba(0,0,0,.12);
 
-}
+</div>
 
 
 
-.card i{
 
-font-size:34px;
 
-color:#0B7A3B;
 
-margin-bottom:14px;
 
-text-align:center;
+<div class="card">
 
-}
 
+<i class="fa-solid fa-bed"></i>
 
 
-.card h3{
+<h3>
 
-    text-align:center;
+Macas Ocupadas
 
-    margin-bottom:10px;
+</h3>
 
-    font-size:18px;
 
-}
+<div class="numero" id="totalMacas">
 
-.numero{
+0
 
-    text-align:center;
+</div>
 
-    font-size:34px;
 
-    font-weight:700;
+</div>
 
-    color:#0B7A3B;
 
-}
 
-#proximoEvento{
 
-    text-align:center;
 
-    font-weight:500;
 
-    color:#444;
 
-    margin-top:8px;
+<div class="card">
 
-}
+
+<i class="fa-solid fa-stethoscope"></i>
+
+
+<h3>
+
+Atendimentos
+
+</h3>
+
+
+<div class="numero" id="totalAtendimentos">
+
+0
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<i class="fa-solid fa-users"></i>
+
+
+<h3>
+
+Membros
+
+</h3>
+
+
+<div class="numero" id="totalMembros">
+
+0
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<i class="fa-solid fa-calendar-days"></i>
+
+
+<h3>
+
+Próximo Evento
+
+</h3>
+
+
+<div id="proximoEvento">
+
+Carregando...
+
+</div>
+
+
+</div>
+
+
+
+
+
+</section>
 
 
 /* MENU PRINCIPAL */
