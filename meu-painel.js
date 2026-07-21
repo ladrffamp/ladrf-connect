@@ -72,41 +72,23 @@ return;
 
 eventos.forEach((evento)=>{
 
-const dados =
-evento.data();
+const dados = evento.data();
 
 listaEscalas.innerHTML += `
 
 <div class="escala">
 
-<h3>
+<h3>${dados.titulo || "Evento"}</h3>
 
-${dados.titulo || "Evento"}
+<p>📅 ${dados.data || "-"}</p>
 
-</h3>
+<p>📍 ${dados.local || "-"}</p>
 
-<p>
+<p>⏰ ${dados.inicio || "-"} às ${dados.fim || "-"}</p>
 
-📅 ${dados.data || "-"}
-
-</p>
-
-<p>
-
-📍 ${dados.local || "-"}
-
-</p>
-
-<p>
-
-⏰ ${dados.inicio || "-"}
-às
-${dados.fim || "-"}
-
-</p>
-
-<button
-class="confirmar">
+<button 
+class="confirmar"
+data-id="${evento.id}">
 
 ✅ Confirmar Presença
 
@@ -118,4 +100,27 @@ class="confirmar">
 
 });
 
-}
+
+document.querySelectorAll(".confirmar")
+.forEach((botao)=>{
+
+botao.addEventListener("click", async()=>{
+
+await addDoc(collection(db,"presencas"),{
+
+evento: botao.dataset.id,
+
+usuario: auth.currentUser.email,
+
+data: Timestamp.now()
+
+});
+
+
+botao.innerHTML="✅ Presença Confirmada";
+
+botao.disabled=true;
+
+});
+
+});
