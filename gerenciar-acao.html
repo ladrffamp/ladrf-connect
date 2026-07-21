@@ -9,18 +9,161 @@
 
 <title>Gerenciar Ação - LADRF</title>
 
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+
+body{
+
+    background:#111;
+    color:white;
+    padding:30px;
+
+}
+
+
+.btn-voltar{
+
+    background:#00d26a;
+    color:#111;
+    padding:12px 20px;
+    border:none;
+    border-radius:10px;
+    font-weight:bold;
+    cursor:pointer;
+    margin-bottom:30px;
+
+}
+
+
+header{
+
+    margin-bottom:30px;
+
+}
+
+
+h1{
+
+    color:#00d26a;
+    font-size:40px;
+    margin-bottom:10px;
+
+}
+
+
+h2{
+
+    margin-bottom:25px;
+
+}
+
+
+.container{
+
+    width:90%;
+    max-width:900px;
+    margin:auto;
+
+}
+
+
+.card{
+
+    background:#222;
+    padding:30px;
+    border-radius:20px;
+    margin-bottom:25px;
+
+}
+
+
+#listaMembros{
+
+    background:#1b1b1b;
+    border-radius:15px;
+    padding:20px;
+    min-height:150px;
+
+}
+
+
+.membro{
+
+    padding:15px;
+    border-bottom:1px solid #444;
+
+}
+
+
+button#salvar{
+
+    background:#00d26a;
+    color:#111;
+    border:none;
+    padding:15px 35px;
+    border-radius:12px;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+
+}
+
+
+button#salvar:hover{
+
+    background:#00a854;
+
+}
+
+
+</style>
+
+
 </head>
 
 
 <body>
 
 
-<h1>👥 Escala da Ação</h1>
+<button class="btn-voltar" onclick="window.location.href='index.html'">
+
+🏠 Menu Inicial
+
+</button>
+
+
+
+<div class="container">
+
+
+<header>
+
+<h1>
+<i class="fa-solid fa-users"></i>
+Escala da Ação
+</h1>
 
 
 <h2 id="nomeAcao">
 Carregando...
 </h2>
+
+</header>
+
+
+
+<div class="card">
 
 
 <div id="listaMembros">
@@ -30,7 +173,8 @@ Carregando membros...
 </div>
 
 
-<br>
+</div>
+
 
 
 <button id="salvar">
@@ -38,6 +182,10 @@ Carregando membros...
 Salvar escala
 
 </button>
+
+
+</div>
+
 
 
 <script type="module" src="gerenciar-acao.js"></script>
