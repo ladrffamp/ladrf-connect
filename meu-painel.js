@@ -86,7 +86,7 @@ listaEscalas.innerHTML += `
 
 <p>⏰ ${dados.inicio || "-"} às ${dados.fim || "-"}</p>
 
-<button 
+<button
 class="confirmar"
 data-id="${evento.id}">
 
@@ -99,7 +99,6 @@ data-id="${evento.id}">
 `;
 
 });
-
 
 document.querySelectorAll(".confirmar")
 .forEach((botao)=>{
@@ -116,11 +115,12 @@ data: Timestamp.now()
 
 });
 
+botao.innerHTML = "✅ Presença Confirmada";
 
-botao.innerHTML="✅ Presença Confirmada";
+botao.disabled = true;
 
-botao.disabled=true;
+});
 
 });
 
-});
+}
