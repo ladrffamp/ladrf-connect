@@ -199,7 +199,10 @@ function carregarPresencas() {
         where("eventoId", "==", eventoId)
     );
 
-    unsubscribePresencas = onSnapshot(
+   buscarConfirmacoesPainel(eventoId);
+
+
+unsubscribePresencas = onSnapshot(
 
         q,
 
