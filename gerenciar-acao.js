@@ -332,44 +332,43 @@ async()=>{
 
             await setDoc(
 
+    doc(
 
-                doc(
+        db,
 
-                    db,
+        "acoes",
 
-                    "acoes",
+        idAcao,
 
-                    idAcao,
+        "participantes",
 
-                    "participantes",
+        membro.value
 
-                    membro.value
+    ),
 
-                ),
+    {
 
+        id: membro.value,
 
-                {
+        nome: membro.dataset.nome,
 
+        email: membro.dataset.email,
 
-                    nome:
+        presenca: "Pendente",
 
-                    membro.dataset.nome,
+        confirmadoEm: null,
 
+        escaladoEm: serverTimestamp()
 
-                    presenca:
+    },
 
-                    "Pendente",
+    {
 
+        merge: true
 
-                    escaladoEm:
+    }
 
-                    serverTimestamp()
-
-
-                }
-
-
-            );
+);
 
 
 
