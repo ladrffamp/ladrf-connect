@@ -1,88 +1,259 @@
 import { auth, db } from "./firebase.js";
 
 import {
-  onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-  collection,
-  getDocs,
-  addDoc,
-  Timestamp
+collection,
+getDocs,
+doc,
+updateDoc,
+serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const boasVindas = document.getElementById("boasVindas");
-const listaEscalas = document.getElementById("listaEscalas");
 
-onAuthStateChanged(auth, async (usuario) => {
+const boasVindas =
+document.getElementById("boasVindas");
 
-  if (!usuario) {
-    window.location.href = "login.html";
-    return;
-  }
 
-  boasVindas.innerHTML = `👋 Bem-vindo`;
+const listaEscalas =
+document.getElementById("listaEscalas");
 
-  await carregarEscalas();
+
+
+onAuthStateChanged(auth, async(usuario)=>{
+
+
+if(!usuario){
+
+window.location.href="login.html";
+
+return;
+
+}
+
+
+boasVindas.innerHTML =
+`👋 Bem-vindo ${usuario.email}`;
+
+
+carregarEscalas(usuario.email);
+
 
 });
 
-async function carregarEscalas() {
 
-  listaEscalas.innerHTML = "";
 
-  const eventos = await getDocs(collection(db, "agenda"));
 
-  if (eventos.empty) {
 
-    listaEscalas.innerHTML = `
-      <div class="card">
-        Nenhuma escala disponível.
-      </div>
-    `;
+async function carregarEscalas(emailUsuario){
 
-    return;
-  }
 
-  eventos.forEach((evento) => {
+listaEscalas.innerHTML="";
 
-    const dados = evento.data();
 
-    listaEscalas.innerHTML += `
-      <div class="escala">
+const acoes =
+await getDocs(
 
-        <h3>${dados.titulo || "Evento"}</h3>
+collection(
+db,
+"acoes"
 
-        <p>📅 ${dados.data || "-"}</p>
+)
 
-        <p>📍 ${dados.local || "-"}</p>
+);
 
-        <p>⏰ ${dados.inicio || "-"} às ${dados.fim || "-"}</p>
 
-        <button class="confirmar" data-id="${evento.id}">
-          ✅ Confirmar Presença
-        </button>
 
-      </div>
-    `;
+let encontrou = false;
 
-  });
 
-  document.querySelectorAll(".confirmar").forEach((botao) => {
 
-    botao.addEventListener("click", async () => {
+for(
+const acao of acoes.docs
+){
 
-      await addDoc(collection(db, "presencas"), {
-        evento: botao.dataset.id,
-        usuario: auth.currentUser.email,
-        data: Timestamp.now()
-      });
 
-      botao.textContent = "✅ Presença Confirmada";
-      botao.disabled = true;
+const participantes =
 
-    });
+await getDocs(
 
-  });
+collection(
+
+db,
+
+"acoes",
+
+acao.id,
+
+"participantes"
+
+)
+
+);
+
+
+
+for(
+const participante of participantes.docs
+){
+
+
+const dados =
+participante.data();
+
+
+
+if(
+dados.email === emailUsuario
+){
+
+
+encontrou = true;
+
+
+
+listaEscalas.innerHTML += `
+
+<div class="escala">
+
+
+<h3>
+
+${acao.id}
+
+</h3>
+
+
+<p>
+
+👤 ${dados.nome}
+
+</p>
+
+
+<p>
+
+Status:
+
+<strong>
+
+${dados.presenca}
+
+</strong>
+
+</p>
+
+
+<button
+
+class="confirmar"
+
+data-acao="${acao.id}"
+
+data-membro="${participante.id}"
+
+>
+
+${dados.presenca === "Confirmada"
+
+? "✅ Presença Confirmada"
+
+: "✅ Confirmar Presença"}
+
+</button>
+
+
+</div>
+
+`;
+
+
+
+}
+
+
+}
+
+
+}
+
+
+
+if(!encontrou){
+
+
+listaEscalas.innerHTML=`
+
+<div class="card">
+
+Nenhuma escala encontrada.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+
+document.querySelectorAll(".confirmar")
+
+.forEach((botao)=>{
+
+
+botao.addEventListener("click", async()=>{
+
+
+const referencia =
+
+doc(
+
+db,
+
+"acoes",
+
+botao.dataset.acao,
+
+"participantes",
+
+botao.dataset.membro
+
+);
+
+
+
+await updateDoc(
+
+referencia,
+
+{
+
+presenca:"Confirmada",
+
+confirmadoEm:serverTimestamp()
+
+}
+
+);
+
+
+
+botao.innerHTML =
+"✅ Presença Confirmada";
+
+
+botao.disabled = true;
+
+
+
+});
+
+
+});
+
 
 }
