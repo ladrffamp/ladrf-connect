@@ -1,98 +1,426 @@
-body{
-    margin:0;
-    font-family:Arial,Helvetica,sans-serif;
-    background:#f5f7fa;
+/* =========================
+   PADRÃO LADRF CONNECT
+========================= */
+
+:root{
+    --verde:#0B7A3D;
+    --verde-escuro:#095f2f;
+    --verde-claro:#e8f5ee;
+    --cinza:#f5f7fa;
+    --texto:#333;
+    --branco:#fff;
 }
 
-header{
-    background:#0B7A3D;
-    color:white;
-    padding:18px;
-    text-align:center;
-    font-size:28px;
-    font-weight:bold;
-    box-shadow:0 3px 10px rgba(0,0,0,.15);
-}
 
-.container{
-    width:95%;
-    max-width:1000px;
-    margin:25px auto;
-}
-
-.card{
-    background:white;
-    border-radius:15px;
-    padding:20px;
-    margin-bottom:20px;
-    box-shadow:0 4px 12px rgba(0,0,0,.1);
-}
-
-input,select{
-    width:100%;
-    padding:14px;
-    margin-top:10px;
-    margin-bottom:15px;
-    border:1px solid #dcdcdc;
-    border-radius:10px;
-    font-size:16px;
+*{
     box-sizing:border-box;
 }
 
-button{
-    width:100%;
-    padding:15px;
-    background:#0B7A3D;
+
+body{
+
+    margin:0;
+
+    font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+    background:var(--cinza);
+
+    color:var(--texto);
+
+}
+
+
+/* =========================
+   CABEÇALHO
+========================= */
+
+header{
+
+    background:var(--verde);
+
     color:white;
-    border:none;
-    border-radius:10px;
-    font-size:16px;
-    cursor:pointer;
+
+    padding:18px;
+
+    text-align:center;
+
+    font-size:26px;
+
     font-weight:bold;
-    transition:.2s;
+
+    box-shadow:
+    0 3px 10px rgba(0,0,0,.15);
+
 }
 
-button:hover{
-    background:#095f2f;
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+
+    width:95%;
+
+    max-width:1100px;
+
+    margin:25px auto;
+
 }
 
-#contador{
-    font-size:20px;
-    font-weight:bold;
-    color:#0B7A3D;
+
+/* =========================
+   CARDS
+========================= */
+
+.card{
+
+    background:white;
+
+    border-radius:15px;
+
+    padding:20px;
+
     margin-bottom:20px;
+
+    box-shadow:
+    0 4px 12px rgba(0,0,0,.08);
+
 }
+
+
+.card h1,
+.card h2,
+.card h3{
+
+    color:var(--verde);
+
+}
+
+
+/* =========================
+   MENU DASHBOARD
+========================= */
+
+.menu-card{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    text-align:center;
+
+    box-shadow:
+    0 4px 12px rgba(0,0,0,.10);
+
+    transition:.2s;
+
+}
+
+
+.menu-card:hover{
+
+    transform:translateY(-3px);
+
+}
+
+
+.menu-card i{
+
+    font-size:35px;
+
+    color:var(--verde);
+
+    margin-bottom:10px;
+
+}
+
+
+.menu-card h2{
+
+    margin:8px 0;
+
+    color:#333;
+
+}
+
+
+.menu-card p{
+
+    color:#777;
+
+}
+
+
+/* =========================
+   BOTÕES
+========================= */
+
+button,
+.btn{
+
+    width:100%;
+
+    padding:14px;
+
+    background:var(--verde);
+
+    color:white;
+
+    border:none;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    transition:.2s;
+
+}
+
+
+button:hover,
+.btn:hover{
+
+    background:var(--verde-escuro);
+
+}
+
+
+/* BOTÃO INÍCIO */
+
+.btn-inicio{
+
+    display:inline-flex;
+
+    align-items:center;
+
+    gap:8px;
+
+    width:auto;
+
+    padding:10px 18px;
+
+    margin-bottom:20px;
+
+}
+
+
+/* =========================
+   CAMPOS
+========================= */
+
+input,
+select,
+textarea{
+
+    width:100%;
+
+    padding:14px;
+
+    margin-top:10px;
+
+    margin-bottom:15px;
+
+    border:
+
+    1px solid #ddd;
+
+    border-radius:10px;
+
+    font-size:16px;
+
+    background:white;
+
+}
+
+
+/* =========================
+   PACIENTES
+========================= */
 
 .paciente{
+
     background:white;
-    border-left:8px solid #0B7A3D;
+
+    border-left:
+
+    8px solid var(--verde);
+
     border-radius:12px;
+
     padding:18px;
+
     margin-bottom:18px;
-    box-shadow:0 2px 8px rgba(0,0,0,.08);
+
+    box-shadow:
+
+    0 2px 8px rgba(0,0,0,.08);
+
 }
+
 
 .paciente h2{
+
     margin:0;
-    color:#0B7A3D;
+
+    color:var(--verde);
+
 }
+
 
 .paciente p{
+
     margin:6px 0;
+
 }
 
-select{
-    margin-top:15px;
+
+/* =========================
+   STATUS
+========================= */
+
+.status{
+
+    display:inline-block;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    font-weight:bold;
+
+    font-size:14px;
+
 }
+
+
+.status-aguardando{
+
+    background:#fff3cd;
+
+    color:#856404;
+
+}
+
+
+.status-atendimento{
+
+    background:#d1ecf1;
+
+    color:#0c5460;
+
+}
+
+
+.status-finalizado{
+
+    background:#d4edda;
+
+    color:#155724;
+
+}
+
+
+/* =========================
+   TABELAS
+========================= */
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+    background:white;
+
+    border-radius:12px;
+
+    overflow:hidden;
+
+}
+
+
+th{
+
+    background:var(--verde);
+
+    color:white;
+
+    padding:12px;
+
+}
+
+
+td{
+
+    padding:12px;
+
+    border-bottom:1px solid #eee;
+
+}
+
+
+/* =========================
+   CONTADORES
+========================= */
+
+#contador,
+.contador{
+
+    font-size:22px;
+
+    font-weight:bold;
+
+    color:var(--verde);
+
+    margin-bottom:20px;
+
+}
+
+
+
+/* =========================
+   CELULAR
+========================= */
 
 @media(max-width:700px){
 
+
 header{
+
     font-size:22px;
+
 }
 
+
 .container{
+
     width:92%;
+
 }
+
+
+.menu-card{
+
+    padding:15px;
+
+}
+
+
+table{
+
+    font-size:14px;
+
+}
+
 
 }
