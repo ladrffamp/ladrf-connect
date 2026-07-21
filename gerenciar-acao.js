@@ -202,53 +202,35 @@ async function carregarMembros(){
             (usuario)=>{
 
 
-                const dados =
+                const dados = usuario.data();
 
-                usuario.data();
+if (dados.perfil === "membro") {
 
+    listaMembros.innerHTML += `
 
+    <div style="
+        margin:10px;
+        padding:10px;
+        border:1px solid #ddd;
+        border-radius:8px;
+    ">
 
-                if(
-                    dados.perfil === "membro"
-                ){
+        <input
+            type="checkbox"
+            class="membro"
+            value="${usuario.id}"
+            data-nome="${dados.nome}"
+            data-email="${dados.email}"
+        >
 
+        <strong>${dados.nome}</strong><br>
+        <small>${dados.email}</small>
 
+    </div>
 
-                    listaMembros.innerHTML += `
+    `;
 
-
-                    <div style="
-                    margin:10px;
-                    padding:10px;
-                    border:1px solid #ddd;
-                    border-radius:8px;
-                    ">
-
-
-                    <input
-
-                    type="checkbox"
-
-                    class="membro"
-
-                    value="${usuario.id}"
-
-                    data-nome="${dados.nome}"
-
-                    >
-
-
-                    ${dados.nome}
-
-
-                    </div>
-
-
-                    `;
-
-
-
-                }
+}
 
 
 
