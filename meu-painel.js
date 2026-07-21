@@ -225,9 +225,13 @@ botao.dataset.membro
 );
 
 
-
+console.log(botao.dataset.acao);
+console.log(botao.dataset.membro);
+  
 await updateDoc(
 
+  alert("Presença atualizada!");
+  
 referencia,
 
 {
