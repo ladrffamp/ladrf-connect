@@ -575,4 +575,62 @@ atualizarContadores(
 // LOG
 // ======================================================
 
+async function buscarConfirmacoesPainel(eventoId){
+
+    const acoes = await getDocs(
+        collection(db,"acoes")
+    );
+
+
+    for(const acao of acoes.docs){
+
+
+        const participantes = await getDocs(
+
+            collection(
+
+                db,
+
+                "acoes",
+
+                acao.id,
+
+                "participantes"
+
+            )
+
+        );
+
+
+        participantes.forEach((item)=>{
+
+
+            const dados = item.data();
+
+
+            if(dados.presenca === "Confirmada"){
+
+
+                presencas[item.id] = {
+
+                    status:"Presente",
+
+                    hora:
+                    "Confirmado pelo painel"
+
+                };
+
+
+            }
+
+
+        });
+
+
+    }
+
+
+    atualizarTabela();
+
+}
 console.log("LADRF Connect - Frequência carregada com sucesso.");
