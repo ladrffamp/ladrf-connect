@@ -1,284 +1,148 @@
 import { auth, db } from "./firebase.js";
 
 import {
-onAuthStateChanged
+    onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 import {
-collection,
-getDocs,
-doc,
-updateDoc,
-serverTimestamp
+    collection,
+    getDocs,
+    doc,
+    updateDoc,
+    serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+const boasVindas = document.getElementById("boasVindas");
+const listaEscalas = document.getElementById("listaEscalas");
 
-const boasVindas =
-document.getElementById("boasVindas");
+onAuthStateChanged(auth, async (usuario) => {
 
+    if (!usuario) {
+        window.location.href = "login.html";
+        return;
+    }
 
-const listaEscalas =
-document.getElementById("listaEscalas");
+    boasVindas.innerHTML = `👋 Bem-vindo ${usuario.email}`;
 
-
-
-onAuthStateChanged(auth, async(usuario)=>{
-
-
-if(!usuario){
-
-window.location.href="login.html";
-
-return;
-
-}
-
-
-boasVindas.innerHTML =
-`👋 Bem-vindo ${usuario.email}`;
-
-
-carregarEscalas(usuario.email);
-
+    carregarEscalas(usuario.email);
 
 });
 
+async function carregarEscalas(emailUsuario) {
 
+    listaEscalas.innerHTML = "";
 
+    const acoes = await getDocs(
+        collection(db, "acoes")
+    );
 
+    let encontrou = false;
 
-async function carregarEscalas(emailUsuario){
+    for (const acao of acoes.docs) {
 
+        const participantes = await getDocs(
+            collection(
+                db,
+                "acoes",
+                acao.id,
+                "participantes"
+            )
+        );
 
-listaEscalas.innerHTML="";
+        for (const participante of participantes.docs) {
 
+            const dados = participante.data();
 
-const acoes =
-await getDocs(
+            if (dados.email === emailUsuario) {
 
-collection(
-db,
-"acoes"
+                encontrou = true;
 
-)
+                listaEscalas.innerHTML += `
 
-);
+                <div class="escala">
 
+                    <h3>${acao.id}</h3>
 
+                    <p>👤 ${dados.nome}</p>
 
-let encontrou = false;
+                    <p>
+                        Status:
+                        <strong>${dados.presenca}</strong>
+                    </p>
 
+                    <button
+                        class="confirmar"
+                        data-acao="${acao.id}"
+                        data-membro="${participante.id}"
+                        ${dados.presenca === "Confirmada" ? "disabled" : ""}
+                    >
+                        ${dados.presenca === "Confirmada"
+                            ? "✅ Presença Confirmada"
+                            : "✅ Confirmar Presença"}
+                    </button>
 
+                </div>
 
-for(
-const acao of acoes.docs
-){
+                `;
 
+            }
 
-const participantes =
+        }
 
-await getDocs(
+    }
 
-collection(
+    if (!encontrou) {
 
-db,
+        listaEscalas.innerHTML = `
 
-"acoes",
+        <div class="card">
 
-acao.id,
+            Nenhuma escala encontrada.
 
-"participantes"
+        </div>
 
-)
+        `;
 
-);
+        return;
 
+    }
 
+    document.querySelectorAll(".confirmar").forEach((botao) => {
 
-for(
-const participante of participantes.docs
-){
+        botao.addEventListener("click", async () => {
 
+            try {
 
-const dados =
-participante.data();
+                const referencia = doc(
+                    db,
+                    "acoes",
+                    botao.dataset.acao,
+                    "participantes",
+                    botao.dataset.membro
+                );
 
+                console.log(botao.dataset.acao);
+                console.log(botao.dataset.membro);
 
+                await updateDoc(referencia, {
+                    presenca: "Confirmada",
+                    confirmadoEm: serverTimestamp()
+                });
 
-if(
-dados.email === emailUsuario
-){
+                alert("Presença atualizada!");
 
+                botao.innerHTML = "✅ Presença Confirmada";
+                botao.disabled = true;
 
-encontrou = true;
+            } catch (erro) {
 
+                console.error("Erro ao confirmar presença:", erro);
+                alert("Erro ao confirmar presença.");
 
+            }
 
-listaEscalas.innerHTML += `
+        });
 
-<div class="escala">
-
-
-<h3>
-
-${acao.id}
-
-</h3>
-
-
-<p>
-
-👤 ${dados.nome}
-
-</p>
-
-
-<p>
-
-Status:
-
-<strong>
-
-${dados.presenca}
-
-</strong>
-
-</p>
-
-
-<button
-
-class="confirmar"
-
-data-acao="${acao.id}"
-
-data-membro="${participante.id}"
-
->
-
-${dados.presenca === "Confirmada"
-
-? "✅ Presença Confirmada"
-
-: "✅ Confirmar Presença"}
-
-</button>
-
-
-</div>
-
-`;
-
-
-
-}
-
-
-}
-
-
-}
-
-
-
-if(!encontrou){
-
-
-listaEscalas.innerHTML=`
-
-<div class="card">
-
-Nenhuma escala encontrada.
-
-</div>
-
-`;
-
-return;
-
-}
-
-
-
-document.querySelectorAll(".confirmar")
-
-.forEach((botao)=>{
-
-
-botao.addEventListener("click", async()=>{
-
-
-const referencia =
-
-doc(
-
-db,
-
-"acoes",
-
-botao.dataset.acao,
-
-"participantes",
-
-botao.dataset.membro
-
-);
-
-
-console.log(botao.dataset.acao);
-console.log(botao.dataset.membro);
-  
-const referencia = doc(
-
-db,
-
-"acoes",
-
-botao.dataset.acao,
-
-"participantes",
-
-botao.dataset.membro
-
-);
-
-console.log(botao.dataset.acao);
-console.log(botao.dataset.membro);
-
-await updateDoc(
-
-referencia,
-
-{
-
-presenca: "Confirmada",
-
-confirmadoEm: serverTimestamp()
-
-}
-
-);
-
-alert("Presença atualizada!");
-
-botao.innerHTML = "✅ Presença Confirmada";
-
-botao.disabled = true;
-
-
-
-botao.innerHTML =
-"✅ Presença Confirmada";
-
-
-botao.disabled = true;
-
-
-
-});
-
-
-});
-
+    });
 
 }
