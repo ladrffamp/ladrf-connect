@@ -619,6 +619,33 @@ height:250
 console.log("QR Code criado");
 
 
+  
+  // ESCONDER BOTÃO FINALIZAR
+
+const btnFinalizar =
+document.getElementById("btnFinalizar");
+
+
+if(btnFinalizar){
+
+btnFinalizar.style.display="none";
+
+}
+
+
+// MOSTRAR PRÓXIMO ATENDIMENTO
+
+const btnNovo =
+document.getElementById("btnNovoAtendimento");
+
+
+if(btnNovo){
+
+btnNovo.style.display="inline-block";
+
+}
+
+
 }else{
 
 
@@ -667,5 +694,15 @@ alert(
 }
 
 
+
+};
+
+// =====================================
+// PRÓXIMO ATENDIMENTO
+// =====================================
+
+window.proximoAtendimento = function(){
+
+window.location.href="atendimento.html";
 
 };
