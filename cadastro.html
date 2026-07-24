@@ -19,11 +19,12 @@
 </head>
 
 
+
 <body>
 
 
 
-<header>
+<header class="topbar">
 
 
 <a href="index.html" class="btn-inicio">
@@ -41,22 +42,28 @@ Início
 
 
 
+
 <div class="logo">
 
 
 <i class="fa-solid fa-heart-pulse"></i>
 
 
+
 <div>
 
 
 <h1>
+
 LADRF Connect
+
 </h1>
 
 
 <p>
+
 Sistema de Gestão da Liga
+
 </p>
 
 
@@ -70,14 +77,14 @@ Sistema de Gestão da Liga
 
 
 
-<div class="usuario">
+<div class="usuario-info">
 
 
-<h3 id="nomeUsuario">
+<strong id="nomeUsuario">
 
 Carregando...
 
-</h3>
+</strong>
 
 
 <span id="perfilUsuario">
@@ -87,18 +94,22 @@ Perfil
 </span>
 
 
-<p id="horaAtual">
+<small id="horaAtual">
 
 --:--:--
 
-</p>
+</small>
 
 
 </div>
 
 
 
+
+
 </header>
+
+
 
 
 
@@ -112,26 +123,39 @@ Perfil
 
 
 
-<div class="card">
+<section class="page-title">
 
 
-
-<h2>
-
-<i class="fa-solid fa-user-plus"></i>
+<h1>
 
 Cadastro de Paciente
 
-</h2>
+</h1>
 
 
+<p>
+
+Registro inicial para entrada na fila de atendimento.
+
+</p>
+
+
+</section>
+
+
+
+
+
+
+
+
+<div class="card">
 
 
 
 
 
 <form id="formCadastro">
-
 
 
 
@@ -147,11 +171,14 @@ Nome
 </label>
 
 
+
 <input
 
 type="text"
 
 id="nome"
+
+placeholder="Nome completo"
 
 required
 
@@ -161,6 +188,12 @@ required
 </div>
 
 
+
+
+
+
+
+<div class="form-grid">
 
 
 
@@ -182,11 +215,12 @@ type="text"
 
 id="whatsapp"
 
+placeholder="(00) 00000-0000"
+
 >
 
 
 </div>
-
 
 
 
@@ -210,10 +244,19 @@ type="text"
 
 id="idade"
 
+placeholder="Idade"
+
 >
 
 
 </div>
+
+
+
+
+
+</div>
+
 
 
 
@@ -246,6 +289,7 @@ Carregando modalidades...
 </select>
 
 
+
 </div>
 
 
@@ -270,9 +314,10 @@ Queixa principal
 
 id="queixa"
 
-placeholder="Descreva a queixa">
+placeholder="Descreva a queixa principal">
 
 </textarea>
+
 
 
 </div>
@@ -283,19 +328,19 @@ placeholder="Descreva a queixa">
 
 
 
+
 <button 
-class="btn-success"
-type="submit">
+type="submit"
+class="btn-success">
 
 
-<i class="fa-solid fa-check"></i>
+<i class="fa-solid fa-user-plus"></i>
 
 
 Cadastrar Paciente
 
 
 </button>
-
 
 
 
@@ -309,8 +354,10 @@ Cadastrar Paciente
 
 
 
+<div class="card qr-box">
 
-<div class="card">
+
+
 
 
 <h2>
@@ -323,31 +370,39 @@ QR Code de acompanhamento
 
 
 
+
+
 <p>
 
-Entregue este QR Code ao paciente para acompanhar a fila.
+Entregue o QR Code ao paciente para acompanhar sua posição na fila.
 
 </p>
 
 
 
 
-<div id="qrcode" class="flex-center">
+
+
+<div id="qrcode">
 
 
 </div>
 
 
 
-</div>
-
-
-
-
-
 
 
 </div>
+
+
+
+
+
+
+
+
+</div>
+
 
 
 
@@ -364,6 +419,7 @@ Entregue este QR Code ao paciente para acompanhar a fila.
 
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
 
 
 <script type="module" src="cadastro.js"></script>
@@ -383,19 +439,22 @@ Entregue este QR Code ao paciente para acompanhar a fila.
 function atualizarHora(){
 
 
-const hora =
-document.getElementById("horaAtual");
+const hora = document.getElementById("horaAtual");
 
 
 if(hora){
 
+
 hora.innerHTML =
+
 new Date().toLocaleTimeString("pt-BR");
 
+
 }
 
 
 }
+
 
 
 setInterval(atualizarHora,1000);
@@ -413,5 +472,6 @@ atualizarHora();
 
 
 </body>
+
 
 </html>
