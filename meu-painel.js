@@ -1,25 +1,24 @@
 // meu-painel.js
 
-
 import { auth, db } from "./firebase.js";
-
 
 import {
 onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-
 import {
 collection,
-getDocs,
-query,
-where
+getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
 const boasVindas =
 document.getElementById("boasVindas");
+
+
+const listaEscalas =
+document.getElementById("listaEscalas");
 
 
 const totalEventos =
@@ -37,12 +36,16 @@ document.getElementById("totalPresencas");
 
 
 
+// =====================================
+// LOGIN
+// =====================================
+
 
 onAuthStateChanged(
 
 auth,
 
-async(usuario)=>{
+(usuario)=>{
 
 
 if(!usuario){
@@ -55,17 +58,13 @@ return;
 
 
 
-if(boasVindas){
-
 boasVindas.innerHTML =
+
 `👋 Bem-vindo ${usuario.email}`;
 
-}
 
 
-
-carregarResumo(usuario.uid);
-
+carregarPainel(usuario.uid);
 
 
 }
@@ -78,24 +77,24 @@ carregarResumo(usuario.uid);
 
 
 
+// =====================================
+// CARREGAR PAINEL
+// =====================================
 
 
-async function carregarResumo(uid){
+async function carregarPainel(uid){
 
 
 try{
 
 
-let eventos = 0;
+listaEscalas.innerHTML =
 
-let presencas = 0;
-
-let horas = 0;
+"Carregando escalas...";
 
 
 
-const agenda =
-await getDocs(
+const agendaSnapshot = await getDocs(
 
 collection(
 db,
@@ -107,14 +106,33 @@ db,
 
 
 
+let eventos = 0;
+
+let horas = 0;
+
+let presencas = 0;
+
+let encontrou = false;
 
 
-for(const acao of agenda.docs){
+
+
+listaEscalas.innerHTML = "";
 
 
 
-const participantes =
-await getDocs(
+
+
+for(const acao of agendaSnapshot.docs){
+
+
+
+const dadosAcao = acao.data();
+
+
+
+
+const participantes = await getDocs(
 
 collection(
 
@@ -134,8 +152,7 @@ acao.id,
 
 
 
-const membro =
-participantes.docs.find(
+const participante = participantes.docs.find(
 
 (item)=>item.id === uid
 
@@ -145,51 +162,135 @@ participantes.docs.find(
 
 
 
-if(membro){
+if(participante){
 
 
 
-const dados =
-membro.data();
+encontrou = true;
+
+
+
+const dadosParticipante = participante.data();
+
+
+
+
+listaEscalas.innerHTML += `
+
+
+<div class="card">
+
+
+<h3>
+
+<i class="fa-solid fa-calendar-check"></i>
+
+${dadosAcao.titulo || "Sem título"}
+
+</h3>
+
+
+<p>
+
+📅 Data:
+
+<strong>
+
+${dadosAcao.data || "-"}
+
+</strong>
+
+</p>
+
+
+
+<p>
+
+📍 Local:
+
+<strong>
+
+${dadosAcao.local || "-"}
+
+</strong>
+
+</p>
+
+
+
+<p>
+
+⏰ Horário:
+
+<strong>
+
+${dadosAcao.inicio || "-"}
+
+até
+
+${dadosAcao.fim || "-"}
+
+</strong>
+
+</p>
+
+
+
+<p>
+
+Status:
+
+<strong>
+
+${dadosParticipante.presenca || "Pendente"}
+
+</strong>
+
+</p>
+
+
+
+</div>
+
+`;
+
+
 
 
 
 if(
-dados.presenca === "Confirmado" ||
-dados.presenca === "Confirmada"
+
+dadosParticipante.presenca === "Confirmada"
+
 ){
 
 
-eventos++;
 
 presencas++;
 
 
 
-const inicio =
-acao.data().inicio;
-
-
-const fim =
-acao.data().fim;
+eventos++;
 
 
 
-if(inicio && fim){
+
+if(
+
+dadosAcao.inicio &&
+
+dadosAcao.fim
+
+){
 
 
-const h1 =
-Number(inicio.split(":")[0]);
+horas += calcularHoras(
 
+dadosAcao.inicio,
 
-const h2 =
-Number(fim.split(":")[0]);
+dadosAcao.fim
 
-
-horas += h2 - h1;
-
-
-}
+);
 
 
 }
@@ -206,30 +307,51 @@ horas += h2 - h1;
 
 
 
-if(totalEventos){
+}
 
-totalEventos.innerHTML =
-eventos;
+
+
+
+
+
+
+if(!encontrou){
+
+
+
+listaEscalas.innerHTML = `
+
+
+<div class="card">
+
+
+Nenhuma escala encontrada.
+
+
+</div>
+
+
+`;
+
+
 
 }
 
 
 
-if(totalPresencas){
-
-totalPresencas.innerHTML =
-presencas;
-
-}
 
 
 
-if(totalHoras){
 
-totalHoras.innerHTML =
-horas + "h";
+totalEventos.innerHTML = eventos;
 
-}
+
+totalHoras.innerHTML = horas + "h";
+
+
+totalPresencas.innerHTML = presencas;
+
+
 
 
 
@@ -237,13 +359,78 @@ horas + "h";
 
 
 console.error(
-"Erro ao carregar resumo:",
+
+"Erro painel:",
+
 error
+
 );
 
 
 
+listaEscalas.innerHTML =
+
+"Erro ao carregar painel.";
+
+
+
+
+
 }
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// CALCULAR HORAS
+// =====================================
+
+
+function calcularHoras(inicio,fim){
+
+
+
+const inicioPartes = inicio.split(":");
+
+
+const fimPartes = fim.split(":");
+
+
+
+const inicioMin =
+
+(Number(inicioPartes[0])*60)
+
++
+
+Number(inicioPartes[1]);
+
+
+
+
+const fimMin =
+
+(Number(fimPartes[0])*60)
+
++
+
+Number(fimPartes[1]);
+
+
+
+
+return (
+
+fimMin - inicioMin
+
+) / 60;
 
 
 
