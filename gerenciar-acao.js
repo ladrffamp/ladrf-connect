@@ -17,15 +17,17 @@ serverTimestamp
 
 
 
+
 // =====================================
 // PEGAR ID DA AÇÃO
 // =====================================
 
-const idAcao =
 
-new URLSearchParams(window.location.search)
+const idAcao = new URLSearchParams(
 
-.get("id");
+window.location.search
+
+).get("id");
 
 
 
@@ -36,20 +38,31 @@ idAcao
 
 
 
+console.log(
+"URL atual:",
+window.location.href
+);
+
+
+
+
 if(!idAcao){
 
 
-    alert(
-        "Erro: ação não encontrada."
-    );
+alert(
+"Erro: ação não encontrada."
+);
 
 
-    throw new Error(
-        "ID da ação ausente"
-    );
+throw new Error(
+"ID da ação ausente"
+);
 
 
 }
+
+
+
 
 
 
@@ -59,25 +72,17 @@ if(!idAcao){
 // =====================================
 
 
-const nomeAcao =
-
-document.getElementById(
+const nomeAcao = document.getElementById(
 "nomeAcao"
 );
 
 
-
-const listaMembros =
-
-document.getElementById(
+const listaMembros = document.getElementById(
 "listaMembros"
 );
 
 
-
-const botaoSalvar =
-
-document.getElementById(
+const botaoSalvar = document.getElementById(
 "salvar"
 );
 
@@ -85,82 +90,124 @@ document.getElementById(
 
 
 
+
+
+
 // =====================================
-// CARREGAR NOME DA AÇÃO
+// CARREGAR AÇÃO
 // =====================================
 
 
 async function carregarAcao(){
 
 
-    try{
+try{
 
 
-        const referencia =
+const referencia = doc(
 
-        doc(
+db,
 
-            db,
+"acoes",
 
-            "acoes",
+idAcao
 
-            idAcao
-
-        );
-
-
-
-        const resultado =
-
-        await getDoc(
-            referencia
-        );
+);
 
 
 
-        if(
-            resultado.exists()
-        ){
+const resultado = await getDoc(
 
+referencia
 
-            nomeAcao.innerHTML =
-
-            resultado.data().nome;
-
-
-        }
-
-
-        else{
-
-
-            nomeAcao.innerHTML =
-
-            "Ação não encontrada";
-
-
-        }
+);
 
 
 
-    }
 
-    catch(error){
-
-
-        console.error(
-
-            "Erro ao carregar ação:",
-
-            error
-
-        );
+if(resultado.exists()){
 
 
-    }
+
+const dados = resultado.data();
+
+
+
+if(nomeAcao){
+
+
+nomeAcao.innerHTML =
+
+dados.nome || "Ação sem nome";
 
 
 }
+
+
+
+}else{
+
+
+
+console.error(
+
+"Ação inexistente:",
+idAcao
+
+);
+
+
+
+if(nomeAcao){
+
+
+nomeAcao.innerHTML =
+
+"Ação não encontrada";
+
+
+}
+
+
+
+}
+
+
+
+}catch(error){
+
+
+
+console.error(
+
+"Erro ao carregar ação:",
+
+error
+
+);
+
+
+
+if(nomeAcao){
+
+
+nomeAcao.innerHTML =
+
+"Erro ao carregar ação";
+
+
+}
+
+
+
+}
+
+
+
+}
+
+
+
 
 
 
@@ -174,106 +221,166 @@ async function carregarAcao(){
 async function carregarMembros(){
 
 
-    try{
 
-
-        const usuarios =
-
-        await getDocs(
-
-            collection(
-
-                db,
-
-                "usuarios"
-
-            )
-
-        );
+try{
 
 
 
-        listaMembros.innerHTML = "";
+const usuarios = await getDocs(
+
+collection(
+
+db,
+
+"usuarios"
+
+)
+
+);
 
 
 
-        usuarios.forEach(
-
-            (usuario)=>{
 
 
-                const dados = usuario.data();
+if(listaMembros){
 
-if (dados.perfil === "membro") {
 
-    listaMembros.innerHTML += `
+listaMembros.innerHTML = "";
 
-    <div style="
-        margin:10px;
-        padding:10px;
-        border:1px solid #ddd;
-        border-radius:8px;
-    ">
 
-        <input
-            type="checkbox"
-            class="membro"
-            value="${usuario.id}"
-            data-nome="${dados.nome}"
-            data-email="${dados.email}"
-        >
+}
 
-        <strong>${dados.nome}</strong><br>
-        <small>${dados.email}</small>
 
-    </div>
 
-    `;
+
+
+usuarios.forEach((usuario)=>{
+
+
+
+const dados = usuario.data();
+
+
+
+
+if(dados.perfil === "membro"){
+
+
+
+listaMembros.innerHTML += `
+
+
+<div class="card" style="margin-bottom:10px;">
+
+
+
+<label style="
+display:flex;
+align-items:center;
+gap:10px;
+cursor:pointer;
+">
+
+
+<input
+
+type="checkbox"
+
+class="membro"
+
+value="${usuario.id}"
+
+data-nome="${dados.nome || ""}"
+
+data-email="${dados.email || ""}"
+
+>
+
+
+
+<div>
+
+<strong>
+
+${dados.nome || "Sem nome"}
+
+</strong>
+
+
+<br>
+
+
+<small>
+
+${dados.email || ""}
+
+</small>
+
+
+</div>
+
+
+</label>
+
+
+
+</div>
+
+
+`;
+
+
 
 }
 
 
 
-            }
-
-
-        );
+});
 
 
 
-        if(
-            listaMembros.innerHTML === ""
-        ){
-
-
-            listaMembros.innerHTML =
-
-            "Nenhum membro encontrado.";
-
-
-        }
 
 
 
-    }
 
-    catch(error){
-
-
-        console.error(
-
-            "Erro ao buscar membros:",
-
-            error
-
-        );
+if(listaMembros.innerHTML === ""){
 
 
-    }
+
+listaMembros.innerHTML =
+
+"Nenhum membro encontrado.";
+
+
+}
+
+
+
+
+
+}catch(error){
+
+
+
+console.error(
+
+"Erro ao buscar membros:",
+
+error
+
+);
 
 
 
 }
+
+
+
+}
+
+
+
+
 
 
 
@@ -284,6 +391,10 @@ if (dados.perfil === "membro") {
 // =====================================
 
 
+if(botaoSalvar){
+
+
+
 botaoSalvar.addEventListener(
 
 "click",
@@ -291,128 +402,169 @@ botaoSalvar.addEventListener(
 async()=>{
 
 
-    try{
 
-
-        const selecionados =
-
-        document.querySelectorAll(
-
-            ".membro:checked"
-
-        );
+try{
 
 
 
-        if(
-            selecionados.length === 0
-        ){
+const selecionados = document.querySelectorAll(
 
-
-            alert(
-
-                "Selecione pelo menos um membro."
-
-            );
-
-
-            return;
-
-
-        }
-
-
-
-
-        for(
-            const membro of selecionados
-        ){
-
-
-
-            await setDoc(
-
-    doc(
-
-        db,
-
-        "acoes",
-
-        idAcao,
-
-        "participantes",
-
-        membro.value
-
-    ),
-
-    {
-
-        id: membro.value,
-
-        nome: membro.dataset.nome,
-
-        email: membro.dataset.email,
-
-        presenca: "Pendente",
-
-        confirmadoEm: null,
-
-        escaladoEm: serverTimestamp()
-
-    },
-
-    {
-
-        merge: true
-
-    }
+".membro:checked"
 
 );
 
 
 
-        }
+
+
+if(selecionados.length === 0){
 
 
 
-        alert(
+alert(
 
-            "Escala salva com sucesso!"
+"Selecione pelo menos um membro."
 
-        );
-
-
-
-    }
+);
 
 
-    catch(error){
+
+return;
 
 
-        console.error(
 
-            "Erro ao salvar escala:",
-
-            error
-
-        );
+}
 
 
-        alert(
-
-            "Erro ao salvar escala."
-
-        );
 
 
-    }
+
+
+
+for(const membro of selecionados){
+
+
+
+await setDoc(
+
+
+doc(
+
+db,
+
+"acoes",
+
+idAcao,
+
+"participantes",
+
+membro.value
+
+),
+
+
+
+{
+
+
+id:
+
+membro.value,
+
+
+nome:
+
+membro.dataset.nome,
+
+
+email:
+
+membro.dataset.email,
+
+
+presenca:
+
+"Pendente",
+
+
+confirmadoEm:
+
+null,
+
+
+escaladoEm:
+
+serverTimestamp()
+
+
+
+},
+
+
+
+{
+
+merge:true
+
+}
+
+
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+alert(
+
+"Escala salva com sucesso!"
+
+);
+
+
+
+}catch(error){
+
+
+
+console.error(
+
+"Erro ao salvar escala:",
+
+error
+
+);
+
+
+
+alert(
+
+"Erro ao salvar escala."
+
+);
+
+
+
+}
 
 
 
 }
 
 );
+
+
+
+}
+
+
 
 
 
@@ -425,5 +577,6 @@ async()=>{
 
 
 carregarAcao();
+
 
 carregarMembros();
