@@ -451,35 +451,59 @@ dados.maca
 
 // GERAR QR CODE
 
-const qr =
+const qr = document.getElementById("qrcode");
 
-document.getElementById("qrcode");
+const area = document.getElementById("areaAvaliacao");
 
+const link = document.getElementById("linkAvaliacao");
+
+
+console.log("QR elemento:", qr);
+
+console.log("QRCode biblioteca:", QRCode);
+
+
+if(area){
+
+area.style.display="block";
+
+}
+
+
+
+if(link){
+
+link.href = linkAvaliacao;
+
+}
 
 
 
 if(qr && typeof QRCode !== "undefined"){
 
 
-
 qr.innerHTML="";
 
 
+new QRCode(qr, {
 
-new QRCode(
-
-qr,
-
-{
-
-text:linkAvaliacao,
+text: linkAvaliacao,
 
 width:250,
 
 height:250
 
-}
+});
 
+
+console.log("QR Code criado");
+
+
+}else{
+
+
+console.error(
+"QR Code não encontrado ou biblioteca não carregou"
 );
 
 
