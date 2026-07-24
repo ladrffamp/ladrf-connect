@@ -1,26 +1,41 @@
 // minhas-escalas.js
 
+
 console.log("MINHAS ESCALAS JS CARREGADO");
+
 
 
 import { db, auth } from "./firebase.js";
 
 
 import {
+
 collection,
 getDocs,
 doc,
-updateDoc
+updateDoc,
+serverTimestamp
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
 import {
+
 onAuthStateChanged
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 
+
+
 const lista = document.getElementById("listaEscalas");
+
+
+
+
+
 
 
 
@@ -33,12 +48,6 @@ const lista = document.getElementById("listaEscalas");
 async function carregarEscalas(uid){
 
 
-console.log("======================");
-console.log("BUSCANDO ESCALAS");
-console.log("UID:",uid);
-console.log("======================");
-
-
 
 if(!lista){
 
@@ -49,6 +58,7 @@ console.error(
 return;
 
 }
+
 
 
 
@@ -66,31 +76,36 @@ Carregando escalas...
 
 
 
+
+
+
 try{
+
 
 
 const agendaSnapshot = await getDocs(
 
 collection(
+
 db,
+
 "agenda"
+
 )
 
 );
 
 
 
-console.log(
-"Quantidade de ações encontradas:",
-agendaSnapshot.size
-);
-
 
 
 lista.innerHTML = "";
 
 
+
 let encontrou = false;
+
+
 
 
 
@@ -100,14 +115,6 @@ for(const acaoDoc of agendaSnapshot.docs){
 
 
 const dadosAcao = acaoDoc.data();
-
-
-
-console.log(
-"Verificando:",
-acaoDoc.id,
-dadosAcao
-);
 
 
 
@@ -131,13 +138,6 @@ acaoDoc.id,
 
 
 
-console.log(
-"Participantes:",
-participantesSnapshot.size
-);
-
-
-
 
 
 const participanteDoc = participantesSnapshot.docs.find(
@@ -150,7 +150,13 @@ const participanteDoc = participantesSnapshot.docs.find(
 
 
 
-if(participanteDoc){
+if(!participanteDoc){
+
+continue;
+
+}
+
+
 
 
 
@@ -158,13 +164,145 @@ encontrou = true;
 
 
 
-const dadosParticipante =
-participanteDoc.data();
+const dadosParticipante = participanteDoc.data();
+
+
+
+
+
+
+
+let areaResposta = "";
+
+
+
+
+
+if(
+
+dadosParticipante.presenca === "Pendente"
+
+){
+
+
+areaResposta = `
+
+
+<div style="
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:15px;
+">
+
+
+
+<button
+
+class="btn-success"
+
+onclick="confirmarPresenca('${acaoDoc.id}')"
+
+>
+
+<i class="fa-solid fa-check"></i>
+
+Confirmar presença
+
+</button>
+
+
+
+
+
+<button
+
+class="btn-danger"
+
+onclick="recusarPresenca('${acaoDoc.id}')"
+
+>
+
+<i class="fa-solid fa-xmark"></i>
+
+Não poderei comparecer
+
+</button>
+
+
+
+</div>
+
+
+`;
+
+
+
+}
+
+else if(
+
+dadosParticipante.presenca === "Confirmado"
+
+){
+
+
+
+areaResposta = `
+
+
+<div class="card">
+
+
+🟢 Presença confirmada
+
+
+</div>
+
+
+`;
+
+
+
+}
+
+else if(
+
+dadosParticipante.presenca === "Recusado"
+
+){
+
+
+
+areaResposta = `
+
+
+<div class="card">
+
+
+🔴 Você informou que não poderá comparecer.
+
+
+</div>
+
+
+`;
+
+
+
+}
+
+
+
+
+
 
 
 
 
 lista.innerHTML += `
+
+
 
 <div class="card">
 
@@ -176,6 +314,8 @@ lista.innerHTML += `
 ${dadosAcao.titulo || "Ação sem título"}
 
 </h2>
+
+
 
 
 
@@ -194,6 +334,7 @@ ${dadosAcao.data || "-"}
 
 
 
+
 <p>
 
 📍 Local:
@@ -205,6 +346,7 @@ ${dadosAcao.local || "-"}
 </strong>
 
 </p>
+
 
 
 
@@ -228,6 +370,7 @@ ${dadosAcao.fim || "-"}
 
 
 
+
 <p>
 
 👤 Responsável:
@@ -243,6 +386,7 @@ ${dadosAcao.responsavel || "-"}
 
 
 
+
 <p>
 
 📌 Tipo:
@@ -254,6 +398,7 @@ ${dadosAcao.tipo || "-"}
 </strong>
 
 </p>
+
 
 
 
@@ -274,87 +419,28 @@ ${dadosParticipante.presenca || "Pendente"}
 
 
 
-${dadosParticipante.presenca === "Pendente" ? `
-
-<div style="
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:15px;
-">
-
-
-<button
-
-class="btn-success"
-
-onclick="confirmarPresenca('${acaoDoc.id}')"
-
->
-
-<i class="fa-solid fa-check"></i>
-
-Confirmar presença
-
-</button>
-
-
-
-
-<button
-
-class="btn-danger"
-
-onclick="recusarPresenca('${acaoDoc.id}')"
-
->
-
-<i class="fa-solid fa-xmark"></i>
-
-Não poderei comparecer
-
-</button>
-
-
-</div>
-
-` : dadosParticipante.presenca === "Confirmado" ? `
-
-<div class="card">
-
-✅ Presença confirmada
-
-</div>
-
-` : `
-
-<div class="card">
-
-❌ Você informou que não poderá comparecer.
-
-</div>
-
-`}
+${areaResposta}
 
 
 
 </div>
+
+
 
 `;
 
 
 
-}
-
-
 
 }
+
 
 
 
 
 
 if(!encontrou){
+
 
 
 lista.innerHTML = `
@@ -383,6 +469,7 @@ Você ainda não possui ações atribuídas.
 `;
 
 
+
 }
 
 
@@ -391,9 +478,13 @@ Você ainda não possui ações atribuídas.
 }catch(error){
 
 
+
 console.error(
+
 "Erro ao carregar escalas:",
+
 error
+
 );
 
 
@@ -409,11 +500,13 @@ Erro ao carregar escalas.
 `;
 
 
-}
-
-
 
 }
+
+
+
+}
+
 
 
 
@@ -430,6 +523,7 @@ Erro ao carregar escalas.
 window.confirmarPresenca = async function(idAcao){
 
 
+
 const usuario = auth.currentUser;
 
 
@@ -437,7 +531,9 @@ const usuario = auth.currentUser;
 if(!usuario){
 
 alert(
+
 "Usuário não autenticado"
+
 );
 
 return;
@@ -446,7 +542,9 @@ return;
 
 
 
+
 try{
+
 
 
 await updateDoc(
@@ -467,7 +565,12 @@ usuario.uid
 
 {
 
-presenca:"Confirmado"
+
+presenca:"Confirmado",
+
+
+confirmadoEm:serverTimestamp()
+
 
 }
 
@@ -475,27 +578,49 @@ presenca:"Confirmado"
 
 
 
+
+
 alert(
+
 "Presença confirmada!"
+
 );
+
+
 
 
 
 carregarEscalas(
+
 usuario.uid
+
 );
+
+
+
 
 
 
 }catch(error){
 
 
-console.error(error);
+
+console.error(
+
+"Erro ao confirmar presença:",
+
+error
+
+);
+
 
 
 alert(
+
 "Erro ao confirmar presença."
+
 );
+
 
 
 }
@@ -503,6 +628,7 @@ alert(
 
 
 };
+
 
 
 
@@ -527,8 +653,11 @@ const usuario = auth.currentUser;
 if(!usuario){
 
 alert(
+
 "Usuário não autenticado"
+
 );
+
 
 return;
 
@@ -536,7 +665,10 @@ return;
 
 
 
+
+
 try{
+
 
 
 await updateDoc(
@@ -557,7 +689,12 @@ usuario.uid
 
 {
 
-presenca:"Recusado"
+
+presenca:"Recusado",
+
+
+respondidoEm:serverTimestamp()
+
 
 }
 
@@ -565,27 +702,49 @@ presenca:"Recusado"
 
 
 
+
+
 alert(
+
 "Resposta enviada!"
+
 );
+
+
 
 
 
 carregarEscalas(
+
 usuario.uid
+
 );
+
+
+
 
 
 
 }catch(error){
 
 
-console.error(error);
+
+console.error(
+
+"Erro ao recusar presença:",
+
+error
+
+);
+
 
 
 alert(
+
 "Erro ao enviar resposta."
+
 );
+
 
 
 }
@@ -593,6 +752,7 @@ alert(
 
 
 };
+
 
 
 
@@ -616,28 +776,21 @@ auth,
 if(usuario){
 
 
-console.log("======================");
 
 console.log(
-"USUÁRIO LOGADO"
-);
 
-console.log(
-"UID:",
+"Usuário logado:",
+
 usuario.uid
-);
 
-console.log(
-"EMAIL:",
-usuario.email
 );
-
-console.log("======================");
 
 
 
 carregarEscalas(
+
 usuario.uid
+
 );
 
 
@@ -645,15 +798,11 @@ usuario.uid
 }else{
 
 
-console.log(
-"Nenhum usuário logado"
-);
-
-
 
 if(lista){
 
 lista.innerHTML =
+
 "Usuário não logado.";
 
 }
