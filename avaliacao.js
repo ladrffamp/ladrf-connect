@@ -191,48 +191,36 @@ document.getElementById("btnEnviar")
 
 
 const espera = document.querySelector(
-
 'input[name="espera"]:checked'
-
 );
 
 
 
 const equipe = document.querySelector(
-
 'input[name="equipe"]:checked'
-
 );
 
 
 
 const resolucao = document.querySelector(
-
 'input[name="resolucao"]:checked'
-
 );
 
 
 
 const indicaria = document.querySelector(
-
 'input[name="indicaria"]:checked'
-
 );
 
 
 
-
-// VALIDAÇÕES
 
 
 if(nota === 0){
 
 
 alert(
-
 "Selecione uma nota de 1 a 5 estrelas."
-
 );
 
 
@@ -240,26 +228,20 @@ return;
 
 
 }
+
 
 
 
 if(
-
 !espera ||
-
 !equipe ||
-
 !resolucao ||
-
 !indicaria
-
 ){
 
 
 alert(
-
 "Responda todas as perguntas."
-
 );
 
 
@@ -267,6 +249,7 @@ return;
 
 
 }
+
 
 
 
@@ -311,6 +294,8 @@ serverTimestamp()
 
 
 
+
+
 try{
 
 
@@ -326,7 +311,6 @@ avaliacao
 
 
 
-// TELA DE SUCESSO
 
 
 document.querySelector(".card").innerHTML = `
@@ -438,6 +422,7 @@ Seguir @ladrf.famp
 
 
 
+
 }catch(erro){
 
 
@@ -465,42 +450,3 @@ alert(
 
 
 });
-
-// =====================================
-// NOVO CADASTRO
-// =====================================
-
-window.novoCadastro = function(){
-
-
-const formulario = document.getElementById("formCadastro");
-
-
-if(formulario){
-
-formulario.reset();
-
-}
-
-
-
-// limpa QR Code antigo
-
-const qrCode = document.getElementById("qrcode");
-
-
-if(qrCode){
-
-qrCode.innerHTML = "";
-
-}
-
-
-
-// volta foco para nome
-
-document.getElementById("nome").focus();
-
-
-
-};
