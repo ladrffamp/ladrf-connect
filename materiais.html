@@ -25,22 +25,17 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 
 
-
-<header>
+<header class="topbar">
 
 
 
 <a href="index.html" class="btn-inicio">
 
-
 <i class="fa-solid fa-house"></i>
-
 
 Início
 
-
 </a>
-
 
 
 
@@ -81,16 +76,14 @@ Sistema de Gestão da Liga
 
 
 
+<div class="usuario-info">
 
 
-<div class="usuario">
-
-
-<h3 id="nomeUsuario">
+<strong id="nomeUsuario">
 
 Carregando...
 
-</h3>
+</strong>
 
 
 
@@ -102,11 +95,11 @@ Perfil
 
 
 
-<p id="horaAtual">
+<small id="horaAtual">
 
 00:00:00
 
-</p>
+</small>
 
 
 
@@ -135,7 +128,7 @@ Perfil
 
 <i class="fa-solid fa-boxes-stacked"></i>
 
-Materiais
+Controle de Materiais
 
 </h1>
 
@@ -143,13 +136,20 @@ Materiais
 
 <p>
 
-Controle de estoque da LADRF.
+Gerenciamento do estoque da LADRF.
 
 </p>
 
 
 
 </section>
+
+
+
+
+
+
+
 <div class="card">
 
 
@@ -164,8 +164,11 @@ Controle de estoque da LADRF.
 
 
 <input
+
 type="text"
+
 id="pesquisa"
+
 placeholder="Pesquisar material...">
 
 
@@ -175,7 +178,12 @@ placeholder="Pesquisar material...">
 
 
 
-<button class="btn-success" id="novoMaterial">
+
+<button
+
+class="btn-success"
+
+id="novoMaterial">
 
 
 <i class="fa-solid fa-plus"></i>
@@ -188,22 +196,12 @@ Novo Material
 
 
 
-
 </div>
 
 
 
 </div>
-
-
-
-
-
-
-
 <section class="stats">
-
-
 
 
 
@@ -227,10 +225,7 @@ Total de Materiais
 </span>
 
 
-
 </div>
-
-
 
 
 
@@ -256,10 +251,7 @@ Estoque Baixo
 </span>
 
 
-
 </div>
-
-
 
 
 
@@ -285,10 +277,7 @@ Esgotados
 </span>
 
 
-
 </div>
-
-
 
 
 
@@ -314,11 +303,7 @@ Movimentações Hoje
 </span>
 
 
-
 </div>
-
-
-
 
 
 
@@ -341,7 +326,6 @@ Movimentações Hoje
 
 
 <table>
-
 
 
 <thead>
@@ -399,7 +383,6 @@ Ações
 </th>
 
 
-
 </tr>
 
 
@@ -415,7 +398,7 @@ Ações
 <tr>
 
 
-<td colspan="7" style="text-align:center;">
+<td colspan="7" style="text-align:center">
 
 
 <i class="fa-solid fa-spinner fa-spin"></i>
@@ -436,7 +419,6 @@ Carregando materiais...
 
 
 
-
 </table>
 
 
@@ -452,7 +434,6 @@ Carregando materiais...
 <div class="modal-content">
 
 
-
 <h2 id="tituloModal">
 
 Novo Material
@@ -464,10 +445,12 @@ Novo Material
 
 
 <input
-type="text"
-id="nome"
-placeholder="Nome do material">
 
+type="text"
+
+id="nome"
+
+placeholder="Nome do material">
 
 
 
@@ -532,7 +515,6 @@ Outros
 </option>
 
 
-
 </select>
 
 
@@ -542,9 +524,13 @@ Outros
 
 
 <input
+
 type="number"
+
 id="quantidade"
+
 min="0"
+
 placeholder="Quantidade em estoque">
 
 
@@ -553,9 +539,13 @@ placeholder="Quantidade em estoque">
 
 
 <input
+
 type="number"
+
 id="minimo"
+
 min="0"
+
 placeholder="Estoque mínimo">
 
 
@@ -615,9 +605,7 @@ Litros
 </option>
 
 
-
 </select>
-
 
 
 
@@ -630,7 +618,9 @@ Litros
 
 
 <button
+
 class="btn-secondary"
+
 id="cancelarModal">
 
 
@@ -645,7 +635,9 @@ Cancelar
 
 
 <button
+
 class="btn-success"
+
 id="salvarMaterial">
 
 
@@ -683,10 +675,7 @@ Salvar
 
 
 
-
-
 <script type="module" src="materiais.js"></script>
-
 
 <script type="module" src="permissoes.js"></script>
 
@@ -705,21 +694,18 @@ function atualizarHora(){
 const hora=document.getElementById("horaAtual");
 
 
-
 if(hora){
 
 
-hora.innerHTML=new Date()
+hora.innerHTML =
 
-.toLocaleTimeString("pt-BR");
-
-
-}
-
+new Date().toLocaleTimeString("pt-BR");
 
 
 }
 
+
+}
 
 
 setInterval(atualizarHora,1000);
