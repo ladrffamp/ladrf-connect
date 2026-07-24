@@ -5,14 +5,13 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Avaliação do Atendimento | LADRF Connect</title>
 
 <link rel="stylesheet" href="styles.css">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
@@ -37,7 +36,7 @@ padding:40px;
 
 .card{
 
-background:white;
+background:#fff;
 
 width:100%;
 
@@ -45,9 +44,9 @@ max-width:700px;
 
 padding:35px;
 
-border-radius:20px;
+border-radius:22px;
 
-box-shadow:0 10px 30px rgba(0,0,0,.12);
+box-shadow:0 15px 35px rgba(0,0,0,.12);
 
 animation:fade .3s ease;
 
@@ -57,7 +56,7 @@ animation:fade .3s ease;
 
 text-align:center;
 
-margin-bottom:20px;
+margin-bottom:25px;
 
 }
 
@@ -67,17 +66,17 @@ font-size:60px;
 
 color:#0B7A3B;
 
-margin-bottom:10px;
+margin-bottom:12px;
 
 }
 
 .logo h1{
 
-color:#0B7A3B;
-
 font-size:30px;
 
-margin-bottom:5px;
+color:#0B7A3B;
+
+margin-bottom:8px;
 
 }
 
@@ -91,7 +90,7 @@ font-size:15px;
 
 .info{
 
-background:#f7f7f7;
+background:#f8fafb;
 
 padding:18px;
 
@@ -99,11 +98,13 @@ border-radius:14px;
 
 margin:25px 0;
 
+border-left:5px solid #0B7A3B;
+
 }
 
 .info p{
 
-margin:10px 0;
+margin:8px 0;
 
 font-size:15px;
 
@@ -131,7 +132,7 @@ display:flex;
 
 justify-content:center;
 
-gap:10px;
+gap:12px;
 
 margin:20px 0;
 
@@ -143,7 +144,7 @@ font-size:42px;
 
 cursor:pointer;
 
-color:#ccc;
+color:#d4d4d4;
 
 transition:.2s;
 
@@ -166,8 +167,6 @@ label{
 display:block;
 
 padding:10px;
-
-margin-bottom:6px;
 
 border-radius:10px;
 
@@ -193,25 +192,23 @@ textarea{
 
 width:100%;
 
-height:130px;
+height:140px;
 
 padding:15px;
 
 border-radius:12px;
 
-border:1px solid #ccc;
+border:1px solid #d9dfe6;
 
 resize:none;
 
 font-size:15px;
 
-margin-top:10px;
+outline:none;
 
 }
 
 textarea:focus{
-
-outline:none;
 
 border-color:#0B7A3B;
 
@@ -227,7 +224,7 @@ padding:16px;
 
 background:#0B7A3B;
 
-color:white;
+color:#fff;
 
 border:none;
 
@@ -251,19 +248,53 @@ background:#096430;
 
 .rodape{
 
-margin-top:30px;
+margin-top:35px;
 
 text-align:center;
 
-font-size:14px;
+line-height:1.8;
 
 color:#666;
 
-line-height:1.7;
+}
+
+.instagram{
+
+display:inline-flex;
+
+align-items:center;
+
+gap:10px;
+
+margin-top:18px;
+
+padding:14px 24px;
+
+background:#0B7A3B;
+
+color:#fff;
+
+border-radius:12px;
+
+text-decoration:none;
+
+font-weight:600;
+
+}
+
+.instagram:hover{
+
+background:#096430;
 
 }
 
 @media(max-width:700px){
+
+body{
+
+padding:20px;
+
+}
 
 .card{
 
@@ -352,213 +383,6 @@ Nota geral
 
 </div>
 
-<h3>
-
-Como você avalia o tempo de espera?
-
-</h3>
-
-<label>
-
-<input type="radio" name="espera" value="Excelente">
-
-Excelente
-
-</label>
-
-<label>
-
-<input type="radio" name="espera" value="Bom">
-
-Bom
-
-</label>
-
-<label>
-
-<input type="radio" name="espera" value="Regular">
-
-Regular
-
-</label>
-
-<label>
-
-<input type="radio" name="espera" value="Ruim">
-
-Ruim
-
-</label>
-
-
-
-<h3>
-
-Como você avalia o atendimento da equipe?
-
-</h3>
-
-<label>
-
-<input type="radio" name="equipe" value="Excelente">
-
-Excelente
-
-</label>
-
-<label>
-
-<input type="radio" name="equipe" value="Bom">
-
-Bom
-
-</label>
-
-<label>
-
-<input type="radio" name="equipe" value="Regular">
-
-Regular
-
-</label>
-
-<label>
-
-<input type="radio" name="equipe" value="Ruim">
-
-Ruim
-
-</label>
-
-
-
-<h3>
-
-Seu problema foi resolvido?
-
-</h3>
-
-<label>
-
-<input type="radio" name="resolucao" value="Sim">
-
-Sim
-
-</label>
-
-<label>
-
-<input type="radio" name="resolucao" value="Parcialmente">
-
-Parcialmente
-
-</label>
-
-<label>
-
-<input type="radio" name="resolucao" value="Não">
-
-Não
-
-</label>
-
-
-
-<h3>
-
-Você recomendaria o atendimento da LADRF para outra pessoa?
-
-</h3>
-
-<label>
-
-<input type="radio" name="indicaria" value="Sim">
-
-Sim
-
-</label>
-
-<label>
-
-<input type="radio" name="indicaria" value="Talvez">
-
-Talvez
-
-</label>
-
-<label>
-
-<input type="radio" name="indicaria" value="Não">
-
-Não
-
-</label>
-
-
-
-<h3>
-
-Comentário ou sugestão
-
-</h3>
-
-<textarea
-
-id="comentario"
-
-placeholder="Conte como foi sua experiência ou deixe uma sugestão para melhorarmos."
-
-></textarea>
-
-
-
-<button
-
-class="btn-enviar"
-
-id="btnEnviar">
-
-<i class="fa-solid fa-paper-plane"></i>
-
-Enviar Avaliação
-
-</button>
-
-
-
-<div class="rodape">
-
-💚 <strong>Obrigado pela sua participação!</strong>
-
-<br><br>
-
-Sua presença contribui para a nossa formação e crescimento como futuros fisioterapeutas.
-
-<br><br>
-
-<strong>Siga a LADRF no Instagram e acompanhe nossas ações!</strong> 📲
-
-</div>
-<h3>
-
-Nota geral
-
-</h3>
-
-<div class="estrelas">
-
-<span class="star" data-star="1">★</span>
-
-<span class="star" data-star="2">★</span>
-
-<span class="star" data-star="3">★</span>
-
-<span class="star" data-star="4">★</span>
-
-<span class="star" data-star="5">★</span>
-
-</div>
-
 
 
 <h3>
@@ -737,49 +561,31 @@ Enviar Avaliação
 
 <div class="rodape">
 
+<p>
+
 💚 <strong>Obrigado pela sua participação!</strong>
 
-<br><br>
+</p>
+
+<p>
 
 Sua presença contribui para a nossa formação e crescimento como futuros fisioterapeutas.
 
-<br><br>
+</p>
 
-Acompanhe nossas ações, projetos e eventos da LADRF.
+<p>
 
-<br><br>
+Acompanhe nossas ações, projetos e eventos.
+
+</p>
 
 <a
 
+class="instagram"
+
 href="https://instagram.com/ladrf.famp"
 
-target="_blank"
-
-style="
-
-display:inline-flex;
-
-align-items:center;
-
-justify-content:center;
-
-gap:10px;
-
-background:#0B7A3B;
-
-color:white;
-
-padding:14px 24px;
-
-border-radius:12px;
-
-text-decoration:none;
-
-font-weight:600;
-
-font-size:16px;
-
-">
+target="_blank">
 
 <i class="fa-brands fa-instagram"></i>
 
