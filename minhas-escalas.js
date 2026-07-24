@@ -1,242 +1,247 @@
 // minhas-escalas.js
 
-
 import { db, auth } from "./firebase.js";
 
-
 import {
-
 collection,
-query,
-where,
 getDocs,
 doc,
 updateDoc
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 import {
-
 onAuthStateChanged
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 
-
-// =====================================
-// ELEMENTO
-// =====================================
-
-const lista =
-
-document.getElementById(
-"listaEscalas"
-);
-
+const lista = document.getElementById("listaEscalas");
 
 
 
 
 // =====================================
-// BUSCAR ESCALAS DO MEMBRO
+// CARREGAR ESCALAS DO MEMBRO
 // =====================================
 
 
 async function carregarEscalas(uid){
 
 
-    lista.innerHTML =
-    "Buscando escalas...";
+if(!lista) return;
 
 
-    try{
 
+lista.innerHTML = `
 
-        const acoes =
+<div style="text-align:center">
 
-        await getDocs(
+<i class="fa-solid fa-spinner fa-spin"></i>
 
-            collection(
-                db,
-                "acoes"
-            )
+Buscando escalas...
 
-        );
+</div>
 
+`;
 
 
-        lista.innerHTML = "";
 
+try{
 
 
-        for(
-            const acaoDoc of acoes.docs
-        ){
+const acoesSnapshot = await getDocs(
 
+collection(db,"acoes")
 
-            const participantes =
+);
 
-            await getDocs(
 
-                collection(
 
-                    db,
+lista.innerHTML = "";
 
-                    "acoes",
 
-                    acaoDoc.id,
 
-                    "participantes"
+let encontrou = false;
 
-                )
 
-            );
 
 
+for(const acaoDoc of acoesSnapshot.docs){
 
-            participantes.forEach(
 
-                (membro)=>{
+const dadosAcao = acaoDoc.data();
 
 
-                    if(
-                        membro.id === uid
-                    ){
 
+const participantesSnapshot = await getDocs(
 
+collection(
 
-                        const dados =
+db,
 
-                        acaoDoc.data();
+"acoes",
 
+acaoDoc.id,
 
+"participantes"
 
-                        const participante =
+)
 
-                        membro.data();
+);
 
 
 
-                        lista.innerHTML += `
 
+const participanteDoc = participantesSnapshot.docs.find(
 
-                        <div style="
-                        border:1px solid #ccc;
-                        padding:15px;
-                        margin:10px;
-                        border-radius:10px;
-                        ">
+(doc)=>doc.id === uid
 
+);
 
-                        <h2>
-                        ${dados.nome}
-                        </h2>
 
 
-                        <p>
-                        📅 ${dados.data}
-                        </p>
 
+if(participanteDoc){
 
-                        <p>
-                        📍 ${dados.local}
-                        </p>
 
+encontrou = true;
 
-                        <p>
-                        ⏰ ${dados.horaInicio || "-"}
-                        até
-                        ${dados.horaFim || "-"}
-                        </p>
 
 
-                        <p>
+const participante = participanteDoc.data();
 
-                        Status:
 
-                        <b id="status-${acaoDoc.id}">
 
-                        ${participante.presenca}
 
-                        </b>
+lista.innerHTML += `
 
-                        </p>
+<div class="card" style="margin-bottom:20px;">
 
 
-                        <button
+<h2>
 
-                        onclick="confirmarPresenca(
-                        '${acaoDoc.id}'
-                        )"
+<i class="fa-solid fa-calendar-check"></i>
 
-                        >
+${dadosAcao.nome || "Ação sem nome"}
 
-                        ✅ Confirmar presença
+</h2>
 
-                        </button>
 
 
-                        <button
+<p>
 
-                        onclick="recusarPresenca(
-                        '${acaoDoc.id}'
-                        )"
+📅 Data:
 
-                        >
+<strong>
 
-                        ❌ Não poderei comparecer
+${dadosAcao.data || "-"}
 
-                        </button>
+</strong>
 
+</p>
 
-                        </div>
 
 
-                        `;
+<p>
 
+📍 Local:
 
-                    }
+<strong>
 
+${dadosAcao.local || "-"}
 
-                }
+</strong>
 
-            );
+</p>
 
 
 
-        }
+<p>
 
+⏰ Horário:
 
+<strong>
 
-        if(lista.innerHTML===""){
+${dadosAcao.horaInicio || "-"}
+até
+${dadosAcao.horaFim || "-"}
 
+</strong>
 
-            lista.innerHTML =
+</p>
 
-            "Nenhuma escala encontrada.";
 
 
-        }
 
+<p>
 
+Status:
 
-    }
+<b id="status-${acaoDoc.id}">
 
-    catch(error){
+${participante.presenca || "Pendente"}
 
+</b>
 
-        console.error(
+</p>
 
-            "Erro ao buscar escalas:",
 
-            error
 
-        );
 
+<div style="
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:15px;
+">
 
-    }
+
+<button
+
+class="btn-success"
+
+onclick="confirmarPresenca('${acaoDoc.id}')"
+
+>
+
+<i class="fa-solid fa-check"></i>
+
+Confirmar presença
+
+</button>
+
+
+
+
+<button
+
+class="btn-danger"
+
+onclick="recusarPresenca('${acaoDoc.id}')"
+
+>
+
+<i class="fa-solid fa-xmark"></i>
+
+Não poderei comparecer
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+`;
+
+
+
+}
+
 
 
 }
@@ -244,25 +249,98 @@ async function carregarEscalas(uid){
 
 
 
+if(!encontrou){
+
+
+lista.innerHTML = `
+
+<div class="card">
+
+
+<h3>
+
+Nenhuma escala encontrada.
+
+</h3>
+
+
+<p>
+
+Você ainda não possui ações atribuídas.
+
+</p>
+
+
+</div>
+
+`;
+
+
+
+}
+
+
+
+}catch(error){
+
+
+console.error(
+"Erro ao carregar escalas:",
+error
+);
+
+
+
+lista.innerHTML = `
+
+<div class="card">
+
+Erro ao carregar escalas.
+
+</div>
+
+`;
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
 // =====================================
-// CONFIRMAR
+// CONFIRMAR PRESENÇA
 // =====================================
 
 
-window.confirmarPresenca =
-
-async function(idAcao){
+window.confirmarPresenca = async function(idAcao){
 
 
+if(!auth.currentUser){
 
-const uid =
+alert("Usuário não autenticado.");
 
-auth.currentUser.uid;
+return;
 
+}
+
+
+
+const uid = auth.currentUser.uid;
+
+
+
+try{
 
 
 await updateDoc(
-
 
 doc(
 
@@ -278,29 +356,36 @@ uid
 
 ),
 
-
 {
 
-
-presenca:
-
-"Confirmado"
-
+presenca:"Confirmado"
 
 }
 
-
 );
 
 
 
-alert(
-"Presença confirmada!"
-);
+alert("Presença confirmada!");
 
 
 
 carregarEscalas(uid);
+
+
+
+}catch(error){
+
+
+console.error(error);
+
+
+alert(
+"Erro ao confirmar presença."
+);
+
+
+}
 
 
 
@@ -310,25 +395,35 @@ carregarEscalas(uid);
 
 
 
+
+
 // =====================================
-// RECUSAR
+// RECUSAR PRESENÇA
 // =====================================
 
 
-window.recusarPresenca =
-
-async function(idAcao){
+window.recusarPresenca = async function(idAcao){
 
 
 
-const uid =
+if(!auth.currentUser){
 
-auth.currentUser.uid;
+alert("Usuário não autenticado.");
 
+return;
+
+}
+
+
+
+const uid = auth.currentUser.uid;
+
+
+
+try{
 
 
 await updateDoc(
-
 
 doc(
 
@@ -344,25 +439,17 @@ uid
 
 ),
 
-
 {
 
-
-presenca:
-
-"Recusado"
-
+presenca:"Recusado"
 
 }
 
-
 );
 
 
 
-alert(
-"Resposta enviada."
-);
+alert("Resposta enviada!");
 
 
 
@@ -370,7 +457,25 @@ carregarEscalas(uid);
 
 
 
+}catch(error){
+
+
+console.error(error);
+
+
+alert(
+"Erro ao enviar resposta."
+);
+
+
+}
+
+
+
 };
+
+
+
 
 
 
@@ -388,25 +493,32 @@ auth,
 (usuario)=>{
 
 
-    if(usuario){
+if(usuario){
 
 
-        carregarEscalas(
-            usuario.uid
-        );
+carregarEscalas(usuario.uid);
 
 
-    }
 
-    else{
-
-
-        lista.innerHTML =
-
-        "Usuário não logado.";
+}else{
 
 
-    }
+lista.innerHTML = `
+
+<div class="card">
+
+Usuário não logado.
+
+</div>
+
+`;
 
 
-});
+
+}
+
+
+
+}
+
+);
