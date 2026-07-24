@@ -73,7 +73,7 @@ console.log(idAcao);
 
 const referencia = doc(
 db,
-"agendas",
+"agenda",
 idAcao
 );
 
