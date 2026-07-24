@@ -100,44 +100,87 @@ const botaoSalvar = document.getElementById(
 
 async function carregarAcao(){
 
-
 try{
 
 
+console.log("Buscando documento:", idAcao);
+
+
 const referencia = doc(
-
 db,
-
 "acoes",
-
 idAcao
-
 );
 
 
 
-const resultado = await getDoc(
+const resultado = await getDoc(referencia);
 
-referencia
 
+
+console.log(
+"Existe?",
+resultado.exists()
 );
-
 
 
 
 if(resultado.exists()){
 
 
-
 const dados = resultado.data();
 
 
+console.log(
+"Dados encontrados:",
+dados
+);
 
-if(nomeAcao){
+
+
+nomeAcao.innerHTML = `
+
+${dados.titulo || "Sem título"}
+
+<br>
+
+<small>
+
+${dados.local || ""}
+
+</small>
+
+`;
+
+
+
+}else{
+
 
 nomeAcao.innerHTML =
+"Ação não encontrada";
 
-dados.titulo || dados.nome || "Ação sem nome";
+
+}
+
+
+
+}catch(error){
+
+
+console.error(
+"Erro completo:",
+error
+);
+
+
+nomeAcao.innerHTML =
+"Erro ao carregar";
+
+
+}
+
+
 
 }
 
