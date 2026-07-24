@@ -22,27 +22,20 @@ serverTimestamp
 
 
 const idAcao =
-new URLSearchParams(window.location.search)
-.get("id");
+new URLSearchParams(window.location.search).get("id");
 
 
 
-console.log(
-"ID AÇÃO:",
-idAcao
-);
+console.log("ID AÇÃO:", idAcao);
+
 
 
 
 if(!idAcao){
 
-alert(
-"Ação não encontrada."
-);
+alert("Ação não encontrada.");
 
-throw new Error(
-"ID ausente"
-);
+throw new Error("ID ausente");
 
 }
 
@@ -85,8 +78,7 @@ async function carregarAcao(){
 try{
 
 
-const referencia =
-doc(
+const referencia = doc(
 
 db,
 
@@ -98,8 +90,7 @@ idAcao
 
 
 
-const resultado =
-await getDoc(
+const resultado = await getDoc(
 
 referencia
 
@@ -110,16 +101,18 @@ referencia
 if(resultado.exists()){
 
 
-const dados =
-resultado.data();
+const dados = resultado.data();
 
 
 
 nomeAcao.innerHTML = `
 
+
 ${dados.titulo || "Sem título"}
 
+
 <br>
+
 
 <small>
 
@@ -134,6 +127,7 @@ ${dados.titulo || "Sem título"}
 ⏰ ${dados.inicio || "-"} até ${dados.fim || "-"}
 
 </small>
+
 
 `;
 
@@ -160,7 +154,9 @@ error
 );
 
 
+
 nomeAcao.innerHTML =
+
 "Erro ao carregar ação";
 
 
@@ -179,7 +175,7 @@ nomeAcao.innerHTML =
 
 
 // =====================================
-// CARREGAR MEMBROS
+// CARREGAR MEMBROS E ESCALADOS
 // =====================================
 
 
@@ -189,8 +185,7 @@ async function carregarMembros(){
 try{
 
 
-const usuarios =
-await getDocs(
+const usuarios = await getDocs(
 
 collection(
 
@@ -206,8 +201,7 @@ db,
 
 
 
-const participantes =
-await getDocs(
+const participantes = await getDocs(
 
 collection(
 
@@ -234,11 +228,11 @@ const escalados = {};
 participantes.forEach((item)=>{
 
 
-escalados[item.id] =
-item.data();
+escalados[item.id] = item.data();
 
 
 });
+
 
 
 
@@ -250,24 +244,22 @@ listaMembros.innerHTML = "";
 
 
 
+
 usuarios.forEach((usuario)=>{
 
 
-const dados =
-usuario.data();
+const dados = usuario.data();
+
 
 
 
 if(
-dados.perfil?.toLowerCase()
-===
-"membro"
+dados.perfil?.toLowerCase() === "membro"
 ){
 
 
 
-const escalado =
-escalados[usuario.id];
+const escalado = escalados[usuario.id];
 
 
 
@@ -280,30 +272,19 @@ if(escalado){
 
 if(escalado.presenca === "Confirmado"){
 
-status =
-"🟢 Confirmado";
+status = "🟢 Confirmado";
 
 
-}
+}else if(escalado.presenca === "Recusado"){
 
-else if(escalado.presenca === "Recusado"){
-
-
-status =
-"🔴 Recusado";
+status = "🔴 Recusado";
 
 
-}
+}else{
 
-else{
-
-
-status =
-"🟡 Pendente";
-
+status = "🟡 Pendente";
 
 }
-
 
 
 }
@@ -317,14 +298,12 @@ listaMembros.innerHTML += `
 <div class="card" style="margin-bottom:10px;">
 
 
-
 <label style="
 display:flex;
 align-items:center;
 gap:10px;
 cursor:pointer;
 ">
-
 
 
 <input
@@ -342,6 +321,7 @@ data-email="${dados.email || ""}"
 ${escalado ? "checked" : ""}
 
 >
+
 
 
 
@@ -363,6 +343,7 @@ ${dados.nome || "Sem nome"}
 ${dados.email || ""}
 
 </small>
+
 
 
 ${
@@ -400,9 +381,7 @@ ${status}
 </label>
 
 
-
 </div>
-
 
 
 `;
@@ -481,9 +460,7 @@ async()=>{
 
 
 
-const selecionados =
-
-document.querySelectorAll(
+const selecionados = document.querySelectorAll(
 
 ".membro:checked"
 
@@ -520,9 +497,7 @@ for(const membro of selecionados){
 
 
 
-
-
-const referenciaParticipante = doc(
+const referencia = doc(
 
 db,
 
@@ -540,11 +515,9 @@ membro.value
 
 
 
-const participanteAtual =
+const existente = await getDoc(
 
-await getDoc(
-
-referenciaParticipante
+referencia
 
 );
 
@@ -552,21 +525,18 @@ referenciaParticipante
 
 
 
-let presencaAtual =
-
-"Pendente";
+let presenca = "Pendente";
 
 
 
 
 
-if(participanteAtual.exists()){
+if(existente.exists()){
 
 
+presenca =
 
-presencaAtual =
-
-participanteAtual.data().presenca || "Pendente";
+existente.data().presenca || "Pendente";
 
 
 }
@@ -575,11 +545,9 @@ participanteAtual.data().presenca || "Pendente";
 
 
 
-
 await setDoc(
 
-referenciaParticipante,
-
+referencia,
 
 {
 
@@ -596,7 +564,7 @@ membro.dataset.email,
 
 presenca:
 
-presencaAtual,
+presenca,
 
 
 escaladoEm:
@@ -605,7 +573,6 @@ serverTimestamp()
 
 
 },
-
 
 {
 
@@ -624,7 +591,6 @@ merge:true
 
 
 
-
 alert(
 
 "Escala salva com sucesso!"
@@ -634,8 +600,6 @@ alert(
 
 
 carregarMembros();
-
-
 
 
 
@@ -664,7 +628,9 @@ alert(
 
 
 
-});
+}
+
+);
 
 
 
@@ -684,6 +650,5 @@ alert(
 
 
 carregarAcao();
-
 
 carregarMembros();
