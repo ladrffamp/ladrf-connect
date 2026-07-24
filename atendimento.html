@@ -403,29 +403,20 @@ Outro
 
 
 <label>
-
 <input type="radio" name="lado" value="Direito">
-
 Direito
-
 </label>
 
 
 <label>
-
 <input type="radio" name="lado" value="Esquerdo">
-
 Esquerdo
-
 </label>
 
 
 <label>
-
 <input type="radio" name="lado" value="Bilateral">
-
 Bilateral
-
 </label>
 
 
@@ -502,6 +493,13 @@ Outro
 </div>
 
 </div>
+
+
+
+
+
+
+
 <div class="card">
 
 
@@ -628,11 +626,6 @@ Outro
 
 
 </div>
-
-
-
-
-
 <div class="card">
 
 
@@ -712,3 +705,154 @@ Permaneceu em observação
 
 
 </div>
+
+
+
+
+
+
+
+<!-- ÁREA QR CODE AVALIAÇÃO -->
+
+<div class="card" id="areaAvaliacao" style="display:none;text-align:center;">
+
+
+<h2>
+
+⭐ Avaliação do Atendimento
+
+</h2>
+
+
+
+<p>
+
+Peça para o paciente escanear o QR Code:
+
+</p>
+
+
+
+
+<div id="qrcode"
+
+style="
+display:flex;
+justify-content:center;
+margin:25px;
+">
+
+</div>
+
+
+
+
+
+<a
+
+id="linkAvaliacao"
+
+target="_blank"
+
+class="btn-success"
+
+style="
+display:inline-block;
+text-decoration:none;
+">
+
+<i class="fa-solid fa-star"></i>
+
+Abrir Avaliação
+
+</a>
+
+
+
+</div>
+
+
+
+
+
+
+
+<button
+
+class="btn-success"
+
+onclick="salvarAtendimento()">
+
+
+<i class="fa-solid fa-check"></i>
+
+Finalizar Atendimento
+
+
+</button>
+
+
+
+
+
+</main>
+
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+<script type="module" src="atendimento.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora = document.getElementById("horaAtual");
+
+
+if(hora){
+
+
+hora.innerHTML =
+
+new Date().toLocaleTimeString("pt-BR");
+
+
+}
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
+
+
+</body>
+
+</html>
