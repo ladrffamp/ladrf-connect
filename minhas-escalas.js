@@ -51,7 +51,7 @@ try{
 
 const acoesSnapshot = await getDocs(
 
-collection(db,"acoes")
+collection(db,"agenda")
 
 );
 
