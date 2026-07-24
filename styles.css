@@ -1,12 +1,8 @@
 /* ==========================================================
    LADRF CONNECT 2.0
-   ESTILO GLOBAL
+   ESTILO GLOBAL PADRONIZADO
 ========================================================== */
 
-
-/* ===========================
-   RESET
-=========================== */
 
 *{
     margin:0;
@@ -14,9 +10,11 @@
     box-sizing:border-box;
 }
 
+
 html{
     scroll-behavior:smooth;
 }
+
 
 body{
 
@@ -31,25 +29,27 @@ body{
 }
 
 
-/* ===========================
-   CORES
-=========================== */
 
 :root{
 
     --verde:#0B7A3B;
-    --verde-hover:#0A6832;
+
+    --verde-hover:#08602f;
+
     --verde-claro:#15A34A;
 
-    --branco:#ffffff;
+    --branco:#fff;
 
     --cinza:#eef3f7;
-    --cinza-card:#f8fafb;
-    --cinza-borda:#d9dfe6;
+
     --cinza-texto:#666;
 
+    --borda:#d9dfe6;
+
     --azul:#2563eb;
+
     --vermelho:#dc2626;
+
     --laranja:#f59e0b;
 
     --sombra:0 8px 20px rgba(0,0,0,.08);
@@ -57,30 +57,29 @@ body{
 }
 
 
-/* ===========================
-   LINKS
-=========================== */
 
 a{
 
-    color:inherit;
-
     text-decoration:none;
+
+    color:inherit;
 
 }
 
 
 
 /* ==========================================================
-   CABEÇALHO PADRÃO LADRF CONNECT
+   CABEÇALHO
 ========================================================== */
 
-header{
+
+header,
+.topbar{
 
     background:linear-gradient(
         90deg,
-        #0B7A3B,
-        #15A34A
+        var(--verde),
+        var(--verde-claro)
     );
 
     color:white;
@@ -105,13 +104,11 @@ header{
 
     background:white;
 
-    color:#0B7A3B;
+    color:var(--verde);
 
-    padding:12px 20px;
+    padding:10px 18px;
 
     border-radius:10px;
-
-    font-weight:600;
 
     display:flex;
 
@@ -119,19 +116,25 @@ header{
 
     gap:8px;
 
-}
+    font-weight:600;
 
+    transition:.25s;
+
+}
 
 
 .btn-inicio:hover{
 
     background:#f1f1f1;
 
+    transform:translateY(-2px);
+
 }
 
 
 
 /* LOGO */
+
 
 .logo{
 
@@ -140,8 +143,6 @@ header{
     align-items:center;
 
     gap:15px;
-
-    color:white;
 
 }
 
@@ -161,8 +162,6 @@ header{
 
     font-size:28px;
 
-    margin:0;
-
 }
 
 
@@ -181,7 +180,9 @@ header{
 
 /* USUÁRIO */
 
-.usuario{
+
+.usuario,
+.usuario-info{
 
     display:flex;
 
@@ -195,7 +196,8 @@ header{
 
 
 
-.usuario h3{
+.usuario h3,
+.usuario-info strong{
 
     color:white;
 
@@ -205,7 +207,8 @@ header{
 
 
 
-.usuario span{
+.usuario span,
+.usuario-info span{
 
     color:white;
 
@@ -215,56 +218,17 @@ header{
 
 
 
-.usuario p{
+.usuario p,
+.usuario-info small{
 
     color:white;
 
     font-size:13px;
 
-    margin-top:4px;
-
 }
-
-
-
-
-/* ===========================
-   BOTÕES
-=========================== */
-
-
-.btn{
-
-    background:white;
-
-    color:var(--verde);
-
-    border:none;
-
-    border-radius:10px;
-
-    padding:12px 22px;
-
-    cursor:pointer;
-
-    font-weight:600;
-
-    transition:.25s;
-
-}
-
-
-.btn:hover{
-
-    transform:translateY(-2px);
-
-}
-
-
-
-/* ===========================
-   CONTAINER
-=========================== */
+/* ==========================================================
+   CONTAINER E TÍTULOS
+========================================================== */
 
 
 .container{
@@ -279,9 +243,33 @@ header{
 
 
 
-/* ===========================
-   TÍTULOS
-=========================== */
+.page-title{
+
+    margin-bottom:30px;
+
+}
+
+
+
+.page-title h1{
+
+    color:var(--verde);
+
+    margin-bottom:8px;
+
+    font-size:30px;
+
+}
+
+
+
+.page-title p{
+
+    color:var(--cinza-texto);
+
+}
+
+
 
 
 h1{
@@ -289,6 +277,7 @@ h1{
     font-size:30px;
 
 }
+
 
 
 h2{
@@ -300,6 +289,7 @@ h2{
 }
 
 
+
 h3{
 
     font-weight:600;
@@ -308,9 +298,10 @@ h3{
 
 
 
-/* ===========================
+
+/* ==========================================================
    CARDS
-=========================== */
+========================================================== */
 
 
 .card{
@@ -330,6 +321,7 @@ h3{
 }
 
 
+
 .card:hover{
 
     transform:translateY(-3px);
@@ -338,8 +330,9 @@ h3{
 
 
 
+
 /* ==========================================================
-   DASHBOARD
+   DASHBOARD E ESTATÍSTICAS
 ========================================================== */
 
 
@@ -393,140 +386,9 @@ h3{
 
     color:var(--verde);
 
-    margin-top:10px;
-
 }
 
 
-#proximoEvento{
-
-    margin-top:10px;
-
-    color:#555;
-
-    font-weight:500;
-
-}
-
-
-
-/* ==========================================================
-   MENU PRINCIPAL PADRONIZADO
-========================================================== */
-
-
-.menu{
-
-    display:grid;
-
-    grid-template-columns:repeat(4,1fr);
-
-    gap:20px;
-
-    margin-top:25px;
-
-}
-
-
-
-.menu-card{
-
-    background:white;
-
-    border-radius:16px;
-
-    padding:20px;
-
-    min-height:140px;
-
-    box-shadow:var(--sombra);
-
-    transition:.25s;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    text-align:center;
-
-}
-
-
-
-.menu-card:hover{
-
-    transform:translateY(-5px);
-
-    background:var(--verde);
-
-    color:white;
-
-}
-
-
-
-.menu-card i{
-
-    font-size:32px;
-
-    color:var(--verde);
-
-    margin-bottom:12px;
-
-}
-
-
-
-.menu-card:hover i{
-
-    color:white;
-
-}
-
-
-
-.menu-card h2{
-
-    color:#222;
-
-    margin-bottom:8px;
-
-    font-size:18px;
-
-}
-
-
-
-.menu-card:hover h2{
-
-    color:white;
-
-}
-
-
-
-.menu-card p{
-
-    color:#666;
-
-    font-size:13px;
-
-}
-
-
-
-.menu-card:hover p{
-
-    color:white;
-
-}
-/* ==========================================================
-   ESTATÍSTICAS
-========================================================== */
 
 
 .stats{
@@ -583,6 +445,110 @@ h3{
 
 
 
+
+/* ==========================================================
+   MENU PRINCIPAL
+========================================================== */
+
+
+.menu{
+
+    display:grid;
+
+    grid-template-columns:repeat(4,1fr);
+
+    gap:20px;
+
+}
+
+
+
+.menu-card{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:20px;
+
+    min-height:140px;
+
+    box-shadow:var(--sombra);
+
+    display:flex;
+
+    flex-direction:column;
+
+    justify-content:center;
+
+    align-items:center;
+
+    text-align:center;
+
+    transition:.25s;
+
+}
+
+
+
+.menu-card:hover{
+
+    background:var(--verde);
+
+    color:white;
+
+    transform:translateY(-5px);
+
+}
+
+
+
+.menu-card i{
+
+    font-size:32px;
+
+    color:var(--verde);
+
+    margin-bottom:12px;
+
+}
+
+
+
+.menu-card:hover i{
+
+    color:white;
+
+}
+
+
+
+.menu-card h2{
+
+    color:#222;
+
+    font-size:18px;
+
+}
+
+
+
+.menu-card:hover h2,
+.menu-card:hover p{
+
+    color:white;
+
+}
+
+
+
+.menu-card p{
+
+    color:#666;
+
+    font-size:13px;
+
+}
 /* ==========================================================
    FORMULÁRIOS
 ========================================================== */
@@ -626,11 +592,6 @@ label{
 
 
 
-/* ==========================================================
-   INPUTS
-========================================================== */
-
-
 input,
 select,
 textarea{
@@ -639,7 +600,7 @@ textarea{
 
     padding:14px 16px;
 
-    border:1px solid var(--cinza-borda);
+    border:1px solid var(--borda);
 
     border-radius:12px;
 
@@ -677,21 +638,13 @@ textarea{
 
 
 
-input::placeholder,
-textarea::placeholder{
-
-    color:#999;
-
-}
-
-
-
 /* ==========================================================
-   BOTÕES GERAIS
+   BOTÕES
 ========================================================== */
 
 
-button{
+button,
+.btn{
 
     border:none;
 
@@ -711,7 +664,8 @@ button{
 
 
 
-button:hover{
+button:hover,
+.btn:hover{
 
     transform:translateY(-2px);
 
@@ -719,11 +673,8 @@ button:hover{
 
 
 
-/* VERDE */
-
 .btn-success,
-.btn-verde,
-button.verde{
+.btn-verde{
 
     background:var(--verde);
 
@@ -734,8 +685,7 @@ button.verde{
 
 
 .btn-success:hover,
-.btn-verde:hover,
-button.verde:hover{
+.btn-verde:hover{
 
     background:var(--verde-hover);
 
@@ -743,10 +693,7 @@ button.verde:hover{
 
 
 
-/* AZUL */
-
-.btn-primary,
-.btn-azul{
+.btn-primary{
 
     background:var(--azul);
 
@@ -756,10 +703,7 @@ button.verde:hover{
 
 
 
-/* VERMELHO */
-
-.btn-danger,
-.btn-vermelho{
+.btn-danger{
 
     background:var(--vermelho);
 
@@ -768,8 +712,6 @@ button.verde:hover{
 }
 
 
-
-/* LARANJA */
 
 .btn-warning{
 
@@ -781,9 +723,9 @@ button.verde:hover{
 
 
 
-/* ==========================================================
-   GRUPO DE BOTÕES
-========================================================== */
+
+
+/* GRUPO DE BOTÕES */
 
 
 .botoes{
@@ -807,6 +749,7 @@ button.verde:hover{
     min-width:180px;
 
 }
+
 
 
 
@@ -847,6 +790,43 @@ button.verde:hover{
 
 
 
+
+/* ==========================================================
+   FLEX
+========================================================== */
+
+
+.flex{
+
+    display:flex;
+
+    gap:15px;
+
+}
+
+
+
+.flex-between{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+
+.flex-center{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
 /* ==========================================================
    TABELAS
 ========================================================== */
@@ -857,6 +837,8 @@ button.verde:hover{
     width:100%;
 
     overflow-x:auto;
+
+    border-radius:18px;
 
 }
 
@@ -869,12 +851,6 @@ table{
     border-collapse:collapse;
 
     background:white;
-
-    border-radius:18px;
-
-    overflow:hidden;
-
-    box-shadow:var(--sombra);
 
 }
 
@@ -917,6 +893,8 @@ tbody tr:hover{
     background:#f7faf8;
 
 }
+
+
 
 
 
@@ -970,6 +948,72 @@ tbody tr:hover{
     color:var(--verde);
 
 }
+
+
+
+
+/* STATUS ESTOQUE - MATERIAIS */
+
+
+.normal{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    display:inline-block;
+
+    font-weight:600;
+
+    font-size:13px;
+
+}
+
+
+
+.baixo{
+
+    background:#fef3c7;
+
+    color:#92400e;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    display:inline-block;
+
+    font-weight:600;
+
+    font-size:13px;
+
+}
+
+
+
+.esgotado{
+
+    background:#fee2e2;
+
+    color:#991b1b;
+
+    padding:6px 12px;
+
+    border-radius:20px;
+
+    display:inline-block;
+
+    font-weight:600;
+
+    font-size:13px;
+
+}
+
+
 
 
 
@@ -1038,8 +1082,9 @@ tbody tr:hover{
 
 
 
+
 /* ==========================================================
-   AÇÕES DAS TABELAS
+   AÇÕES
 ========================================================== */
 
 
@@ -1064,6 +1109,11 @@ tbody tr:hover{
     font-size:13px;
 
 }
+
+
+
+
+
 /* ==========================================================
    LISTAS
 ========================================================== */
@@ -1091,17 +1141,107 @@ tbody tr:hover{
 
     box-shadow:var(--sombra);
 
-    transition:.2s;
+}
+
+
+
+
+/* ==========================================================
+   MODAIS
+========================================================== */
+
+
+.modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.45);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
 
 }
 
 
 
-.lista-item:hover{
+.modal.active{
 
-    transform:translateY(-2px);
+    display:flex;
 
 }
+
+
+
+.modal-content{
+
+    background:white;
+
+    width:95%;
+
+    max-width:700px;
+
+    border-radius:18px;
+
+    padding:30px;
+
+    box-shadow:0 20px 40px rgba(0,0,0,.18);
+
+}
+/* ==========================================================
+   ABAS
+========================================================== */
+
+
+.tabs{
+
+    display:flex;
+
+    gap:10px;
+
+    flex-wrap:wrap;
+
+    margin-bottom:25px;
+
+}
+
+
+
+.tab{
+
+    background:white;
+
+    border:1px solid var(--borda);
+
+    border-radius:10px;
+
+    padding:12px 18px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+    transition:.25s;
+
+}
+
+
+
+.tab:hover,
+.tab.active{
+
+    background:var(--verde);
+
+    color:white;
+
+}
+
 
 
 
@@ -1164,106 +1304,6 @@ tbody tr:hover{
 
 
 
-/* ==========================================================
-   MODAIS
-========================================================== */
-
-
-.modal{
-
-    position:fixed;
-
-    inset:0;
-
-    background:rgba(0,0,0,.45);
-
-    display:none;
-
-    justify-content:center;
-
-    align-items:center;
-
-    z-index:9999;
-
-}
-
-
-
-.modal.active{
-
-    display:flex;
-
-}
-
-
-
-.modal-content{
-
-    background:white;
-
-    width:95%;
-
-    max-width:700px;
-
-    border-radius:18px;
-
-    padding:30px;
-
-    box-shadow:0 20px 40px rgba(0,0,0,.18);
-
-}
-
-
-
-/* ==========================================================
-   ABAS
-========================================================== */
-
-
-.tabs{
-
-    display:flex;
-
-    gap:10px;
-
-    flex-wrap:wrap;
-
-    margin-bottom:25px;
-
-}
-
-
-
-.tab{
-
-    background:white;
-
-    border:1px solid var(--cinza-borda);
-
-    border-radius:10px;
-
-    padding:12px 18px;
-
-    cursor:pointer;
-
-    transition:.25s;
-
-    font-weight:600;
-
-}
-
-
-
-.tab:hover,
-.tab.active{
-
-    background:var(--verde);
-
-    color:white;
-
-}
-
-
 
 /* ==========================================================
    FOOTER
@@ -1283,6 +1323,7 @@ footer{
     font-size:14px;
 
 }
+
 
 
 
@@ -1308,6 +1349,7 @@ footer{
         transform:translateY(8px);
 
     }
+
 
     to{
 
@@ -1339,6 +1381,7 @@ footer{
 
     }
 
+
     to{
 
         transform:scale(1);
@@ -1348,6 +1391,7 @@ footer{
     }
 
 }
+
 
 
 
@@ -1363,6 +1407,7 @@ footer{
 .mt-30{margin-top:30px;}
 
 
+
 .mb-10{margin-bottom:10px;}
 
 .mb-20{margin-bottom:20px;}
@@ -1370,11 +1415,13 @@ footer{
 .mb-30{margin-bottom:30px;}
 
 
+
 .p-10{padding:10px;}
 
 .p-20{padding:20px;}
 
 .p-30{padding:30px;}
+
 
 
 .w-100{
@@ -1385,53 +1432,12 @@ footer{
 
 
 
-.d-flex{
-
-    display:flex;
-
-}
-
-
-
-.flex{
-
-    display:flex;
-
-    gap:15px;
-
-}
-
-
-
-.flex-between{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-}
-
-
-
-.flex-center{
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-}
-
-
-
 .hidden{
 
     display:none !important;
 
 }
+
 
 
 
@@ -1474,6 +1480,7 @@ footer{
 
 
 
+
 /* ==========================================================
    IMPRESSÃO
 ========================================================== */
@@ -1510,12 +1517,14 @@ footer{
 
 
 
+
 /* ==========================================================
    RESPONSIVIDADE
 ========================================================== */
 
 
 @media(max-width:1200px){
+
 
     .cards{
 
@@ -1534,7 +1543,29 @@ footer{
 
 
 
+
 @media(max-width:900px){
+
+
+    header{
+
+        flex-direction:column;
+
+        gap:15px;
+
+        text-align:center;
+
+    }
+
+
+
+    .usuario,
+    .usuario-info{
+
+        align-items:center;
+
+    }
+
 
 
     .cards{
@@ -1544,11 +1575,13 @@ footer{
     }
 
 
+
     .menu{
 
         grid-template-columns:repeat(2,1fr);
 
     }
+
 
 
     .stats{
@@ -1557,31 +1590,21 @@ footer{
 
     }
 
+
 }
+
 
 
 
 @media(max-width:600px){
 
 
-    header{
+    .container{
 
-        height:auto;
-
-        padding:15px;
-
-        flex-direction:column;
-
-        gap:15px;
+        padding:20px;
 
     }
 
-
-    .usuario{
-
-        text-align:center;
-
-    }
 
 
     .cards,
@@ -1592,12 +1615,6 @@ footer{
 
     }
 
-
-    .container{
-
-        padding:20px;
-
-    }
 
 
     .flex,
@@ -1610,11 +1627,13 @@ footer{
     }
 
 
+
     .botoes{
 
         flex-direction:column;
 
     }
+
 
 
     .botoes button{
@@ -1624,11 +1643,13 @@ footer{
     }
 
 
+
     table{
 
         font-size:14px;
 
     }
+
 
 
     th,
@@ -1637,5 +1658,6 @@ footer{
         padding:10px;
 
     }
+
 
 }
