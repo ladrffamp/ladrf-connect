@@ -1,4 +1,7 @@
+// minhas-escalas.js
+
 import { db, auth } from "./firebase.js";
+
 
 import {
 collection,
@@ -7,31 +10,54 @@ doc,
 updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
 import {
 onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+
 
 
 const lista = document.getElementById("listaEscalas");
 
 
 
+
+
 // =====================================
-// CARREGAR ESCALAS
+// CARREGAR ESCALAS DO MEMBRO
 // =====================================
+
 
 async function carregarEscalas(uid){
 
 
-if(!lista) return;
+console.log("Buscando escalas para UID:");
+console.log(uid);
+
+
+
+if(!lista){
+
+console.error("Elemento listaEscalas não encontrado");
+
+return;
+
+}
 
 
 
 lista.innerHTML = `
+
 <div style="text-align:center">
+
 <i class="fa-solid fa-spinner fa-spin"></i>
+
 Carregando escalas...
+
 </div>
+
 `;
 
 
@@ -39,7 +65,7 @@ Carregando escalas...
 try{
 
 
-const agenda = await getDocs(
+const agendaSnapshot = await getDocs(
 
 collection(
 db,
@@ -50,33 +76,89 @@ db,
 
 
 
+console.log(
+"Quantidade de ações encontradas:",
+agendaSnapshot.size
+);
+
+
+
 lista.innerHTML = "";
+
 
 let encontrou = false;
 
 
 
-for(const acaoDoc of agenda.docs){
+
+for(const acaoDoc of agendaSnapshot.docs){
+
+
+
+console.log(
+"Verificando ação:",
+acaoDoc.id
+);
+
 
 
 const dadosAcao = acaoDoc.data();
 
 
 
-const participantes = await getDocs(
+console.log(
+"Dados da ação:",
+dadosAcao
+);
+
+
+
+
+const participantesSnapshot = await getDocs(
 
 collection(
+
 db,
+
 "agenda",
+
 acaoDoc.id,
+
 "participantes"
+
 )
 
 );
 
 
 
-const meuRegistro = participantes.docs.find(
+console.log(
+
+"Participantes da ação:",
+
+participantesSnapshot.size
+
+);
+
+
+
+
+participantesSnapshot.forEach((item)=>{
+
+
+console.log(
+"UID participante:",
+item.id
+);
+
+
+});
+
+
+
+
+
+const participante = participantesSnapshot.docs.find(
 
 (item)=>item.id === uid
 
@@ -84,14 +166,17 @@ const meuRegistro = participantes.docs.find(
 
 
 
-if(meuRegistro){
+
+if(participante){
 
 
 encontrou = true;
 
 
+
 const dadosParticipante =
-meuRegistro.data();
+participante.data();
+
 
 
 
@@ -105,7 +190,7 @@ lista.innerHTML += `
 
 <i class="fa-solid fa-calendar-check"></i>
 
-${dadosAcao.titulo || "Ação"}
+${dadosAcao.titulo || "Ação sem título"}
 
 </h2>
 
@@ -161,14 +246,23 @@ ${dadosAcao.fim || "-"}
 
 Status:
 
-<b>
+<strong>
 
 ${dadosParticipante.presenca || "Pendente"}
 
-</b>
+</strong>
 
 </p>
 
+
+
+
+<div style="
+display:flex;
+gap:10px;
+margin-top:15px;
+flex-wrap:wrap;
+">
 
 
 <button
@@ -182,6 +276,7 @@ onclick="confirmarPresenca('${acaoDoc.id}')"
 ✅ Confirmar presença
 
 </button>
+
 
 
 
@@ -202,6 +297,11 @@ onclick="recusarPresenca('${acaoDoc.id}')"
 </div>
 
 
+
+</div>
+
+
+
 `;
 
 
@@ -211,27 +311,49 @@ onclick="recusarPresenca('${acaoDoc.id}')"
 
 
 }
+
 
 
 
 if(!encontrou){
 
 
+console.warn(
+"Nenhuma escala encontrada para este UID"
+);
+
+
+
 lista.innerHTML = `
+
 
 <div class="card">
 
+
 <h3>
+
 Nenhuma escala encontrada.
+
 </h3>
 
+
 <p>
-Você ainda não possui ações atribuídas.
+
+UID pesquisado:
+
+<br>
+
+${uid}
+
 </p>
+
 
 </div>
 
+
 `;
+
+
 
 }
 
@@ -241,13 +363,25 @@ Você ainda não possui ações atribuídas.
 
 
 console.error(
+
 "Erro ao carregar escalas:",
+
 error
+
 );
 
 
-lista.innerHTML =
-"Erro ao carregar escalas.";
+
+lista.innerHTML = `
+
+<div class="card">
+
+Erro ao carregar escalas.
+
+</div>
+
+`;
+
 
 
 }
@@ -259,19 +393,34 @@ lista.innerHTML =
 
 
 
+
+
+
+
 // =====================================
-// CONFIRMAR
+// CONFIRMAR PRESENÇA
 // =====================================
 
 
-window.confirmarPresenca = async function(id){
+window.confirmarPresenca = async function(idAcao){
 
 
 const usuario = auth.currentUser;
 
 
-if(!usuario) return;
+if(!usuario){
 
+alert(
+"Usuário não logado."
+);
+
+return;
+
+}
+
+
+
+try{
 
 
 await updateDoc(
@@ -282,7 +431,7 @@ db,
 
 "agenda",
 
-id,
+idAcao,
 
 "participantes",
 
@@ -309,25 +458,54 @@ alert(
 carregarEscalas(usuario.uid);
 
 
+
+}catch(error){
+
+
+console.error(error);
+
+
+alert(
+"Erro ao confirmar presença."
+);
+
+
+}
+
+
+
 };
 
 
 
 
 
+
+
 // =====================================
-// RECUSAR
+// RECUSAR PRESENÇA
 // =====================================
 
 
-window.recusarPresenca = async function(id){
+window.recusarPresenca = async function(idAcao){
 
 
 const usuario = auth.currentUser;
 
 
-if(!usuario) return;
+if(!usuario){
 
+alert(
+"Usuário não logado."
+);
+
+return;
+
+}
+
+
+
+try{
 
 
 await updateDoc(
@@ -338,7 +516,7 @@ db,
 
 "agenda",
 
-id,
+idAcao,
 
 "participantes",
 
@@ -365,7 +543,26 @@ alert(
 carregarEscalas(usuario.uid);
 
 
+
+}catch(error){
+
+
+console.error(error);
+
+
+alert(
+"Erro ao enviar resposta."
+);
+
+
+}
+
+
+
 };
+
+
+
 
 
 
@@ -386,19 +583,37 @@ auth,
 if(usuario){
 
 
+
+console.log("====================");
+
+console.log("USUÁRIO LOGADO");
+
+console.log("UID:", usuario.uid);
+
+console.log("EMAIL:", usuario.email);
+
+console.log("====================");
+
+
+
 carregarEscalas(
+
 usuario.uid
+
 );
+
 
 
 }else{
 
 
 lista.innerHTML =
+
 "Usuário não logado.";
 
 
 }
+
 
 
 });
