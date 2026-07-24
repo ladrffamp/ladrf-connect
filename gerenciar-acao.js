@@ -1,64 +1,92 @@
-// gerenciar-acao.js
+// meu-painel.js
 
 
-import { db } from "./firebase.js";
+import { auth, db } from "./firebase.js";
 
 
 import {
-doc,
-getDoc,
+onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
+import {
 collection,
-getDocs,
-setDoc,
-serverTimestamp
+getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
 
+
+const boasVindas =
+document.getElementById("boasVindas");
+
+
+const listaEscalas =
+document.getElementById("listaEscalas");
+
+
+const totalEventos =
+document.getElementById("totalEventos");
+
+
+const totalHoras =
+document.getElementById("totalHoras");
+
+
+const totalPresencas =
+document.getElementById("totalPresencas");
+
+
+
+
+
+
+
+
+
 // =====================================
-// ID DA AÇÃO
+// LOGIN
 // =====================================
 
 
-const idAcao =
-new URLSearchParams(window.location.search).get("id");
+onAuthStateChanged(
+
+auth,
+
+(usuario)=>{
 
 
-
-console.log("ID AÇÃO:", idAcao);
-
+if(!usuario){
 
 
+window.location.href =
+"login.html";
 
-if(!idAcao){
 
-alert("Ação não encontrada.");
+return;
 
-throw new Error("ID ausente");
 
 }
 
 
 
+boasVindas.innerHTML =
+
+`👋 Bem-vindo ${usuario.email}`;
 
 
 
-// =====================================
-// ELEMENTOS
-// =====================================
+carregarPainel(
+usuario.uid
+);
 
 
-const nomeAcao =
-document.getElementById("nomeAcao");
 
+}
 
-const listaMembros =
-document.getElementById("listaMembros");
+);
 
-
-const botaoSalvar =
-document.getElementById("salvar");
 
 
 
@@ -68,131 +96,42 @@ document.getElementById("salvar");
 
 
 // =====================================
-// CARREGAR AÇÃO
+// CARREGAR PAINEL
 // =====================================
 
 
-async function carregarAcao(){
+async function carregarPainel(uid){
+
 
 
 try{
 
 
-const referencia = doc(
 
-db,
-
-"agenda",
-
-idAcao
-
-);
+listaEscalas.innerHTML = `
 
 
+<div class="card">
 
-const resultado = await getDoc(
+<i class="fa-solid fa-spinner fa-spin"></i>
 
-referencia
+Carregando escalas...
 
-);
-
-
-
-if(resultado.exists()){
-
-
-const dados = resultado.data();
-
-
-
-nomeAcao.innerHTML = `
-
-
-${dados.titulo || "Sem título"}
-
-
-<br>
-
-
-<small>
-
-📅 ${dados.data || "-"}
-
-<br>
-
-📍 ${dados.local || "-"}
-
-<br>
-
-⏰ ${dados.inicio || "-"} até ${dados.fim || "-"}
-
-</small>
+</div>
 
 
 `;
 
 
 
-}else{
-
-
-nomeAcao.innerHTML =
-
-"Ação não encontrada";
-
-
-}
 
 
 
-}catch(error){
-
-
-console.error(
-"Erro ao carregar ação:",
-error
-);
-
-
-
-nomeAcao.innerHTML =
-
-"Erro ao carregar ação";
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// =====================================
-// CARREGAR MEMBROS E ESCALADOS
-// =====================================
-
-
-async function carregarMembros(){
-
-
-try{
-
-
-const usuarios = await getDocs(
+const agendaSnapshot = await getDocs(
 
 collection(
-
 db,
-
-"usuarios"
-
+"agenda"
 )
 
 );
@@ -201,7 +140,47 @@ db,
 
 
 
-const participantes = await getDocs(
+
+let eventos = 0;
+
+let horas = 0;
+
+let presencas = 0;
+
+
+
+let encontrou = false;
+
+
+
+let escalasMostradas = new Set();
+
+
+
+
+
+
+listaEscalas.innerHTML = "";
+
+
+
+
+
+
+
+for(const acao of agendaSnapshot.docs){
+
+
+
+const dadosAcao =
+acao.data();
+
+
+
+
+
+
+const participantesSnapshot = await getDocs(
 
 collection(
 
@@ -209,7 +188,7 @@ db,
 
 "agenda",
 
-idAcao,
+acao.id,
 
 "participantes"
 
@@ -221,156 +200,175 @@ idAcao,
 
 
 
-const escalados = {};
 
+const participante =
 
+participantesSnapshot.docs.find(
 
-participantes.forEach((item)=>{
+(item)=>item.id === uid
 
-
-escalados[item.id] = item.data();
-
-
-});
-
-
-
-
-
-
-listaMembros.innerHTML = "";
+);
 
 
 
 
 
 
-usuarios.forEach((usuario)=>{
 
-
-const dados = usuario.data();
-
+if(participante){
 
 
 
-if(
-dados.perfil?.toLowerCase() === "membro"
-){
+encontrou = true;
 
 
 
-const escalado = escalados[usuario.id];
 
 
+// evita aparecer duas vezes
 
-let status = "";
+if(escalasMostradas.has(acao.id)){
 
-
-
-if(escalado){
-
-
-if(escalado.presenca === "Confirmado"){
-
-status = "🟢 Confirmado";
-
-
-}else if(escalado.presenca === "Recusado"){
-
-status = "🔴 Recusado";
-
-
-}else{
-
-status = "🟡 Pendente";
-
-}
-
+continue;
 
 }
 
 
 
-
-listaMembros.innerHTML += `
-
-
-<div class="card" style="margin-bottom:10px;">
-
-
-<label style="
-display:flex;
-align-items:center;
-gap:10px;
-cursor:pointer;
-">
-
-
-<input
-
-type="checkbox"
-
-class="membro"
-
-value="${usuario.id}"
-
-data-nome="${dados.nome || ""}"
-
-data-email="${dados.email || ""}"
-
-${escalado ? "checked" : ""}
-
->
+escalasMostradas.add(
+acao.id
+);
 
 
 
 
-<div>
 
+
+const dadosParticipante =
+participante.data();
+
+
+
+
+
+
+
+listaEscalas.innerHTML += `
+
+
+
+<div class="card">
+
+
+
+<h3>
+
+<i class="fa-solid fa-calendar-check"></i>
+
+${dadosAcao.titulo || "Sem título"}
+
+</h3>
+
+
+
+
+<p>
+
+📅 Data:
 
 <strong>
 
-${dados.nome || "Sem nome"}
+${dadosAcao.data || "-"}
 
 </strong>
 
-
-<br>
-
-
-<small>
-
-${dados.email || ""}
-
-</small>
+</p>
 
 
 
-${
 
-status
 
-?
+<p>
 
-`
+📍 Local:
 
-<br>
+<strong>
 
-<span>
+${dadosAcao.local || "-"}
+
+</strong>
+
+</p>
+
+
+
+
+
+<p>
+
+⏰ Horário:
+
+<strong>
+
+${dadosAcao.inicio || "-"}
+
+até
+
+${dadosAcao.fim || "-"}
+
+</strong>
+
+</p>
+
+
+
+
+
+<p>
+
+👤 Responsável:
+
+<strong>
+
+${dadosAcao.responsavel || "-"}
+
+</strong>
+
+</p>
+
+
+
+
+
+<p>
+
+📌 Tipo:
+
+<strong>
+
+${dadosAcao.tipo || "-"}
+
+</strong>
+
+</p>
+
+
+
+
+
+<p>
 
 Status:
 
-${status}
+<strong>
 
-</span>
+${dadosParticipante.presenca || "Pendente"}
 
-`
+</strong>
 
-:
+</p>
 
-""
 
-}
 
 
 
@@ -378,7 +376,104 @@ ${status}
 
 
 
-</label>
+`;
+
+
+
+
+
+
+
+
+// =====================================
+// CONTAGEM DE PARTICIPAÇÃO
+// =====================================
+
+
+
+if(
+
+dadosParticipante.presenca === "Confirmado"
+
+){
+
+
+
+presencas++;
+
+
+eventos++;
+
+
+
+
+
+if(
+
+dadosAcao.inicio &&
+
+dadosAcao.fim
+
+){
+
+
+horas += calcularHoras(
+
+dadosAcao.inicio,
+
+dadosAcao.fim
+
+);
+
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+}
+
+
+
+
+
+}
+
+
+
+
+
+
+
+if(!encontrou){
+
+
+
+listaEscalas.innerHTML = `
+
+
+<div class="card">
+
+
+<h3>
+
+Nenhuma escala encontrada.
+
+</h3>
+
+
+<p>
+
+Você ainda não possui ações atribuídas.
+
+</p>
 
 
 </div>
@@ -392,21 +487,24 @@ ${status}
 
 
 
-});
 
 
 
 
-
-if(listaMembros.innerHTML === ""){
-
-
-listaMembros.innerHTML =
-
-"Nenhum membro encontrado.";
+// atualizar resumo
 
 
-}
+totalEventos.innerHTML =
+eventos;
+
+
+totalHoras.innerHTML =
+horas + "h";
+
+
+totalPresencas.innerHTML =
+presencas;
+
 
 
 
@@ -415,222 +513,29 @@ listaMembros.innerHTML =
 }catch(error){
 
 
-console.error(
-
-"Erro ao carregar membros:",
-
-error
-
-);
-
-
-
-listaMembros.innerHTML =
-
-"Erro ao carregar membros.";
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-
-
-// =====================================
-// SALVAR ESCALA
-// =====================================
-
-
-if(botaoSalvar){
-
-
-botaoSalvar.addEventListener(
-
-"click",
-
-async()=>{
-
-
-
-const selecionados = document.querySelectorAll(
-
-".membro:checked"
-
-);
-
-
-
-
-
-if(selecionados.length === 0){
-
-
-alert(
-
-"Selecione pelo menos um membro."
-
-);
-
-
-return;
-
-
-}
-
-
-
-
-
-try{
-
-
-
-for(const membro of selecionados){
-
-
-
-const referencia = doc(
-
-db,
-
-"agenda",
-
-idAcao,
-
-"participantes",
-
-membro.value
-
-);
-
-
-
-
-
-const existente = await getDoc(
-
-referencia
-
-);
-
-
-
-
-
-let presenca = "Pendente";
-
-
-
-
-
-if(existente.exists()){
-
-
-presenca =
-
-existente.data().presenca || "Pendente";
-
-
-}
-
-
-
-
-
-await setDoc(
-
-referencia,
-
-{
-
-
-nome:
-
-membro.dataset.nome,
-
-
-email:
-
-membro.dataset.email,
-
-
-presenca:
-
-presenca,
-
-
-escaladoEm:
-
-serverTimestamp()
-
-
-},
-
-{
-
-merge:true
-
-}
-
-
-);
-
-
-
-}
-
-
-
-
-
-alert(
-
-"Escala salva com sucesso!"
-
-);
-
-
-
-carregarMembros();
-
-
-
-}catch(error){
-
 
 console.error(
-
-"Erro ao salvar escala:",
-
+"Erro ao carregar painel:",
 error
-
 );
 
 
 
-alert(
+listaEscalas.innerHTML = `
 
-"Erro ao salvar escala."
 
-);
+<div class="card">
+
+Erro ao carregar escalas.
+
+</div>
+
+
+`;
 
 
 
 }
-
-
-
-}
-
-);
 
 
 
@@ -645,10 +550,58 @@ alert(
 
 
 // =====================================
-// INICIAR
+// CALCULAR HORAS
 // =====================================
 
 
-carregarAcao();
+function calcularHoras(
+inicio,
+fim
+){
 
-carregarMembros();
+
+
+const inicioPartes =
+inicio.split(":");
+
+
+
+const fimPartes =
+fim.split(":");
+
+
+
+
+const inicioMinutos =
+
+(Number(inicioPartes[0]) * 60)
+
++
+
+Number(inicioPartes[1]);
+
+
+
+
+
+const fimMinutos =
+
+(Number(fimPartes[0]) * 60)
+
++
+
+Number(fimPartes[1]);
+
+
+
+
+
+return (
+
+fimMinutos - inicioMinutos
+
+) / 60;
+
+
+
+}
