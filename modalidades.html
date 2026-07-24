@@ -9,90 +9,13 @@
 
 <title>Modalidades | LADRF Connect</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
-<style>
-
-*{
-box-sizing:border-box;
-font-family:Poppins,sans-serif;
-}
-
-body{
-background:#eef3f7;
-margin:0;
-}
+<link rel="stylesheet" href="styles.css">
 
 
-header{
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-background:#0B7A3B;
-color:white;
-padding:25px 40px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-
-}
-
-
-.container{
-
-padding:35px;
-max-width:1000px;
-margin:auto;
-
-}
-
-
-.card{
-
-background:white;
-padding:25px;
-border-radius:18px;
-box-shadow:0 8px 20px #0002;
-margin-bottom:25px;
-
-}
-
-
-input,button{
-
-padding:12px;
-border-radius:10px;
-border:1px solid #ddd;
-
-}
-
-
-button{
-
-background:#0B7A3B;
-color:white;
-cursor:pointer;
-border:none;
-
-}
-
-
-table{
-
-width:100%;
-border-collapse:collapse;
-
-}
-
-
-td,th{
-
-padding:15px;
-border-bottom:1px solid #eee;
-text-align:left;
-
-}
-
-
-</style>
 
 </head>
 
@@ -100,38 +23,155 @@ text-align:left;
 <body>
 
 
-<header>
+
+<header class="topbar">
+
+
+<a href="index.html" class="btn-inicio">
+
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</a>
+
+
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
 
 <h1>
-Modalidades
+
+LADRF Connect
+
 </h1>
 
-<button onclick="location.href='index.html'">
-Início
-</button>
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
+Carregando...
+
+</strong>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<small id="horaAtual">
+
+00:00:00
+
+</small>
+
+
+</div>
+
+
 
 </header>
 
 
 
-<div class="container">
+
+
+
+
+<main class="container">
+
+
+
+
+
+<section class="page-title">
+
+
+<h1>
+
+<i class="fa-solid fa-person-running"></i>
+
+Modalidades Esportivas
+
+</h1>
+
+
+<p>
+
+Cadastro e gerenciamento das modalidades atendidas pela LADRF.
+
+</p>
+
+
+</section>
+
+
+
+
 
 
 <div class="card">
 
+
 <h2>
-Cadastrar modalidade
+
+<i class="fa-solid fa-plus"></i>
+
+Nova Modalidade
+
 </h2>
 
-<br>
 
 
-<input id="nomeModalidade" placeholder="Ex: Futebol">
 
 
-<button id="salvarModalidade">
-Salvar
-</button>
+<div class="form-grid">
+
+
+
+<div class="form-group">
+
+
+<label>
+
+Nome da modalidade
+
+</label>
+
+
+<input
+
+id="nomeModalidade"
+
+placeholder="Ex: Futebol">
 
 
 </div>
@@ -139,49 +179,215 @@ Salvar
 
 
 
+
+<div class="form-group">
+
+
+<label>
+
+Descrição
+
+</label>
+
+
+<input
+
+id="descricao"
+
+placeholder="Descrição da modalidade">
+
+
+</div>
+
+
+
+</div>
+<div class="botoes">
+
+
+<button 
+class="btn-success"
+id="salvarModalidade">
+
+
+<i class="fa-solid fa-floppy-disk"></i>
+
+
+Salvar Modalidade
+
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
 <div class="card">
 
 
 <h2>
-Modalidades cadastradas
+
+<i class="fa-solid fa-list"></i>
+
+Modalidades Cadastradas
+
 </h2>
+
+
+
+
+
+
+<div class="table-responsive">
 
 
 <table>
 
+
+
 <thead>
+
 
 <tr>
 
-<th>
-Nome
-</th>
 
 <th>
-Ações
+
+Nome
+
 </th>
+
+
+
+<th>
+
+Descrição
+
+</th>
+
+
+
+<th>
+
+Status
+
+</th>
+
+
+
+<th>
+
+Ações
+
+</th>
+
 
 </tr>
+
 
 </thead>
 
 
+
+
 <tbody id="listaModalidades">
 
+
+<tr>
+
+
+<td colspan="4" style="text-align:center;">
+
+
+Carregando modalidades...
+
+
+</td>
+
+
+</tr>
+
+
+
 </tbody>
+
+
 
 
 </table>
 
 
+
 </div>
 
 
+
 </div>
+</main>
+
+
+
 
 
 
 <script type="module" src="modalidades.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora = document.getElementById("horaAtual");
+
+
+
+if(hora){
+
+
+hora.innerHTML = new Date()
+
+.toLocaleTimeString("pt-BR");
+
+
+}
+
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
 
 
 </body>
