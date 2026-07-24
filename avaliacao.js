@@ -9,7 +9,9 @@ serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-// Pegar ID do atendimento pela URL
+// =====================================================
+// PEGAR ID DO ATENDIMENTO PELA URL
+// =====================================================
 
 const parametros = new URLSearchParams(
 window.location.search
@@ -17,10 +19,14 @@ window.location.search
 
 const atendimentoId = parametros.get("id");
 
+
 let nota = 0;
 
 
-// Controle das estrelas
+
+// =====================================================
+// CONTROLE DAS ESTRELAS
+// =====================================================
 
 const estrelas = document.querySelectorAll(".star");
 
@@ -61,19 +67,32 @@ s.classList.remove("ativa");
 
 
 
-// Buscar atendimento
+
+// =====================================================
+// CARREGAR DADOS DO ATENDIMENTO
+// =====================================================
 
 async function carregarAtendimento(){
 
 
 if(!atendimentoId){
 
-alert("Atendimento não encontrado.");
+
+document.getElementById("paciente").innerHTML =
+"Atendimento não identificado";
+
+
+document.getElementById("membro").innerHTML =
+"Não informado";
+
 
 return;
 
 }
 
+
+
+try{
 
 
 const atendimentoRef = doc(
@@ -119,14 +138,34 @@ dados.membro || "Não informado";
 
 
 document.getElementById("paciente").innerHTML =
+
 "Não encontrado";
 
 
 document.getElementById("membro").innerHTML =
+
 "Não encontrado";
 
 
 }
+
+
+
+}catch(erro){
+
+
+console.error(
+
+"Erro ao carregar atendimento:",
+
+erro
+
+);
+
+
+
+}
+
 
 
 }
@@ -138,49 +177,98 @@ carregarAtendimento();
 
 
 
-// Salvar avaliação
+
+
+// =====================================================
+// ENVIAR AVALIAÇÃO
+// =====================================================
 
 
 document.getElementById("btnEnviar")
+
 .addEventListener("click", async()=>{
 
 
 
 const espera = document.querySelector(
+
 'input[name="espera"]:checked'
+
 );
 
 
 
 const equipe = document.querySelector(
+
 'input[name="equipe"]:checked'
+
 );
 
 
 
 const resolucao = document.querySelector(
+
 'input[name="resolucao"]:checked'
+
 );
 
 
 
+const indicaria = document.querySelector(
+
+'input[name="indicaria"]:checked'
+
+);
+
+
+
+
+// VALIDAÇÕES
+
+
 if(nota === 0){
 
-alert("Selecione uma nota de 1 a 5 estrelas.");
+
+alert(
+
+"Selecione uma nota de 1 a 5 estrelas."
+
+);
+
 
 return;
+
 
 }
 
 
 
-if(!espera || !equipe || !resolucao){
+if(
 
-alert("Responda todas as perguntas.");
+!espera ||
+
+!equipe ||
+
+!resolucao ||
+
+!indicaria
+
+){
+
+
+alert(
+
+"Responda todas as perguntas."
+
+);
+
 
 return;
 
+
 }
+
+
 
 
 
@@ -189,17 +277,26 @@ const avaliacao = {
 
 atendimentoId,
 
+
 nota,
+
 
 espera: espera.value,
 
+
 equipe: equipe.value,
+
 
 resolucao: resolucao.value,
 
+
+indicaria: indicaria.value,
+
+
 comentario:
 
-document.getElementById("comentario").value,
+document.getElementById("comentario").value.trim(),
+
 
 
 data:
@@ -207,11 +304,15 @@ data:
 serverTimestamp()
 
 
+
 };
 
 
 
+
+
 try{
+
 
 
 await addDoc(
@@ -224,25 +325,139 @@ avaliacao
 
 
 
-alert(
-"Avaliação enviada com sucesso! Obrigado."
-);
+
+// TELA DE SUCESSO
+
+
+document.querySelector(".card").innerHTML = `
+
+
+<div style="text-align:center;padding:40px 20px;">
+
+
+<i class="fa-solid fa-circle-check"
+
+style="font-size:70px;color:#16a34a;">
+
+</i>
 
 
 
-window.location.href="index.html";
+<h2 style="
+
+margin-top:20px;
+
+color:#0B7A3B;
+
+">
+
+Avaliação enviada com sucesso!
+
+</h2>
+
+
+
+<p style="
+
+margin-top:20px;
+
+line-height:1.8;
+
+color:#555;
+
+">
+
+
+Obrigado por contribuir com a nossa formação.
+
+
+<br><br>
+
+
+Sua opinião ajuda a LADRF a melhorar cada atendimento.
+
+
+<br><br>
+
+
+Acompanhe nossas ações e eventos.
+
+
+</p>
+
+
+
+
+
+<a
+
+href="https://instagram.com/ladrf.famp"
+
+target="_blank"
+
+style="
+
+display:inline-flex;
+
+align-items:center;
+
+gap:10px;
+
+margin-top:30px;
+
+padding:14px 24px;
+
+background:#0B7A3B;
+
+color:white;
+
+border-radius:12px;
+
+text-decoration:none;
+
+font-weight:600;
+
+">
+
+
+<i class="fa-brands fa-instagram"></i>
+
+
+Seguir @ladrf.famp
+
+
+</a>
+
+
+
+</div>
+
+
+`;
+
 
 
 
 }catch(erro){
 
 
-console.error(erro);
+
+console.error(
+
+"Erro ao salvar avaliação:",
+
+erro
+
+);
+
 
 
 alert(
+
 "Erro ao enviar avaliação."
+
 );
+
 
 
 }
