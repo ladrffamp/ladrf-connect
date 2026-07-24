@@ -43,6 +43,11 @@ document.getElementById("totalPresencas");
 
 
 
+// =====================================
+// LOGIN
+// =====================================
+
+
 onAuthStateChanged(
 
 auth,
@@ -60,13 +65,25 @@ return;
 
 
 
+console.log(
+"Usuário painel:",
+usuario.uid
+);
+
+
+
+if(boasVindas){
+
 boasVindas.innerHTML =
 
 `👋 Bem-vindo ${usuario.email}`;
 
+}
+
 
 
 carregarPainel(usuario.uid);
+
 
 
 }
@@ -80,15 +97,42 @@ carregarPainel(usuario.uid);
 
 
 
+// =====================================
+// CARREGAR PAINEL
+// =====================================
+
+
 async function carregarPainel(uid){
 
 
 try{
 
 
+listaEscalas.innerHTML = `
 
-listaEscalas.innerHTML =
-"Carregando...";
+<div class="card">
+
+Carregando escalas...
+
+</div>
+
+`;
+
+
+
+
+const agendaSnapshot = await getDocs(
+
+collection(
+
+db,
+
+"agenda"
+
+)
+
+);
+
 
 
 
@@ -99,28 +143,12 @@ let horas = 0;
 let presencas = 0;
 
 
+let encontrou = false;
 
-
-
-// ================================
-// ESCALAS
-// ================================
-
-
-const agendaSnapshot = await getDocs(
-
-collection(
-db,
-"agenda"
-)
-
-);
 
 
 
 listaEscalas.innerHTML = "";
-
-let encontrou = false;
 
 
 
@@ -131,6 +159,7 @@ for(const acao of agendaSnapshot.docs){
 
 
 const dadosAcao = acao.data();
+
 
 
 
@@ -153,6 +182,7 @@ acao.id,
 
 
 
+
 const participante = participantes.docs.find(
 
 (item)=>item.id === uid
@@ -163,7 +193,11 @@ const participante = participantes.docs.find(
 
 
 
-if(participante){
+if(!participante){
+
+continue;
+
+}
 
 
 
@@ -171,7 +205,9 @@ encontrou = true;
 
 
 
-const dados = participante.data();
+const dadosParticipante =
+participante.data();
+
 
 
 
@@ -193,27 +229,84 @@ ${dadosAcao.titulo || "Sem título"}
 
 
 
+
 <p>
 
-📅 ${dadosAcao.data || "-"}
+📅 Data:
+
+<strong>
+
+${dadosAcao.data || "-"}
+
+</strong>
 
 </p>
 
 
 
+
 <p>
 
-📍 ${dadosAcao.local || "-"}
+📍 Local:
+
+<strong>
+
+${dadosAcao.local || "-"}
+
+</strong>
 
 </p>
 
 
 
+
 <p>
 
-⏰ ${dadosAcao.inicio || "-"} até ${dadosAcao.fim || "-"}
+⏰ Horário:
+
+<strong>
+
+${dadosAcao.inicio || "-"}
+
+até
+
+${dadosAcao.fim || "-"}
+
+</strong>
 
 </p>
+
+
+
+
+
+<p>
+
+👤 Responsável:
+
+<strong>
+
+${dadosAcao.responsavel || "-"}
+
+</strong>
+
+</p>
+
+
+
+
+<p>
+
+📌 Tipo:
+
+<strong>
+
+${dadosAcao.tipo || "-"}
+
+</strong>
+
+</p>
+
 
 
 
@@ -223,10 +316,9 @@ Status:
 
 <strong>
 
-${dados.presenca || "Pendente"}
+${dadosParticipante.presenca || "Pendente"}
 
 </strong>
-
 
 </p>
 
@@ -235,16 +327,66 @@ ${dados.presenca || "Pendente"}
 </div>
 
 
+
 `;
 
 
 
+
+
+
+// ================================
+// CONTABILIZAR PARTICIPAÇÃO
+// ================================
+
+
+
+if(
+
+dadosParticipante.presenca === "Confirmado"
+
+){
+
+
+
+eventos++;
+
+presencas++;
+
+
+
+
+if(
+
+dadosAcao.inicio &&
+
+dadosAcao.fim
+
+){
+
+
+
+horas += calcularHoras(
+
+dadosAcao.inicio,
+
+dadosAcao.fim
+
+);
+
+
+
+}
+
+
+
 }
 
 
 
 
 }
+
 
 
 
@@ -255,21 +397,27 @@ ${dados.presenca || "Pendente"}
 if(!encontrou){
 
 
-listaEscalas.innerHTML =
+listaEscalas.innerHTML = `
 
-`
 
 <div class="card">
 
+
+<h3>
+
 Nenhuma escala encontrada.
 
+</h3>
+
+
 </div>
+
 
 `;
 
 
-}
 
+}
 
 
 
@@ -277,175 +425,43 @@ Nenhuma escala encontrada.
 
 
 // ================================
-// BUSCAR FREQUÊNCIA FINALIZADA
+// ATUALIZAR RESUMO
 // ================================
 
 
-
-const frequencias = await getDocs(
-
-collection(
-
-db,
-
-"frequencia"
-
-)
-
-);
-
-
-
-
-
-
-
-frequencias.forEach((item)=>{
-
-
-const dados = item.data();
-
-
-
-
-
-if(!dados.presentes){
-
-return;
-
-}
-
-
-
-
-const participou = dados.presentes.find(
-
-(membro)=>membro.uid === uid
-
-);
-
-
-
-
-
-if(participou){
-
-
-
-eventos++;
-
-
-presencas++;
-
-
-
-
-
-}
-
-
-
-
-
-
-});
-
-
-
-
-
-
-
-
-
-// ================================
-// CALCULAR HORAS PELAS AÇÕES
-// ================================
-
-
-
-for(const acao of agendaSnapshot.docs){
-
-
-const dados = acao.data();
-
-
-
-const frequencia = frequencias.docs.find(
-
-(item)=>item.id === acao.id
-
-);
-
-
-
-if(!frequencia){
-
-continue;
-
-}
-
-
-
-
-const lista = frequencia.data().presentes || [];
-
-
-
-const participou = lista.find(
-
-(membro)=>membro.uid === uid
-
-);
-
-
-
-
-
-if(
-
-participou &&
-
-dados.inicio &&
-
-dados.fim
-
-){
-
-
-
-horas += calcularHoras(
-
-dados.inicio,
-
-dados.fim
-
-);
-
-
-
-}
-
-
-
-
-}
-
-
-
-
-
-
-
+if(totalEventos){
 
 totalEventos.innerHTML = eventos;
 
+}
+
+
+
+if(totalHoras){
 
 totalHoras.innerHTML = horas + "h";
 
+}
+
+
+
+if(totalPresencas){
 
 totalPresencas.innerHTML = presencas;
 
+}
+
+
+
+
+console.log(
+"Resumo:",
+{
+eventos,
+horas,
+presencas
+}
+);
 
 
 
@@ -453,10 +469,9 @@ totalPresencas.innerHTML = presencas;
 }catch(error){
 
 
-
 console.error(
 
-"Erro painel:",
+"Erro ao carregar painel:",
 
 error
 
@@ -464,9 +479,15 @@ error
 
 
 
-listaEscalas.innerHTML =
+listaEscalas.innerHTML = `
 
-"Erro ao carregar painel.";
+<div class="card">
+
+Erro ao carregar painel.
+
+</div>
+
+`;
 
 
 
@@ -483,37 +504,72 @@ listaEscalas.innerHTML =
 
 
 
-function calcularHoras(inicio,fim){
+
+// =====================================
+// CALCULAR HORAS
+// =====================================
+
+
+function calcularHoras(
+
+inicio,
+
+fim
+
+){
+
+
+
+const inicioPartes =
+inicio.split(":");
+
+
+const fimPartes =
+fim.split(":");
 
 
 
 const inicioMin =
 
-(Number(inicio.split(":")[0])*60)
+(Number(inicioPartes[0]) * 60)
 
 +
 
-Number(inicio.split(":")[1]);
+Number(inicioPartes[1]);
+
 
 
 
 
 const fimMin =
 
-(Number(fim.split(":")[0])*60)
+(Number(fimPartes[0]) * 60)
 
 +
 
-Number(fim.split(":")[1]);
+Number(fimPartes[1]);
 
 
 
 
-return (
 
-fimMin - inicioMin
 
-) / 60;
+let resultado =
+
+(fimMin - inicioMin) / 60;
+
+
+
+
+if(resultado < 0){
+
+resultado += 24;
+
+}
+
+
+
+return resultado;
 
 
 
