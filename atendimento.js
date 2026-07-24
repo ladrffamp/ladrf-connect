@@ -28,11 +28,9 @@ document.getElementById("resultadoPacientes");
 
 
 
-
 // =====================================
 // BUSCAR PACIENTE PELO NOME
 // =====================================
-
 
 if(campoNome && resultadoPacientes){
 
@@ -103,7 +101,7 @@ id:item.id,
 
 
 
-document.getElementById("nome").value =
+campoNome.value =
 paciente.nome;
 
 
@@ -137,6 +135,7 @@ resultadoPacientes.appendChild(div);
 }
 
 
+
 });
 
 
@@ -144,19 +143,31 @@ resultadoPacientes.appendChild(div);
 
 
 }
+
+
+
+
+
+
 // =====================================
 // CARREGAR PACIENTE EM ATENDIMENTO
 // =====================================
 
-
 async function carregarPaciente(){
+
+
+try{
 
 
 const busca = query(
 
 collection(db,"pacientes"),
 
-where("status","==","Em atendimento")
+where(
+"status",
+"==",
+"Em atendimento"
+)
 
 );
 
@@ -191,6 +202,7 @@ id:item.id,
 
 
 
+
 if(pacienteAtual){
 
 
@@ -199,43 +211,25 @@ pacienteAtual.nome || "";
 
 
 
-if(document.getElementById("idade")){
-
 document.getElementById("idade").value =
 pacienteAtual.idade || "";
 
-}
 
-
-
-if(document.getElementById("sexo")){
 
 document.getElementById("sexo").value =
 pacienteAtual.sexo || "";
 
-}
 
-
-
-if(document.getElementById("modalidade")){
 
 document.getElementById("modalidade").value =
 pacienteAtual.modalidade || "";
 
-}
 
-
-
-if(document.getElementById("maca")){
 
 document.getElementById("maca").value =
 pacienteAtual.maca || "";
 
-}
 
-
-
-if(document.getElementById("inicio")){
 
 document.getElementById("inicio").value =
 
@@ -245,12 +239,23 @@ new Date().toLocaleTimeString(
 hour:"2-digit",
 minute:"2-digit"
 }
+
+);
+
+
+}
+
+
+
+}catch(error){
+
+console.error(
+"Erro ao carregar paciente:",
+error
 );
 
 }
 
-
-}
 
 
 }
@@ -265,33 +270,35 @@ carregarPaciente();
 
 
 // =====================================
-// PEGAR CHECKBOXES
+// PEGAR CHECKBOX
 // =====================================
-
 
 function pegarSelecionados(nomeCampo){
 
 
-const selecionados=[];
+const lista = [];
 
 
 
 document
-.querySelectorAll(`input[name="${nomeCampo}"]:checked`)
+.querySelectorAll(
+`input[name="${nomeCampo}"]:checked`
+)
 .forEach((item)=>{
 
 
-selecionados.push(item.value);
+lista.push(item.value);
 
 
 });
 
 
 
-return selecionados;
-
+return lista;
 
 }
+
+
 
 
 
@@ -302,14 +309,15 @@ return selecionados;
 // LIBERAR MACA
 // =====================================
 
-
 async function liberarMaca(numero){
 
 
+if(!numero) return;
+
+
+
 const macas = await getDocs(
-
 collection(db,"macas")
-
 );
 
 
@@ -317,7 +325,7 @@ collection(db,"macas")
 for(const item of macas.docs){
 
 
-const maca=item.data();
+const maca = item.data();
 
 
 
@@ -344,10 +352,15 @@ paciente:""
 }
 
 
+
 }
 
 
+
 }
+
+
+
 
 
 
@@ -358,7 +371,6 @@ paciente:""
 // FINALIZAR ATENDIMENTO
 // =====================================
 
-
 window.salvarAtendimento = async function(){
 
 
@@ -367,13 +379,14 @@ if(!pacienteAtual){
 
 
 alert(
-"Selecione um paciente."
+"Selecione um paciente antes de finalizar."
 );
 
 
 return;
 
 }
+
 
 
 
@@ -390,35 +403,35 @@ pacienteAtual.nome,
 
 
 idade:
-document.getElementById("idade")?.value || "",
+document.getElementById("idade").value,
 
 
 sexo:
-document.getElementById("sexo")?.value || "",
+document.getElementById("sexo").value,
 
 
 modalidade:
-document.getElementById("modalidade")?.value || "",
+document.getElementById("modalidade").value,
 
 
 evento:
-document.getElementById("evento")?.value || "",
+document.getElementById("evento").value,
 
 
 membro:
-document.getElementById("membro")?.value || "",
+document.getElementById("membro").value,
 
 
 maca:
-document.getElementById("maca")?.value || "",
+document.getElementById("maca").value,
 
 
 inicio:
-document.getElementById("inicio")?.value || "",
+document.getElementById("inicio").value,
 
 
 termino:
-document.getElementById("termino")?.value || "",
+document.getElementById("termino").value,
 
 
 queixa:
@@ -435,12 +448,12 @@ pegarSelecionados("conduta"),
 
 eva:
 Number(
-document.getElementById("eva")?.value || 0
+document.getElementById("eva").value
 ),
 
 
 observacoes:
-document.getElementById("observacoes")?.value || "",
+document.getElementById("observacoes").value,
 
 
 data:
@@ -448,15 +461,18 @@ Timestamp.now()
 
 
 };
-  try{
 
 
-// =====================================
+
+
+
+try{
+
+
+
 // SALVAR ATENDIMENTO
-// =====================================
 
-
-const atendimentoCriado = await addDoc(
+const atendimento = await addDoc(
 
 collection(db,"atendimentos"),
 
@@ -468,14 +484,14 @@ dados
 
 
 
-// =====================================
-// GERAR LINK DA AVALIAÇÃO
-// =====================================
 
+
+// LINK DA AVALIAÇÃO
 
 const linkAvaliacao =
 
-`https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id=${atendimentoCriado.id}`;
+`https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id=${atendimento.id}`;
+
 
 
 
@@ -484,11 +500,15 @@ const linkAvaliacao =
 
 await updateDoc(
 
-doc(db,"atendimentos",atendimentoCriado.id),
+doc(
+db,
+"atendimentos",
+atendimento.id
+),
 
 {
 
-linkAvaliacao: linkAvaliacao
+linkAvaliacao
 
 }
 
@@ -499,14 +519,17 @@ linkAvaliacao: linkAvaliacao
 
 
 
-// =====================================
-// ATUALIZAR PACIENTE
-// =====================================
+
+// FINALIZAR PACIENTE
 
 
 await updateDoc(
 
-doc(db,"pacientes",pacienteAtual.id),
+doc(
+db,
+"pacientes",
+pacienteAtual.id
+),
 
 {
 
@@ -521,15 +544,11 @@ status:"Finalizado"
 
 
 
-// =====================================
-// LIBERAR MACA
-// =====================================
 
+// LIBERAR MACA
 
 await liberarMaca(
-
 dados.maca
-
 );
 
 
@@ -538,9 +557,7 @@ dados.maca
 
 
 
-// =====================================
 // MOSTRAR QR CODE
-// =====================================
 
 
 const area =
@@ -556,6 +573,8 @@ document.getElementById("linkAvaliacao");
 
 
 
+
+
 if(area){
 
 area.style.display="block";
@@ -565,9 +584,11 @@ area.style.display="block";
 
 
 
+
 if(link){
 
-link.href = linkAvaliacao;
+link.href =
+linkAvaliacao;
 
 }
 
@@ -601,50 +622,51 @@ height:250
 
 
 
-// =====================================
-// CRIAR BOTÃO PRÓXIMO ATENDIMENTO
-// =====================================
+
+// BOTÃO PRÓXIMO ATENDIMENTO
 
 
-let botaoProximo =
-document.getElementById("proximoAtendimento");
+let botao =
+document.getElementById(
+"proximoAtendimento"
+);
 
 
 
-if(!botaoProximo){
+if(!botao){
 
 
-botaoProximo =
+botao =
 document.createElement("button");
 
 
-botaoProximo.id =
+botao.id =
 "proximoAtendimento";
 
 
-botaoProximo.className =
+botao.className =
 "btn-success";
 
 
-botaoProximo.innerHTML =
+botao.innerHTML =
 "➡️ Próximo Atendimento";
 
 
 
-botaoProximo.style.marginTop =
+botao.style.marginTop =
 "20px";
 
 
 
-area.appendChild(botaoProximo);
+area.appendChild(botao);
+
 
 
 }
 
 
 
-
-botaoProximo.onclick = ()=>{
+botao.onclick = ()=>{
 
 
 window.location.reload();
@@ -657,22 +679,29 @@ window.location.reload();
 
 
 
+
 alert(
 "Atendimento finalizado! QR Code gerado."
 );
 
 
 
+
+
 }catch(error){
+
 
 
 console.error(error);
 
 
+
 alert(
 "Erro ao finalizar atendimento: "
-+error.message
++
+error.message
 );
+
 
 
 }
