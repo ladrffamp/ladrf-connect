@@ -10,216 +10,11 @@
 <title>Exportação | LADRF Connect</title>
 
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="styles.css">
 
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-
-<style>
-
-*{
-
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-
-}
-
-
-body{
-
-background:#eef3f7;
-color:#333;
-
-}
-
-
-header{
-
-background:linear-gradient(90deg,#0B7A3B,#15A34A);
-
-color:white;
-
-padding:25px 40px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-box-shadow:0 5px 15px rgba(0,0,0,.15);
-
-}
-
-
-header h1{
-
-font-size:28px;
-
-}
-
-
-.botao{
-
-background:#0B7A3B;
-
-color:white;
-
-padding:12px 22px;
-
-border:none;
-
-border-radius:12px;
-
-cursor:pointer;
-
-font-weight:600;
-
-font-size:15px;
-
-display:inline-flex;
-
-align-items:center;
-
-gap:8px;
-
-}
-
-
-.botao:hover{
-
-background:#09632f;
-
-}
-
-
-.container{
-
-max-width:1300px;
-
-margin:auto;
-
-padding:35px;
-
-}
-
-
-.grid{
-
-display:grid;
-
-grid-template-columns:repeat(3,1fr);
-
-gap:25px;
-
-margin-bottom:30px;
-
-}
-
-
-.card{
-
-background:white;
-
-padding:25px;
-
-border-radius:18px;
-
-box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-}
-
-
-.card > i{
-
-font-size:35px;
-
-color:#0B7A3B;
-
-margin-bottom:15px;
-
-}
-
-
-.botao i{
-
-color:white;
-
-font-size:16px;
-
-margin:0;
-
-}
-
-
-.card h2{
-
-font-size:20px;
-
-margin-bottom:10px;
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-
-th{
-
-padding:15px;
-
-text-align:left;
-
-}
-
-
-td{
-
-padding:15px;
-
-border-bottom:1px solid #eee;
-
-}
-
-
-@media(max-width:900px){
-
-.grid{
-
-grid-template-columns:1fr;
-
-}
-
-}
-
-
-@media(max-width:700px){
-
-table{
-
-display:block;
-
-overflow-x:auto;
-
-white-space:nowrap;
-
-}
-
-}
-
-
-</style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
@@ -228,23 +23,40 @@ white-space:nowrap;
 <body>
 
 
-<header>
+
+<header class="topbar">
+
+
+<a href="index.html" class="btn-inicio">
+
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</a>
+
+
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
 
 
 <div>
 
 <h1>
 
-<i class="fa-solid fa-file-export"></i>
-
-Exportação
+LADRF Connect
 
 </h1>
 
 
 <p>
 
-Relatórios e estatísticas LADRF
+Sistema de Gestão da Liga
 
 </p>
 
@@ -252,147 +64,223 @@ Relatórios e estatísticas LADRF
 </div>
 
 
-<button class="botao" onclick="window.location='index.html'">
+</div>
 
-<i class="fa-solid fa-house"></i>
 
-Início
 
-</button>
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
+Carregando...
+
+</strong>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<small id="horaAtual">
+
+00:00:00
+
+</small>
+
+
+</div>
+
 
 
 </header>
 
 
 
-<div class="container">
 
 
-<div class="grid">
+
+<main class="container">
+
+
+
+
+
+<section class="page-title">
+
+
+<h1>
+
+<i class="fa-solid fa-file-export"></i>
+
+Exportação de Dados
+
+</h1>
+
+
+<p>
+
+Gere arquivos com os dados do sistema LADRF Connect.
+
+</p>
+
+
+</section>
+
+
+
 
 
 
 <div class="card">
 
-<i class="fa-solid fa-file-pdf"></i>
-
 
 <h2>
 
-Relatório PDF
+<i class="fa-solid fa-database"></i>
+
+Selecionar Dados
 
 </h2>
 
 
-<p>
-
-Gerar relatório completo dos atendimentos
-
-</p>
 
 
-<br>
+<div class="form-grid">
 
 
-<button class="botao" id="gerarPDF">
+<div class="form-group">
 
-<i class="fa-solid fa-download"></i>
 
-Gerar PDF
+<label>
 
-</button>
+Tipo de exportação
+
+</label>
+
+
+
+<select id="tipoExportacao">
+
+
+<option value="membros">
+
+Membros
+
+</option>
+
+
+<option value="pacientes">
+
+Pacientes
+
+</option>
+
+
+<option value="atendimentos">
+
+Atendimentos
+
+</option>
+
+
+<option value="eventos">
+
+Eventos
+
+</option>
+
+
+<option value="materiais">
+
+Materiais
+
+</option>
+
+
+<option value="movimentacoes">
+
+Movimentações
+
+</option>
+
+
+</select>
+
 
 
 </div>
 
 
+</div>
+<div class="botoes">
 
 
-<div class="card">
+<button 
+class="btn-success"
+id="exportarExcel">
+
 
 <i class="fa-solid fa-file-excel"></i>
 
 
+Exportar Excel
+
+
+</button>
+
+
+
+
+
+<button 
+class="btn-primary"
+id="exportarPDF">
+
+
+<i class="fa-solid fa-file-pdf"></i>
+
+
+Exportar PDF
+
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
 <h2>
-
-Relatório Excel
-
-</h2>
-
-
-<p>
-
-Exportar dados para planilha
-
-</p>
-
-
-<br>
-
-
-<button class="botao" id="gerarExcel">
 
 <i class="fa-solid fa-table"></i>
 
-Gerar Excel
-
-</button>
-
-
-</div>
-
-
-
-
-<div class="card">
-
-<i class="fa-solid fa-chart-line"></i>
-
-
-<h2>
-
-Estatísticas
+Dados Exportados
 
 </h2>
 
 
-<p>
-
-Análise dos eventos LADRF
-
-</p>
-
-
-<br>
-
-
-<button class="botao" id="carregarDados">
-
-<i class="fa-solid fa-chart-column"></i>
-
-Atualizar
-
-</button>
-
-
-</div>
 
 
 
-</div>
-<div class="card">
-
-
-<h2>
-
-<i class="fa-solid fa-calendar-days"></i>
-
-Estatísticas por evento
-
-</h2>
-
-
-<br>
+<div class="table-responsive">
 
 
 <table>
@@ -400,26 +288,20 @@ Estatísticas por evento
 
 <thead>
 
-<tr style="background:#0B7A3B;color:white;">
+
+<tr>
 
 
 <th>
 
-Evento
+Campo
 
 </th>
 
 
 <th>
 
-Pacientes
-
-</th>
-
-
-<th>
-
-Atendimentos
+Valor
 
 </th>
 
@@ -431,41 +313,121 @@ Atendimentos
 
 
 
-<tbody id="tabelaEventos">
+<tbody id="previewDados">
 
 
 <tr>
 
-<td colspan="3" style="text-align:center">
 
-Carregando dados...
+<td colspan="2" style="text-align:center;">
+
+
+Selecione uma opção para visualizar.
+
 
 </td>
 
+
 </tr>
+
 
 
 </tbody>
 
 
+
 </table>
 
 
-</div>
-
 
 </div>
 
 
 
+</div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+
+
+
+<div class="card">
+
+
+<h2>
+
+<i class="fa-solid fa-circle-info"></i>
+
+Informações
+
+</h2>
+
+
+
+<p>
+
+Os arquivos exportados podem ser utilizados para relatórios,
+
+prestação de contas e organização administrativa da LADRF.
+
+</p>
+
+
+
+</div>
+</main>
+
+
+
+
 
 
 <script type="module" src="exportacao.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora = document.getElementById("horaAtual");
+
+
+
+if(hora){
+
+
+hora.innerHTML = new Date()
+
+.toLocaleTimeString("pt-BR");
+
+
+}
+
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
 
 
 
