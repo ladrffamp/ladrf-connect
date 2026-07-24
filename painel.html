@@ -13,30 +13,273 @@
 <link rel="stylesheet" href="styles.css">
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" 
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
+<style>
+
+
+body{
+
+background:#111 !important;
+
+color:white;
+
+min-height:100vh;
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+justify-content:center;
+
+padding:30px;
+
+}
+
+
+
+/* BOTÃO INÍCIO */
+
+.btn-inicio{
+
+position:fixed;
+
+top:20px;
+
+left:20px;
+
+z-index:9999;
+
+background:#0B7A3B;
+
+color:white;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+font-weight:bold;
+
+}
+
+
+
+/* LOGO */
+
+.painel-logo{
+
+font-size:45px;
+
+font-weight:700;
+
+color:white;
+
+text-align:center;
+
+margin-bottom:15px;
+
+}
+
+
+
+/* HORA */
+
+#horaAtual{
+
+font-size:45px;
+
+font-weight:bold;
+
+color:#15A34A;
+
+margin-bottom:35px;
+
+letter-spacing:3px;
+
+}
+
+
+
+/* PACIENTE */
+
+.chamado{
+
+width:90%;
+
+max-width:1200px;
+
+background:#222;
+
+border-radius:25px;
+
+padding:50px;
+
+text-align:center;
+
+box-shadow:0 15px 40px rgba(0,0,0,.5);
+
+}
+
+
+
+.chamado h2{
+
+color:white;
+
+font-size:28px;
+
+margin-bottom:20px;
+
+}
+
+
+
+.nome{
+
+font-size:70px;
+
+font-weight:700;
+
+color:white;
+
+margin:30px;
+
+}
+
+
+
+.maca{
+
+font-size:40px;
+
+font-weight:bold;
+
+color:#15A34A;
+
+}
+
+
+
+/* FILA */
+
+.proximos{
+
+width:90%;
+
+max-width:1200px;
+
+background:#222;
+
+border-radius:25px;
+
+padding:35px;
+
+margin-top:30px;
+
+box-shadow:0 15px 40px rgba(0,0,0,.5);
+
+}
+
+
+
+.proximos h2{
+
+color:white;
+
+margin-bottom:20px;
+
+}
+
+
+
+.proximos ul{
+
+list-style:none;
+
+padding:0;
+
+}
+
+
+
+.proximos li{
+
+color:white;
+
+font-size:28px;
+
+padding:15px;
+
+border-bottom:1px solid #444;
+
+}
+
+
+
+/* RESPONSIVO */
+
+@media(max-width:700px){
+
+
+.painel-logo{
+
+font-size:32px;
+
+}
+
+
+#horaAtual{
+
+font-size:32px;
+
+}
+
+
+.nome{
+
+font-size:40px;
+
+}
+
+
+.maca{
+
+font-size:28px;
+
+}
+
+
+.proximos li{
+
+font-size:20px;
+
+}
+
+
+}
+
+
+</style>
 
 
 </head>
 
 
 
-<body class="painel-tv">
+<body>
 
 
-
-
-
-<header class="topbar">
 
 
 <a href="index.html" class="btn-inicio">
 
-
 <i class="fa-solid fa-house"></i>
 
-
 Início
-
 
 </a>
 
@@ -44,96 +287,21 @@ Início
 
 
 
-<div class="logo">
-
-
-<i class="fa-solid fa-heart-pulse"></i>
-
-
-<div>
-
-
-<h1>
-
-LADRF Connect
-
-</h1>
-
-
-<p>
-
-Sistema de Gestão da Liga
-
-</p>
-
-
-</div>
-
-
-</div>
-
-
-
-
-
-
-
-<div class="usuario-info">
-
-
-<strong id="nomeUsuario">
-
-Carregando...
-
-</strong>
-
-
-
-<span id="perfilUsuario">
-
-Perfil
-
-</span>
-
-
-
-<small id="horaAtual">
-
---:--:--
-
-</small>
-
-
-
-</div>
-
-
-
-
-
-</header>
-
-
-
-
-
-
-
-
-
-<main class="painel-container">
-
-
-
-
-
-
-
-<h1 class="painel-logo">
+<div class="painel-logo">
 
 LADRF CONNECT
 
-</h1>
+</div>
+
+
+
+
+
+<div id="horaAtual">
+
+00:00:00
+
+</div>
 
 
 
@@ -144,7 +312,6 @@ LADRF CONNECT
 <div class="chamado">
 
 
-
 <h2>
 
 Paciente em Atendimento
@@ -153,36 +320,23 @@ Paciente em Atendimento
 
 
 
-
-
-<div 
-class="nome"
-id="nome">
-
+<div class="nome" id="nome">
 
 Nenhum
 
-
 </div>
 
 
 
-
-
-<div 
-class="maca"
-id="maca">
-
+<div class="maca" id="maca">
 
 -
 
-
 </div>
 
 
 
 </div>
-
 
 
 
@@ -201,8 +355,6 @@ Fila de Espera
 
 
 
-
-
 <ul id="fila">
 
 
@@ -218,25 +370,7 @@ Fila de Espera
 
 
 
-
-</main>
-
-
-
-
-
-
-
-
-
 <script type="module" src="painel.js"></script>
-
-
-<script type="module" src="permissoes.js"></script>
-
-
-
-
 
 
 
@@ -247,20 +381,16 @@ Fila de Espera
 function atualizarHora(){
 
 
-const hora =
-document.getElementById("horaAtual");
+const hora=document.getElementById("horaAtual");
 
 
 if(hora){
 
+hora.innerHTML=new Date()
 
-hora.innerHTML =
-
-new Date().toLocaleTimeString("pt-BR");
-
+.toLocaleTimeString("pt-BR");
 
 }
-
 
 
 }
@@ -275,8 +405,6 @@ atualizarHora();
 
 
 </script>
-
-
 
 
 
