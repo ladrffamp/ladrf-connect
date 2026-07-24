@@ -7,154 +7,15 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Histórico - LADRF Connect</title>
+<title>Histórico | LADRF Connect</title>
 
 
-<style>
+<link rel="stylesheet" href="styles.css">
 
-*{
 
-box-sizing:border-box;
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-font-family:Arial, Helvetica, sans-serif;
-
-}
-
-
-
-body{
-
-background:#f4f6f9;
-
-padding:30px;
-
-}
-
-
-
-.btn-voltar{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-cursor:pointer;
-
-}
-
-
-
-.container{
-
-max-width:1100px;
-
-margin:auto;
-
-}
-
-
-
-h1{
-
-color:#0B7A3B;
-
-margin-bottom:25px;
-
-}
-
-
-
-.card{
-
-background:white;
-
-padding:25px;
-
-border-radius:15px;
-
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-
-margin-bottom:20px;
-
-}
-
-
-
-input{
-
-width:100%;
-
-padding:12px;
-
-border-radius:8px;
-
-border:1px solid #ccc;
-
-}
-
-
-
-button{
-
-margin-top:15px;
-
-padding:12px 20px;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-
-
-.item{
-
-background:#f8f8f8;
-
-padding:20px;
-
-border-radius:12px;
-
-margin-top:15px;
-
-line-height:1.8;
-
-}
-
-
-
-.titulo{
-
-font-size:22px;
-
-font-weight:bold;
-
-color:#0B7A3B;
-
-}
-
-
-
-</style>
 
 </head>
 
@@ -163,42 +24,206 @@ color:#0B7A3B;
 
 
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
 
-🏠 Menu Inicial
-
-</button>
+<header class="topbar">
 
 
+<a href="index.html" class="btn-inicio">
 
 
-<div class="container">
+<i class="fa-solid fa-house"></i>
+
+
+Início
+
+
+</a>
+
+
+
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+
+<div>
 
 
 <h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
+Carregando...
+
+</strong>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+
+<small id="horaAtual">
+
+00:00:00
+
+</small>
+
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<main class="container">
+
+
+
+
+
+
+<section class="page-title">
+
+
+<h1>
+
+<i class="fa-solid fa-clock-rotate-left"></i>
 
 Histórico de Atendimentos
 
 </h1>
 
 
+<p>
+
+Consulta dos atendimentos realizados pela LADRF.
+
+</p>
+
+
+</section>
+
+
+
+
+
+
 
 <div class="card">
 
 
-<input 
+
+<h2>
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+Buscar paciente
+
+</h2>
+
+
+
+
+
+<div class="form-group">
+
+
+<input
+
 id="busca"
-placeholder="Nome do paciente">
+
+placeholder="Digite o nome do paciente">
 
 
-<button onclick="buscar()">
+</div>
+
+
+
+
+
+
+<button
+
+class="btn-success"
+
+onclick="buscar()">
+
+
+
+<i class="fa-solid fa-search"></i>
+
 
 Buscar
+
+
 
 </button>
 
 
+
 </div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+
+<i class="fa-solid fa-file-medical"></i>
+
+Atendimentos encontrados
+
+</h2>
 
 
 
@@ -206,11 +231,26 @@ Buscar
 
 <div id="lista">
 
+
+</div>
+
+
+
+
 </div>
 
 
 
-</div>
+
+
+
+
+
+
+</main>
+
+
+
 
 
 
@@ -218,7 +258,51 @@ Buscar
 
 <script type="module" src="historico.js"></script>
 
+
 <script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora=document.getElementById("horaAtual");
+
+
+if(hora){
+
+
+hora.innerHTML =
+
+new Date().toLocaleTimeString("pt-BR");
+
+
+}
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
 
 
 </body>
