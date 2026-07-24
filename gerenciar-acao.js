@@ -393,7 +393,7 @@ doc(
 
 db,
 
-"agendas",
+"agenda",
 
 idAcao,
 
