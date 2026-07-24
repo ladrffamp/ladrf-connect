@@ -137,10 +137,9 @@ if(nomeAcao){
 
 nomeAcao.innerHTML =
 
-dados.titulo || "Ação sem nome";
+dados.titulo || dados.nome || "Ação sem nome";
 
 }
-
 
 
 }else{
