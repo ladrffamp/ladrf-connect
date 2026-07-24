@@ -16,168 +16,20 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
-<style>
-
-body{
-
-background:#111;
-
-color:white;
-
-display:flex;
-
-flex-direction:column;
-
-align-items:center;
-
-padding:30px;
-
-}
-
-
-
-.btn-inicio{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-z-index:9999;
-
-}
-
-
-
-.painel-logo{
-
-font-size:55px;
-
-color:white;
-
-font-weight:700;
-
-margin-top:40px;
-
-}
-
-
-
-#horaAtual{
-
-font-size:45px;
-
-color:#15A34A;
-
-font-weight:bold;
-
-margin:30px;
-
-letter-spacing:2px;
-
-}
-
-
-
-.chamado{
-
-width:90%;
-
-max-width:1200px;
-
-background:#222;
-
-border-radius:20px;
-
-padding:40px;
-
-text-align:center;
-
-margin-bottom:40px;
-
-}
-
-
-
-.nome{
-
-font-size:65px;
-
-font-weight:bold;
-
-margin:25px;
-
-}
-
-
-
-.maca{
-
-font-size:40px;
-
-color:#15A34A;
-
-}
-
-
-
-.proximos{
-
-width:90%;
-
-max-width:1200px;
-
-background:#222;
-
-padding:30px;
-
-border-radius:20px;
-
-}
-
-
-
-.proximos h2{
-
-margin-bottom:20px;
-
-}
-
-
-
-.proximos ul{
-
-list-style:none;
-
-}
-
-
-
-.proximos li{
-
-padding:15px;
-
-font-size:28px;
-
-border-bottom:1px solid #444;
-
-}
-
-
-
-</style>
-
-
 </head>
 
 
 
-<body>
+<body class="painel-tv">
 
 
 
-<a href="index.html" class="btn btn-inicio">
+
+
+<header class="topbar">
+
+
+<a href="index.html" class="btn-inicio">
 
 
 <i class="fa-solid fa-house"></i>
@@ -192,22 +44,96 @@ Início
 
 
 
-<div class="painel-logo">
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
+
+
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
+Carregando...
+
+</strong>
+
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+
+<small id="horaAtual">
+
+--:--:--
+
+</small>
+
+
+
+</div>
+
+
+
+
+
+</header>
+
+
+
+
+
+
+
+
+
+<main class="painel-container">
+
+
+
+
+
+
+
+<h1 class="painel-logo">
 
 LADRF CONNECT
 
-</div>
-
-
-
-
-
-<div id="horaAtual">
-
-00:00:00
-
-</div>
-
+</h1>
 
 
 
@@ -228,6 +154,7 @@ Paciente em Atendimento
 
 
 
+
 <div 
 class="nome"
 id="nome">
@@ -237,6 +164,7 @@ Nenhum
 
 
 </div>
+
 
 
 
@@ -262,7 +190,6 @@ id="maca">
 
 
 
-
 <div class="proximos">
 
 
@@ -271,6 +198,7 @@ id="maca">
 Fila de Espera
 
 </h2>
+
 
 
 
@@ -291,11 +219,25 @@ Fila de Espera
 
 
 
-<script
-type="module"
-src="painel.js">
+</main>
 
-</script>
+
+
+
+
+
+
+
+
+<script type="module" src="painel.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
 
 
 
@@ -311,10 +253,14 @@ document.getElementById("horaAtual");
 
 if(hora){
 
+
 hora.innerHTML =
+
 new Date().toLocaleTimeString("pt-BR");
 
+
 }
+
 
 
 }
@@ -329,6 +275,9 @@ atualizarHora();
 
 
 </script>
+
+
+
 
 
 
