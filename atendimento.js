@@ -15,9 +15,7 @@ updateDoc
 let pacienteAtual = null;
 
 
-
 const nome = document.getElementById("nome");
-
 
 
 
@@ -97,17 +95,18 @@ pacienteAtual.maca || "";
 if(document.getElementById("inicio")){
 
 document.getElementById("inicio").value =
-new Date().toLocaleTimeString("pt-BR",
+new Date().toLocaleTimeString(
+"pt-BR",
 {
 hour:"2-digit",
 minute:"2-digit"
-});
+}
+);
 
 }
 
 
 }
-
 
 
 carregarPaciente();
@@ -117,12 +116,9 @@ carregarPaciente();
 
 
 
-
-
 // =====================================
 // PEGAR CHECKBOX
 // =====================================
-
 
 function pegarSelecionados(nomeCampo){
 
@@ -142,7 +138,6 @@ selecionados.push(item.value);
 
 
 return selecionados;
-
 
 }
 
@@ -171,7 +166,7 @@ collection(db,"macas")
 for(const item of macas.docs){
 
 
-const maca=item.data();
+const maca = item.data();
 
 
 
@@ -233,8 +228,6 @@ return;
 
 
 
-
-
 const lado =
 
 document.querySelector(
@@ -250,6 +243,8 @@ const situacao =
 document.querySelector(
 'input[name="situacao"]:checked'
 )?.value || "";
+
+
 
 
 
@@ -370,9 +365,12 @@ Timestamp.now()
 
 
 
+
 try{
 
 
+
+// SALVAR ATENDIMENTO
 
 const atendimentoCriado = await addDoc(
 
@@ -385,6 +383,38 @@ dados
 
 
 
+// GERAR LINK DE AVALIAÇÃO
+
+const linkAvaliacao =
+
+`https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id=${atendimentoCriado.id}`;
+
+
+
+
+
+// SALVAR LINK NO ATENDIMENTO
+
+await updateDoc(
+
+doc(db,"atendimentos",atendimentoCriado.id),
+
+{
+
+linkAvaliacao:
+
+linkAvaliacao
+
+}
+
+);
+
+
+
+
+
+
+// ALTERAR STATUS DO PACIENTE
 
 await updateDoc(
 
@@ -403,6 +433,9 @@ status:"Finalizado"
 
 
 
+
+// LIBERAR MACA
+
 await liberarMaca(
 
 dados.maca
@@ -415,19 +448,17 @@ dados.maca
 
 
 
+
+// GERAR QR CODE
+
 const qr =
 
 document.getElementById("qrcode");
 
 
 
+
 if(qr && typeof QRCode !== "undefined"){
-
-
-
-const link =
-
-`https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id=${atendimentoCriado.id}`;
 
 
 
@@ -441,11 +472,11 @@ qr,
 
 {
 
-text:link,
+text:linkAvaliacao,
 
-width:200,
+width:250,
 
-height:200
+height:250
 
 }
 
@@ -462,13 +493,10 @@ height:200
 
 alert(
 
-"Atendimento finalizado com sucesso!"
+"Atendimento finalizado! QR Code da avaliação gerado."
 
 );
 
-
-
-window.location.href="index.html";
 
 
 
