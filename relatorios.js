@@ -1,3 +1,5 @@
+// relatorios.js
+
 import { db } from "./firebase.js";
 
 import {
@@ -7,130 +9,76 @@ getDocs
 
 
 
+const totalMembros =
+document.getElementById("totalMembros");
+
+
+const totalAtendimentos =
+document.getElementById("totalAtendimentos");
+
+
+const totalEventos =
+document.getElementById("totalEventos");
+
+
+const totalHoras =
+document.getElementById("totalHoras");
+
+
+const tabelaCategorias =
+document.getElementById("tabelaCategorias");
+
+
+const tabelaEventos =
+document.getElementById("tabelaEventos");
+
+
+
+
+
 async function carregarRelatorios(){
 
 
-const atendimentos = await getDocs(
+try{
 
-collection(db,"atendimentos")
+
+
+// ===============================
+// MEMBROS
+// ===============================
+
+
+const usuariosSnapshot = await getDocs(
+
+collection(
+db,
+"usuarios"
+)
 
 );
 
 
 
-let total = 0;
-
-let pacientes = new Set();
-
-let modalidades = {};
-
-let regioes = {};
-
-let lesoes = {};
-
-let situacoes = {};
-
-let somaEVA = 0;
+let membros = 0;
 
 
 
-atendimentos.forEach((item)=>{
+usuariosSnapshot.forEach((doc)=>{
 
 
-const dados = item.data();
-
-
-
-total++;
+const dados = doc.data();
 
 
 
+if(
+dados.perfil?.toLowerCase()
+===
+"membro"
+){
 
-if(dados.paciente){
-
-pacientes.add(dados.paciente);
+membros++;
 
 }
-
-
-
-
-
-// Modalidades
-
-if(dados.modalidade){
-
-modalidades[dados.modalidade] =
-(modalidades[dados.modalidade] || 0) + 1;
-
-}
-
-
-
-
-
-// Regiões da queixa
-
-if(Array.isArray(dados.queixa)){
-
-
-dados.queixa.forEach((q)=>{
-
-
-regioes[q] =
-(regioes[q] || 0) + 1;
-
-
-});
-
-
-}
-
-
-
-
-
-// Lesões
-
-if(Array.isArray(dados.lesao)){
-
-
-dados.lesao.forEach((l)=>{
-
-
-lesoes[l] =
-(lesoes[l] || 0) + 1;
-
-
-});
-
-
-}
-
-
-
-
-
-// Situação final
-
-if(dados.situacaoFinal){
-
-
-situacoes[dados.situacaoFinal] =
-
-(situacoes[dados.situacaoFinal] || 0) + 1;
-
-
-}
-
-
-
-
-
-// EVA
-
-somaEVA += Number(dados.eva || 0);
-
 
 
 });
@@ -139,35 +87,278 @@ somaEVA += Number(dados.eva || 0);
 
 
 
-
-function maior(obj){
-
-
-let maiorValor = "-";
-
-let quantidade = 0;
+totalMembros.innerHTML =
+membros;
 
 
 
-for(const item in obj){
 
 
-if(obj[item] > quantidade){
 
 
-quantidade = obj[item];
 
-maiorValor = item;
+
+// ===============================
+// EVENTOS
+// ===============================
+
+
+const agendaSnapshot = await getDocs(
+
+collection(
+db,
+"agenda"
+)
+
+);
+
+
+
+let eventos = 0;
+
+let atendimentos = 0;
+
+let horas = 0;
+
+
+
+let linhasEventos = "";
+
+
+
+let categorias = {};
+
+
+
+
+
+for(const evento of agendaSnapshot.docs){
+
+
+
+const dados =
+evento.data();
+
+
+
+eventos++;
+
+
+
+
+
+if(
+dados.tipo === "Atendimento"
+){
+
+atendimentos++;
+
+
+}
+
+
+
+
+
+
+if(
+dados.tipo
+){
+
+if(!categorias[dados.tipo]){
+
+categorias[dados.tipo]=0;
+
+}
+
+
+categorias[dados.tipo]++;
 
 
 }
 
 
+
+
+
+
+
+if(
+dados.inicio &&
+dados.fim
+){
+
+
+horas += calcularHoras(
+
+dados.inicio,
+
+dados.fim
+
+);
+
+
+}
+
+
+
+
+
+
+
+
+// participantes
+
+
+const participantes = await getDocs(
+
+collection(
+
+db,
+
+"agenda",
+
+evento.id,
+
+"participantes"
+
+)
+
+);
+
+
+
+linhasEventos += `
+
+
+<tr>
+
+
+<td>
+
+${dados.titulo || "-"}
+
+</td>
+
+
+
+<td>
+
+${dados.data || "-"}
+
+</td>
+
+
+
+<td>
+
+${participantes.size}
+
+</td>
+
+
+
+</tr>
+
+
+`;
+
+
+
+
+
 }
 
 
 
-return maiorValor;
+
+
+totalEventos.innerHTML =
+eventos;
+
+
+totalAtendimentos.innerHTML =
+atendimentos;
+
+
+totalHoras.innerHTML =
+horas + "h";
+
+
+
+
+
+// ===============================
+// CATEGORIAS
+// ===============================
+
+
+tabelaCategorias.innerHTML = "";
+
+
+
+Object.keys(categorias)
+.forEach((categoria)=>{
+
+
+tabelaCategorias.innerHTML += `
+
+
+<tr>
+
+<td>
+
+${categoria}
+
+</td>
+
+
+<td>
+
+${categorias[categoria]}
+
+</td>
+
+
+</tr>
+
+
+`;
+
+
+
+});
+
+
+
+
+
+
+
+// ===============================
+// EVENTOS
+// ===============================
+
+
+tabelaEventos.innerHTML =
+linhasEventos;
+
+
+
+
+
+
+}catch(error){
+
+
+console.error(
+"Erro relatórios:",
+error
+);
+
+
+}
+
 
 
 }
@@ -177,55 +368,50 @@ return maiorValor;
 
 
 
-document.getElementById("total").innerHTML =
 
-total;
-
-
-
-document.getElementById("pacientes").innerHTML =
-
-pacientes.size;
+function calcularHoras(
+inicio,
+fim
+){
 
 
+const ini =
+inicio.split(":");
 
-document.getElementById("modalidade").innerHTML =
 
-maior(modalidades);
+const fimP =
+fim.split(":");
 
 
 
-document.getElementById("regiao").innerHTML =
+const minutosIni =
 
-maior(regioes);
-
-
-
-document.getElementById("lesao").innerHTML =
-
-maior(lesoes);
+Number(ini[0])*60
++
+Number(ini[1]);
 
 
 
-document.getElementById("eva").innerHTML =
+const minutosFim =
 
-total > 0 ?
-
-(somaEVA / total).toFixed(1)
-
-:
-
-0;
+Number(fimP[0])*60
++
+Number(fimP[1]);
 
 
 
-document.getElementById("situacao").innerHTML =
+return (
 
-maior(situacoes);
+minutosFim -
+minutosIni
 
+)/60;
 
 
 }
+
+
+
 
 
 
