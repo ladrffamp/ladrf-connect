@@ -1,5 +1,8 @@
 // minhas-escalas.js
 
+console.log("MINHAS ESCALAS JS CARREGADO");
+
+
 import { db, auth } from "./firebase.js";
 
 
@@ -33,14 +36,18 @@ const lista = document.getElementById("listaEscalas");
 async function carregarEscalas(uid){
 
 
-console.log("Buscando escalas para UID:");
-console.log(uid);
+console.log("======================");
+console.log("BUSCANDO ESCALAS");
+console.log("UID:", uid);
+console.log("======================");
 
 
 
 if(!lista){
 
-console.error("Elemento listaEscalas não encontrado");
+console.error(
+"Elemento listaEscalas não encontrado"
+);
 
 return;
 
@@ -86,6 +93,7 @@ agendaSnapshot.size
 lista.innerHTML = "";
 
 
+
 let encontrou = false;
 
 
@@ -96,7 +104,7 @@ for(const acaoDoc of agendaSnapshot.docs){
 
 
 console.log(
-"Verificando ação:",
+"ID DA AÇÃO:",
 acaoDoc.id
 );
 
@@ -107,9 +115,10 @@ const dadosAcao = acaoDoc.data();
 
 
 console.log(
-"Dados da ação:",
+"DADOS DA AÇÃO:",
 dadosAcao
 );
+
 
 
 
@@ -134,7 +143,7 @@ acaoDoc.id,
 
 console.log(
 
-"Participantes da ação:",
+"Quantidade participantes:",
 
 participantesSnapshot.size
 
@@ -143,12 +152,19 @@ participantesSnapshot.size
 
 
 
+
 participantesSnapshot.forEach((item)=>{
 
 
 console.log(
-"UID participante:",
+"PARTICIPANTE UID:",
 item.id
+);
+
+
+console.log(
+"DADOS PARTICIPANTE:",
+item.data()
 );
 
 
@@ -158,11 +174,14 @@ item.id
 
 
 
+
 const participante = participantesSnapshot.docs.find(
 
-(item)=>item.id === uid
+(item)=> item.id === uid
 
 );
+
+
 
 
 
@@ -174,8 +193,7 @@ encontrou = true;
 
 
 
-const dadosParticipante =
-participante.data();
+const dadosParticipante = participante.data();
 
 
 
@@ -190,7 +208,7 @@ lista.innerHTML += `
 
 <i class="fa-solid fa-calendar-check"></i>
 
-${dadosAcao.titulo || "Ação sem título"}
+${dadosAcao.titulo || dadosAcao.nome || "Ação sem título"}
 
 </h2>
 
@@ -200,13 +218,14 @@ ${dadosAcao.titulo || "Ação sem título"}
 
 📅 Data:
 
-<b>
+<strong>
 
 ${dadosAcao.data || "-"}
 
-</b>
+</strong>
 
 </p>
+
 
 
 
@@ -214,13 +233,14 @@ ${dadosAcao.data || "-"}
 
 📍 Local:
 
-<b>
+<strong>
 
 ${dadosAcao.local || "-"}
 
-</b>
+</strong>
 
 </p>
+
 
 
 
@@ -228,7 +248,7 @@ ${dadosAcao.local || "-"}
 
 ⏰ Horário:
 
-<b>
+<strong>
 
 ${dadosAcao.inicio || "-"}
 
@@ -236,9 +256,10 @@ até
 
 ${dadosAcao.fim || "-"}
 
-</b>
+</strong>
 
 </p>
+
 
 
 
@@ -257,12 +278,14 @@ ${dadosParticipante.presenca || "Pendente"}
 
 
 
+
 <div style="
 display:flex;
 gap:10px;
-margin-top:15px;
 flex-wrap:wrap;
+margin-top:15px;
 ">
+
 
 
 <button
@@ -273,9 +296,12 @@ onclick="confirmarPresenca('${acaoDoc.id}')"
 
 >
 
-✅ Confirmar presença
+<i class="fa-solid fa-check"></i>
+
+Confirmar presença
 
 </button>
+
 
 
 
@@ -288,18 +314,20 @@ onclick="recusarPresenca('${acaoDoc.id}')"
 
 >
 
-❌ Não poderei comparecer
+<i class="fa-solid fa-xmark"></i>
+
+Não poderei comparecer
 
 </button>
 
 
 
-</div>
-
-
 
 </div>
 
+
+
+</div>
 
 
 `;
@@ -315,11 +343,13 @@ onclick="recusarPresenca('${acaoDoc.id}')"
 
 
 
+
 if(!encontrou){
 
 
 console.warn(
-"Nenhuma escala encontrada para este UID"
+"Nenhuma escala encontrada para:",
+uid
 );
 
 
@@ -337,15 +367,17 @@ Nenhuma escala encontrada.
 </h3>
 
 
+
 <p>
 
-UID pesquisado:
+Usuário:
 
 <br>
 
 ${uid}
 
 </p>
+
 
 
 </div>
@@ -359,12 +391,14 @@ ${uid}
 
 
 
+
+
 }catch(error){
 
 
 console.error(
 
-"Erro ao carregar escalas:",
+"ERRO AO BUSCAR ESCALAS:",
 
 error
 
@@ -408,15 +442,17 @@ window.confirmarPresenca = async function(idAcao){
 const usuario = auth.currentUser;
 
 
+
 if(!usuario){
 
 alert(
-"Usuário não logado."
+"Usuário não autenticado."
 );
 
 return;
 
 }
+
 
 
 
@@ -462,7 +498,9 @@ carregarEscalas(usuario.uid);
 }catch(error){
 
 
-console.error(error);
+console.error(
+error
+);
 
 
 alert(
@@ -493,15 +531,17 @@ window.recusarPresenca = async function(idAcao){
 const usuario = auth.currentUser;
 
 
+
 if(!usuario){
 
 alert(
-"Usuário não logado."
+"Usuário não autenticado."
 );
 
 return;
 
 }
+
 
 
 
@@ -547,7 +587,9 @@ carregarEscalas(usuario.uid);
 }catch(error){
 
 
-console.error(error);
+console.error(
+error
+);
 
 
 alert(
@@ -584,15 +626,23 @@ if(usuario){
 
 
 
-console.log("====================");
+console.log("======================");
 
-console.log("USUÁRIO LOGADO");
+console.log(
+"USUÁRIO LOGADO"
+);
 
-console.log("UID:", usuario.uid);
+console.log(
+"UID:",
+usuario.uid
+);
 
-console.log("EMAIL:", usuario.email);
+console.log(
+"EMAIL:",
+usuario.email
+);
 
-console.log("====================");
+console.log("======================");
 
 
 
@@ -607,9 +657,19 @@ usuario.uid
 }else{
 
 
+console.log(
+"Nenhum usuário logado"
+);
+
+
+
+if(lista){
+
 lista.innerHTML =
 
 "Usuário não logado.";
+
+}
 
 
 }
