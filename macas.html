@@ -4,177 +4,66 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Controle de Macas - LADRF Connect</title>
 
+<title>Macas | LADRF Connect</title>
 
-<style>
 
-body{
+<link rel="stylesheet" href="styles.css">
 
-font-family:Arial,sans-serif;
 
-background:#f4f6f9;
-
-padding:30px;
-
-}
-
-
-
-/* BOTÃO MENU */
-
-.btn-voltar{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-z-index:9999;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-font-size:15px;
-
-cursor:pointer;
-
-box-shadow:0 5px 15px rgba(0,0,0,.2);
-
-}
-
-
-
-.btn-voltar:hover{
-
-background:#075c2b;
-
-}
-
-
-
-
-
-h1{
-
-color:#0B7A3B;
-
-}
-
-
-
-.container{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-
-gap:20px;
-
-}
-
-
-
-.maca{
-
-background:white;
-
-padding:25px;
-
-border-radius:15px;
-
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-
-text-align:center;
-
-}
-
-
-
-.livre{
-
-border-top:10px solid #4CAF50;
-
-}
-
-
-
-.ocupada{
-
-border-top:10px solid #E53935;
-
-}
-
-
-
-button{
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-
-
-button:hover{
-
-opacity:.85;
-
-}
-
-
-
-</style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
-
 
 
 <body>
 
 
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
-
-🏠 Menu Inicial
-
-</button>
+<header class="topbar">
 
 
+<a href="index.html" class="btn-inicio">
+
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</a>
 
 
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
 
 <h1>
 
-Controle de Macas
+LADRF Connect
 
 </h1>
 
 
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
 
 
+</div>
 
-<div class="container" id="macas">
 
 </div>
 
@@ -184,10 +73,122 @@ Controle de Macas
 
 
 
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
+Carregando...
+
+</strong>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<small id="horaAtual">
+
+00:00:00
+
+</small>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+
+<main class="container">
+
+
+
+<section class="page-title">
+
+
+<h1>
+
+<i class="fa-solid fa-bed"></i>
+
+Controle de Macas
+
+</h1>
+
+
+<p>
+
+Gerenciamento da disponibilidade das macas de atendimento.
+
+</p>
+
+
+</section>
+
+
+
+
+
+
+
+<div class="cards" id="macas">
+
+
+</div>
+</main>
+
+
+
+
 <script type="module" src="macas.js"></script>
 
 
 <script type="module" src="permissoes.js"></script>
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora=document.getElementById("horaAtual");
+
+
+if(hora){
+
+
+hora.innerHTML=new Date()
+
+.toLocaleTimeString("pt-BR");
+
+
+}
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
 
 
 
