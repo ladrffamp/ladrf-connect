@@ -465,3 +465,42 @@ alert(
 
 
 });
+
+// =====================================
+// NOVO CADASTRO
+// =====================================
+
+window.novoCadastro = function(){
+
+
+const formulario = document.getElementById("formCadastro");
+
+
+if(formulario){
+
+formulario.reset();
+
+}
+
+
+
+// limpa QR Code antigo
+
+const qrCode = document.getElementById("qrcode");
+
+
+if(qrCode){
+
+qrCode.innerHTML = "";
+
+}
+
+
+
+// volta foco para nome
+
+document.getElementById("nome").focus();
+
+
+
+};
