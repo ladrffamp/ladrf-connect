@@ -7,127 +7,14 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Gerenciar Ação - LADRF</title>
+<title>Gerenciar Ação | LADRF Connect</title>
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="styles.css">
 
 
-<style>
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial, sans-serif;
-}
-
-
-body{
-
-    background:#111;
-    color:white;
-    padding:30px;
-
-}
-
-
-.btn-voltar{
-
-    background:#00d26a;
-    color:#111;
-    padding:12px 20px;
-    border:none;
-    border-radius:10px;
-    font-weight:bold;
-    cursor:pointer;
-    margin-bottom:30px;
-
-}
-
-
-header{
-
-    margin-bottom:30px;
-
-}
-
-
-h1{
-
-    color:#00d26a;
-    font-size:40px;
-    margin-bottom:10px;
-
-}
-
-
-h2{
-
-    margin-bottom:25px;
-
-}
-
-
-.container{
-
-    width:90%;
-    max-width:900px;
-    margin:auto;
-
-}
-
-
-.card{
-
-    background:#222;
-    padding:30px;
-    border-radius:20px;
-    margin-bottom:25px;
-
-}
-
-
-#listaMembros{
-
-    background:#1b1b1b;
-    border-radius:15px;
-    padding:20px;
-    min-height:150px;
-
-}
-
-
-.membro{
-
-    padding:15px;
-    border-bottom:1px solid #444;
-
-}
-
-
-button#salvar{
-
-    background:#00d26a;
-    color:#111;
-    border:none;
-    padding:15px 35px;
-    border-radius:12px;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
-
-}
-
-
-button#salvar:hover{
-
-    background:#00a854;
-
-}
-
-
-</style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
@@ -136,61 +23,232 @@ button#salvar:hover{
 <body>
 
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
 
-🏠 Menu Inicial
-
-</button>
+<header class="topbar">
 
 
+<a href="index.html" class="btn-inicio">
 
-<div class="container">
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</a>
 
 
-<header>
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
 
 <h1>
-<i class="fa-solid fa-users"></i>
-Escala da Ação
+
+LADRF Connect
+
 </h1>
 
 
-<h2 id="nomeAcao">
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
 Carregando...
-</h2>
+
+</strong>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<small id="horaAtual">
+
+--:--:--
+
+</small>
+
+
+</div>
+
+
 
 </header>
+
+
+
+
+
+
+
+<main class="container">
+
+
+
+
+
+<section class="page-title">
+
+
+<h1>
+
+<i class="fa-solid fa-users"></i>
+
+Escala da Ação
+
+</h1>
+
+
+<p>
+
+Selecione os membros responsáveis pela atividade.
+
+</p>
+
+
+</section>
+
+
+
+
 
 
 
 <div class="card">
 
 
+<h2 id="nomeAcao">
+
+Carregando ação...
+
+</h2>
+
+
+
 <div id="listaMembros">
+
+
+<div style="text-align:center">
+
+<i class="fa-solid fa-spinner fa-spin"></i>
 
 Carregando membros...
 
 </div>
 
 
+
+</div>
+
+
 </div>
 
 
 
-<button id="salvar">
+
+
+
+
+<button id="salvar" class="btn-success">
+
+
+<i class="fa-solid fa-check"></i>
 
 Salvar escala
+
 
 </button>
 
 
-</div>
+
+
+
+</main>
+
+
+
+
+
+
 
 
 
 <script type="module" src="gerenciar-acao.js"></script>
 
 
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora = document.getElementById("horaAtual");
+
+
+if(hora){
+
+
+hora.innerHTML = new Date()
+
+.toLocaleTimeString("pt-BR");
+
+
+}
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
+
+
+
 </body>
+
 
 </html>
