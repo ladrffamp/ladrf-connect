@@ -274,13 +274,14 @@ ${dadosParticipante.presenca || "Pendente"}
 
 
 
+${dadosParticipante.presenca === "Pendente" ? `
+
 <div style="
 display:flex;
 gap:10px;
 flex-wrap:wrap;
 margin-top:15px;
 ">
-
 
 
 <button
@@ -315,8 +316,25 @@ Não poderei comparecer
 </button>
 
 
+</div>
+
+` : dadosParticipante.presenca === "Confirmado" ? `
+
+<div class="card">
+
+✅ Presença confirmada
 
 </div>
+
+` : `
+
+<div class="card">
+
+❌ Você informou que não poderá comparecer.
+
+</div>
+
+`}
 
 
 
