@@ -46,18 +46,13 @@ const mensagem = document
 
 try {
 
-
+mensagem.innerHTML = "";
 
 await signInWithEmailAndPassword(
-
 auth,
-
 email,
-
 senha
-
 );
-
 
 
 
