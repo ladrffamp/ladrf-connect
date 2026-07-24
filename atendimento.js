@@ -709,6 +709,27 @@ height:250
 }
 
 
+  
+  // MOSTRAR BOTÃO PRÓXIMO ATENDIMENTO
+
+const botaoProximo =
+document.getElementById("proximoAtendimento");
+
+
+if(botaoProximo){
+
+botaoProximo.style.display = "inline-block";
+
+
+botaoProximo.onclick = ()=>{
+
+window.location.reload();
+
+};
+
+}
+
+
 
 
 
