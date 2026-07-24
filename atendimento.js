@@ -12,7 +12,6 @@ updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-
 // =====================================
 // VARIÁVEIS
 // =====================================
@@ -24,7 +23,6 @@ const campoNome = document.getElementById("nome");
 
 const resultadoPacientes =
 document.getElementById("resultadoPacientes");
-
 
 
 
@@ -45,12 +43,15 @@ campoNome.value.toLowerCase().trim();
 
 if(texto.length < 3){
 
-resultadoPacientes.innerHTML="";
+resultadoPacientes.innerHTML = "";
 
 return;
 
 }
 
+
+
+try{
 
 
 const lista = await getDocs(
@@ -76,14 +77,13 @@ paciente.nome.toLowerCase().includes(texto)
 ){
 
 
-
 const div = document.createElement("div");
 
 
 div.className="lista-item";
 
 
-div.innerHTML =
+div.textContent =
 paciente.nome;
 
 
@@ -121,6 +121,15 @@ paciente.modalidade || "";
 
 
 
+if(document.getElementById("maca")){
+
+document.getElementById("maca").value =
+paciente.maca || "";
+
+}
+
+
+
 resultadoPacientes.innerHTML="";
 
 
@@ -135,8 +144,20 @@ resultadoPacientes.appendChild(div);
 }
 
 
-
 });
+
+
+}catch(error){
+
+
+console.error(
+"Erro ao buscar pacientes:",
+error
+);
+
+
+}
+
 
 
 });
@@ -152,6 +173,7 @@ resultadoPacientes.appendChild(div);
 // =====================================
 // CARREGAR PACIENTE EM ATENDIMENTO
 // =====================================
+
 
 async function carregarPaciente(){
 
@@ -201,9 +223,12 @@ id:item.id,
 
 
 
+if(!pacienteAtual){
 
+return;
 
-if(pacienteAtual){
+}
+
 
 
 campoNome.value =
@@ -226,9 +251,16 @@ pacienteAtual.modalidade || "";
 
 
 
+if(document.getElementById("maca")){
+
 document.getElementById("maca").value =
 pacienteAtual.maca || "";
 
+}
+
+
+
+if(document.getElementById("inicio")){
 
 
 document.getElementById("inicio").value =
@@ -239,7 +271,6 @@ new Date().toLocaleTimeString(
 hour:"2-digit",
 minute:"2-digit"
 }
-
 );
 
 
@@ -249,56 +280,48 @@ minute:"2-digit"
 
 }catch(error){
 
+
 console.error(
 "Erro ao carregar paciente:",
 error
 );
 
-}
-
-
 
 }
+
+
+}
+
 
 
 carregarPaciente();
-
-
-
-
-
-
-
 // =====================================
-// PEGAR CHECKBOX
+// PEGAR CHECKBOXES
 // =====================================
 
 function pegarSelecionados(nomeCampo){
 
 
-const lista = [];
+const selecionados = [];
 
 
 
 document
-.querySelectorAll(
-`input[name="${nomeCampo}"]:checked`
-)
+.querySelectorAll(`input[name="${nomeCampo}"]:checked`)
 .forEach((item)=>{
 
 
-lista.push(item.value);
+selecionados.push(item.value);
 
 
 });
 
 
 
-return lista;
+return selecionados;
+
 
 }
-
-
 
 
 
@@ -312,12 +335,21 @@ return lista;
 async function liberarMaca(numero){
 
 
-if(!numero) return;
+if(!numero){
 
+return;
+
+}
+
+
+
+try{
 
 
 const macas = await getDocs(
+
 collection(db,"macas")
+
 );
 
 
@@ -332,6 +364,7 @@ const maca = item.data();
 if(
 Number(maca.numero) === Number(numero)
 ){
+
 
 
 await updateDoc(
@@ -349,16 +382,28 @@ paciente:""
 );
 
 
+
+}
+
+
+}
+
+
+
+}catch(error){
+
+
+console.error(
+"Erro ao liberar maca:",
+error
+);
+
+
 }
 
 
 
 }
-
-
-
-}
-
 
 
 
@@ -370,6 +415,7 @@ paciente:""
 // =====================================
 // FINALIZAR ATENDIMENTO
 // =====================================
+
 
 window.salvarAtendimento = async function(){
 
@@ -385,7 +431,9 @@ alert(
 
 return;
 
+
 }
+
 
 
 
@@ -395,69 +443,117 @@ const dados = {
 
 
 pacienteId:
+
 pacienteAtual.id,
 
 
+
 paciente:
+
 pacienteAtual.nome,
 
 
+
 idade:
-document.getElementById("idade").value,
+
+document.getElementById("idade")?.value || "",
+
 
 
 sexo:
-document.getElementById("sexo").value,
+
+document.getElementById("sexo")?.value || "",
+
 
 
 modalidade:
-document.getElementById("modalidade").value,
+
+document.getElementById("modalidade")?.value || "",
+
 
 
 evento:
-document.getElementById("evento").value,
+
+document.getElementById("evento")?.value || "",
+
 
 
 membro:
-document.getElementById("membro").value,
+
+document.getElementById("membro")?.value || "",
+
 
 
 maca:
-document.getElementById("maca").value,
+
+document.getElementById("maca")?.value || "",
+
 
 
 inicio:
-document.getElementById("inicio").value,
+
+document.getElementById("inicio")?.value || "",
+
 
 
 termino:
-document.getElementById("termino").value,
+
+document.getElementById("termino")?.value || "",
+
 
 
 queixa:
+
 pegarSelecionados("queixa"),
 
 
+
+lado:
+
+document.querySelector(
+'input[name="lado"]:checked'
+)?.value || "",
+
+
+
 lesao:
+
 pegarSelecionados("lesao"),
 
 
+
 condutas:
+
 pegarSelecionados("conduta"),
 
 
+
 eva:
+
 Number(
-document.getElementById("eva").value
+document.getElementById("eva")?.value || 0
 ),
 
 
+
 observacoes:
-document.getElementById("observacoes").value,
+
+document.getElementById("observacoes")?.value || "",
+
+
+
+situacaoFinal:
+
+document.querySelector(
+'input[name="situacao"]:checked'
+)?.value || "",
+
 
 
 data:
+
 Timestamp.now()
+
 
 
 };
@@ -466,13 +562,13 @@ Timestamp.now()
 
 
 
-try{
 
+try{
 
 
 // SALVAR ATENDIMENTO
 
-const atendimento = await addDoc(
+const atendimentoCriado = await addDoc(
 
 collection(db,"atendimentos"),
 
@@ -485,13 +581,12 @@ dados
 
 
 
-
-// LINK DA AVALIAÇÃO
+// LINK AVALIAÇÃO
 
 const linkAvaliacao =
 
-`https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id=${atendimento.id}`;
 
+`https://ladrffamp.github.io/ladrf-connect/avaliacao.html?id=${atendimentoCriado.id}`;
 
 
 
@@ -503,7 +598,7 @@ await updateDoc(
 doc(
 db,
 "atendimentos",
-atendimento.id
+atendimentoCriado.id
 ),
 
 {
@@ -519,8 +614,7 @@ linkAvaliacao
 
 
 
-
-// FINALIZAR PACIENTE
+// ATUALIZA PACIENTE
 
 
 await updateDoc(
@@ -545,12 +639,12 @@ status:"Finalizado"
 
 
 
-// LIBERAR MACA
+// LIBERA MACA
+
 
 await liberarMaca(
 dados.maca
 );
-
 
 
 
@@ -580,8 +674,6 @@ if(area){
 area.style.display="block";
 
 }
-
-
 
 
 
@@ -621,52 +713,21 @@ height:250
 
 
 
+// BOTÃO PRÓXIMO
 
-
-// BOTÃO PRÓXIMO ATENDIMENTO
-
-
-let botao =
-document.getElementById(
-"proximoAtendimento"
-);
+const botaoProximo =
+document.getElementById("proximoAtendimento");
 
 
 
-if(!botao){
+if(botaoProximo){
 
 
-botao =
-document.createElement("button");
-
-
-botao.id =
-"proximoAtendimento";
-
-
-botao.className =
-"btn-success";
-
-
-botao.innerHTML =
-"➡️ Próximo Atendimento";
+botaoProximo.style.display="inline-block";
 
 
 
-botao.style.marginTop =
-"20px";
-
-
-
-area.appendChild(botao);
-
-
-
-}
-
-
-
-botao.onclick = ()=>{
+botaoProximo.onclick = ()=>{
 
 
 window.location.reload();
@@ -674,6 +735,9 @@ window.location.reload();
 
 };
 
+
+
+}
 
 
 
@@ -687,21 +751,19 @@ alert(
 
 
 
-
 }catch(error){
-
 
 
 console.error(error);
 
 
-
 alert(
-"Erro ao finalizar atendimento: "
-+
-error.message
-);
 
+"Erro ao finalizar atendimento: "
+
++error.message
+
+);
 
 
 }
@@ -709,3 +771,73 @@ error.message
 
 
 };
+// =====================================
+// VERIFICAÇÃO FINAL DA PÁGINA
+// =====================================
+
+
+// Garante que o botão próximo começa escondido
+
+const botaoProximoInicial =
+document.getElementById("proximoAtendimento");
+
+
+if(botaoProximoInicial){
+
+botaoProximoInicial.style.display="none";
+
+}
+
+
+
+// =====================================
+// LIMPAR FORMULÁRIO PARA PRÓXIMO PACIENTE
+// =====================================
+
+window.proximoAtendimento = function(){
+
+
+window.location.reload();
+
+
+};
+
+
+
+
+// =====================================
+// ATUALIZAR HORA DO CABEÇALHO
+// =====================================
+
+function atualizarHora(){
+
+
+const hora =
+document.getElementById("horaAtual");
+
+
+
+if(hora){
+
+
+hora.innerHTML =
+
+new Date().toLocaleTimeString(
+"pt-BR"
+);
+
+
+}
+
+
+}
+
+
+
+setInterval(
+atualizarHora,
+1000
+);
+
+
+atualizarHora();
