@@ -7,6 +7,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
 <title>Movimentações | LADRF Connect</title>
 
 
@@ -26,7 +27,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 
 
-<header class="topbar">
+<header>
+
 
 
 <a href="index.html" class="btn-inicio">
@@ -39,6 +41,8 @@ Início
 
 
 </a>
+
+
 
 
 
@@ -71,6 +75,7 @@ Sistema de Gestão da Liga
 </div>
 
 
+
 </div>
 
 
@@ -79,15 +84,14 @@ Sistema de Gestão da Liga
 
 
 
-<div class="usuario-info">
+<div class="usuario">
 
 
-<strong id="nomeUsuario">
+<h3 id="nomeUsuario">
 
 Carregando...
 
-</strong>
-
+</h3>
 
 
 <span id="perfilUsuario">
@@ -97,14 +101,11 @@ Perfil
 </span>
 
 
-
-
-<small id="horaAtual">
+<p id="horaAtual">
 
 00:00:00
 
-</small>
-
+</p>
 
 
 </div>
@@ -133,7 +134,7 @@ Perfil
 
 <i class="fa-solid fa-clock-rotate-left"></i>
 
-Movimentações de Estoque
+Movimentações
 
 </h1>
 
@@ -141,7 +142,7 @@ Movimentações de Estoque
 
 <p>
 
-Histórico de entradas e saídas de materiais.
+Histórico de entrada e saída de materiais.
 
 </p>
 
@@ -158,44 +159,18 @@ Histórico de entradas e saídas de materiais.
 <div class="card">
 
 
-
-<div class="flex-between">
-
-
 <h2>
 
-<i class="fa-solid fa-box"></i>
-
-Histórico de Movimentações
+Histórico do Estoque
 
 </h2>
-
-
-
-<button 
-class="btn-success"
-onclick="window.location='materiais.html'">
-
-
-<i class="fa-solid fa-arrow-left"></i>
-
-
-Materiais
-
-
-</button>
-
-
-
-</div>
-
-
 
 
 
 
 
 <div class="table-responsive">
+
 
 
 <table>
@@ -256,21 +231,14 @@ Motivo
 
 <tr>
 
-
 <td colspan="5" style="text-align:center">
 
-
-<i class="fa-solid fa-spinner fa-spin"></i>
-
-
 Carregando movimentações...
-
 
 </td>
 
 
 </tr>
-
 
 
 </tbody>
@@ -287,14 +255,18 @@ Carregando movimentações...
 
 </div>
 
-
-
-
-
-
-
 </main>
 
+
+
+
+
+
+<footer>
+
+LADRF Connect • Controle de Estoque
+
+</footer>
 
 
 
@@ -323,18 +295,21 @@ function atualizarHora(){
 const hora=document.getElementById("horaAtual");
 
 
+
 if(hora){
 
 
-hora.innerHTML =
+hora.innerHTML=new Date()
 
-new Date().toLocaleTimeString("pt-BR");
+.toLocaleTimeString("pt-BR");
+
+
+}
+
 
 
 }
 
-
-}
 
 
 setInterval(atualizarHora,1000);
@@ -345,6 +320,7 @@ atualizarHora();
 
 
 </script>
+
 
 
 
