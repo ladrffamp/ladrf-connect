@@ -12,14 +12,26 @@ updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
 // =====================================
-// BUSCA DE PACIENTE PELO NOME
+// VARIÁVEIS
 // =====================================
+
+let pacienteAtual = null;
+
 
 const campoNome = document.getElementById("nome");
 
 const resultadoPacientes =
 document.getElementById("resultadoPacientes");
+
+
+
+
+
+// =====================================
+// BUSCAR PACIENTE PELO NOME
+// =====================================
 
 
 if(campoNome && resultadoPacientes){
@@ -66,13 +78,15 @@ paciente.nome.toLowerCase().includes(texto)
 ){
 
 
+
 const div = document.createElement("div");
 
 
 div.className="lista-item";
 
 
-div.innerHTML = paciente.nome;
+div.innerHTML =
+paciente.nome;
 
 
 
@@ -119,6 +133,7 @@ resultadoPacientes.innerHTML="";
 resultadoPacientes.appendChild(div);
 
 
+
 }
 
 
@@ -129,20 +144,10 @@ resultadoPacientes.appendChild(div);
 
 
 }
-
-
-
-let pacienteAtual = null;
-
-
-const nome = document.getElementById("nome");
-
-
-
-
 // =====================================
 // CARREGAR PACIENTE EM ATENDIMENTO
 // =====================================
+
 
 async function carregarPaciente(){
 
@@ -162,11 +167,6 @@ const resultado = await getDocs(busca);
 
 
 if(resultado.empty){
-
-
-nome.innerHTML =
-"Nenhum paciente em atendimento";
-
 
 return;
 
@@ -190,7 +190,30 @@ id:item.id,
 
 
 
-nome.value = pacienteAtual.nome || "";
+
+if(pacienteAtual){
+
+
+campoNome.value =
+pacienteAtual.nome || "";
+
+
+
+if(document.getElementById("idade")){
+
+document.getElementById("idade").value =
+pacienteAtual.idade || "";
+
+}
+
+
+
+if(document.getElementById("sexo")){
+
+document.getElementById("sexo").value =
+pacienteAtual.sexo || "";
+
+}
 
 
 
@@ -215,6 +238,7 @@ pacienteAtual.maca || "";
 if(document.getElementById("inicio")){
 
 document.getElementById("inicio").value =
+
 new Date().toLocaleTimeString(
 "pt-BR",
 {
@@ -229,6 +253,9 @@ minute:"2-digit"
 }
 
 
+}
+
+
 carregarPaciente();
 
 
@@ -236,14 +263,17 @@ carregarPaciente();
 
 
 
+
 // =====================================
-// PEGAR CHECKBOX
+// PEGAR CHECKBOXES
 // =====================================
+
 
 function pegarSelecionados(nomeCampo){
 
 
-const selecionados = [];
+const selecionados=[];
+
 
 
 document
@@ -257,10 +287,11 @@ selecionados.push(item.value);
 });
 
 
+
 return selecionados;
 
-}
 
+}
 
 
 
@@ -271,8 +302,8 @@ return selecionados;
 // LIBERAR MACA
 // =====================================
 
-async function liberarMaca(numero){
 
+async function liberarMaca(numero){
 
 
 const macas = await getDocs(
@@ -286,12 +317,13 @@ collection(db,"macas")
 for(const item of macas.docs){
 
 
-const maca = item.data();
+const maca=item.data();
 
 
 
-if(Number(maca.numero) === Number(numero)){
-
+if(
+Number(maca.numero) === Number(numero)
+){
 
 
 await updateDoc(
@@ -322,8 +354,6 @@ paciente:""
 
 
 
-
-
 // =====================================
 // FINALIZAR ATENDIMENTO
 // =====================================
@@ -337,7 +367,7 @@ if(!pacienteAtual){
 
 
 alert(
-"Nenhum paciente em atendimento."
+"Selecione um paciente."
 );
 
 
@@ -348,149 +378,83 @@ return;
 
 
 
-const lado =
-
-document.querySelector(
-'input[name="lado"]:checked'
-)?.value || "";
-
-
-
-
-
-const situacao =
-
-document.querySelector(
-'input[name="situacao"]:checked'
-)?.value || "";
-
-
-
-
-
-
-
-
 const dados = {
 
 
 pacienteId:
-
 pacienteAtual.id,
 
 
 paciente:
-
 pacienteAtual.nome,
 
 
 idade:
-
 document.getElementById("idade")?.value || "",
 
 
 sexo:
-
 document.getElementById("sexo")?.value || "",
 
 
-
 modalidade:
-
 document.getElementById("modalidade")?.value || "",
 
 
-
 evento:
-
 document.getElementById("evento")?.value || "",
 
 
-
 membro:
-
 document.getElementById("membro")?.value || "",
 
 
-
 maca:
-
-document.getElementById("maca")?.value || pacienteAtual.maca || "",
-
+document.getElementById("maca")?.value || "",
 
 
 inicio:
-
 document.getElementById("inicio")?.value || "",
 
 
-
 termino:
-
 document.getElementById("termino")?.value || "",
 
 
-
 queixa:
-
 pegarSelecionados("queixa"),
 
 
-
-lado,
-
-
-
 lesao:
-
 pegarSelecionados("lesao"),
 
 
+condutas:
+pegarSelecionados("conduta"),
+
 
 eva:
-
 Number(
 document.getElementById("eva")?.value || 0
 ),
 
 
-
-condutas:
-
-pegarSelecionados("conduta"),
-
-
-
 observacoes:
-
 document.getElementById("observacoes")?.value || "",
 
 
-
-situacaoFinal:
-
-situacao,
-
-
-
 data:
-
 Timestamp.now()
 
 
 };
+  try{
 
 
-
-
-
-
-
-try{
-
-
-
+// =====================================
 // SALVAR ATENDIMENTO
+// =====================================
+
 
 const atendimentoCriado = await addDoc(
 
@@ -503,7 +467,11 @@ dados
 
 
 
-// GERAR LINK DE AVALIAÇÃO
+
+// =====================================
+// GERAR LINK DA AVALIAÇÃO
+// =====================================
+
 
 const linkAvaliacao =
 
@@ -513,7 +481,6 @@ const linkAvaliacao =
 
 
 
-// SALVAR LINK NO ATENDIMENTO
 
 await updateDoc(
 
@@ -521,9 +488,7 @@ doc(db,"atendimentos",atendimentoCriado.id),
 
 {
 
-linkAvaliacao:
-
-linkAvaliacao
+linkAvaliacao: linkAvaliacao
 
 }
 
@@ -534,7 +499,10 @@ linkAvaliacao
 
 
 
-// ALTERAR STATUS DO PACIENTE
+// =====================================
+// ATUALIZAR PACIENTE
+// =====================================
+
 
 await updateDoc(
 
@@ -553,8 +521,10 @@ status:"Finalizado"
 
 
 
-
+// =====================================
 // LIBERAR MACA
+// =====================================
+
 
 await liberarMaca(
 
@@ -568,19 +538,22 @@ dados.maca
 
 
 
-
-// GERAR QR CODE
-
-const qr = document.getElementById("qrcode");
-
-const area = document.getElementById("areaAvaliacao");
-
-const link = document.getElementById("linkAvaliacao");
+// =====================================
+// MOSTRAR QR CODE
+// =====================================
 
 
-console.log("QR elemento:", qr);
+const area =
+document.getElementById("areaAvaliacao");
 
-console.log("QRCode biblioteca:", QRCode);
+
+const qr =
+document.getElementById("qrcode");
+
+
+const link =
+document.getElementById("linkAvaliacao");
+
 
 
 if(area){
@@ -588,6 +561,7 @@ if(area){
 area.style.display="block";
 
 }
+
 
 
 
@@ -599,15 +573,18 @@ link.href = linkAvaliacao;
 
 
 
+
+
 if(qr && typeof QRCode !== "undefined"){
 
 
 qr.innerHTML="";
 
 
-new QRCode(qr, {
 
-text: linkAvaliacao,
+new QRCode(qr,{
+
+text:linkAvaliacao,
 
 width:250,
 
@@ -616,46 +593,64 @@ height:250
 });
 
 
-console.log("QR Code criado");
+}
 
 
-  
-  // ESCONDER BOTÃO FINALIZAR
-
-const btnFinalizar =
-document.getElementById("btnFinalizar");
 
 
-if(btnFinalizar){
 
-btnFinalizar.style.display="none";
+
+
+// =====================================
+// CRIAR BOTÃO PRÓXIMO ATENDIMENTO
+// =====================================
+
+
+let botaoProximo =
+document.getElementById("proximoAtendimento");
+
+
+
+if(!botaoProximo){
+
+
+botaoProximo =
+document.createElement("button");
+
+
+botaoProximo.id =
+"proximoAtendimento";
+
+
+botaoProximo.className =
+"btn-success";
+
+
+botaoProximo.innerHTML =
+"➡️ Próximo Atendimento";
+
+
+
+botaoProximo.style.marginTop =
+"20px";
+
+
+
+area.appendChild(botaoProximo);
+
 
 }
 
 
-// MOSTRAR PRÓXIMO ATENDIMENTO
-
-const btnNovo =
-document.getElementById("btnNovoAtendimento");
 
 
-if(btnNovo){
-
-btnNovo.style.display="inline-block";
-
-}
+botaoProximo.onclick = ()=>{
 
 
-}else{
+window.location.reload();
 
 
-console.error(
-"QR Code não encontrado ou biblioteca não carregou"
-);
-
-
-}
-
+};
 
 
 
@@ -663,46 +658,25 @@ console.error(
 
 
 alert(
-
-"Atendimento finalizado! QR Code da avaliação gerado."
-
+"Atendimento finalizado! QR Code gerado."
 );
-
-
-
 
 
 
 }catch(error){
 
 
-
 console.error(error);
 
 
-
 alert(
-
 "Erro ao finalizar atendimento: "
-
 +error.message
-
 );
-
 
 
 }
 
 
-
-};
-
-// =====================================
-// PRÓXIMO ATENDIMENTO
-// =====================================
-
-window.proximoAtendimento = function(){
-
-window.location.href="atendimento.html";
 
 };
