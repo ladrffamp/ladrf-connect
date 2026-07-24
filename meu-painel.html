@@ -4,143 +4,359 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Meu Painel - LADRF Connect</title>
+<title>Meu Painel | LADRF Connect</title>
 
-<style>
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
-}
+<link rel="stylesheet" href="styles.css">
 
-body{
-background:#f4f6f9;
-}
 
-header{
-background:#0B7A3B;
-color:white;
-padding:20px;
-text-align:center;
-}
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-.container{
-max-width:1000px;
-margin:30px auto;
-padding:20px;
-}
-
-.card{
-background:white;
-padding:20px;
-border-radius:15px;
-box-shadow:0 3px 10px rgba(0,0,0,.15);
-margin-bottom:20px;
-}
-
-.btn-voltar{
-position:fixed;
-top:20px;
-left:20px;
-background:#0B7A3B;
-color:white;
-border:none;
-padding:12px 20px;
-border-radius:10px;
-cursor:pointer;
-}
-
-.btn-voltar:hover{
-background:#08602f;
-}
-
-.escala{
-background:white;
-padding:20px;
-border-radius:15px;
-margin-bottom:20px;
-box-shadow:0 3px 10px rgba(0,0,0,.12);
-}
-
-.escala h3{
-color:#0B7A3B;
-margin-bottom:10px;
-}
-
-.confirmar{
-background:#0B7A3B;
-color:white;
-border:none;
-padding:10px 15px;
-border-radius:8px;
-cursor:pointer;
-margin-top:15px;
-}
-
-.confirmar:hover{
-background:#08602f;
-}
-
-.confirmado{
-background:#1e88e5;
-color:white;
-padding:8px 12px;
-border-radius:8px;
-display:inline-block;
-margin-top:10px;
-}
-
-</style>
 
 </head>
 
+
 <body>
 
-<button
-class="btn-voltar"
-onclick="window.location.href='index.html'">
 
-🏠 Menu Inicial
 
-</button>
+<header class="topbar">
 
-<header>
 
-<h1>Meu Painel</h1>
+<a href="index.html" class="btn-inicio">
 
-<p>Minhas Escalas e Participações</p>
+<i class="fa-solid fa-house"></i>
 
-</header>
+Início
 
-<div class="container">
+</a>
 
-<div class="card">
 
-<h2 id="boasVindas">
 
-Carregando...
 
-</h2>
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
+
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
 
 </div>
 
-<div id="listaEscalas">
+
+</div>
+
+
+
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
+Carregando...
+
+</strong>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<small id="horaAtual">
+
+00:00:00
+
+</small>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+
+<main class="container">
+
+
+
+
+
+<section class="page-title">
+
+
+<h1>
+
+<i class="fa-solid fa-user"></i>
+
+Meu Painel
+
+</h1>
+
+
+<p>
+
+Minhas escalas e participações na LADRF.
+
+</p>
+
+
+</section>
+
+
+
+
+
 
 <div class="card">
+
+
+<h2>
+
+<i class="fa-solid fa-hand-wave"></i>
+
+Bem-vindo
+
+</h2>
+
+
+<h3 id="boasVindas">
+
+Carregando...
+
+</h3>
+
+
+</div>
+<div class="card">
+
+
+<h2>
+
+<i class="fa-solid fa-calendar-check"></i>
+
+Minhas Escalas
+
+</h2>
+
+
+
+
+<div id="listaEscalas">
+
+
+<div class="card">
+
+<i class="fa-solid fa-spinner fa-spin"></i>
 
 Carregando escalas...
 
 </div>
 
-</div>
+
 
 </div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+
+<i class="fa-solid fa-chart-line"></i>
+
+Resumo de Participações
+
+</h2>
+
+
+
+
+
+<div class="stats">
+
+
+
+<div class="stat">
+
+
+<i class="fa-solid fa-calendar-days"></i>
+
+
+<h3>
+
+Eventos Participados
+
+</h3>
+
+
+<span id="totalEventos">
+
+0
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+<div class="stat">
+
+
+<i class="fa-solid fa-clock"></i>
+
+
+<h3>
+
+Horas de Participação
+
+</h3>
+
+
+<span id="totalHoras">
+
+0
+
+</span>
+
+
+</div>
+
+
+
+
+
+
+<div class="stat">
+
+
+<i class="fa-solid fa-check"></i>
+
+
+<h3>
+
+Presenças
+
+</h3>
+
+
+<span id="totalPresencas">
+
+0
+
+</span>
+
+
+</div>
+
+
+
+
+</div>
+
+
+</div>
+</main>
+
+
+
+
+
 
 <script type="module" src="meu-painel.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora=document.getElementById("horaAtual");
+
+
+
+if(hora){
+
+
+hora.innerHTML=new Date()
+
+.toLocaleTimeString("pt-BR");
+
+
+}
+
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
+
+
 
 </body>
 
