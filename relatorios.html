@@ -7,152 +7,168 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Relatórios LADRF</title>
+<title>Relatórios | LADRF Connect</title>
 
 
-<style>
-
-*{
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
+<link rel="stylesheet" href="styles.css">
 
 
-body{
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-background:#f4f6f9;
-padding:30px;
-
-}
-
-
-
-.btn-voltar{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-cursor:pointer;
-
-}
-
-
-
-.container{
-
-max-width:1200px;
-
-margin:auto;
-
-}
-
-
-
-h1{
-
-color:#0B7A3B;
-
-margin-bottom:30px;
-
-}
-
-
-
-.cards{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-
-gap:20px;
-
-}
-
-
-
-.card{
-
-background:white;
-
-padding:25px;
-
-border-radius:15px;
-
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-
-text-align:center;
-
-}
-
-
-
-.card h3{
-
-color:#555;
-
-}
-
-
-
-.numero{
-
-font-size:35px;
-
-font-weight:bold;
-
-color:#0B7A3B;
-
-}
-
-
-
-</style>
 
 </head>
-
 
 
 <body>
 
 
-
-<button class="btn-voltar" onclick="window.location.href='index.html'">
-
-🏠 Menu Inicial
-
-</button>
+<header class="topbar">
 
 
+<a href="index.html" class="btn-inicio">
 
-<div class="container">
+<i class="fa-solid fa-house"></i>
 
+Início
+
+</a>
+
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
 
 <h1>
 
-Relatórios LADRF Connect
+LADRF Connect
 
 </h1>
 
 
+<p>
 
-<div class="cards">
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
 
 
 
-<div class="card">
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
+Carregando...
+
+</strong>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<small id="horaAtual">
+
+00:00:00
+
+</small>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+<main class="container">
+
+
+
+
+
+<section class="page-title">
+
+
+<h1>
+
+<i class="fa-solid fa-chart-line"></i>
+
+Relatórios
+
+</h1>
+
+
+<p>
+
+Indicadores e estatísticas da LADRF.
+
+</p>
+
+
+</section>
+
+
+
+
+
+
+<section class="stats">
+
+
+<div class="stat">
+
+
+<i class="fa-solid fa-users"></i>
+
+
+<h3>
+
+Membros
+
+</h3>
+
+
+<span id="totalMembros">
+
+0
+
+</span>
+
+
+</div>
+
+
+
+
+
+<div class="stat">
+
+
+<i class="fa-solid fa-user-doctor"></i>
+
 
 <h3>
 
@@ -160,110 +176,158 @@ Atendimentos
 
 </h3>
 
-<div class="numero" id="total">
+
+<span id="totalAtendimentos">
 
 0
 
+</span>
+
+
 </div>
 
-</div>
 
 
 
 
-<div class="card">
+<div class="stat">
+
+
+<i class="fa-solid fa-calendar-check"></i>
+
 
 <h3>
 
-Pacientes atendidos
+Eventos
 
 </h3>
 
-<div class="numero" id="pacientes">
+
+<span id="totalEventos">
 
 0
 
+</span>
+
+
 </div>
 
-</div>
 
 
 
 
-<div class="card">
+<div class="stat">
+
+
+<i class="fa-solid fa-clock"></i>
+
 
 <h3>
 
-Modalidade principal
+Horas de atuação
 
 </h3>
 
-<div class="numero" id="modalidade">
 
--
-
-</div>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<h3>
-
-Região mais atendida
-
-</h3>
-
-<div class="numero" id="regiao">
-
--
-
-</div>
-
-</div>
-
-
-
-
-<div class="card">
-
-<h3>
-
-Lesão mais comum
-
-</h3>
-
-<div class="numero" id="lesao">
-
--
-
-</div>
-
-</div>
-
-
-
-
-
-<div class="card">
-
-<h3>
-
-Média EVA
-
-</h3>
-
-<div class="numero" id="eva">
+<span id="totalHoras">
 
 0
 
-</div>
+</span>
+
 
 </div>
+
+
+
+</section>
+<div class="card">
+
+
+<h2>
+
+<i class="fa-solid fa-file-lines"></i>
+
+Resumo dos Atendimentos
+
+</h2>
+
+
+
+
+<div class="table-responsive">
+
+
+<table>
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Categoria
+
+</th>
+
+
+<th>
+
+Quantidade
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+
+<tbody id="resumoAtendimentos">
+
+
+<tr>
+
+<td>
+
+Carregando...
+
+</td>
+
+
+<td>
+
+-
+
+</td>
+
+
+</tr>
+
+
+</tbody>
+
+
+
+
+</table>
+
+
+
+</div>
+
+
+
+</div>
+
+
+
 
 
 
@@ -271,26 +335,158 @@ Média EVA
 
 <div class="card">
 
-<h3>
 
-Situação final mais comum
+<h2>
 
-</h3>
+<i class="fa-solid fa-calendar-days"></i>
 
-<div class="numero" id="situacao">
+Eventos Realizados
 
--
+</h2>
+
+
+
+
+
+<div class="table-responsive">
+
+
+<table>
+
+
+<thead>
+
+
+<tr>
+
+
+<th>
+
+Evento
+
+</th>
+
+
+<th>
+
+Data
+
+</th>
+
+
+<th>
+
+Participantes
+
+</th>
+
+
+</tr>
+
+
+</thead>
+
+
+
+<tbody id="listaEventos">
+
+
+
+<tr>
+
+
+<td colspan="3" style="text-align:center;">
+
+
+Carregando eventos...
+
+
+</td>
+
+
+</tr>
+
+
+
+</tbody>
+
+
+
+</table>
+
+
 
 </div>
 
+
+
+</div>
+
+
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+
+<i class="fa-solid fa-download"></i>
+
+Exportar Relatório
+
+</h2>
+
+
+
+<div class="botoes">
+
+
+
+<button 
+class="btn-success"
+id="exportarPDF">
+
+
+<i class="fa-solid fa-file-pdf"></i>
+
+
+Exportar PDF
+
+
+</button>
+
+
+
+
+
+
+<button 
+class="btn-primary"
+id="exportarExcel">
+
+
+<i class="fa-solid fa-file-excel"></i>
+
+
+Exportar Excel
+
+
+</button>
+
+
+
+
 </div>
 
 
 
 </div>
+</main>
 
 
-</div>
 
 
 
@@ -298,7 +494,51 @@ Situação final mais comum
 
 <script type="module" src="relatorios.js"></script>
 
+
 <script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora = document.getElementById("horaAtual");
+
+
+
+if(hora){
+
+
+hora.innerHTML = new Date()
+
+.toLocaleTimeString("pt-BR");
+
+
+}
+
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
 
 
 </body>
