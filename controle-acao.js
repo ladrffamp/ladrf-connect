@@ -1,3 +1,6 @@
+// controle-acao.js
+
+
 import { db } from "./firebase.js";
 
 
@@ -8,6 +11,7 @@ getDoc,
 collection,
 getDocs,
 updateDoc,
+setDoc,
 serverTimestamp
 
 }
@@ -18,6 +22,11 @@ from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
+// =====================================
+// ID DA AÇÃO
+// =====================================
+
+
 const idAcao =
 
 new URLSearchParams(window.location.search)
@@ -26,6 +35,26 @@ new URLSearchParams(window.location.search)
 
 
 
+
+
+if(!idAcao){
+
+
+alert("Ação não encontrada.");
+
+throw new Error("ID da ação ausente");
+
+
+}
+
+
+
+
+
+
+// =====================================
+// ELEMENTOS
+// =====================================
 
 
 const nomeAcao =
@@ -56,8 +85,16 @@ document.getElementById("finalizar");
 
 
 
+
+// =====================================
+// CARREGAR AÇÃO
+// =====================================
+
+
 async function carregar(){
 
+
+try{
 
 
 const acao = await getDoc(
@@ -77,15 +114,20 @@ idAcao
 
 
 
+
 if(!acao.exists()){
+
 
 nomeAcao.innerHTML =
 
 "Ação não encontrada";
 
+
 return;
 
+
 }
+
 
 
 
@@ -94,32 +136,79 @@ const dados = acao.data();
 
 
 
+
+
 nomeAcao.innerHTML =
 
-dados.titulo;
+`
+
+${dados.titulo}
+
+`;
 
 
 
-dadosAcao.innerHTML = `
+
+
+
+dadosAcao.innerHTML =
+
+`
 
 <p>
-📅 ${dados.data}
+
+📅 ${dados.data || "-"}
+
 </p>
 
-<p>
-📍 ${dados.local}
-</p>
 
 <p>
-⏰ ${dados.inicio} até ${dados.fim}
+
+📍 ${dados.local || "-"}
+
 </p>
 
+
 <p>
+
+⏰ ${dados.inicio || "-"} até ${dados.fim || "-"}
+
+</p>
+
+
+<p>
+
+👤 Responsável:
+
+${dados.responsavel || "-"}
+
+</p>
+
+
+<p>
+
+📌 Tipo:
+
+${dados.tipo || "-"}
+
+</p>
+
+
+<p>
+
 Status:
-<b>${dados.status}</b>
+
+<b>
+
+${dados.status || "-"}
+
+</b>
+
 </p>
 
 `;
+
+
 
 
 
@@ -144,7 +233,10 @@ idAcao,
 
 
 
+
+
 listaParticipantes.innerHTML = "";
+
 
 
 
@@ -156,6 +248,7 @@ listaParticipantes.innerHTML =
 
 "Nenhum membro escalado.";
 
+
 return;
 
 
@@ -165,34 +258,36 @@ return;
 
 
 
-participantes.forEach((item)=>{
 
+
+participantes.forEach((item)=>{
 
 
 const membro = item.data();
 
 
 
-let status =
 
-"🟡 Pendente";
+
+let status = "🟡 Pendente";
 
 
 
 if(membro.presenca === "Confirmado"){
 
-status =
 
-"🟢 Confirmado";
+status = "🟢 Confirmado";
+
 
 }
+
 
 
 if(membro.presenca === "Recusado"){
 
-status =
 
-"🔴 Recusado";
+status = "🔴 Recusado";
+
 
 }
 
@@ -200,22 +295,25 @@ status =
 
 
 
-listaParticipantes.innerHTML += `
 
+listaParticipantes.innerHTML +=
+
+
+`
 
 <div class="card">
 
 
 <h3>
 
-${membro.nome}
+${membro.nome || "Sem nome"}
 
 </h3>
 
 
 <p>
 
-${membro.email}
+${membro.email || ""}
 
 </p>
 
@@ -238,12 +336,41 @@ ${status}
 
 
 
+
+
+
+}catch(error){
+
+
+console.error(
+
+"Erro ao carregar ação:",
+
+error
+
+);
+
+
+
+}
+
+
+
 }
 
 
 
 
 
+
+
+
+// =====================================
+// FINALIZAR AÇÃO + FREQUÊNCIA
+// =====================================
+
+
+if(finalizar){
 
 
 
@@ -254,20 +381,180 @@ finalizar.addEventListener(
 async()=>{
 
 
+
 const confirmar = confirm(
 
-"Deseja finalizar esta ação?"
+"Deseja finalizar esta ação e lançar a frequência?"
 
 );
 
 
 
+
+
 if(!confirmar){
+
 
 return;
 
+
 }
 
+
+
+
+
+
+
+try{
+
+
+
+
+
+const participantes = await getDocs(
+
+collection(
+
+db,
+
+"agenda",
+
+idAcao,
+
+"participantes"
+
+)
+
+);
+
+
+
+
+
+
+
+const presentes = [];
+
+
+
+
+
+
+participantes.forEach((item)=>{
+
+
+
+const membro = item.data();
+
+
+
+
+
+if(membro.presenca === "Confirmado"){
+
+
+
+presentes.push({
+
+
+uid:item.id,
+
+
+nome:membro.nome,
+
+
+email:membro.email
+
+
+});
+
+
+
+}
+
+
+
+});
+
+
+
+
+
+
+
+
+if(presentes.length === 0){
+
+
+alert(
+
+"Nenhum membro confirmou presença."
+
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+
+
+
+// =====================================
+// SALVAR FREQUÊNCIA
+// =====================================
+
+
+await setDoc(
+
+doc(
+
+db,
+
+"frequencia",
+
+idAcao
+
+),
+
+{
+
+
+acaoId:idAcao,
+
+
+presentes:presentes,
+
+
+totalPresentes:presentes.length,
+
+
+status:"Finalizado",
+
+
+criadoEm:serverTimestamp()
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+// =====================================
+// ATUALIZAR STATUS DA AÇÃO
+// =====================================
 
 
 await updateDoc(
@@ -285,14 +572,10 @@ idAcao
 {
 
 
-status:
-
-"Concluído",
+status:"Concluído",
 
 
-finalizadoEm:
-
-serverTimestamp()
+finalizadoEm:serverTimestamp()
 
 
 }
@@ -301,23 +584,68 @@ serverTimestamp()
 
 
 
+
+
+
+
 alert(
 
-"Ação finalizada!"
+"Ação finalizada e frequência registrada!"
 
 );
+
+
+
 
 
 
 carregar();
 
 
+
+
+
+}catch(error){
+
+
+
+console.error(
+
+"Erro ao finalizar ação:",
+
+error
+
+);
+
+
+
+alert(
+
+"Erro ao finalizar ação."
+
+);
+
+
+
+}
+
+
+
 });
 
 
 
+}
 
 
+
+
+
+
+
+// =====================================
+// INICIAR
+// =====================================
 
 
 carregar();
