@@ -1,20 +1,15 @@
 // gerenciar-acao.js
 
-
 import { db } from "./firebase.js";
 
-
 import {
-
 doc,
 getDoc,
 collection,
 getDocs,
 setDoc,
 serverTimestamp
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 
 
@@ -22,48 +17,23 @@ serverTimestamp
 // PEGAR ID DA AÇÃO
 // =====================================
 
-
 const idAcao = new URLSearchParams(
-
 window.location.search
-
 ).get("id");
 
 
 
-console.log(
-"ID DA AÇÃO:",
-idAcao
-);
-
-
-
-console.log(
-"URL atual:",
-window.location.href
-);
-
+console.log("ID DA AÇÃO:", idAcao);
 
 
 
 if(!idAcao){
 
+alert("Erro: ação não encontrada.");
 
-alert(
-"Erro: ação não encontrada."
-);
-
-
-throw new Error(
-"ID da ação ausente"
-);
-
+throw new Error("ID da ação ausente");
 
 }
-
-
-
-
 
 
 
@@ -72,38 +42,29 @@ throw new Error(
 // =====================================
 
 
-const nomeAcao = document.getElementById(
-"nomeAcao"
-);
+const nomeAcao =
+document.getElementById("nomeAcao");
 
 
-const listaMembros = document.getElementById(
-"listaMembros"
-);
+const listaMembros =
+document.getElementById("listaMembros");
 
 
-const botaoSalvar = document.getElementById(
-"salvar"
-);
-
-
-
-
+const botaoSalvar =
+document.getElementById("salvar");
 
 
 
 
 // =====================================
-// CARREGAR AÇÃO
+// CARREGAR AÇÃO (AGENDAS)
 // =====================================
 
 
 async function carregarAcao(){
 
+
 try{
-
-
-console.log("Buscando documento:", idAcao);
 
 
 const referencia = doc(
@@ -114,13 +75,8 @@ idAcao
 
 
 
-const resultado = await getDoc(referencia);
-
-
-
-console.log(
-"Existe?",
-resultado.exists()
+const resultado = await getDoc(
+referencia
 );
 
 
@@ -131,22 +87,30 @@ if(resultado.exists()){
 const dados = resultado.data();
 
 
+
 console.log(
-"Dados encontrados:",
+"Ação encontrada:",
 dados
 );
 
 
 
+if(nomeAcao){
+
+
 nomeAcao.innerHTML = `
 
-${dados.titulo || "Sem título"}
+${dados.titulo || "Ação sem título"}
 
 <br>
 
 <small>
 
-${dados.local || ""}
+📅 ${dados.data || "-"} 
+
+|
+
+📍 ${dados.local || "-"}
 
 </small>
 
@@ -154,60 +118,22 @@ ${dados.local || ""}
 
 
 
-}else{
-
-
-nomeAcao.innerHTML =
-"Ação não encontrada";
-
-
 }
 
-
-
-}catch(error){
-
-
-console.error(
-"Erro completo:",
-error
-);
-
-
-nomeAcao.innerHTML =
-"Erro ao carregar";
-
-
-}
-
-
-
-}
 
 
 }else{
 
 
-
 console.error(
-
 "Ação inexistente:",
 idAcao
-
 );
 
 
 
-if(nomeAcao){
-
-
 nomeAcao.innerHTML =
-
 "Ação não encontrada";
-
-
-}
-
 
 
 }
@@ -217,22 +143,13 @@ nomeAcao.innerHTML =
 }catch(error){
 
 
-
 console.error(
-
 "Erro ao carregar ação:",
-
 error
-
 );
 
 
-
-if(nomeAcao){
-
-
 nomeAcao.innerHTML =
-
 "Erro ao carregar ação";
 
 
@@ -241,14 +158,6 @@ nomeAcao.innerHTML =
 
 
 }
-
-
-
-}
-
-
-
-
 
 
 
@@ -261,57 +170,43 @@ nomeAcao.innerHTML =
 async function carregarMembros(){
 
 
-
 try{
-
 
 
 const usuarios = await getDocs(
 
 collection(
-
 db,
-
 "usuarios"
-
 )
 
 );
 
 
 
-
-
-if(listaMembros){
-
-
 listaMembros.innerHTML = "";
-
-
-}
-
-
 
 
 
 usuarios.forEach((usuario)=>{
 
 
-
 const dados = usuario.data();
 
 
 
-
-if(dados.perfil === "membro"){
+if(
+dados.perfil?.toLowerCase() === "membro"
+){
 
 
 
 listaMembros.innerHTML += `
 
 
-<div class="card" style="margin-bottom:10px;">
-
+<div class="card" style="
+margin-bottom:10px;
+">
 
 
 <label style="
@@ -340,6 +235,7 @@ data-email="${dados.email || ""}"
 
 <div>
 
+
 <strong>
 
 ${dados.nome || "Sem nome"}
@@ -363,7 +259,6 @@ ${dados.email || ""}
 </label>
 
 
-
 </div>
 
 
@@ -381,14 +276,10 @@ ${dados.email || ""}
 
 
 
-
-
 if(listaMembros.innerHTML === ""){
 
 
-
 listaMembros.innerHTML =
-
 "Nenhum membro encontrado.";
 
 
@@ -396,31 +287,20 @@ listaMembros.innerHTML =
 
 
 
-
-
 }catch(error){
 
 
-
 console.error(
-
-"Erro ao buscar membros:",
-
+"Erro ao carregar membros:",
 error
-
 );
 
 
-
 }
 
 
 
 }
-
-
-
-
 
 
 
@@ -442,35 +322,25 @@ botaoSalvar.addEventListener(
 async()=>{
 
 
-
 try{
 
 
-
-const selecionados = document.querySelectorAll(
-
+const selecionados =
+document.querySelectorAll(
 ".membro:checked"
-
 );
-
-
 
 
 
 if(selecionados.length === 0){
 
 
-
 alert(
-
 "Selecione pelo menos um membro."
-
 );
 
 
-
 return;
-
 
 
 }
@@ -479,9 +349,9 @@ return;
 
 
 
-
-
-for(const membro of selecionados){
+for(
+const membro of selecionados
+){
 
 
 
@@ -491,9 +361,12 @@ await setDoc(
 doc(
 
 db,
+
 "agendas",
+
 idAcao,
-"participantes"
+
+"participantes",
 
 membro.value
 
@@ -505,32 +378,26 @@ membro.value
 
 
 id:
-
 membro.value,
 
 
 nome:
-
 membro.dataset.nome,
 
 
 email:
-
 membro.dataset.email,
 
 
 presenca:
-
 "Pendente",
 
 
 confirmadoEm:
-
 null,
 
 
 escaladoEm:
-
 serverTimestamp()
 
 
@@ -557,12 +424,8 @@ merge:true
 
 
 
-
-
 alert(
-
 "Escala salva com sucesso!"
-
 );
 
 
@@ -570,21 +433,15 @@ alert(
 }catch(error){
 
 
-
 console.error(
-
 "Erro ao salvar escala:",
-
 error
-
 );
 
 
 
 alert(
-
 "Erro ao salvar escala."
-
 );
 
 
@@ -600,8 +457,6 @@ alert(
 
 
 }
-
-
 
 
 
@@ -614,6 +469,5 @@ alert(
 
 
 carregarAcao();
-
 
 carregarMembros();
