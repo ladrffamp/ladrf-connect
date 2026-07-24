@@ -7,20 +7,23 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Membros - LADRF Connect</title>
+<title>Painel | LADRF Connect</title>
 
 
 <link rel="stylesheet" href="styles.css">
 
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
 
 
-<body>
+
+<body class="painel-tv">
+
+
+
 
 
 <header class="topbar">
@@ -28,27 +31,49 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <a href="index.html" class="btn-inicio">
 
+
 <i class="fa-solid fa-house"></i>
 
+
 Início
+
 
 </a>
 
 
 
+
+
 <div class="logo">
+
 
 <i class="fa-solid fa-heart-pulse"></i>
 
+
 <div>
 
-<h1>LADRF Connect</h1>
 
-<p>Sistema de Gestão da Liga</p>
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
 
 </div>
 
+
 </div>
+
+
+
 
 
 
@@ -63,6 +88,7 @@ Carregando...
 </strong>
 
 
+
 <span id="perfilUsuario">
 
 Perfil
@@ -70,14 +96,19 @@ Perfil
 </span>
 
 
+
 <small id="horaAtual">
 
-00:00:00
+--:--:--
 
 </small>
 
 
+
 </div>
+
+
+
 
 
 </header>
@@ -86,179 +117,50 @@ Perfil
 
 
 
-<main class="container">
 
 
 
-<section class="page-title">
 
-<h1>
+<main class="painel-container">
 
-👥 Cadastro de Membros
+
+
+
+
+
+
+<h1 class="painel-logo">
+
+LADRF CONNECT
 
 </h1>
 
-<p>
-
-Gerenciamento da equipe LADRF.
-
-</p>
-
-</section>
 
 
 
 
 
-<div class="card">
+
+<div class="chamado">
+
 
 
 <h2>
 
-Novo Membro
+Paciente em Atendimento
 
 </h2>
 
 
 
 
-<div class="form-grid">
 
+<div 
+class="nome"
+id="nome">
 
-<div class="form-group">
 
-<label>
-
-Nome completo
-
-</label>
-
-<input
-id="nome"
-placeholder="Nome completo">
-
-</div>
-
-
-
-<div class="form-group">
-
-<label>
-
-E-mail
-
-</label>
-
-<input
-id="email"
-placeholder="E-mail">
-
-</div>
-
-
-
-<div class="form-group">
-
-<label>
-
-Telefone
-
-</label>
-
-<input
-id="telefone"
-placeholder="Telefone">
-
-</div>
-
-
-
-<div class="form-group">
-
-<label>
-
-Curso
-
-</label>
-
-<input
-id="curso"
-placeholder="Curso">
-
-</div>
-
-
-
-<div class="form-group">
-
-<label>
-
-Período
-
-</label>
-
-<input
-id="periodo"
-placeholder="Período">
-
-</div>
-
-
-
-<div class="form-group">
-
-<label>
-
-Função
-
-</label>
-
-<select id="funcao">
-
-
-<option>Membro</option>
-
-<option>Presidente</option>
-
-<option>Vice-presidente</option>
-
-<option>Diretor Científico</option>
-
-<option>Diretor Financeiro</option>
-
-<option>Diretor de Marketing</option>
-
-<option>Secretário</option>
-
-<option>Orientador</option>
-
-
-</select>
-
-</div>
-
-
-
-<div class="form-group">
-
-<label>
-
-Status
-
-</label>
-
-<select id="status">
-
-
-<option>Ativo</option>
-
-<option>Inativo</option>
-
-
-</select>
-
-</div>
-
+Nenhum
 
 
 </div>
@@ -266,18 +168,13 @@ Status
 
 
 
-<div class="botoes">
+
+<div 
+class="maca"
+id="maca">
 
 
-<button
-class="btn-success"
-onclick="salvarMembro()">
-
-<i class="fa-solid fa-user-plus"></i>
-
-Cadastrar Membro
-
-</button>
+-
 
 
 </div>
@@ -292,63 +189,30 @@ Cadastrar Membro
 
 
 
-<div class="card">
+
+<div class="proximos">
 
 
 <h2>
 
-Membros Cadastrados
+Fila de Espera
 
 </h2>
 
 
 
 
-<div class="table-responsive">
+
+<ul id="fila">
 
 
-<table>
+</ul>
 
-
-<thead>
-
-<tr>
-
-<th>
-Nome
-</th>
-
-<th>
-Função
-</th>
-
-<th>
-Status
-</th>
-
-<th>
-Ações
-</th>
-
-</tr>
-
-</thead>
-
-
-
-<tbody id="listaMembros">
-
-</tbody>
-
-
-
-</table>
 
 
 </div>
 
 
-</div>
 
 
 
@@ -362,9 +226,18 @@ Ações
 
 
 
-<script type="module" src="membros.js"></script>
+
+
+
+<script type="module" src="painel.js"></script>
+
 
 <script type="module" src="permissoes.js"></script>
+
+
+
+
+
 
 
 
@@ -374,27 +247,38 @@ Ações
 function atualizarHora(){
 
 
-const hora=document.getElementById("horaAtual");
+const hora =
+document.getElementById("horaAtual");
 
 
 if(hora){
 
-hora.innerHTML=new Date()
 
-.toLocaleTimeString("pt-BR");
+hora.innerHTML =
+
+new Date().toLocaleTimeString("pt-BR");
+
 
 }
 
 
+
 }
+
 
 
 setInterval(atualizarHora,1000);
 
+
 atualizarHora();
 
 
+
 </script>
+
+
+
+
 
 
 
