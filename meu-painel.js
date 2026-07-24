@@ -1,15 +1,20 @@
 // meu-painel.js
 
+
 import { auth, db } from "./firebase.js";
+
 
 import {
 onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
 import {
 collection,
 getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
 
 
 
@@ -36,9 +41,6 @@ document.getElementById("totalPresencas");
 
 
 
-// =====================================
-// LOGIN
-// =====================================
 
 
 onAuthStateChanged(
@@ -77,10 +79,6 @@ carregarPainel(usuario.uid);
 
 
 
-// =====================================
-// CARREGAR PAINEL
-// =====================================
-
 
 async function carregarPainel(uid){
 
@@ -88,10 +86,25 @@ async function carregarPainel(uid){
 try{
 
 
+
 listaEscalas.innerHTML =
+"Carregando...";
 
-"Carregando escalas...";
 
+
+let eventos = 0;
+
+let horas = 0;
+
+let presencas = 0;
+
+
+
+
+
+// ================================
+// ESCALAS
+// ================================
 
 
 const agendaSnapshot = await getDocs(
@@ -105,19 +118,9 @@ db,
 
 
 
-
-let eventos = 0;
-
-let horas = 0;
-
-let presencas = 0;
+listaEscalas.innerHTML = "";
 
 let encontrou = false;
-
-
-
-
-listaEscalas.innerHTML = "";
 
 
 
@@ -128,7 +131,6 @@ for(const acao of agendaSnapshot.docs){
 
 
 const dadosAcao = acao.data();
-
 
 
 
@@ -151,7 +153,6 @@ acao.id,
 
 
 
-
 const participante = participantes.docs.find(
 
 (item)=>item.id === uid
@@ -170,7 +171,8 @@ encontrou = true;
 
 
 
-const dadosParticipante = participante.data();
+const dados = participante.data();
+
 
 
 
@@ -190,15 +192,10 @@ ${dadosAcao.titulo || "Sem título"}
 </h3>
 
 
+
 <p>
 
-📅 Data:
-
-<strong>
-
-${dadosAcao.data || "-"}
-
-</strong>
+📅 ${dadosAcao.data || "-"}
 
 </p>
 
@@ -206,13 +203,7 @@ ${dadosAcao.data || "-"}
 
 <p>
 
-📍 Local:
-
-<strong>
-
-${dadosAcao.local || "-"}
-
-</strong>
+📍 ${dadosAcao.local || "-"}
 
 </p>
 
@@ -220,17 +211,7 @@ ${dadosAcao.local || "-"}
 
 <p>
 
-⏰ Horário:
-
-<strong>
-
-${dadosAcao.inicio || "-"}
-
-até
-
-${dadosAcao.fim || "-"}
-
-</strong>
+⏰ ${dadosAcao.inicio || "-"} até ${dadosAcao.fim || "-"}
 
 </p>
 
@@ -242,9 +223,10 @@ Status:
 
 <strong>
 
-${dadosParticipante.presenca || "Pendente"}
+${dados.presenca || "Pendente"}
 
 </strong>
+
 
 </p>
 
@@ -252,57 +234,12 @@ ${dadosParticipante.presenca || "Pendente"}
 
 </div>
 
+
 `;
 
 
 
-
-
-if(
-
-dadosParticipante.presenca === "Confirmada"
-
-){
-
-
-
-presencas++;
-
-
-
-eventos++;
-
-
-
-
-if(
-
-dadosAcao.inicio &&
-
-dadosAcao.fim
-
-){
-
-
-horas += calcularHoras(
-
-dadosAcao.inicio,
-
-dadosAcao.fim
-
-);
-
-
 }
-
-
-
-}
-
-
-
-}
-
 
 
 
@@ -318,24 +255,182 @@ dadosAcao.fim
 if(!encontrou){
 
 
+listaEscalas.innerHTML =
 
-listaEscalas.innerHTML = `
-
+`
 
 <div class="card">
 
-
 Nenhuma escala encontrada.
 
-
 </div>
-
 
 `;
 
 
+}
+
+
+
+
+
+
+
+// ================================
+// BUSCAR FREQUÊNCIA FINALIZADA
+// ================================
+
+
+
+const frequencias = await getDocs(
+
+collection(
+
+db,
+
+"frequencia"
+
+)
+
+);
+
+
+
+
+
+
+
+frequencias.forEach((item)=>{
+
+
+const dados = item.data();
+
+
+
+
+
+if(!dados.presentes){
+
+return;
 
 }
+
+
+
+
+const participou = dados.presentes.find(
+
+(membro)=>membro.uid === uid
+
+);
+
+
+
+
+
+if(participou){
+
+
+
+eventos++;
+
+
+presencas++;
+
+
+
+
+
+}
+
+
+
+
+
+
+});
+
+
+
+
+
+
+
+
+
+// ================================
+// CALCULAR HORAS PELAS AÇÕES
+// ================================
+
+
+
+for(const acao of agendaSnapshot.docs){
+
+
+const dados = acao.data();
+
+
+
+const frequencia = frequencias.docs.find(
+
+(item)=>item.id === acao.id
+
+);
+
+
+
+if(!frequencia){
+
+continue;
+
+}
+
+
+
+
+const lista = frequencia.data().presentes || [];
+
+
+
+const participou = lista.find(
+
+(membro)=>membro.uid === uid
+
+);
+
+
+
+
+
+if(
+
+participou &&
+
+dados.inicio &&
+
+dados.fim
+
+){
+
+
+
+horas += calcularHoras(
+
+dados.inicio,
+
+dados.fim
+
+);
+
+
+
+}
+
+
+
+
+}
+
 
 
 
@@ -358,6 +453,7 @@ totalPresencas.innerHTML = presencas;
 }catch(error){
 
 
+
 console.error(
 
 "Erro painel:",
@@ -374,8 +470,6 @@ listaEscalas.innerHTML =
 
 
 
-
-
 }
 
 
@@ -387,41 +481,30 @@ listaEscalas.innerHTML =
 
 
 
-
-// =====================================
-// CALCULAR HORAS
-// =====================================
 
 
 function calcularHoras(inicio,fim){
 
 
 
-const inicioPartes = inicio.split(":");
-
-
-const fimPartes = fim.split(":");
-
-
-
 const inicioMin =
 
-(Number(inicioPartes[0])*60)
+(Number(inicio.split(":")[0])*60)
 
 +
 
-Number(inicioPartes[1]);
+Number(inicio.split(":")[1]);
 
 
 
 
 const fimMin =
 
-(Number(fimPartes[0])*60)
+(Number(fim.split(":")[0])*60)
 
 +
 
-Number(fimPartes[1]);
+Number(fim.split(":")[1]);
 
 
 
