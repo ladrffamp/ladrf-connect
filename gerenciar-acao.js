@@ -1,4 +1,8 @@
+// gerenciar-acao.js
+
+
 import { db } from "./firebase.js";
+
 
 import {
 doc,
@@ -10,32 +14,47 @@ serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+
+
 // =====================================
 // ID DA AÇÃO
 // =====================================
 
-const idAcao = new URLSearchParams(
-window.location.search
-).get("id");
+
+const idAcao =
+new URLSearchParams(window.location.search)
+.get("id");
 
 
-console.log("ID AÇÃO:", idAcao);
+
+console.log(
+"ID AÇÃO:",
+idAcao
+);
 
 
 
 if(!idAcao){
 
-alert("Ação não encontrada.");
+alert(
+"Ação não encontrada."
+);
 
-throw new Error("ID ausente");
+throw new Error(
+"ID ausente"
+);
 
 }
+
+
+
 
 
 
 // =====================================
 // ELEMENTOS
 // =====================================
+
 
 const nomeAcao =
 document.getElementById("nomeAcao");
@@ -51,17 +70,19 @@ document.getElementById("salvar");
 
 
 
+
+
+
 // =====================================
-// BUSCAR AÇÃO
+// CARREGAR AÇÃO
 // =====================================
+
 
 async function carregarAcao(){
 
 
-try{
-
-
-const referencia = doc(
+const referencia =
+doc(
 db,
 "agenda",
 idAcao
@@ -69,7 +90,8 @@ idAcao
 
 
 
-const resultado = await getDoc(
+const resultado =
+await getDoc(
 referencia
 );
 
@@ -78,13 +100,8 @@ referencia
 if(resultado.exists()){
 
 
-const dados = resultado.data();
-
-
-console.log(
-"Ação encontrada:",
-dados
-);
+const dados =
+resultado.data();
 
 
 
@@ -96,11 +113,15 @@ ${dados.titulo || "Sem título"}
 
 <small>
 
-📅 ${dados.data || ""}
+📅 ${dados.data || "-"}
 
 <br>
 
-📍 ${dados.local || ""}
+📍 ${dados.local || "-"}
+
+<br>
+
+⏰ ${dados.inicio || "-"} até ${dados.fim || "-"}
 
 </small>
 
@@ -111,13 +132,6 @@ ${dados.titulo || "Sem título"}
 }else{
 
 
-console.error(
-"Ação inexistente:",
-idAcao
-);
-
-
-
 nomeAcao.innerHTML =
 "Ação não encontrada";
 
@@ -126,22 +140,6 @@ nomeAcao.innerHTML =
 
 
 
-}catch(error){
-
-
-console.error(
-error
-);
-
-
-nomeAcao.innerHTML =
-"Erro ao carregar ação";
-
-
-}
-
-
-
 }
 
 
@@ -149,9 +147,12 @@ nomeAcao.innerHTML =
 
 
 
+
+
 // =====================================
-// CARREGAR MEMBROS
+// CARREGAR MEMBROS E ESCALADOS
 // =====================================
+
 
 async function carregarMembros(){
 
@@ -159,7 +160,8 @@ async function carregarMembros(){
 try{
 
 
-const usuarios = await getDocs(
+const usuarios =
+await getDocs(
 
 collection(
 db,
@@ -170,28 +172,92 @@ db,
 
 
 
+
+
+const participantes =
+await getDocs(
+
+collection(
+
+db,
+
+"agenda",
+
+idAcao,
+
+"participantes"
+
+)
+
+);
+
+
+
+
+
+const escalados = {};
+
+
+
+participantes.forEach((item)=>{
+
+
+escalados[item.id] =
+item.data();
+
+
+});
+
+
+
+
+
+
+
 listaMembros.innerHTML = "";
+
+
+
 
 
 
 usuarios.forEach((usuario)=>{
 
 
-const dados = usuario.data();
+const dados =
+usuario.data();
 
 
 
 if(
-dados.perfil?.toLowerCase() === "membro"
+dados.perfil?.toLowerCase()
+===
+"membro"
 ){
+
+
+
+const escalado =
+escalados[usuario.id];
+
+
 
 
 listaMembros.innerHTML += `
 
-<div class="card">
+
+<div class="card" style="margin-bottom:10px;">
 
 
-<label>
+
+<label style="
+display:flex;
+align-items:center;
+gap:10px;
+cursor:pointer;
+">
+
+
 
 <input
 
@@ -205,7 +271,13 @@ data-nome="${dados.nome || ""}"
 
 data-email="${dados.email || ""}"
 
+${escalado ? "checked" : ""}
+
 >
+
+
+
+<div>
 
 
 <strong>
@@ -214,15 +286,75 @@ ${dados.nome || "Sem nome"}
 
 </strong>
 
+
 <br>
 
+
+<small>
+
 ${dados.email || ""}
+
+</small>
+
+
+
+${
+escalado
+?
+
+`
+
+<br>
+
+<span>
+
+Status:
+
+${
+
+escalado.presenca === "Confirmado"
+
+?
+
+"🟢 Confirmado"
+
+:
+
+escalado.presenca === "Recusado"
+
+?
+
+"🔴 Recusado"
+
+:
+
+"🟡 Pendente"
+
+}
+
+</span>
+
+`
+
+:
+
+""
+
+}
+
+
+
+</div>
+
 
 
 </label>
 
 
+
 </div>
+
+
 
 `;
 
@@ -236,11 +368,13 @@ ${dados.email || ""}
 
 
 
+
+
 }catch(error){
 
 
 console.error(
-"Erro membros:",
+"Erro ao carregar membros:",
 error
 );
 
@@ -248,7 +382,11 @@ error
 }
 
 
+
 }
+
+
+
 
 
 
@@ -259,12 +397,13 @@ error
 // SALVAR ESCALA
 // =====================================
 
-if(botaoSalvar){
-
 
 botaoSalvar.addEventListener(
+
 "click",
+
 async()=>{
+
 
 
 const selecionados =
@@ -274,11 +413,13 @@ document.querySelectorAll(
 
 
 
-if(selecionados.length === 0){
+
+
+if(selecionados.length===0){
 
 
 alert(
-"Selecione um membro."
+"Selecione pelo menos um membro."
 );
 
 
@@ -286,6 +427,7 @@ return;
 
 
 }
+
 
 
 
@@ -298,7 +440,6 @@ for(const membro of selecionados){
 
 
 await setDoc(
-
 
 doc(
 
@@ -313,7 +454,6 @@ idAcao,
 membro.value
 
 ),
-
 
 
 {
@@ -335,8 +475,14 @@ escaladoEm:
 serverTimestamp()
 
 
-}
+},
 
+
+{
+
+merge:true
+
+}
 
 
 );
@@ -344,12 +490,18 @@ serverTimestamp()
 
 
 }
+
+
 
 
 
 alert(
-"Escala salva!"
+"Escala salva com sucesso!"
 );
+
+
+
+carregarMembros();
 
 
 
@@ -357,12 +509,13 @@ alert(
 
 
 console.error(
+"Erro ao salvar:",
 error
 );
 
 
 alert(
-"Erro ao salvar escala"
+"Erro ao salvar escala."
 );
 
 
@@ -371,12 +524,11 @@ alert(
 
 
 
-}
-
-);
+});
 
 
-}
+
+
 
 
 
