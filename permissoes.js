@@ -2,20 +2,14 @@ import { auth, db } from "./firebase.js";
 
 
 import {
-
 onAuthStateChanged
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 import {
-
 doc,
-
 getDoc
-
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 
 
@@ -29,15 +23,11 @@ onAuthStateChanged(auth, async(usuario)=>{
 
 if(!usuario){
 
-
 window.location.href="login.html";
-
 
 return;
 
-
 }
-
 
 
 
@@ -45,13 +35,9 @@ try{
 
 
 const usuarioRef = doc(
-
 db,
-
 "usuarios",
-
 usuario.uid
-
 );
 
 
@@ -60,21 +46,15 @@ const usuarioDoc = await getDoc(usuarioRef);
 
 
 
-
-
 if(!usuarioDoc.exists()){
 
 
 alert(
-
 "Usuário sem perfil cadastrado."
-
 );
 
 
-
 window.location.href="login.html";
-
 
 return;
 
@@ -83,23 +63,15 @@ return;
 
 
 
-
-
-
 const dadosUsuario = usuarioDoc.data();
-
 
 
 const perfil = dadosUsuario.perfil;
 
 
-
 const paginaAtual = window.location.pathname
-
 .split("/")
-
 .pop();
-
 
 
 
@@ -114,72 +86,58 @@ const permissoes = {
 
 
 
-
 admin:[
 
-
 "index.html",
-
 "dashboard.html",
 
 "cadastro.html",
-
 "fila.html",
-
 "recepcao.html",
-
-"macas.html",
-
-"atendimento.html",
-
-"historico.html",
-
-"usuarios.html",
-
-"membros.html",
-
-"relatorios.html",
-
 "painel.html",
 
-"agenda.html"
+"agenda.html",
+"macas.html",
+"atendimento.html",
+"historico.html",
 
+"materiais.html",
+"movimentacoes.html",
+
+"membros.html",
+"usuarios.html",
+
+"frequencia.html",
+
+"meu-painel.html",
+
+"relatorios.html",
+"certificados.html",
+"exportacao.html",
+
+"modalidades.html"
 
 ],
-
-
-
 
 
 
 recepcao:[
 
-
 "index.html",
-
 "dashboard.html",
 
 "cadastro.html",
-
 "fila.html",
-
 "recepcao.html",
-
 "painel.html"
-
 
 ],
 
 
 
-
-
-
 membro:[
 
-
 "index.html",
-
 "dashboard.html",
 
 "fila.html",
@@ -190,14 +148,17 @@ membro:[
 
 "historico.html",
 
-"painel.html",
+"agenda.html",
 
-"agenda.html"
+"frequencia.html",
 
+"meu-painel.html",
+
+"materiais.html",
+
+"exportacao.html"
 
 ]
-
-
 
 };
 
@@ -206,9 +167,8 @@ membro:[
 
 
 
-
 // =====================================
-// VERIFICA PERFIL
+// PERFIL EXISTE?
 // =====================================
 
 
@@ -216,13 +176,8 @@ if(!permissoes[perfil]){
 
 
 alert(
-
-"Perfil não reconhecido: "
-
-+ perfil
-
+"Perfil não reconhecido: " + perfil
 );
-
 
 
 window.location.href="index.html";
@@ -232,7 +187,6 @@ return;
 
 
 }
-
 
 
 
@@ -248,11 +202,7 @@ if(!permissoes[perfil].includes(paginaAtual)){
 
 
 alert(
-
-"Sem permissão para: "
-
-+ paginaAtual
-
+"Sem permissão para acessar esta página."
 );
 
 
@@ -272,21 +222,17 @@ return;
 
 
 // =====================================
-// ESCONDER BOTÕES DO MENU
+// CONTROLE DO MENU
 // =====================================
 
 
 document
-
 .querySelectorAll("[data-perfil]")
-
 .forEach((item)=>{
 
 
-
-const permitido = item.dataset.perfil.split(" ");
-
-
+const permitido =
+item.dataset.perfil.split(" ");
 
 
 
@@ -308,41 +254,59 @@ item.style.display="none";
 
 
 
+// =====================================
+// MOSTRAR USUÁRIO
+// =====================================
+
+
+const nome =
+document.getElementById("nomeUsuario");
+
+
+const perfilTexto =
+document.getElementById("perfilUsuario");
+
+
+
+if(nome){
+
+nome.innerText =
+usuario.displayName || usuario.email;
+
+}
+
+
+
+if(perfilTexto){
+
+perfilTexto.innerText =
+perfil.toUpperCase();
+
+}
+
+
+
+
 console.log(
-
 "Permissão liberada:",
-
 perfil,
-
 paginaAtual
-
 );
-
-
-
 
 
 
 }catch(error){
 
 
-
 console.error(
-
 "Erro nas permissões:",
-
 error
-
 );
-
 
 
 alert(
-
 "Erro ao validar permissões."
-
 );
-
 
 
 }
