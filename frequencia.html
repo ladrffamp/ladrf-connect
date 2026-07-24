@@ -9,39 +9,27 @@
 
 <title>Frequência | LADRF Connect</title>
 
-
 <link rel="stylesheet" href="styles.css">
-
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-
 </head>
-
 
 
 <body>
 
 
-
-
-<header>
-
+<header class="topbar">
 
 
 <a href="index.html" class="btn-inicio">
 
-
 <i class="fa-solid fa-house"></i>
-
 
 Início
 
-
 </a>
-
-
 
 
 
@@ -54,13 +42,11 @@ Início
 
 <div>
 
-
 <h1>
 
 LADRF Connect
 
 </h1>
-
 
 <p>
 
@@ -78,17 +64,14 @@ Sistema de Gestão da Liga
 
 
 
+<div class="usuario-info">
 
 
-<div class="usuario">
-
-
-<h3 id="nomeUsuario">
+<strong id="nomeUsuario">
 
 Carregando...
 
-</h3>
-
+</strong>
 
 
 <span id="perfilUsuario">
@@ -98,23 +81,17 @@ Perfil
 </span>
 
 
-
-<p id="horaAtual">
+<small id="horaAtual">
 
 00:00:00
 
-</p>
-
+</small>
 
 
 </div>
 
 
-
-
-
 </header>
-
 
 
 
@@ -126,9 +103,6 @@ Perfil
 
 
 
-
-
-
 <section class="page-title">
 
 
@@ -136,18 +110,16 @@ Perfil
 
 <i class="fa-solid fa-clipboard-check"></i>
 
-Frequência
+Controle de Frequência
 
 </h1>
 
 
-
 <p>
 
-Controle de presença dos membros.
+Registro de presença dos membros nos eventos da LADRF.
 
 </p>
-
 
 
 </section>
@@ -159,18 +131,16 @@ Controle de presença dos membros.
 
 
 
-
 <div class="card">
-
 
 
 <h2>
 
+<i class="fa-solid fa-calendar-days"></i>
+
 Selecionar Evento
 
 </h2>
-
-
 
 
 
@@ -179,7 +149,6 @@ Selecionar Evento
 Evento
 
 </label>
-
 
 
 <select id="evento">
@@ -206,30 +175,28 @@ Carregando eventos...
 
 
 
-
-<section class="stats">
-
+<section class="cards">
 
 
 
+<div class="card">
 
-<div class="stat">
 
+<i class="fa-solid fa-users"></i>
 
 
 <h3>
 
-👥 Total
+Total de membros
 
 </h3>
 
 
-<span id="totalMembros">
+<div class="numero" id="totalMembros">
 
 0
 
-</span>
-
+</div>
 
 
 </div>
@@ -238,25 +205,24 @@ Carregando eventos...
 
 
 
+<div class="card">
 
-<div class="stat">
 
+<i class="fa-solid fa-user-check"></i>
 
 
 <h3>
 
-🟢 Presentes
+Presentes
 
 </h3>
 
 
-
-<span id="presentes">
+<div class="numero" id="presentes">
 
 0
 
-</span>
-
+</div>
 
 
 </div>
@@ -265,25 +231,24 @@ Carregando eventos...
 
 
 
+<div class="card">
 
-<div class="stat">
 
+<i class="fa-solid fa-clock"></i>
 
 
 <h3>
 
-🟡 Pendentes
+Pendentes
 
 </h3>
 
 
-
-<span id="pendentes">
+<div class="numero" id="pendentes">
 
 0
 
-</span>
-
+</div>
 
 
 </div>
@@ -292,30 +257,27 @@ Carregando eventos...
 
 
 
+<div class="card">
 
-<div class="stat">
 
+<i class="fa-solid fa-user-xmark"></i>
 
 
 <h3>
 
-🔴 Ausentes
+Ausentes
 
 </h3>
 
 
-
-<span id="ausentes">
+<div class="numero" id="ausentes">
 
 0
-
-</span>
-
-
 
 </div>
 
 
+</div>
 
 
 
@@ -332,8 +294,9 @@ Carregando eventos...
 <div class="card">
 
 
-
 <h2>
+
+<i class="fa-solid fa-list-check"></i>
 
 Lista de Presença
 
@@ -343,21 +306,16 @@ Lista de Presença
 
 
 
-
 <div class="table-responsive">
-
 
 
 <table>
 
 
-
 <thead>
 
 
-
 <tr>
-
 
 
 <th>
@@ -367,13 +325,11 @@ Nome
 </th>
 
 
-
 <th>
 
 Curso
 
 </th>
-
 
 
 <th>
@@ -383,13 +339,11 @@ Status
 </th>
 
 
-
 <th>
 
 Horário
 
 </th>
-
 
 
 <th>
@@ -399,9 +353,7 @@ Ações
 </th>
 
 
-
 </tr>
-
 
 
 </thead>
@@ -415,24 +367,16 @@ Ações
 
 <tr>
 
-
-<td colspan="5" style="text-align:center;">
-
+<td colspan="5" style="text-align:center">
 
 Selecione um evento.
 
-
 </td>
-
 
 </tr>
 
 
 </tbody>
-
-
-
-
 
 
 </table>
@@ -451,9 +395,7 @@ Selecione um evento.
 
 
 
-
 </main>
-
 
 
 
@@ -464,12 +406,7 @@ Selecione um evento.
 
 <script type="module" src="frequencia.js"></script>
 
-
 <script type="module" src="permissoes.js"></script>
-
-
-
-
 
 
 
@@ -484,21 +421,15 @@ function atualizarHora(){
 const hora=document.getElementById("horaAtual");
 
 
-
 if(hora){
 
-
-hora.innerHTML=new Date()
-
-.toLocaleTimeString("pt-BR");
-
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
 
 }
 
 
-
 }
-
 
 
 setInterval(atualizarHora,1000);
@@ -509,9 +440,6 @@ atualizarHora();
 
 
 </script>
-
-
-
 
 
 
