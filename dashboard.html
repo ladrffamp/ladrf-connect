@@ -9,151 +9,12 @@
 
 <title>LADRF Connect - Painel</title>
 
+
 <link rel="stylesheet" href="styles.css">
 
 
-<style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-body{
-
-font-family:Arial;
-
-background:#f4f6f9;
-
-padding:30px;
-
-}
-
-
-
-/* BOTÃO MENU */
-
-.btn-voltar{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-z-index:9999;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-font-size:15px;
-
-cursor:pointer;
-
-box-shadow:0 5px 15px rgba(0,0,0,.2);
-
-}
-
-
-
-.btn-voltar:hover{
-
-background:#075c2b;
-
-}
-
-
-
-
-h1{
-
-color:#0B7A3B;
-
-margin-bottom:30px;
-
-}
-
-
-
-.cards{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
-gap:20px;
-
-}
-
-
-
-.card{
-
-background:white;
-
-padding:25px;
-
-border-radius:15px;
-
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-
-}
-
-
-
-.numero{
-
-font-size:40px;
-
-font-weight:bold;
-
-color:#0B7A3B;
-
-}
-
-
-
-table{
-
-width:100%;
-
-margin-top:30px;
-
-background:white;
-
-border-collapse:collapse;
-
-}
-
-
-
-th{
-
-background:#0B7A3B;
-
-color:white;
-
-padding:15px;
-
-}
-
-
-
-td{
-
-padding:15px;
-
-border-bottom:1px solid #ddd;
-
-text-align:center;
-
-}
-
-
-
-</style>
 
 </head>
 
@@ -162,14 +23,89 @@ text-align:center;
 
 
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
-
-🏠 Menu Inicial
-
-</button>
+<header>
 
 
+<a href="index.html" class="btn-inicio">
 
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</a>
+
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
+
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="usuario">
+
+
+<h3 id="nomeUsuario">
+
+Carregando...
+
+</h3>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<p id="horaAtual">
+
+--:--:--
+
+</p>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+<main class="container">
+
+
+
+<section class="page-title">
 
 
 <h1>
@@ -179,13 +115,32 @@ Painel de Atendimento LADRF Connect
 </h1>
 
 
+<p>
+
+Acompanhamento dos atendimentos em tempo real.
+
+</p>
+
+
+</section>
 
 
 
-<div class="cards">
+
+
+
+
+<section class="cards">
+
+
+
 
 
 <div class="card">
+
+
+<i class="fa-solid fa-clock"></i>
+
 
 <h3>
 
@@ -193,19 +148,27 @@ Aguardando
 
 </h3>
 
+
 <div id="aguardando" class="numero">
 
 0
 
 </div>
 
+
 </div>
 
 
 
 
 
+
+
 <div class="card">
+
+
+<i class="fa-solid fa-user-doctor"></i>
+
 
 <h3>
 
@@ -213,19 +176,27 @@ Em atendimento
 
 </h3>
 
+
 <div id="atendimento" class="numero">
 
 0
 
 </div>
 
+
 </div>
 
 
 
 
 
+
+
 <div class="card">
+
+
+<i class="fa-solid fa-bed"></i>
+
 
 <h3>
 
@@ -233,13 +204,17 @@ Macas livres
 
 </h3>
 
+
 <div id="livres" class="numero">
 
 0
 
 </div>
 
+
 </div>
+
+
 
 
 
@@ -247,11 +222,16 @@ Macas livres
 
 <div class="card">
 
+
+<i class="fa-solid fa-bed-pulse"></i>
+
+
 <h3>
 
 Macas ocupadas
 
 </h3>
+
 
 <div id="ocupadas" class="numero">
 
@@ -259,15 +239,23 @@ Macas ocupadas
 
 </div>
 
-</div>
-
-
 
 </div>
 
 
 
 
+
+</section>
+
+
+
+
+
+
+
+
+<div class="card">
 
 
 
@@ -281,12 +269,17 @@ Pacientes em atendimento
 
 
 
+<div class="table-responsive">
+
+
 <table>
 
 
 <thead>
 
+
 <tr>
+
 
 <th>
 
@@ -311,6 +304,7 @@ Modalidade
 
 </tr>
 
+
 </thead>
 
 
@@ -325,12 +319,63 @@ Modalidade
 </table>
 
 
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+</main>
+
+
+
 
 
 
 
 
 <script type="module" src="dashboard.js"></script>
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora = document.getElementById("horaAtual");
+
+
+if(hora){
+
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
+
+}
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
 
 
 
