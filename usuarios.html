@@ -7,7 +7,7 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Usuários - LADRF Connect</title>
+<title>Usuários | LADRF Connect</title>
 
 
 <link rel="stylesheet" href="styles.css">
@@ -20,10 +20,12 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 </head>
 
 
+
 <body>
 
 
-<header class="topbar">
+
+<header>
 
 
 <a href="index.html" class="btn-inicio">
@@ -37,16 +39,29 @@ Início
 
 
 
+
 <div class="logo">
+
 
 <i class="fa-solid fa-heart-pulse"></i>
 
 
 <div>
 
-<h1>LADRF Connect</h1>
 
-<p>Sistema de Gestão da Liga</p>
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
 
 </div>
 
@@ -56,14 +71,17 @@ Início
 
 
 
-<div class="usuario-info">
 
 
-<strong id="nomeUsuario">
+<div class="usuario">
+
+
+<h3 id="nomeUsuario">
 
 Carregando...
 
-</strong>
+</h3>
+
 
 
 <span id="perfilUsuario">
@@ -73,14 +91,18 @@ Perfil
 </span>
 
 
-<small id="horaAtual">
+
+<p id="horaAtual">
 
 00:00:00
 
-</small>
+</p>
+
 
 
 </div>
+
+
 
 
 </header>
@@ -89,7 +111,11 @@ Perfil
 
 
 
+
+
 <main class="container">
+
+
 
 
 
@@ -103,11 +129,13 @@ Perfil
 </h1>
 
 
+
 <p>
 
 Controle de acessos e permissões do sistema.
 
 </p>
+
 
 
 </section>
@@ -117,13 +145,17 @@ Controle de acessos e permissões do sistema.
 
 
 
+
 <div class="card">
+
 
 
 <div class="table-responsive">
 
 
+
 <table>
+
 
 
 <thead>
@@ -139,11 +171,13 @@ Nome
 </th>
 
 
+
 <th>
 
 Email
 
 </th>
+
 
 
 <th>
@@ -153,6 +187,7 @@ Perfil
 </th>
 
 
+
 <th>
 
 Ação
@@ -160,10 +195,14 @@ Ação
 </th>
 
 
+
 </tr>
 
 
+
 </thead>
+
+
 
 
 
@@ -176,14 +215,17 @@ Ação
 
 
 
+
 </table>
 
 
-</div>
-
-
 
 </div>
+
+
+
+</div>
+
 
 
 
@@ -191,6 +233,8 @@ Ação
 
 
 </main>
+
+
 
 
 
@@ -205,25 +249,33 @@ Ação
 
 
 
+
+
+
 <script>
 
 
 function atualizarHora(){
 
 
-const hora=document.getElementById("horaAtual");
+const hora = document.getElementById("horaAtual");
+
 
 
 if(hora){
 
-hora.innerHTML=new Date()
+
+hora.innerHTML = new Date()
 
 .toLocaleTimeString("pt-BR");
 
+
 }
 
 
+
 }
+
 
 
 setInterval(atualizarHora,1000);
@@ -232,7 +284,11 @@ setInterval(atualizarHora,1000);
 atualizarHora();
 
 
+
 </script>
+
+
+
 
 
 
