@@ -55,7 +55,22 @@ const auth = getAuth(app);
 
 const db = getFirestore(app);
 
-const messaging = getMessaging(app);
+let messaging = null;
+
+
+try{
+
+    messaging = getMessaging(app);
+
+}
+catch(error){
+
+    console.log(
+        "Firebase Messaging não inicializado:",
+        error
+    );
+
+}
 
 
 // =====================================
