@@ -158,6 +158,12 @@ Carregando...
 
 
 </div>
+
+
+
+
+
+
 <div class="card">
 
 
@@ -175,7 +181,7 @@ Minhas Escalas
 <div id="listaEscalas">
 
 
-<div class="card">
+<div style="text-align:center;">
 
 <i class="fa-solid fa-spinner fa-spin"></i>
 
@@ -299,6 +305,8 @@ Presenças
 
 
 </div>
+
+
 </main>
 
 
@@ -306,12 +314,15 @@ Presenças
 
 
 
-<script type="module" src="meu-painel.js"></script>
 
 
-<script type="module" src="permissoes.js"></script>
+<!-- SCRIPTS -->
 
+<script type="module" src="./meu-painel.js"></script>
 
+<script type="module" src="./minhas-escalas.js"></script>
+
+<script type="module" src="./permissoes.js"></script>
 
 
 
@@ -324,20 +335,18 @@ Presenças
 function atualizarHora(){
 
 
-const hora=document.getElementById("horaAtual");
-
+const hora = document.getElementById("horaAtual");
 
 
 if(hora){
 
 
-hora.innerHTML=new Date()
+hora.innerHTML = new Date()
 
 .toLocaleTimeString("pt-BR");
 
 
 }
-
 
 
 }
