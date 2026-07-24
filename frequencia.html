@@ -7,20 +7,26 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+
 <title>Frequência | LADRF Connect</title>
+
 
 <link rel="stylesheet" href="styles.css">
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
 
 </head>
+
 
 
 <body>
 
 
-<header class="topbar">
+
+<header>
+
 
 
 <a href="index.html" class="btn-inicio">
@@ -34,19 +40,23 @@ Início
 
 
 
+
 <div class="logo">
 
 
 <i class="fa-solid fa-heart-pulse"></i>
 
 
+
 <div>
+
 
 <h1>
 
 LADRF Connect
 
 </h1>
+
 
 <p>
 
@@ -64,14 +74,14 @@ Sistema de Gestão da Liga
 
 
 
-<div class="usuario-info">
+<div class="usuario">
 
 
-<strong id="nomeUsuario">
+<h3 id="nomeUsuario">
 
 Carregando...
 
-</strong>
+</h3>
 
 
 <span id="perfilUsuario">
@@ -81,14 +91,17 @@ Perfil
 </span>
 
 
-<small id="horaAtual">
+
+<p id="horaAtual">
 
 00:00:00
 
-</small>
+</p>
+
 
 
 </div>
+
 
 
 </header>
@@ -100,6 +113,8 @@ Perfil
 
 
 <main class="container">
+
+
 
 
 
@@ -136,8 +151,6 @@ Registro de presença dos membros nos eventos da LADRF.
 
 <h2>
 
-<i class="fa-solid fa-calendar-days"></i>
-
 Selecionar Evento
 
 </h2>
@@ -149,6 +162,7 @@ Selecionar Evento
 Evento
 
 </label>
+
 
 
 <select id="evento">
@@ -167,19 +181,11 @@ Carregando eventos...
 
 </div>
 
+<section class="stats">
 
 
 
-
-
-
-
-
-<section class="cards">
-
-
-
-<div class="card">
+<div class="stat">
 
 
 <i class="fa-solid fa-users"></i>
@@ -187,25 +193,26 @@ Carregando eventos...
 
 <h3>
 
-Total de membros
+Total de Membros
 
 </h3>
 
 
-<div class="numero" id="totalMembros">
+<span id="totalMembros">
 
 0
 
+</span>
+
+
+
 </div>
 
 
-</div>
 
 
 
-
-
-<div class="card">
+<div class="stat">
 
 
 <i class="fa-solid fa-user-check"></i>
@@ -218,23 +225,24 @@ Presentes
 </h3>
 
 
-<div class="numero" id="presentes">
+<span id="presentes">
 
 0
 
+</span>
+
+
+
 </div>
 
 
-</div>
 
 
 
+<div class="stat">
 
 
-<div class="card">
-
-
-<i class="fa-solid fa-clock"></i>
+<i class="fa-solid fa-user-clock"></i>
 
 
 <h3>
@@ -244,20 +252,21 @@ Pendentes
 </h3>
 
 
-<div class="numero" id="pendentes">
+<span id="pendentes">
 
 0
 
+</span>
+
+
+
 </div>
 
 
-</div>
 
 
 
-
-
-<div class="card">
+<div class="stat">
 
 
 <i class="fa-solid fa-user-xmark"></i>
@@ -270,20 +279,20 @@ Ausentes
 </h3>
 
 
-<div class="numero" id="ausentes">
+<span id="ausentes">
 
 0
 
-</div>
+</span>
 
 
+
 </div>
+
 
 
 
 </section>
-
-
 
 
 
@@ -296,8 +305,6 @@ Ausentes
 
 <h2>
 
-<i class="fa-solid fa-list-check"></i>
-
 Lista de Presença
 
 </h2>
@@ -309,7 +316,9 @@ Lista de Presença
 <div class="table-responsive">
 
 
+
 <table>
+
 
 
 <thead>
@@ -365,18 +374,25 @@ Ações
 <tbody id="listaPresenca">
 
 
+
 <tr>
 
-<td colspan="5" style="text-align:center">
+
+<td colspan="5" style="text-align:center;">
+
 
 Selecione um evento.
 
+
 </td>
+
 
 </tr>
 
 
+
 </tbody>
+
 
 
 </table>
@@ -388,27 +404,9 @@ Selecione um evento.
 
 
 </div>
-
-
-
-
-
-
-
-</main>
-
-
-
-
-
-
-
-
 <script type="module" src="frequencia.js"></script>
 
 <script type="module" src="permissoes.js"></script>
-
-
 
 
 
@@ -418,18 +416,24 @@ Selecione um evento.
 function atualizarHora(){
 
 
-const hora=document.getElementById("horaAtual");
+const hora = document.getElementById("horaAtual");
+
 
 
 if(hora){
 
-hora.innerHTML =
-new Date().toLocaleTimeString("pt-BR");
+
+hora.innerHTML = new Date()
+
+.toLocaleTimeString("pt-BR");
+
 
 }
 
 
+
 }
+
 
 
 setInterval(atualizarHora,1000);
