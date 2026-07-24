@@ -13,7 +13,8 @@
 <link rel="stylesheet" href="styles.css">
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
@@ -120,6 +121,11 @@ Registro completo do atendimento fisioterapêutico.
 
 
 </section>
+
+
+
+
+
 <div class="card">
 
 
@@ -303,12 +309,6 @@ Horário de término
 
 
 </div>
-
-
-
-
-
-
 <div class="card">
 
 
@@ -387,6 +387,11 @@ Outro
 
 
 </div>
+
+
+
+
+
 <div class="card">
 
 
@@ -395,7 +400,6 @@ Outro
 📌 Lado acometido
 
 </h2>
-
 
 
 <div class="radio-group">
@@ -432,9 +436,7 @@ Bilateral
 
 </div>
 
-
 </div>
-
 
 
 
@@ -527,12 +529,9 @@ Outro
 </label>
 
 
-
 </div>
 
-
 </div>
-
 
 
 
@@ -576,7 +575,6 @@ Dor:
 
 
 </div>
-
 
 
 
@@ -818,8 +816,70 @@ Permaneceu em observação
 
 
 
-<button 
+<!-- ÁREA DA AVALIAÇÃO -->
+
+<div class="card" id="areaAvaliacao" style="display:none;text-align:center;">
+
+
+<h2>
+
+⭐ Avaliação do Atendimento
+
+</h2>
+
+
+<p>
+
+Peça para o paciente escanear o QR Code abaixo:
+
+</p>
+
+
+
+<div 
+id="qrcode"
+style="
+display:flex;
+justify-content:center;
+margin:25px;
+">
+
+</div>
+
+
+
+
+<a
+
+id="linkAvaliacao"
+
+target="_blank"
+
 class="btn-success"
+
+style="
+display:inline-block;
+text-decoration:none;
+">
+
+<i class="fa-solid fa-star"></i>
+
+Abrir Avaliação
+
+</a>
+
+
+</div>
+
+
+
+
+
+
+<button 
+
+class="btn-success"
+
 onclick="salvarAtendimento()">
 
 
@@ -842,6 +902,9 @@ Finalizar Atendimento
 
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
 <script type="module" src="atendimento.js"></script>
 
 
@@ -859,15 +922,21 @@ function atualizarHora(){
 
 
 const hora =
+
 document.getElementById("horaAtual");
+
 
 
 if(hora){
 
+
 hora.innerHTML =
+
 new Date().toLocaleTimeString("pt-BR");
 
+
 }
+
 
 }
 
