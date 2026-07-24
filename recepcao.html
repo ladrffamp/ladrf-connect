@@ -4,187 +4,16 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Recepção - LADRF Connect</title>
+<title>Recepção | LADRF Connect</title>
 
 
-<style>
+<link rel="stylesheet" href="styles.css">
 
-body{
 
-font-family:Arial,sans-serif;
-
-background:#f4f6f9;
-
-padding:30px;
-
-}
-
-
-
-/* BOTÃO MENU */
-
-.btn-voltar{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-z-index:9999;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-font-size:15px;
-
-cursor:pointer;
-
-box-shadow:0 5px 15px rgba(0,0,0,.2);
-
-}
-
-
-
-.btn-voltar:hover{
-
-background:#075c2b;
-
-}
-
-
-
-
-.container{
-
-max-width:1000px;
-
-margin:auto;
-
-}
-
-
-
-h1,h2{
-
-color:#0B7A3B;
-
-}
-
-
-
-.card{
-
-background:white;
-
-padding:25px;
-
-border-radius:15px;
-
-margin-top:25px;
-
-box-shadow:0 5px 15px rgba(0,0,0,.1);
-
-}
-
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-
-
-th{
-
-background:#0B7A3B;
-
-color:white;
-
-padding:12px;
-
-}
-
-
-
-td{
-
-padding:12px;
-
-border-bottom:1px solid #ddd;
-
-text-align:center;
-
-}
-
-
-
-button{
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:8px;
-
-cursor:pointer;
-
-}
-
-
-
-button:hover{
-
-opacity:.85;
-
-}
-
-
-
-#macas{
-
-display:flex;
-
-flex-wrap:wrap;
-
-gap:15px;
-
-}
-
-
-
-.maca{
-
-width:150px;
-
-padding:20px;
-
-border-radius:12px;
-
-font-size:16px;
-
-}
-
-
-
-</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
@@ -195,17 +24,101 @@ font-size:16px;
 
 
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
-
-🏠 Menu Inicial
-
-</button>
+<header>
 
 
+<a href="index.html" class="btn-inicio">
+
+
+<i class="fa-solid fa-house"></i>
+
+
+Início
+
+
+</a>
 
 
 
-<div class="container">
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
+
+
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="usuario">
+
+
+<h3 id="nomeUsuario">
+
+Carregando...
+
+</h3>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<p id="horaAtual">
+
+--:--:--
+
+</p>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+
+
+<main class="container">
+
+
+
+
+
+<section class="page-title">
 
 
 <h1>
@@ -213,6 +126,18 @@ font-size:16px;
 Recepção LADRF Connect
 
 </h1>
+
+
+<p>
+
+Controle da fila e distribuição dos pacientes.
+
+</p>
+
+
+</section>
+
+
 
 
 
@@ -223,10 +148,18 @@ Recepção LADRF Connect
 
 <h2>
 
+<i class="fa-solid fa-list"></i>
+
 Fila de Atendimento
 
 </h2>
 
+
+
+
+
+
+<div class="table-responsive">
 
 
 <table>
@@ -234,13 +167,16 @@ Fila de Atendimento
 
 <thead>
 
+
 <tr>
+
 
 <th>
 
 Paciente
 
 </th>
+
 
 
 <th>
@@ -250,6 +186,7 @@ Modalidade
 </th>
 
 
+
 <th>
 
 Ação
@@ -257,13 +194,16 @@ Ação
 </th>
 
 
+
 </tr>
+
 
 </thead>
 
 
 
 <tbody id="fila">
+
 
 </tbody>
 
@@ -276,6 +216,12 @@ Ação
 
 
 
+</div>
+
+
+
+
+
 
 
 
@@ -285,9 +231,12 @@ Ação
 
 <h2>
 
+<i class="fa-solid fa-bed"></i>
+
 Escolha a Maca
 
 </h2>
+
 
 
 <p>
@@ -298,18 +247,28 @@ Selecione um paciente na fila e depois escolha uma maca livre.
 
 
 
-<div id="macas">
+
+
+
+<div id="macas" class="lista">
+
+
+</div>
+
+
+
 
 </div>
 
 
 
-</div>
 
 
 
 
-</div>
+</main>
+
+
 
 
 
@@ -319,7 +278,47 @@ Selecione um paciente na fila e depois escolha uma maca livre.
 
 <script type="module" src="recepcao.js"></script>
 
+
 <script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora =
+document.getElementById("horaAtual");
+
+
+if(hora){
+
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
+
+}
+
+
+}
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
 
 
 
