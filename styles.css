@@ -72,17 +72,18 @@ a{
 
 
 /* ==========================================================
-   CABEÇALHO PADRÃO
+   CABEÇALHO PADRÃO LADRF CONNECT
 ========================================================== */
-
 
 header{
 
-    background:white;
+    background:linear-gradient(
+        90deg,
+        #0B7A3B,
+        #15A34A
+    );
 
-    color:#222;
-
-    height:75px;
+    color:white;
 
     display:flex;
 
@@ -90,19 +91,47 @@ header{
 
     align-items:center;
 
-    padding:0 30px;
+    padding:18px 35px;
 
-    box-shadow:0 3px 12px rgba(0,0,0,.12);
-
-    position:sticky;
-
-    top:0;
-
-    z-index:1000;
+    box-shadow:0 4px 15px rgba(0,0,0,.15);
 
 }
 
 
+
+/* BOTÃO INÍCIO */
+
+.btn-inicio{
+
+    background:white;
+
+    color:#0B7A3B;
+
+    padding:12px 20px;
+
+    border-radius:10px;
+
+    font-weight:600;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+
+
+.btn-inicio:hover{
+
+    background:#f1f1f1;
+
+}
+
+
+
+/* LOGO */
 
 .logo{
 
@@ -110,7 +139,9 @@ header{
 
     align-items:center;
 
-    gap:12px;
+    gap:15px;
+
+    color:white;
 
 }
 
@@ -118,9 +149,7 @@ header{
 
 .logo i{
 
-    font-size:28px;
-
-    color:var(--verde);
+    font-size:38px;
 
 }
 
@@ -128,11 +157,11 @@ header{
 
 .logo h1{
 
-    font-size:22px;
+    color:white;
 
-    font-weight:700;
+    font-size:28px;
 
-    color:var(--verde);
+    margin:0;
 
 }
 
@@ -140,23 +169,35 @@ header{
 
 .logo p{
 
-    font-size:13px;
+    color:white;
 
-    color:#666;
+    opacity:.9;
+
+    font-size:14px;
 
 }
 
 
 
+/* USUÁRIO */
+
 .usuario{
 
-    text-align:right;
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:flex-end;
+
+    color:white;
 
 }
 
 
 
 .usuario h3{
+
+    color:white;
 
     font-size:17px;
 
@@ -166,9 +207,9 @@ header{
 
 .usuario span{
 
-    font-size:14px;
+    color:white;
 
-    color:#666;
+    font-size:14px;
 
 }
 
@@ -176,9 +217,11 @@ header{
 
 .usuario p{
 
+    color:white;
+
     font-size:13px;
 
-    color:#777;
+    margin-top:4px;
 
 }
 
