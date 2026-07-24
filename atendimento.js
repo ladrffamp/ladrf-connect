@@ -12,6 +12,126 @@ updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
+// =====================================
+// BUSCA DE PACIENTE PELO NOME
+// =====================================
+
+const campoNome = document.getElementById("nome");
+
+const resultadoPacientes =
+document.getElementById("resultadoPacientes");
+
+
+if(campoNome && resultadoPacientes){
+
+
+campoNome.addEventListener("input", async()=>{
+
+
+const texto =
+campoNome.value.toLowerCase().trim();
+
+
+
+if(texto.length < 3){
+
+resultadoPacientes.innerHTML="";
+
+return;
+
+}
+
+
+
+const lista = await getDocs(
+collection(db,"pacientes")
+);
+
+
+
+resultadoPacientes.innerHTML="";
+
+
+
+lista.forEach((item)=>{
+
+
+const paciente = item.data();
+
+
+
+if(
+paciente.nome &&
+paciente.nome.toLowerCase().includes(texto)
+){
+
+
+const div = document.createElement("div");
+
+
+div.className="lista-item";
+
+
+div.innerHTML = paciente.nome;
+
+
+
+div.onclick = ()=>{
+
+
+pacienteAtual = {
+
+id:item.id,
+
+...paciente
+
+};
+
+
+
+document.getElementById("nome").value =
+paciente.nome;
+
+
+
+document.getElementById("idade").value =
+paciente.idade || "";
+
+
+
+document.getElementById("sexo").value =
+paciente.sexo || "";
+
+
+
+document.getElementById("modalidade").value =
+paciente.modalidade || "";
+
+
+
+resultadoPacientes.innerHTML="";
+
+
+};
+
+
+
+resultadoPacientes.appendChild(div);
+
+
+}
+
+
+});
+
+
+});
+
+
+}
+
+
+
 let pacienteAtual = null;
 
 
