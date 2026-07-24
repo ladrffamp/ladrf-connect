@@ -4,226 +4,66 @@
 <head>
 
 <meta charset="UTF-8">
+
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Movimentações | LADRF Connect</title>
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-}
-
-
-body{
-background:#eef3f7;
-color:#333;
-}
-
-
-header{
-
-background:linear-gradient(90deg,#0B7A3B,#15A34A);
-
-color:white;
-
-padding:25px 35px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-box-shadow:0 5px 15px rgba(0,0,0,.15);
-
-}
-
-
-header h1{
-
-font-size:28px;
-
-}
-
-
-header p{
-
-font-size:14px;
-
-opacity:.9;
-
-}
-
-
-.container{
-
-max-width:1300px;
-
-margin:auto;
-
-padding:35px;
-
-}
-
-
-
-.botao{
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:12px;
-
-cursor:pointer;
-
-font-weight:600;
-
-}
-
-
-
-.card{
-
-background:white;
-
-border-radius:18px;
-
-padding:25px;
-
-box-shadow:0 8px 20px rgba(0,0,0,.08);
-
-}
-
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-
-
-thead{
-
-background:#0B7A3B;
-
-color:white;
-
-}
-
-
-
-th{
-
-padding:16px;
-
-text-align:left;
-
-}
-
-
-
-td{
-
-padding:16px;
-
-border-bottom:1px solid #eee;
-
-}
-
-
-
-.entrada{
-
-color:#198754;
-
-font-weight:bold;
-
-}
-
-
-
-.saida{
-
-color:#dc3545;
-
-font-weight:bold;
-
-}
-
-
-
-footer{
-
-text-align:center;
-
-padding:30px;
-
-color:#666;
-
-}
-
-
-
-@media(max-width:800px){
-
-table{
-
-display:block;
-
-overflow-x:auto;
-
-}
-
-}
-
-
-</style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
 
 
+
 <body>
 
 
-<header>
+
+
+<header class="topbar">
+
+
+<a href="index.html" class="btn-inicio">
+
+
+<i class="fa-solid fa-house"></i>
+
+
+Início
+
+
+</a>
+
+
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
 
 
 <div>
 
+
 <h1>
 
-<i class="fa-solid fa-clock-rotate-left"></i>
-
-Movimentações
+LADRF Connect
 
 </h1>
 
 
 <p>
 
-Histórico do estoque LADRF
+Sistema de Gestão da Liga
 
 </p>
 
@@ -231,14 +71,45 @@ Histórico do estoque LADRF
 </div>
 
 
+</div>
 
-<button class="botao" onclick="window.location='materiais.html'">
 
-<i class="fa-solid fa-box"></i>
 
-Materiais
 
-</button>
+
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
+Carregando...
+
+</strong>
+
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+
+
+<small id="horaAtual">
+
+00:00:00
+
+</small>
+
+
+
+</div>
+
+
 
 
 </header>
@@ -246,10 +117,85 @@ Materiais
 
 
 
-<div class="container">
+
+
+
+<main class="container">
+
+
+
+
+
+<section class="page-title">
+
+
+<h1>
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+Movimentações de Estoque
+
+</h1>
+
+
+
+<p>
+
+Histórico de entradas e saídas de materiais.
+
+</p>
+
+
+
+</section>
+
+
+
+
+
 
 
 <div class="card">
+
+
+
+<div class="flex-between">
+
+
+<h2>
+
+<i class="fa-solid fa-box"></i>
+
+Histórico de Movimentações
+
+</h2>
+
+
+
+<button 
+class="btn-success"
+onclick="window.location='materiais.html'">
+
+
+<i class="fa-solid fa-arrow-left"></i>
+
+
+Materiais
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="table-responsive">
 
 
 <table>
@@ -257,17 +203,44 @@ Materiais
 
 <thead>
 
+
 <tr>
 
-<th>Data</th>
 
-<th>Material</th>
+<th>
 
-<th>Tipo</th>
+Data
 
-<th>Quantidade</th>
+</th>
 
-<th>Motivo</th>
+
+<th>
+
+Material
+
+</th>
+
+
+<th>
+
+Tipo
+
+</th>
+
+
+<th>
+
+Quantidade
+
+</th>
+
+
+<th>
+
+Motivo
+
+</th>
+
 
 </tr>
 
@@ -276,18 +249,28 @@ Materiais
 
 
 
+
+
 <tbody id="listaMovimentacoes">
 
 
 <tr>
 
+
 <td colspan="5" style="text-align:center">
 
-Carregando...
+
+<i class="fa-solid fa-spinner fa-spin"></i>
+
+
+Carregando movimentações...
+
 
 </td>
 
+
 </tr>
+
 
 
 </tbody>
@@ -301,22 +284,71 @@ Carregando...
 </div>
 
 
+
 </div>
 
 
 
 
 
-<footer>
 
-LADRF Connect 2.0 • Histórico de Estoque
 
-</footer>
+</main>
+
+
+
+
+
 
 
 
 
 <script type="module" src="movimentacoes.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora=document.getElementById("horaAtual");
+
+
+if(hora){
+
+
+hora.innerHTML =
+
+new Date().toLocaleTimeString("pt-BR");
+
+
+}
+
+
+}
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
+
 
 
 </body>
