@@ -1,11 +1,15 @@
 // relatorios.js
 
+
 import { db } from "./firebase.js";
+
 
 import {
 collection,
 getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
 
 
 
@@ -25,12 +29,17 @@ const totalHoras =
 document.getElementById("totalHoras");
 
 
-const tabelaCategorias =
-document.getElementById("tabelaCategorias");
+
+const resumoAtendimentos =
+document.getElementById("resumoAtendimentos");
 
 
-const tabelaEventos =
-document.getElementById("tabelaEventos");
+const listaEventos =
+document.getElementById("listaEventos");
+
+
+
+
 
 
 
@@ -43,12 +52,13 @@ try{
 
 
 
-// ===============================
+// =============================
 // MEMBROS
-// ===============================
+// =============================
 
 
-const usuariosSnapshot = await getDocs(
+const usuarios =
+await getDocs(
 
 collection(
 db,
@@ -63,10 +73,11 @@ let membros = 0;
 
 
 
-usuariosSnapshot.forEach((doc)=>{
+usuarios.forEach((usuario)=>{
 
 
-const dados = doc.data();
+const dados =
+usuario.data();
 
 
 
@@ -76,14 +87,14 @@ dados.perfil?.toLowerCase()
 "membro"
 ){
 
+
 membros++;
+
 
 }
 
 
 });
-
-
 
 
 
@@ -97,13 +108,13 @@ membros;
 
 
 
-
-// ===============================
+// =============================
 // EVENTOS
-// ===============================
+// =============================
 
 
-const agendaSnapshot = await getDocs(
+const eventosSnapshot =
+await getDocs(
 
 collection(
 db,
@@ -121,18 +132,19 @@ let atendimentos = 0;
 let horas = 0;
 
 
-
-let linhasEventos = "";
-
-
-
 let categorias = {};
 
 
 
+listaEventos.innerHTML = "";
 
 
-for(const evento of agendaSnapshot.docs){
+
+
+
+
+
+for(const evento of eventosSnapshot.docs){
 
 
 
@@ -151,6 +163,7 @@ if(
 dados.tipo === "Atendimento"
 ){
 
+
 atendimentos++;
 
 
@@ -161,26 +174,33 @@ atendimentos++;
 
 
 
-if(
-dados.tipo
-){
+// categorias
 
-if(!categorias[dados.tipo]){
 
-categorias[dados.tipo]=0;
+const categoria =
+dados.tipo || "Outros";
+
+
+
+if(!categorias[categoria]){
+
+
+categorias[categoria]=0;
+
 
 }
 
 
-categorias[dados.tipo]++;
-
-
-}
+categorias[categoria]++;
 
 
 
 
 
+
+
+
+// horas
 
 
 if(
@@ -206,11 +226,11 @@ dados.fim
 
 
 
-
 // participantes
 
 
-const participantes = await getDocs(
+const participantes =
+await getDocs(
 
 collection(
 
@@ -228,7 +248,10 @@ evento.id,
 
 
 
-linhasEventos += `
+
+
+
+listaEventos.innerHTML += `
 
 
 <tr>
@@ -273,12 +296,15 @@ ${participantes.size}
 
 
 
-totalEventos.innerHTML =
-eventos;
-
 
 totalAtendimentos.innerHTML =
 atendimentos;
+
+
+
+totalEventos.innerHTML =
+eventos;
+
 
 
 totalHoras.innerHTML =
@@ -288,23 +314,26 @@ horas + "h";
 
 
 
-// ===============================
-// CATEGORIAS
-// ===============================
-
-
-tabelaCategorias.innerHTML = "";
 
 
 
-Object.keys(categorias)
-.forEach((categoria)=>{
+// =============================
+// RESUMO ATENDIMENTOS
+// =============================
 
 
-tabelaCategorias.innerHTML += `
+resumoAtendimentos.innerHTML = "";
+
+
+
+Object.keys(categorias).forEach((categoria)=>{
+
+
+resumoAtendimentos.innerHTML += `
 
 
 <tr>
+
 
 <td>
 
@@ -335,13 +364,30 @@ ${categorias[categoria]}
 
 
 
-// ===============================
-// EVENTOS
-// ===============================
+if(
+listaEventos.innerHTML === ""
+){
 
 
-tabelaEventos.innerHTML =
-linhasEventos;
+listaEventos.innerHTML = `
+
+
+<tr>
+
+<td colspan="3">
+
+Nenhum evento encontrado.
+
+</td>
+
+
+</tr>
+
+
+`;
+
+
+}
 
 
 
@@ -352,16 +398,20 @@ linhasEventos;
 
 
 console.error(
-"Erro relatórios:",
+"Erro ao carregar relatórios:",
 error
 );
 
 
-}
-
-
 
 }
+
+
+
+
+
+}
+
 
 
 
@@ -375,40 +425,47 @@ fim
 ){
 
 
-const ini =
+
+const inicioPartes =
 inicio.split(":");
 
 
-const fimP =
+const fimPartes =
 fim.split(":");
 
 
 
-const minutosIni =
+const inicioMinutos =
 
-Number(ini[0])*60
+Number(inicioPartes[0])*60
+
 +
-Number(ini[1]);
+
+Number(inicioPartes[1]);
 
 
 
-const minutosFim =
+const fimMinutos =
 
-Number(fimP[0])*60
+Number(fimPartes[0])*60
+
 +
-Number(fimP[1]);
+
+Number(fimPartes[1]);
 
 
 
 return (
 
-minutosFim -
-minutosIni
+fimMinutos -
+inicioMinutos
 
 )/60;
 
 
+
 }
+
 
 
 
