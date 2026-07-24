@@ -7,194 +7,14 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Atendimento - LADRF Connect</title>
+<title>Atendimento | LADRF Connect</title>
 
 
-<style>
+<link rel="stylesheet" href="styles.css">
 
-*{
 
-box-sizing:border-box;
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-font-family:Arial, Helvetica, sans-serif;
-
-}
-
-
-
-body{
-
-background:#f4f6f9;
-
-padding:30px;
-
-}
-
-
-
-.btn-voltar{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-cursor:pointer;
-
-}
-
-
-
-.container{
-
-max-width:900px;
-
-margin:auto;
-
-}
-
-
-
-.card{
-
-background:white;
-
-padding:30px;
-
-border-radius:20px;
-
-box-shadow:0 8px 20px rgba(0,0,0,.12);
-
-margin-bottom:25px;
-
-}
-
-
-
-h1,h2{
-
-color:#0B7A3B;
-
-}
-
-
-
-label{
-
-display:block;
-
-font-weight:bold;
-
-margin-top:15px;
-
-}
-
-
-
-input,
-select,
-textarea{
-
-width:100%;
-
-padding:12px;
-
-margin-top:5px;
-
-border-radius:8px;
-
-border:1px solid #ccc;
-
-}
-
-
-
-textarea{
-
-height:100px;
-
-}
-
-
-
-.grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-
-gap:15px;
-
-}
-
-
-
-.checkbox{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-
-gap:10px;
-
-margin-top:10px;
-
-}
-
-
-
-.checkbox label{
-
-font-weight:normal;
-
-}
-
-
-
-button{
-
-width:100%;
-
-padding:15px;
-
-margin-top:25px;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-border-radius:10px;
-
-font-size:17px;
-
-cursor:pointer;
-
-}
-
-
-
-button:hover{
-
-background:#075c2b;
-
-}
-
-
-
-</style>
 
 </head>
 
@@ -202,14 +22,91 @@ background:#075c2b;
 <body>
 
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
-
-🏠 Menu Inicial
-
-</button>
+<header>
 
 
-<div class="container">
+<a href="index.html" class="btn-inicio">
+
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</a>
+
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
+
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+<div class="usuario">
+
+
+<h3 id="nomeUsuario">
+
+Carregando...
+
+</h3>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<p id="horaAtual">
+
+--:--:--
+
+</p>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+<main class="container">
+
+
+
+
+
+<section class="page-title">
 
 
 <h1>
@@ -218,18 +115,33 @@ Ficha de Atendimento LADRF
 
 </h1>
 
+
+<p>
+
+Registro completo do atendimento fisioterapêutico.
+
+</p>
+
+
+</section>
+
+
+
+
+
 <div class="card">
 
 
 <h2>
+
 📌 Dados do paciente
+
 </h2>
 
 
-<div class="grid">
 
-
-<div>
+<div class="form-grid">
+  <div class="form-group">
 
 <label>
 Nome
@@ -241,7 +153,8 @@ Nome
 
 
 
-<div>
+
+<div class="form-group">
 
 <label>
 Idade
@@ -253,7 +166,8 @@ Idade
 
 
 
-<div>
+
+<div class="form-group">
 
 <label>
 Sexo
@@ -283,7 +197,8 @@ Outro
 
 
 
-<div>
+
+<div class="form-group">
 
 <label>
 Modalidade esportiva
@@ -333,7 +248,8 @@ Outro
 
 
 
-<div>
+
+<div class="form-group">
 
 <label>
 Evento/Ação
@@ -345,7 +261,8 @@ Evento/Ação
 
 
 
-<div>
+
+<div class="form-group">
 
 <label>
 Membro responsável
@@ -357,7 +274,8 @@ Membro responsável
 
 
 
-<div>
+
+<div class="form-group">
 
 <label>
 Maca
@@ -369,7 +287,8 @@ Maca
 
 
 
-<div>
+
+<div class="form-group">
 
 <label>
 Horário de início
@@ -381,7 +300,8 @@ Horário de início
 
 
 
-<div>
+
+<div class="form-group">
 
 <label>
 Horário de término
@@ -402,15 +322,19 @@ Horário de término
 
 
 
+
 <div class="card">
 
 
 <h2>
+
 📌 Queixa principal
+
 </h2>
 
 
-<div class="checkbox">
+
+<div class="form-grid">
 
 
 <label>
@@ -477,30 +401,43 @@ Outro
 
 
 </div>
-
 <div class="card">
 
 
 <h2>
+
 📌 Lado acometido
+
 </h2>
 
 
+
 <label>
+
 <input type="radio" name="lado" value="Direito">
+
 Direito
+
 </label>
 
 
+
 <label>
+
 <input type="radio" name="lado" value="Esquerdo">
+
 Esquerdo
+
 </label>
 
 
+
 <label>
+
 <input type="radio" name="lado" value="Bilateral">
+
 Bilateral
+
 </label>
 
 
@@ -511,62 +448,89 @@ Bilateral
 
 
 
+
 <div class="card">
 
 
 <h2>
+
 📌 Tipo de lesão
+
 </h2>
 
 
-<div class="checkbox">
+<div class="form-grid">
 
 
 <label>
+
 <input type="checkbox" name="lesao" value="Entorse">
+
 Entorse
+
 </label>
 
 
 <label>
+
 <input type="checkbox" name="lesao" value="Distensão muscular">
+
 Distensão muscular
+
 </label>
 
 
 <label>
+
 <input type="checkbox" name="lesao" value="Cãibra">
+
 Cãibra
+
 </label>
 
 
 <label>
+
 <input type="checkbox" name="lesao" value="Contusão">
+
 Contusão
+
 </label>
 
 
 <label>
+
 <input type="checkbox" name="lesao" value="Tendinopatia">
+
 Tendinopatia
+
 </label>
 
 
 <label>
+
 <input type="checkbox" name="lesao" value="Luxação">
+
 Luxação
+
 </label>
 
 
 <label>
+
 <input type="checkbox" name="lesao" value="Suspeita de fratura">
+
 Suspeita de fratura
+
 </label>
 
 
 <label>
+
 <input type="checkbox" name="lesao" value="Outro">
+
 Outro
+
 </label>
 
 
@@ -574,6 +538,8 @@ Outro
 
 
 </div>
+
+
 
 
 
@@ -583,8 +549,11 @@ Outro
 
 
 <h2>
+
 📌 Escala de dor (EVA)
+
 </h2>
+
 
 
 <input 
@@ -596,12 +565,15 @@ value="0"
 oninput="valorEVA.innerHTML=this.value">
 
 
+
 <h3>
 
 Dor:
 
 <span id="valorEVA">
+
 0
+
 </span>
 
 /10
@@ -609,7 +581,10 @@ Dor:
 </h3>
 
 
+
 </div>
+
+
 
 
 
@@ -619,11 +594,15 @@ Dor:
 
 
 <h2>
+
 📌 Condutas realizadas
+
 </h2>
 
 
-<div class="checkbox">
+
+<div class="form-grid">
+
 
 
 <label>
@@ -698,10 +677,13 @@ Outro
 </label>
 
 
+
 </div>
 
 
 </div>
+
+
 
 
 
@@ -711,14 +693,20 @@ Outro
 
 
 <h2>
+
 📌 Observações
+
 </h2>
+
 
 
 <textarea id="observacoes"></textarea>
 
 
+
 </div>
+
+
 
 
 
@@ -728,8 +716,11 @@ Outro
 
 
 <h2>
+
 📌 Situação ao final do atendimento
+
 </h2>
+
 
 
 <label>
@@ -781,15 +772,24 @@ Permaneceu em observação
 </label>
 
 
+
 </div>
 
 
 
 
 
-<button onclick="salvarAtendimento()">
+
+
+<button 
+class="btn-success"
+onclick="salvarAtendimento()">
+
+
+<i class="fa-solid fa-check"></i>
 
 Finalizar Atendimento
+
 
 </button>
 
@@ -797,13 +797,57 @@ Finalizar Atendimento
 
 
 
-</div>
+
+</main>
+
+
+
 
 
 
 
 
 <script type="module" src="atendimento.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora =
+document.getElementById("horaAtual");
+
+
+if(hora){
+
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
+
+}
+
+
+}
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
 
 
 </body>
