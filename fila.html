@@ -24,17 +24,14 @@
 
 
 
-<header>
+<header class="topbar">
 
 
 <a href="index.html" class="btn-inicio">
 
-
 <i class="fa-solid fa-house"></i>
 
-
 Início
-
 
 </a>
 
@@ -74,14 +71,17 @@ Sistema de Gestão da Liga
 
 
 
-<div class="usuario">
 
 
-<h3 id="nomeUsuario">
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
 
 Carregando...
 
-</h3>
+</strong>
+
 
 
 <span id="perfilUsuario">
@@ -91,14 +91,17 @@ Perfil
 </span>
 
 
-<p id="horaAtual">
+
+<small id="horaAtual">
 
 --:--:--
 
-</p>
+</small>
+
 
 
 </div>
+
 
 
 
@@ -142,11 +145,17 @@ Controle dos pacientes aguardando atendimento.
 
 
 
+
 <div class="card">
 
 
 
+
+
 <div class="flex-between">
+
+
+
 
 
 <h2>
@@ -156,6 +165,8 @@ Controle dos pacientes aguardando atendimento.
 Pacientes aguardando
 
 </h2>
+
+
 
 
 
@@ -176,7 +187,12 @@ Chamar Próximo Paciente
 
 
 
+
+
 </div>
+
+
+
 
 
 
@@ -198,27 +214,37 @@ Chamar Próximo Paciente
 
 
 <th>
+
 Paciente
+
 </th>
 
 
 <th>
+
 Modalidade
+
 </th>
 
 
 <th>
+
 Status
+
 </th>
 
 
 <th>
+
 Maca
+
 </th>
 
 
 <th>
+
 Ação
+
 </th>
 
 
@@ -228,6 +254,7 @@ Ação
 
 
 </thead>
+
 
 
 
@@ -247,7 +274,11 @@ Ação
 
 
 
+
+
 </div>
+
+
 
 
 
@@ -261,11 +292,18 @@ Ação
 
 
 
+
+
 <script type="module" src="fila.js"></script>
+
 
 <script type="module" src="auth.js"></script>
 
+
 <script type="module" src="permissoes.js"></script>
+
+
+
 
 
 
@@ -277,19 +315,24 @@ Ação
 function atualizarHora(){
 
 
-const hora =
-document.getElementById("horaAtual");
+const hora = document.getElementById("horaAtual");
+
 
 
 if(hora){
 
+
 hora.innerHTML =
+
 new Date().toLocaleTimeString("pt-BR");
 
+
 }
 
 
+
 }
+
 
 
 setInterval(atualizarHora,1000);
@@ -300,6 +343,9 @@ atualizarHora();
 
 
 </script>
+
+
+
 
 
 
