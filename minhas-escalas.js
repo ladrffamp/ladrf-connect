@@ -25,7 +25,6 @@ const lista = document.getElementById("listaEscalas");
 // CARREGAR ESCALAS DO MEMBRO
 // =====================================
 
-
 async function carregarEscalas(uid){
 
 
@@ -66,11 +65,11 @@ let encontrou = false;
 
 
 
-
 for(const acaoDoc of acoesSnapshot.docs){
 
 
 const dadosAcao = acaoDoc.data();
+
 
 
 
@@ -119,13 +118,15 @@ lista.innerHTML += `
 <div class="card" style="margin-bottom:20px;">
 
 
+
 <h2>
 
 <i class="fa-solid fa-calendar-check"></i>
 
-${dadosAcao.nome || "Ação sem nome"}
+${dadosAcao.titulo || dadosAcao.nome || "Ação sem nome"}
 
 </h2>
+
 
 
 
@@ -143,6 +144,7 @@ ${dadosAcao.data || "-"}
 
 
 
+
 <p>
 
 📍 Local:
@@ -157,15 +159,33 @@ ${dadosAcao.local || "-"}
 
 
 
+
 <p>
 
 ⏰ Horário:
 
 <strong>
 
-${dadosAcao.horaInicio || "-"}
+${dadosAcao.inicio || dadosAcao.horaInicio || "-"}
+
 até
-${dadosAcao.horaFim || "-"}
+
+${dadosAcao.fim || dadosAcao.horaFim || "-"}
+
+</strong>
+
+</p>
+
+
+
+
+<p>
+
+📌 Tipo:
+
+<strong>
+
+${dadosAcao.tipo || "-"}
 
 </strong>
 
@@ -178,7 +198,7 @@ ${dadosAcao.horaFim || "-"}
 
 Status:
 
-<b id="status-${acaoDoc.id}">
+<b>
 
 ${participante.presenca || "Pendente"}
 
@@ -189,12 +209,14 @@ ${participante.presenca || "Pendente"}
 
 
 
+
 <div style="
 display:flex;
 gap:10px;
 flex-wrap:wrap;
 margin-top:15px;
 ">
+
 
 
 <button
@@ -210,6 +232,7 @@ onclick="confirmarPresenca('${acaoDoc.id}')"
 Confirmar presença
 
 </button>
+
 
 
 
@@ -325,7 +348,9 @@ window.confirmarPresenca = async function(idAcao){
 
 if(!auth.currentUser){
 
-alert("Usuário não autenticado.");
+alert(
+"Usuário não autenticado."
+);
 
 return;
 
@@ -366,7 +391,9 @@ presenca:"Confirmado"
 
 
 
-alert("Presença confirmada!");
+alert(
+"Presença confirmada!"
+);
 
 
 
@@ -408,7 +435,9 @@ window.recusarPresenca = async function(idAcao){
 
 if(!auth.currentUser){
 
-alert("Usuário não autenticado.");
+alert(
+"Usuário não autenticado."
+);
 
 return;
 
@@ -449,7 +478,9 @@ presenca:"Recusado"
 
 
 
-alert("Resposta enviada!");
+alert(
+"Resposta enviada!"
+);
 
 
 
@@ -503,6 +534,8 @@ carregarEscalas(usuario.uid);
 }else{
 
 
+if(lista){
+
 lista.innerHTML = `
 
 <div class="card">
@@ -513,6 +546,7 @@ Usuário não logado.
 
 `;
 
+}
 
 
 }
