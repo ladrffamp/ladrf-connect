@@ -122,21 +122,9 @@ admin:[
 "certificados.html",
 "exportacao.html",
 
-"modalidades.html"
+"modalidades.html",
 
-],
-
-
-
-recepcao:[
-
-"index.html",
-"dashboard.html",
-
-"cadastro.html",
-"fila.html",
-"recepcao.html",
-"painel.html"
+"gerenciar-acao.html"
 
 ],
 
