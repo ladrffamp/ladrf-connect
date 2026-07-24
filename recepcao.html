@@ -24,7 +24,7 @@
 
 
 
-<header>
+<header class="topbar">
 
 
 <a href="index.html" class="btn-inicio">
@@ -75,14 +75,15 @@ Sistema de Gestão da Liga
 
 
 
-<div class="usuario">
+
+<div class="usuario-info">
 
 
-<h3 id="nomeUsuario">
+<strong id="nomeUsuario">
 
 Carregando...
 
-</h3>
+</strong>
 
 
 <span id="perfilUsuario">
@@ -92,18 +93,22 @@ Perfil
 </span>
 
 
-<p id="horaAtual">
+<small id="horaAtual">
 
 --:--:--
 
-</p>
+</small>
+
 
 
 </div>
 
 
 
+
+
 </header>
+
 
 
 
@@ -130,7 +135,7 @@ Recepção LADRF Connect
 
 <p>
 
-Controle da fila e distribuição dos pacientes.
+Controle da fila e distribuição dos pacientes nas macas.
 
 </p>
 
@@ -143,7 +148,12 @@ Controle da fila e distribuição dos pacientes.
 
 
 
+
+
 <div class="card">
+
+
+
 
 
 <h2>
@@ -159,10 +169,13 @@ Fila de Atendimento
 
 
 
+
 <div class="table-responsive">
 
 
+
 <table>
+
 
 
 <thead>
@@ -198,7 +211,10 @@ Ação
 </tr>
 
 
+
 </thead>
+
+
 
 
 
@@ -212,7 +228,10 @@ Ação
 </table>
 
 
+
 </div>
+
+
 
 
 
@@ -229,13 +248,18 @@ Ação
 <div class="card">
 
 
+
+
+
 <h2>
 
 <i class="fa-solid fa-bed"></i>
 
-Escolha a Maca
+Escolha da Maca
 
 </h2>
+
+
 
 
 
@@ -250,7 +274,8 @@ Selecione um paciente na fila e depois escolha uma maca livre.
 
 
 
-<div id="macas" class="lista">
+
+<div id="macas">
 
 
 </div>
@@ -258,7 +283,10 @@ Selecione um paciente na fila e depois escolha uma maca livre.
 
 
 
+
 </div>
+
+
 
 
 
@@ -294,19 +322,23 @@ Selecione um paciente na fila e depois escolha uma maca livre.
 function atualizarHora(){
 
 
-const hora =
-document.getElementById("horaAtual");
+const hora = document.getElementById("horaAtual");
 
 
 if(hora){
 
+
 hora.innerHTML =
+
 new Date().toLocaleTimeString("pt-BR");
 
+
 }
 
 
+
 }
+
 
 
 setInterval(atualizarHora,1000);
@@ -322,6 +354,10 @@ atualizarHora();
 
 
 
+
+
+
 </body>
+
 
 </html>
