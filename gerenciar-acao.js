@@ -491,12 +491,9 @@ await setDoc(
 doc(
 
 db,
-
-"acoes",
-
+"agendas",
 idAcao,
-
-"participantes",
+"participantes"
 
 membro.value
 
