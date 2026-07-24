@@ -22,7 +22,8 @@
 <body>
 
 
-<header>
+
+<header class="topbar">
 
 
 <a href="index.html" class="btn-inicio">
@@ -35,9 +36,7 @@ Início
 
 
 
-
 <div class="logo">
-
 
 <i class="fa-solid fa-heart-pulse"></i>
 
@@ -60,20 +59,20 @@ Sistema de Gestão da Liga
 
 </div>
 
-
 </div>
 
 
 
 
-<div class="usuario">
+
+<div class="usuario-info">
 
 
-<h3 id="nomeUsuario">
+<strong id="nomeUsuario">
 
 Carregando...
 
-</h3>
+</strong>
 
 
 <span id="perfilUsuario">
@@ -83,11 +82,11 @@ Perfil
 </span>
 
 
-<p id="horaAtual">
+<small id="horaAtual">
 
 --:--:--
 
-</p>
+</small>
 
 
 </div>
@@ -101,9 +100,6 @@ Perfil
 
 
 <main class="container">
-
-
-
 
 
 <section class="page-title">
@@ -124,11 +120,6 @@ Registro completo do atendimento fisioterapêutico.
 
 
 </section>
-
-
-
-
-
 <div class="card">
 
 
@@ -141,7 +132,9 @@ Registro completo do atendimento fisioterapêutico.
 
 
 <div class="form-grid">
-  <div class="form-group">
+
+
+<div class="form-group">
 
 <label>
 Nome
@@ -204,43 +197,36 @@ Outro
 Modalidade esportiva
 </label>
 
-<select id="modalidade">
 
+<select id="modalidade">
 
 <option value="">
 Selecione
 </option>
 
-
 <option>
 Futebol
 </option>
-
 
 <option>
 CrossFit
 </option>
 
-
 <option>
 Vôlei
 </option>
-
 
 <option>
 Beach Tennis
 </option>
 
-
 <option>
 Corrida
 </option>
 
-
 <option>
 Outro
 </option>
-
 
 </select>
 
@@ -412,6 +398,9 @@ Outro
 
 
 
+<div class="radio-group">
+
+
 <label>
 
 <input type="radio" name="lado" value="Direito">
@@ -441,8 +430,11 @@ Bilateral
 </label>
 
 
+</div>
+
 
 </div>
+
 
 
 
@@ -457,6 +449,7 @@ Bilateral
 📌 Tipo de lesão
 
 </h2>
+
 
 
 <div class="form-grid">
@@ -534,6 +527,7 @@ Outro
 </label>
 
 
+
 </div>
 
 
@@ -581,7 +575,6 @@ Dor:
 </h3>
 
 
-
 </div>
 
 
@@ -606,74 +599,121 @@ Dor:
 
 
 <label>
+
 <input type="checkbox" name="conduta" value="Crioterapia">
+
 Crioterapia
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Termoterapia">
+
 Termoterapia
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Liberação miofascial">
+
 Liberação miofascial
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Massagem">
+
 Massagem
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Alongamento">
+
 Alongamento
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Mobilização articular">
+
 Mobilização articular
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Bandagem funcional">
+
 Bandagem funcional
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Kinesio Taping">
+
 Kinesio Taping
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Exercícios">
+
 Exercícios
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Orientações">
+
 Orientações
+
 </label>
 
 
+
 <label>
+
 <input type="checkbox" name="conduta" value="Encaminhamento médico">
+
 Encaminhamento médico
+
 </label>
+
 
 
 <label>
+
 <input type="checkbox" name="conduta" value="Outro">
+
 Outro
+
 </label>
 
 
@@ -682,13 +722,6 @@ Outro
 
 
 </div>
-
-
-
-
-
-
-
 <div class="card">
 
 
@@ -721,6 +754,9 @@ Outro
 
 </h2>
 
+
+
+<div class="radio-group">
 
 
 <label>
@@ -772,9 +808,10 @@ Permaneceu em observação
 </label>
 
 
-
 </div>
 
+
+</div>
 
 
 
@@ -797,9 +834,7 @@ Finalizar Atendimento
 
 
 
-
 </main>
-
 
 
 
@@ -811,6 +846,7 @@ Finalizar Atendimento
 
 
 <script type="module" src="permissoes.js"></script>
+
 
 
 
@@ -833,8 +869,8 @@ new Date().toLocaleTimeString("pt-BR");
 
 }
 
-
 }
+
 
 
 setInterval(atualizarHora,1000);
