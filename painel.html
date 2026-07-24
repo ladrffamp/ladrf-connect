@@ -5,27 +5,18 @@
 
 <meta charset="UTF-8">
 
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Painel LADRF</title>
+<title>Painel | LADRF Connect</title>
+
+
+<link rel="stylesheet" href="styles.css">
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 <style>
-
-*{
-
-margin:0;
-
-padding:0;
-
-box-sizing:border-box;
-
-font-family:Arial;
-
-}
-
-
 
 body{
 
@@ -39,15 +30,13 @@ flex-direction:column;
 
 align-items:center;
 
-padding:40px;
+padding:30px;
 
 }
 
 
 
-/* BOTÃO MENU */
-
-.btn-voltar{
+.btn-inicio{
 
 position:fixed;
 
@@ -57,43 +46,35 @@ left:20px;
 
 z-index:9999;
 
-background:#00d26a;
-
-color:#111;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-font-size:16px;
-
-font-weight:bold;
-
-cursor:pointer;
-
 }
 
 
 
-.btn-voltar:hover{
-
-background:#00a854;
-
-}
-
-
-
-
-
-h1{
+.painel-logo{
 
 font-size:55px;
 
-margin-bottom:40px;
+color:white;
 
-color:#00d26a;
+font-weight:700;
+
+margin-top:40px;
+
+}
+
+
+
+#horaAtual{
+
+font-size:45px;
+
+color:#15A34A;
+
+font-weight:bold;
+
+margin:30px;
+
+letter-spacing:2px;
 
 }
 
@@ -102,6 +83,8 @@ color:#00d26a;
 .chamado{
 
 width:90%;
+
+max-width:1200px;
 
 background:#222;
 
@@ -133,7 +116,7 @@ margin:25px;
 
 font-size:40px;
 
-color:#00d26a;
+color:#15A34A;
 
 }
 
@@ -142,6 +125,8 @@ color:#00d26a;
 .proximos{
 
 width:90%;
+
+max-width:1200px;
 
 background:#222;
 
@@ -178,20 +163,7 @@ font-size:28px;
 border-bottom:1px solid #444;
 
 }
-  
-#horaAtual{
 
-font-size:45px;
-
-color:#00d26a;
-
-font-weight:bold;
-
-margin-bottom:40px;
-
-letter-spacing:2px;
-
-}
 
 
 </style>
@@ -200,33 +172,51 @@ letter-spacing:2px;
 </head>
 
 
+
 <body>
 
 
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
-
-🏠 Menu Inicial
-
-</button>
+<a href="index.html" class="btn btn-inicio">
 
 
+<i class="fa-solid fa-house"></i>
+
+
+Início
+
+
+</a>
 
 
 
-<h1>
+
+
+<div class="painel-logo">
+
 LADRF CONNECT
-</h1>
 
-<div id="horaAtual">
-00:00:00
 </div>
 
 
 
 
 
+<div id="horaAtual">
+
+00:00:00
+
+</div>
+
+
+
+
+
+
+
+
 <div class="chamado">
+
 
 
 <h2>
@@ -237,27 +227,37 @@ Paciente em Atendimento
 
 
 
-<div
+
+<div 
 class="nome"
 id="nome">
 
+
 Nenhum
+
 
 </div>
 
 
 
-<div
+
+<div 
 class="maca"
 id="maca">
 
+
 -
 
+
+</div>
+
+
+
 </div>
 
 
 
-</div>
+
 
 
 
@@ -274,7 +274,9 @@ Fila de Espera
 
 
 
+
 <ul id="fila">
+
 
 </ul>
 
@@ -286,11 +288,51 @@ Fila de Espera
 
 
 
+
+
+
 <script
 type="module"
 src="painel.js">
+
 </script>
 
 
 
+<script>
+
+
+function atualizarHora(){
+
+
+const hora =
+document.getElementById("horaAtual");
+
+
+if(hora){
+
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
+
+}
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
+
 </body>
+
+</html>
