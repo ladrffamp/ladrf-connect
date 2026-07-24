@@ -10,7 +10,8 @@ getDoc,
 onSnapshot,
 query,
 orderBy,
-Timestamp
+Timestamp,
+getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -70,138 +71,142 @@ document.getElementById("listaEventos");
 window.salvarEvento = async function(){
 
 
-    try{
+try{
 
 
-        const evento = {
+const evento = {
 
 
-            titulo:
-            titulo.value.trim(),
+titulo:
+titulo.value.trim(),
 
 
-            tipo:
-            tipo.value,
+tipo:
+tipo.value,
 
 
-            data:
-            data.value,
+data:
+data.value,
 
 
-            inicio:
-            inicio.value,
+inicio:
+inicio.value,
 
 
-            fim:
-            fim.value,
+fim:
+fim.value,
 
 
-            local:
-            local.value.trim(),
+local:
+local.value.trim(),
 
 
-            responsavel:
-            responsavel.value.trim(),
+responsavel:
+responsavel.value.trim(),
 
 
-            observacoes:
-            observacoes.value.trim(),
+observacoes:
+observacoes.value.trim(),
 
 
-            status:
-            "Programado",
+status:
+"Programado",
 
 
-            criadoEm:
-            Timestamp.now()
+criadoEm:
+Timestamp.now()
 
 
-        };
+};
 
 
 
-        if(
-            !evento.titulo ||
-            !evento.data ||
-            !evento.inicio
-        ){
 
 
-            alert(
-                "Preencha título, data e horário."
-            );
+if(
+!evento.titulo ||
+!evento.data ||
+!evento.inicio
+){
 
 
-            return;
+alert(
+"Preencha título, data e horário."
+);
 
 
-        }
+return;
 
 
+}
 
-        if(editando){
 
 
-            await updateDoc(
+if(editando){
 
-                doc(
-                    db,
-                    "agenda",
-                    editando
-                ),
 
-                evento
+await updateDoc(
 
-            );
+doc(
+db,
+"agenda",
+editando
+),
 
+evento
 
-            editando = null;
+);
 
 
 
-        }else{
+editando=null;
 
 
-            await addDoc(
 
-                eventosRef,
+}else{
 
-                evento
 
-            );
+await addDoc(
 
+eventosRef,
 
-        }
+evento
 
+);
 
 
-        limparFormulario();
 
+}
 
 
-        alert(
-            "Evento salvo com sucesso!"
-        );
 
+limparFormulario();
 
 
-    }
 
-    catch(error){
+alert(
+"Evento salvo com sucesso!"
+);
 
 
-        console.error(
-            "Erro ao salvar:",
-            error
-        );
 
+}
 
-        alert(
-            "Erro ao salvar evento."
-        );
+catch(error){
 
 
-    }
+console.error(
+"Erro ao salvar:",
+error
+);
+
+
+alert(
+"Erro ao salvar evento."
+);
+
+
+}
 
 
 };
@@ -218,28 +223,24 @@ window.salvarEvento = async function(){
 function limparFormulario(){
 
 
-    titulo.value = "";
+titulo.value="";
 
-    tipo.selectedIndex = 0;
+tipo.selectedIndex=0;
 
-    data.value = "";
+data.value="";
 
-    inicio.value = "";
+inicio.value="";
 
-    fim.value = "";
+fim.value="";
 
-    local.value = "";
+local.value="";
 
-    responsavel.value = "";
+responsavel.value="";
 
-    observacoes.value = "";
-
+observacoes.value="";
 
 
 }
-
-
-
 // =====================================
 // LISTAR EVENTOS TEMPO REAL
 // =====================================
@@ -259,228 +260,34 @@ const consulta = query(
 
 onSnapshot(
 
-    consulta,
+consulta,
 
-    (snapshot)=>{
+async(snapshot)=>{
 
 
-        listaEventos.innerHTML = "";
+listaEventos.innerHTML="";
 
 
 
-        if(snapshot.empty){
+if(snapshot.empty){
 
 
-            listaEventos.innerHTML = `
+listaEventos.innerHTML=`
 
-            <div class="evento">
+<div class="evento">
 
-            <h2>
-            Nenhum evento cadastrado
-            </h2>
+<h2>
 
-            </div>
+Nenhum evento cadastrado
 
-            `;
+</h2>
 
+</div>
 
-            return;
+`;
 
 
-        }
-
-
-
-
-        snapshot.forEach(
-
-            (item)=>{
-
-
-                listaEventos.innerHTML +=
-
-                renderizarEvento(item);
-
-
-            }
-
-        );
-
-
-
-    }
-
-
-);
-// =====================================
-// RENDERIZAÇÃO DOS EVENTOS
-// =====================================
-
-
-function renderizarEvento(item){
-
-
-    const evento =
-    item.data();
-
-
-
-    const classe =
-    corStatus(evento.status);
-
-
-
-    return `
-
-
-    <div class="evento">
-
-
-        <h2>
-
-        ${escaparTexto(evento.titulo)}
-
-        </h2>
-
-
-
-        <p>
-
-        <b>Tipo:</b>
-
-        ${escaparTexto(evento.tipo)}
-
-        </p>
-
-
-
-        <p>
-
-        <b>Data:</b>
-
-        ${formatarData(evento.data)}
-
-        </p>
-
-
-
-        <p>
-
-        <b>Horário:</b>
-
-        ${evento.inicio || "-"}
-
-        às
-
-        ${evento.fim || "-"}
-
-        </p>
-
-
-
-        <p>
-
-        <b>Local:</b>
-
-        ${escaparTexto(evento.local)}
-
-        </p>
-
-
-
-        <p>
-
-        <b>Responsável:</b>
-
-        ${escaparTexto(evento.responsavel)}
-
-        </p>
-
-
-
-        <p>
-
-        <b>Observações:</b>
-
-        <br>
-
-        ${escaparTexto(evento.observacoes)}
-
-        </p>
-
-
-
-        <span class="status ${classe}">
-
-        ${evento.status}
-
-        </span>
-
-
-
-        <div class="botoes">
-
-
-
-            <button
-
-            class="salvar"
-
-            onclick="abrirEscala('${item.id}')">
-
-            👥 Escalar equipe
-
-            </button>
-
-
-
-
-            <button
-
-            class="editar"
-
-            onclick="editarEvento('${item.id}')">
-
-            ✏️ Editar
-
-            </button>
-
-
-
-
-            <button
-
-            class="concluir"
-
-            onclick="concluirEvento('${item.id}')">
-
-            ✅ Concluir
-
-            </button>
-
-
-
-
-            <button
-
-            class="excluir"
-
-            onclick="excluirEvento('${item.id}')">
-
-            🗑️ Excluir
-
-            </button>
-
-
-
-        </div>
-
-
-
-    </div>
-
-
-    `;
+return;
 
 
 }
@@ -489,6 +296,385 @@ function renderizarEvento(item){
 
 
 
+for(const item of snapshot.docs){
+
+
+listaEventos.innerHTML +=
+
+await renderizarEvento(item);
+
+
+
+}
+
+
+
+}
+
+
+
+);
+
+
+
+
+
+
+// =====================================
+// RENDERIZAÇÃO DOS EVENTOS
+// =====================================
+
+
+async function renderizarEvento(item){
+
+
+const evento =
+item.data();
+
+
+
+// =====================================
+// BUSCAR PARTICIPANTES
+// =====================================
+
+
+const participantesSnapshot = await getDocs(
+
+collection(
+
+db,
+
+"agenda",
+
+item.id,
+
+"participantes"
+
+)
+
+);
+
+
+
+let total = 0;
+
+let confirmados = 0;
+
+let pendentes = 0;
+
+let recusados = 0;
+
+
+
+participantesSnapshot.forEach((membro)=>{
+
+
+total++;
+
+
+const dados =
+membro.data();
+
+
+
+if(
+dados.presenca === "Confirmado" ||
+dados.presenca === "Confirmada"
+){
+
+
+confirmados++;
+
+
+}
+
+else if(
+dados.presenca === "Recusado"
+){
+
+
+recusados++;
+
+
+}
+
+else{
+
+
+pendentes++;
+
+
+}
+
+
+});
+
+
+
+
+
+
+const classe =
+corStatus(evento.status);
+
+
+
+
+return `
+
+
+<div class="evento">
+
+
+<h2>
+
+${escaparTexto(evento.titulo)}
+
+</h2>
+
+
+
+
+
+<p>
+
+<b>Tipo:</b>
+
+${escaparTexto(evento.tipo)}
+
+</p>
+
+
+
+
+
+<p>
+
+<b>Data:</b>
+
+${formatarData(evento.data)}
+
+</p>
+
+
+
+
+
+<p>
+
+<b>Horário:</b>
+
+${evento.inicio || "-"}
+
+às
+
+${evento.fim || "-"}
+
+</p>
+
+
+
+
+
+<p>
+
+<b>Local:</b>
+
+${escaparTexto(evento.local)}
+
+</p>
+
+
+
+
+
+<p>
+
+<b>Responsável:</b>
+
+${escaparTexto(evento.responsavel)}
+
+</p>
+
+
+
+
+
+<p>
+
+<b>Observações:</b>
+
+<br>
+
+${escaparTexto(evento.observacoes)}
+
+</p>
+
+
+
+
+
+
+<span class="status ${classe}">
+
+${evento.status}
+
+</span>
+
+
+
+
+
+
+<div style="
+
+margin-top:15px;
+
+padding:15px;
+
+border-radius:12px;
+
+background:#f2f2f2;
+
+color:#222;
+
+">
+
+
+<h3>
+
+👥 Equipe escalada
+
+</h3>
+
+
+
+<p>
+
+Total:
+
+<b>${total}</b>
+
+</p>
+
+
+
+<p>
+
+🟢 Confirmados:
+
+<b>${confirmados}</b>
+
+</p>
+
+
+
+<p>
+
+🟡 Pendentes:
+
+<b>${pendentes}</b>
+
+</p>
+
+
+
+<p>
+
+🔴 Recusados:
+
+<b>${recusados}</b>
+
+</p>
+
+
+
+</div>
+
+
+
+
+
+
+
+<div class="botoes">
+
+
+
+<button
+
+class="salvar"
+
+onclick="abrirEscala('${item.id}')"
+
+>
+
+👥 Escalar equipe
+
+</button>
+
+
+
+
+
+<button
+
+class="editar"
+
+onclick="editarEvento('${item.id}')"
+
+>
+
+✏️ Editar
+
+</button>
+
+
+
+
+
+<button
+
+class="concluir"
+
+onclick="concluirEvento('${item.id}')"
+
+>
+
+✅ Concluir
+
+</button>
+
+
+
+
+
+<button
+
+class="excluir"
+
+onclick="excluirEvento('${item.id}')"
+
+>
+
+🗑️ Excluir
+
+</button>
+
+
+
+</div>
+
+
+
+</div>
+
+
+`;
+
+
+
+}
 // =====================================
 // FORMATAR DATA
 // =====================================
@@ -497,31 +683,33 @@ function renderizarEvento(item){
 function formatarData(dataTexto){
 
 
-    if(!dataTexto){
+if(!dataTexto){
 
-        return "-";
+return "-";
 
-    }
-
-
-
-    const partes =
-    dataTexto.split("-");
+}
 
 
 
-    if(partes.length !== 3){
+const partes =
 
-        return dataTexto;
-
-    }
+dataTexto.split("-");
 
 
 
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
+if(partes.length !== 3){
+
+return dataTexto;
+
+}
+
+
+
+return `${partes[2]}/${partes[1]}/${partes[0]}`;
 
 
 }
+
 
 
 
@@ -535,28 +723,29 @@ function formatarData(dataTexto){
 function escaparTexto(texto){
 
 
-    if(!texto){
+if(!texto){
 
-        return "";
+return "";
 
-    }
+}
 
 
 
-    return texto
+return texto
 
-    .replaceAll("&","&amp;")
+.replaceAll("&","&amp;")
 
-    .replaceAll("<","&lt;")
+.replaceAll("<","&lt;")
 
-    .replaceAll(">","&gt;")
+.replaceAll(">","&gt;")
 
-    .replaceAll('"',"&quot;")
+.replaceAll('"',"&quot;")
 
-    .replaceAll("'","&#039;");
+.replaceAll("'","&#039;");
 
 
 }
+
 
 
 
@@ -570,53 +759,67 @@ function escaparTexto(texto){
 function corStatus(status){
 
 
-    switch(status){
+switch(status){
 
 
-        case "Em andamento":
+case "Em andamento":
 
-            return "andamento";
-
-
-        case "Concluído":
-
-            return "concluido";
+return "andamento";
 
 
-        case "Cancelado":
+case "Concluído":
 
-            return "cancelado";
-
-
-        default:
-
-            return "programado";
+return "concluido";
 
 
-    }
+case "Cancelado":
+
+return "cancelado";
+
+
+default:
+
+return "programado";
 
 
 }
+
+
+
+}
+
+
+
+
+
+
 // =====================================
-// ABRIR ESCALA DA EQUIPE
+// ABRIR ESCALA
 // =====================================
 
 
 window.abrirEscala = function(id){
 
 
-    console.log(
-        "Abrindo escala:",
-        id
-    );
+console.log(
+
+"Abrindo escala:",
+
+id
+
+);
 
 
-    window.location.href =
 
-    "gerenciar-acao.html?id=" + id;
+window.location.href =
+
+"gerenciar-acao.html?id="+id;
+
 
 
 };
+
+
 
 
 
@@ -630,120 +833,147 @@ window.abrirEscala = function(id){
 window.editarEvento = async function(id){
 
 
-    try{
 
-
-        const referencia = doc(
-
-            db,
-
-            "agenda",
-
-            id
-
-        );
+try{
 
 
 
-        const dados =
+const referencia = doc(
 
-        await getDoc(referencia);
+db,
 
+"agenda",
 
+id
 
-        if(!dados.exists()){
-
-
-            alert(
-                "Evento não encontrado."
-            );
-
-
-            return;
-
-
-        }
+);
 
 
 
-        const evento =
+const resultado = await getDoc(
 
-        dados.data();
+referencia
 
-
-
-        editando = id;
+);
 
 
 
-        titulo.value =
-        evento.titulo || "";
+if(!resultado.exists()){
 
-        tipo.value =
-        evento.tipo || "";
 
-        data.value =
-        evento.data || "";
+alert(
 
-        inicio.value =
-        evento.inicio || "";
+"Evento não encontrado."
 
-        fim.value =
-        evento.fim || "";
+);
 
-        local.value =
-        evento.local || "";
 
-        responsavel.value =
-        evento.responsavel || "";
+return;
 
-        observacoes.value =
-        evento.observacoes || "";
+
+}
 
 
 
-
-        window.scrollTo({
-
-            top:0,
-
-            behavior:"smooth"
-
-        });
+const evento = resultado.data();
 
 
 
-        alert(
-            "Evento carregado para edição."
-        );
+editando=id;
 
 
 
-    }
-
-    catch(error){
-
-
-        console.error(
-
-            "Erro ao editar:",
-
-            error
-
-        );
+titulo.value =
+evento.titulo || "";
 
 
-        alert(
 
-            "Erro ao carregar evento."
-
-        );
+tipo.value =
+evento.tipo || "";
 
 
-    }
+
+data.value =
+evento.data || "";
+
+
+
+inicio.value =
+evento.inicio || "";
+
+
+
+fim.value =
+evento.fim || "";
+
+
+
+local.value =
+evento.local || "";
+
+
+
+responsavel.value =
+evento.responsavel || "";
+
+
+
+observacoes.value =
+evento.observacoes || "";
+
+
+
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+
+
+
+alert(
+
+"Evento carregado para edição."
+
+);
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+
+"Erro editar:",
+
+error
+
+);
+
+
+
+alert(
+
+"Erro ao carregar evento."
+
+);
+
+
+
+}
+
 
 
 };
+
+
+
 
 
 
@@ -757,82 +987,87 @@ window.editarEvento = async function(id){
 window.concluirEvento = async function(id){
 
 
-    const confirmar = confirm(
 
-        "Marcar este evento como concluído?"
+const confirmar = confirm(
 
-    );
+"Marcar este evento como concluído?"
 
-
-
-    if(!confirmar){
-
-        return;
-
-    }
+);
 
 
 
-    try{
+if(!confirmar){
 
+return;
 
-        await updateDoc(
-
-            doc(
-
-                db,
-
-                "agenda",
-
-                id
-
-            ),
-
-            {
-
-
-                status:
-
-                "Concluído"
-
-
-            }
-
-
-        );
+}
 
 
 
-        alert(
-
-            "Evento concluído."
-
-        );
+try{
 
 
-    }
 
-    catch(error){
+await updateDoc(
 
+doc(
 
-        console.error(
+db,
 
-            error
+"agenda",
 
-        );
+id
 
+),
 
-        alert(
-
-            "Erro ao concluir evento."
-
-        );
+{
 
 
-    }
+status:
+
+"Concluído"
+
+
+}
+
+);
+
+
+
+alert(
+
+"Evento concluído."
+
+);
+
+
+
+}
+
+catch(error){
+
+
+
+console.error(error);
+
+
+
+alert(
+
+"Erro ao concluir."
+
+);
+
+
+
+}
+
 
 
 };
+
+
+
 
 
 
@@ -846,76 +1081,73 @@ window.concluirEvento = async function(id){
 window.excluirEvento = async function(id){
 
 
-    const confirmar = confirm(
 
-        "Deseja realmente excluir este evento?"
+const confirmar = confirm(
 
-    );
+"Deseja excluir este evento?"
 
-
-
-    if(!confirmar){
-
-        return;
-
-    }
+);
 
 
 
-    try{
+if(!confirmar){
 
+return;
 
-        await deleteDoc(
-
-            doc(
-
-                db,
-
-                "agenda",
-
-                id
-
-            )
-
-        );
+}
 
 
 
-        alert(
-
-            "Evento excluído."
-
-        );
+try{
 
 
-    }
 
-    catch(error){
+await deleteDoc(
 
+doc(
 
-        console.error(
+db,
 
-            error
+"agenda",
 
-        );
+id
 
+)
 
-        alert(
-
-            "Erro ao excluir evento."
-
-        );
+);
 
 
-    }
+
+alert(
+
+"Evento excluído."
+
+);
+
+
+
+}
+
+catch(error){
+
+
+console.error(error);
+
+
+
+alert(
+
+"Erro ao excluir evento."
+
+);
+
+
+
+}
+
 
 
 };
-
-
-
-
-
 // =====================================
 // CANCELAR EDIÇÃO
 // =====================================
@@ -924,14 +1156,21 @@ window.excluirEvento = async function(id){
 window.cancelarEdicao = function(){
 
 
-    editando = null;
+editando = null;
 
 
-    limparFormulario();
-
+limparFormulario();
 
 
 };
+
+
+
+
+
+
+
+
 // =====================================
 // ALTERAR STATUS MANUALMENTE
 // =====================================
@@ -940,48 +1179,54 @@ window.cancelarEdicao = function(){
 window.alterarStatus = async function(id,status){
 
 
-    try{
+try{
 
 
-        await updateDoc(
+await updateDoc(
 
-            doc(
+doc(
 
-                db,
+db,
 
-                "agenda",
+"agenda",
 
-                id
+id
 
-            ),
+),
 
-            {
+{
 
-                status:status
+status:status
 
-            }
+}
 
-        );
-
-
-    }
-
-    catch(error){
+);
 
 
-        console.error(
 
-            "Erro ao alterar status:",
+}
 
-            error
-
-        );
+catch(error){
 
 
-    }
+console.error(
+
+"Erro ao alterar status:",
+
+error
+
+);
+
+
+
+}
+
 
 
 };
+
+
+
 
 
 
@@ -995,70 +1240,71 @@ window.alterarStatus = async function(id,status){
 window.filtrarEventos = function(statusSelecionado){
 
 
-    const eventos =
 
-    document.querySelectorAll(
+const eventos = document.querySelectorAll(
 
-        ".evento"
+".evento"
 
-    );
-
-
-
-    eventos.forEach(
-
-        (evento)=>{
-
-
-            const status =
-
-            evento
-
-            .querySelector(".status")
-
-            .innerText;
+);
 
 
 
-            if(
-
-                statusSelecionado === "Todos"
-
-            ){
 
 
-                evento.style.display="block";
+eventos.forEach((evento)=>{
 
 
-            }
 
-            else if(
+const status =
 
-                status === statusSelecionado
-
-            ){
+evento.querySelector(".status")?.innerText;
 
 
-                evento.style.display="block";
 
 
-            }
 
-            else{
+if(
 
+statusSelecionado === "Todos"
 
-                evento.style.display="none";
-
-
-            }
+){
 
 
-        }
+evento.style.display="block";
 
-    );
+
+}
+
+else if(
+
+status === statusSelecionado
+
+){
+
+
+evento.style.display="block";
+
+
+}
+
+else{
+
+
+evento.style.display="none";
+
+
+}
+
+
+
+});
+
 
 
 };
+
+
+
 
 
 
@@ -1072,58 +1318,62 @@ window.filtrarEventos = function(statusSelecionado){
 window.buscarEvento = function(texto){
 
 
-    const eventos =
 
-    document.querySelectorAll(
+const eventos = document.querySelectorAll(
 
-        ".evento"
+".evento"
 
-    );
-
-
-
-    eventos.forEach(
-
-        (evento)=>{
-
-
-            const conteudo =
-
-            evento.innerText.toLowerCase();
+);
 
 
 
-            if(
 
-                conteudo.includes(
-
-                    texto.toLowerCase()
-
-                )
-
-            ){
+eventos.forEach((evento)=>{
 
 
-                evento.style.display="block";
+
+const conteudo =
+
+evento.innerText.toLowerCase();
 
 
-            }
-
-            else{
 
 
-                evento.style.display="none";
+
+if(
+
+conteudo.includes(
+
+texto.toLowerCase()
+
+)
+
+){
 
 
-            }
+evento.style.display="block";
 
 
-        }
+}
 
-    );
+else{
+
+
+evento.style.display="none";
+
+
+}
+
+
+
+});
+
 
 
 };
+
+
+
 
 
 
@@ -1137,76 +1387,74 @@ window.buscarEvento = function(texto){
 function verificarEventosHoje(){
 
 
-    const hoje = new Date();
+
+const hoje = new Date();
 
 
 
-    const ano =
-
-    hoje.getFullYear();
+const ano = hoje.getFullYear();
 
 
 
-    const mes =
+const mes = String(
 
-    String(
+hoje.getMonth()+1
 
-        hoje.getMonth()+1
-
-    ).padStart(2,"0");
+).padStart(2,"0");
 
 
 
-    const dia =
+const dia = String(
 
-    String(
+hoje.getDate()
 
-        hoje.getDate()
-
-    ).padStart(2,"0");
+).padStart(2,"0");
 
 
 
-    const dataAtual =
+const dataAtual =
 
-    `${ano}-${mes}-${dia}`;
+`${ano}-${mes}-${dia}`;
 
 
 
 
-    document
-
-    .querySelectorAll(".evento")
-
-    .forEach(
-
-        (evento)=>{
 
 
-            if(
+document
 
-                evento.innerText.includes(
+.querySelectorAll(".evento")
 
-                    dataAtual
-
-                )
-
-            ){
+.forEach((evento)=>{
 
 
-                evento.classList.add(
 
-                    "evento-hoje"
+if(
 
-                );
+evento.innerText.includes(
+
+dataAtual
+
+)
+
+){
 
 
-            }
+
+evento.classList.add(
+
+"evento-hoje"
+
+);
 
 
-        }
 
-    );
+}
+
+
+
+});
+
 
 
 }
@@ -1215,8 +1463,12 @@ function verificarEventosHoje(){
 
 
 
+
+
+
+
 // =====================================
-// ATALHO ESC PARA CANCELAR EDIÇÃO
+// ESC PARA CANCELAR EDIÇÃO
 // =====================================
 
 
@@ -1227,19 +1479,28 @@ document.addEventListener(
 (event)=>{
 
 
-    if(event.key === "Escape"){
+if(event.key === "Escape"){
 
 
-        editando = null;
+
+editando=null;
 
 
-        limparFormulario();
+
+limparFormulario();
 
 
-    }
+
+}
 
 
-});
+
+}
+
+);
+
+
+
 
 
 
@@ -1253,7 +1514,7 @@ document.addEventListener(
 setTimeout(()=>{
 
 
-    verificarEventosHoje();
+verificarEventosHoje();
 
 
 },1000);
@@ -1262,8 +1523,9 @@ setTimeout(()=>{
 
 
 
+
 console.log(
 
-"LADRF Connect Agenda 100% carregada."
+"LADRF Connect Agenda carregada com sucesso."
 
 );
