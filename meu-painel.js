@@ -1,148 +1,250 @@
+// meu-painel.js
+
+
 import { auth, db } from "./firebase.js";
 
+
 import {
-    onAuthStateChanged
+onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+
 import {
-    collection,
-    getDocs,
-    doc,
-    updateDoc,
-    serverTimestamp
+collection,
+getDocs,
+query,
+where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-const boasVindas = document.getElementById("boasVindas");
-const listaEscalas = document.getElementById("listaEscalas");
 
-onAuthStateChanged(auth, async (usuario) => {
 
-    if (!usuario) {
-        window.location.href = "login.html";
-        return;
-    }
+const boasVindas =
+document.getElementById("boasVindas");
 
-    boasVindas.innerHTML = `👋 Bem-vindo ${usuario.email}`;
 
-    carregarEscalas(usuario.email);
+const totalEventos =
+document.getElementById("totalEventos");
 
-});
 
-async function carregarEscalas(emailUsuario) {
+const totalHoras =
+document.getElementById("totalHoras");
 
-    listaEscalas.innerHTML = "";
 
-    const acoes = await getDocs(
-        collection(db, "acoes")
-    );
+const totalPresencas =
+document.getElementById("totalPresencas");
 
-    let encontrou = false;
 
-    for (const acao of acoes.docs) {
 
-        const participantes = await getDocs(
-            collection(
-                db,
-                "acoes",
-                acao.id,
-                "participantes"
-            )
-        );
 
-        for (const participante of participantes.docs) {
 
-            const dados = participante.data();
 
-            if (dados.email === emailUsuario) {
+onAuthStateChanged(
 
-                encontrou = true;
+auth,
 
-                listaEscalas.innerHTML += `
+async(usuario)=>{
 
-                <div class="escala">
 
-                    <h3>${acao.id}</h3>
+if(!usuario){
 
-                    <p>👤 ${dados.nome}</p>
+window.location.href="login.html";
 
-                    <p>
-                        Status:
-                        <strong>${dados.presenca}</strong>
-                    </p>
+return;
 
-                    <button
-                        class="confirmar"
-                        data-acao="${acao.id}"
-                        data-membro="${participante.id}"
-                        ${dados.presenca === "Confirmada" ? "disabled" : ""}
-                    >
-                        ${dados.presenca === "Confirmada"
-                            ? "✅ Presença Confirmada"
-                            : "✅ Confirmar Presença"}
-                    </button>
+}
 
-                </div>
 
-                `;
 
-            }
+if(boasVindas){
 
-        }
+boasVindas.innerHTML =
+`👋 Bem-vindo ${usuario.email}`;
 
-    }
+}
 
-    if (!encontrou) {
 
-        listaEscalas.innerHTML = `
 
-        <div class="card">
+carregarResumo(usuario.uid);
 
-            Nenhuma escala encontrada.
 
-        </div>
 
-        `;
+}
 
-        return;
+);
 
-    }
 
-    document.querySelectorAll(".confirmar").forEach((botao) => {
 
-        botao.addEventListener("click", async () => {
 
-            try {
 
-                const referencia = doc(
-                    db,
-                    "acoes",
-                    botao.dataset.acao,
-                    "participantes",
-                    botao.dataset.membro
-                );
 
-                console.log(botao.dataset.acao);
-                console.log(botao.dataset.membro);
 
-                await updateDoc(referencia, {
-                    presenca: "Confirmada",
-                    confirmadoEm: serverTimestamp()
-                });
 
-                alert("Presença atualizada!");
 
-                botao.innerHTML = "✅ Presença Confirmada";
-                botao.disabled = true;
+async function carregarResumo(uid){
 
-            } catch (erro) {
 
-                console.error("Erro ao confirmar presença:", erro);
-                alert("Erro ao confirmar presença.");
+try{
 
-            }
 
-        });
+let eventos = 0;
 
-    });
+let presencas = 0;
+
+let horas = 0;
+
+
+
+const agenda =
+await getDocs(
+
+collection(
+db,
+"agenda"
+)
+
+);
+
+
+
+
+
+
+for(const acao of agenda.docs){
+
+
+
+const participantes =
+await getDocs(
+
+collection(
+
+db,
+
+"agenda",
+
+acao.id,
+
+"participantes"
+
+)
+
+);
+
+
+
+
+
+const membro =
+participantes.docs.find(
+
+(item)=>item.id === uid
+
+);
+
+
+
+
+
+if(membro){
+
+
+
+const dados =
+membro.data();
+
+
+
+if(
+dados.presenca === "Confirmado" ||
+dados.presenca === "Confirmada"
+){
+
+
+eventos++;
+
+presencas++;
+
+
+
+const inicio =
+acao.data().inicio;
+
+
+const fim =
+acao.data().fim;
+
+
+
+if(inicio && fim){
+
+
+const h1 =
+Number(inicio.split(":")[0]);
+
+
+const h2 =
+Number(fim.split(":")[0]);
+
+
+horas += h2 - h1;
+
+
+}
+
+
+}
+
+
+
+}
+
+
+
+}
+
+
+
+
+
+if(totalEventos){
+
+totalEventos.innerHTML =
+eventos;
+
+}
+
+
+
+if(totalPresencas){
+
+totalPresencas.innerHTML =
+presencas;
+
+}
+
+
+
+if(totalHoras){
+
+totalHoras.innerHTML =
+horas + "h";
+
+}
+
+
+
+}catch(error){
+
+
+console.error(
+"Erro ao carregar resumo:",
+error
+);
+
+
+
+}
+
+
 
 }
