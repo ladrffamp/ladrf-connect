@@ -73,6 +73,7 @@ document.getElementById("salvar");
 
 
 
+
 // =====================================
 // CARREGAR AÇÃO
 // =====================================
@@ -81,18 +82,27 @@ document.getElementById("salvar");
 async function carregarAcao(){
 
 
+try{
+
+
 const referencia =
 doc(
+
 db,
+
 "agenda",
+
 idAcao
+
 );
 
 
 
 const resultado =
 await getDoc(
+
 referencia
+
 );
 
 
@@ -133,6 +143,7 @@ ${dados.titulo || "Sem título"}
 
 
 nomeAcao.innerHTML =
+
 "Ação não encontrada";
 
 
@@ -140,7 +151,25 @@ nomeAcao.innerHTML =
 
 
 
+}catch(error){
+
+
+console.error(
+"Erro ao carregar ação:",
+error
+);
+
+
+nomeAcao.innerHTML =
+"Erro ao carregar ação";
+
+
 }
+
+
+
+}
+
 
 
 
@@ -150,7 +179,7 @@ nomeAcao.innerHTML =
 
 
 // =====================================
-// CARREGAR MEMBROS E ESCALADOS
+// CARREGAR MEMBROS
 // =====================================
 
 
@@ -164,8 +193,11 @@ const usuarios =
 await getDocs(
 
 collection(
+
 db,
+
 "usuarios"
+
 )
 
 );
@@ -212,10 +244,7 @@ item.data();
 
 
 
-
-
 listaMembros.innerHTML = "";
-
 
 
 
@@ -239,6 +268,45 @@ dados.perfil?.toLowerCase()
 
 const escalado =
 escalados[usuario.id];
+
+
+
+let status = "";
+
+
+
+if(escalado){
+
+
+if(escalado.presenca === "Confirmado"){
+
+status =
+"🟢 Confirmado";
+
+
+}
+
+else if(escalado.presenca === "Recusado"){
+
+
+status =
+"🔴 Recusado";
+
+
+}
+
+else{
+
+
+status =
+"🟡 Pendente";
+
+
+}
+
+
+
+}
 
 
 
@@ -297,9 +365,10 @@ ${dados.email || ""}
 </small>
 
 
-
 ${
-escalado
+
+status
+
 ?
 
 `
@@ -310,27 +379,7 @@ escalado
 
 Status:
 
-${
-
-escalado.presenca === "Confirmado"
-
-?
-
-"🟢 Confirmado"
-
-:
-
-escalado.presenca === "Recusado"
-
-?
-
-"🔴 Recusado"
-
-:
-
-"🟡 Pendente"
-
-}
+${status}
 
 </span>
 
@@ -370,13 +419,36 @@ escalado.presenca === "Recusado"
 
 
 
+if(listaMembros.innerHTML === ""){
+
+
+listaMembros.innerHTML =
+
+"Nenhum membro encontrado.";
+
+
+}
+
+
+
+
+
 }catch(error){
 
 
 console.error(
+
 "Erro ao carregar membros:",
+
 error
+
 );
+
+
+
+listaMembros.innerHTML =
+
+"Erro ao carregar membros.";
 
 
 }
@@ -398,6 +470,9 @@ error
 // =====================================
 
 
+if(botaoSalvar){
+
+
 botaoSalvar.addEventListener(
 
 "click",
@@ -407,19 +482,24 @@ async()=>{
 
 
 const selecionados =
+
 document.querySelectorAll(
+
 ".membro:checked"
+
 );
 
 
 
 
 
-if(selecionados.length===0){
+if(selecionados.length === 0){
 
 
 alert(
+
 "Selecione pelo menos um membro."
+
 );
 
 
@@ -435,13 +515,14 @@ return;
 try{
 
 
+
 for(const membro of selecionados){
 
 
 
-await setDoc(
 
-doc(
+
+const referenciaParticipante = doc(
 
 db,
 
@@ -453,25 +534,73 @@ idAcao,
 
 membro.value
 
-),
+);
+
+
+
+
+
+const participanteAtual =
+
+await getDoc(
+
+referenciaParticipante
+
+);
+
+
+
+
+
+let presencaAtual =
+
+"Pendente";
+
+
+
+
+
+if(participanteAtual.exists()){
+
+
+
+presencaAtual =
+
+participanteAtual.data().presenca || "Pendente";
+
+
+}
+
+
+
+
+
+
+await setDoc(
+
+referenciaParticipante,
 
 
 {
 
 
 nome:
+
 membro.dataset.nome,
 
 
 email:
+
 membro.dataset.email,
 
 
 presenca:
-"Pendente",
+
+presencaAtual,
 
 
 escaladoEm:
+
 serverTimestamp()
 
 
@@ -495,8 +624,11 @@ merge:true
 
 
 
+
 alert(
+
 "Escala salva com sucesso!"
+
 );
 
 
@@ -505,17 +637,25 @@ carregarMembros();
 
 
 
+
+
 }catch(error){
 
 
 console.error(
-"Erro ao salvar:",
+
+"Erro ao salvar escala:",
+
 error
+
 );
 
 
+
 alert(
+
 "Erro ao salvar escala."
+
 );
 
 
@@ -525,6 +665,11 @@ alert(
 
 
 });
+
+
+
+}
+
 
 
 
@@ -539,5 +684,6 @@ alert(
 
 
 carregarAcao();
+
 
 carregarMembros();
