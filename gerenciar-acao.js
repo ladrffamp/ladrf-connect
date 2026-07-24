@@ -63,8 +63,12 @@ document.getElementById("salvar");
 
 async function carregarAcao(){
 
-
 try{
+
+
+console.log("Buscando em agendas:");
+console.log(idAcao);
+
 
 
 const referencia = doc(
@@ -81,41 +85,68 @@ referencia
 
 
 
+console.log(
+"Documento existe:",
+resultado.exists()
+);
+
+
+
 if(resultado.exists()){
 
 
 const dados = resultado.data();
 
 
-
 console.log(
-"Ação encontrada:",
+"DADOS DA AÇÃO:",
 dados
 );
 
 
 
-if(nomeAcao){
-
-
 nomeAcao.innerHTML = `
 
-${dados.titulo || "Ação sem título"}
+${dados.titulo || "Sem título"}
 
 <br>
 
 <small>
 
-📅 ${dados.data || "-"} 
-
-|
-
-📍 ${dados.local || "-"}
+${dados.local || ""}
 
 </small>
 
 `;
 
+
+
+}else{
+
+
+nomeAcao.innerHTML =
+"Ação não encontrada";
+
+
+}
+
+
+
+}catch(error){
+
+
+console.error(
+"ERRO FIREBASE:",
+error
+);
+
+
+
+nomeAcao.innerHTML =
+"Erro ao buscar ação";
+
+
+}
 
 
 }
