@@ -16,14 +16,16 @@ const form = document.getElementById("formCadastro");
 
 const qrArea = document.getElementById("qrcode");
 
-
-
-// ===============================
-// CARREGAR MODALIDADES
-// ===============================
-
-
 const selectModalidade = document.getElementById("modalidade");
+
+
+
+
+// =====================================
+// CARREGAR MODALIDADES
+// =====================================
+
+if(selectModalidade){
 
 
 onSnapshot(
@@ -43,19 +45,17 @@ Selecione
 
 
 
-snapshot.forEach((doc)=>{
+snapshot.forEach((item)=>{
 
 
-const modalidade = doc.data();
+const modalidade = item.data();
 
 
 
 selectModalidade.innerHTML += `
 
 <option value="${modalidade.nome}">
-
 ${modalidade.nome}
-
 </option>
 
 `;
@@ -67,15 +67,23 @@ ${modalidade.nome}
 
 }
 
-);
-console.log(
-"QRCode disponível:",
-typeof QRCode
+
 );
 
 
+}
 
 
+
+
+
+
+// =====================================
+// CADASTRAR PACIENTE
+// =====================================
+
+
+if(form){
 
 
 form.addEventListener("submit", async function(e){
@@ -85,24 +93,76 @@ e.preventDefault();
 
 
 
-const nome =
-document.getElementById("nome").value;
+
+const dados = {
 
 
-const whatsapp =
-document.getElementById("whatsapp").value;
+nome:
+
+document.getElementById("nome").value.trim(),
 
 
-const idade =
-document.getElementById("idade").value;
+
+whatsapp:
+
+document.getElementById("whatsapp").value.trim(),
 
 
-const modalidade =
-document.getElementById("modalidade").value;
+
+idade:
+
+document.getElementById("idade").value.trim(),
 
 
-const queixa =
-document.getElementById("queixa").value;
+
+modalidade:
+
+document.getElementById("modalidade").value,
+
+
+
+queixa:
+
+document.getElementById("queixa").value.trim(),
+
+
+
+status:
+
+"Aguardando",
+
+
+
+maca:
+
+"",
+
+
+
+criadoEm:
+
+Timestamp.now()
+
+
+
+};
+
+
+
+
+
+
+if(!dados.nome){
+
+
+alert("Digite o nome do paciente.");
+
+return;
+
+
+}
+
+
 
 
 
@@ -112,42 +172,11 @@ try{
 
 
 
-console.log("Salvando paciente...");
-
-
-
 const paciente = await addDoc(
 
 collection(db,"pacientes"),
 
-{
-
-
-nome:nome,
-
-
-whatsapp:whatsapp,
-
-
-idade:idade,
-
-
-modalidade:modalidade,
-
-
-queixa:queixa,
-
-
-maca:"",
-
-
-status:"Aguardando",
-
-
-criadoEm:Timestamp.now()
-
-
-}
+dados
 
 );
 
@@ -156,21 +185,31 @@ criadoEm:Timestamp.now()
 
 
 console.log(
+
 "Paciente criado:",
+
 paciente.id
+
 );
+
 
 
 
 
 
 alert(
+
 "Paciente cadastrado com sucesso!"
+
 );
 
 
 
 
+
+
+
+// GERAR QR CODE
 
 
 
@@ -186,52 +225,11 @@ paciente.id;
 
 
 
-console.log(
-"Link QR:",
-link
-);
 
-
-
-
-
-
-if(!qrArea){
-
-
-alert(
-"Elemento qrcode não encontrado"
-);
-
-
-return;
-
-}
-
-
-
-
-
-if(typeof QRCode === "undefined"){
-
-
-alert(
-"Biblioteca QR Code não carregou"
-);
-
-
-return;
-
-
-}
-
-
-
+if(qrArea){
 
 
 qrArea.innerHTML="";
-
-
 
 
 
@@ -252,12 +250,27 @@ height:200
 );
 
 
+}
 
 
 
-console.log(
-"QR Code criado!"
-);
+
+
+
+// MOSTRAR BOTÃO NOVO CADASTRO
+
+
+const botao = document.getElementById("btnNovoCadastro");
+
+
+
+if(botao){
+
+
+botao.style.display="inline-flex";
+
+
+}
 
 
 
@@ -266,7 +279,9 @@ console.log(
 }catch(error){
 
 
+
 console.error(error);
+
 
 
 alert(
@@ -280,8 +295,84 @@ error.message
 );
 
 
+
 }
 
 
 
 });
+
+
+}
+
+
+
+
+
+
+
+
+// =====================================
+// NOVO CADASTRO
+// =====================================
+
+
+window.novoCadastro = function(){
+
+
+
+const formulario = document.getElementById("formCadastro");
+
+
+
+if(formulario){
+
+
+formulario.reset();
+
+
+}
+
+
+
+
+if(qrArea){
+
+
+qrArea.innerHTML="";
+
+
+}
+
+
+
+
+const modalidade = document.getElementById("modalidade");
+
+
+if(modalidade){
+
+
+modalidade.value="";
+
+
+}
+
+
+
+
+
+document.getElementById("nome")?.focus();
+
+
+
+
+alert(
+
+"Novo cadastro iniciado."
+
+);
+
+
+
+};
