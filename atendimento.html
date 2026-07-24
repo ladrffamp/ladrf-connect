@@ -23,7 +23,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <body>
 
 
-
 <header class="topbar">
 
 
@@ -41,57 +40,39 @@ Início
 
 <i class="fa-solid fa-heart-pulse"></i>
 
-
 <div>
 
 <h1>
-
 LADRF Connect
-
 </h1>
 
-
 <p>
-
 Sistema de Gestão da Liga
-
 </p>
 
-
 </div>
 
 </div>
-
-
 
 
 
 <div class="usuario-info">
 
-
 <strong id="nomeUsuario">
-
 Carregando...
-
 </strong>
 
 
 <span id="perfilUsuario">
-
 Perfil
-
 </span>
 
 
 <small id="horaAtual">
-
 --:--:--
-
 </small>
 
-
 </div>
-
 
 
 </header>
@@ -105,20 +86,13 @@ Perfil
 
 <section class="page-title">
 
-
 <h1>
-
 Ficha de Atendimento LADRF
-
 </h1>
 
-
 <p>
-
 Registro completo do atendimento fisioterapêutico.
-
 </p>
-
 
 </section>
 
@@ -130,14 +104,13 @@ Registro completo do atendimento fisioterapêutico.
 
 
 <h2>
-
 📌 Dados do paciente
-
 </h2>
 
 
 
 <div class="form-grid">
+
 
 
 <div class="form-group">
@@ -146,14 +119,19 @@ Registro completo do atendimento fisioterapêutico.
 Nome
 </label>
 
+
 <input 
 id="nome"
 type="text"
 placeholder="Digite o nome do paciente"
 autocomplete="off">
 
+
 <div id="resultadoPacientes"></div>
+
+
 </div>
+
 
 
 
@@ -164,9 +142,14 @@ autocomplete="off">
 Idade
 </label>
 
-<input id="idade" type="number">
+
+<input 
+id="idade"
+type="number">
+
 
 </div>
+
 
 
 
@@ -176,6 +159,7 @@ Idade
 <label>
 Sexo
 </label>
+
 
 <select id="sexo">
 
@@ -195,9 +179,12 @@ Feminino
 Outro
 </option>
 
+
 </select>
 
+
 </div>
+
 
 
 
@@ -211,37 +198,47 @@ Modalidade esportiva
 
 <select id="modalidade">
 
+
 <option value="">
 Selecione
 </option>
+
 
 <option>
 Futebol
 </option>
 
+
 <option>
 CrossFit
 </option>
+
 
 <option>
 Vôlei
 </option>
 
+
 <option>
 Beach Tennis
 </option>
+
 
 <option>
 Corrida
 </option>
 
+
 <option>
 Outro
 </option>
 
+
 </select>
 
+
 </div>
+
 
 
 
@@ -252,9 +249,12 @@ Outro
 Evento/Ação
 </label>
 
+
 <input id="evento" type="text">
 
+
 </div>
+
 
 
 
@@ -265,9 +265,12 @@ Evento/Ação
 Membro responsável
 </label>
 
+
 <input id="membro" type="text">
 
+
 </div>
+
 
 
 
@@ -278,9 +281,12 @@ Membro responsável
 Maca
 </label>
 
+
 <input id="maca" type="text">
 
+
 </div>
+
 
 
 
@@ -291,9 +297,12 @@ Maca
 Horário de início
 </label>
 
+
 <input id="inicio" type="time">
 
+
 </div>
+
 
 
 
@@ -304,7 +313,9 @@ Horário de início
 Horário de término
 </label>
 
+
 <input id="termino" type="time">
+
 
 </div>
 
@@ -318,11 +329,8 @@ Horário de término
 
 
 <h2>
-
 📌 Queixa principal
-
 </h2>
-
 
 
 <div class="form-grid">
@@ -390,7 +398,6 @@ Outro
 
 </div>
 
-
 </div>
 
 
@@ -401,9 +408,7 @@ Outro
 
 
 <h2>
-
 📌 Lado acometido
-
 </h2>
 
 
@@ -411,35 +416,25 @@ Outro
 
 
 <label>
-
 <input type="radio" name="lado" value="Direito">
-
 Direito
-
 </label>
 
 
-
 <label>
-
 <input type="radio" name="lado" value="Esquerdo">
-
 Esquerdo
-
 </label>
 
 
-
 <label>
-
 <input type="radio" name="lado" value="Bilateral">
-
 Bilateral
-
 </label>
 
 
 </div>
+
 
 </div>
 
@@ -452,9 +447,7 @@ Bilateral
 
 
 <h2>
-
 📌 Tipo de lesão
-
 </h2>
 
 
@@ -463,80 +456,57 @@ Bilateral
 
 
 <label>
-
 <input type="checkbox" name="lesao" value="Entorse">
-
 Entorse
-
 </label>
 
 
 <label>
-
 <input type="checkbox" name="lesao" value="Distensão muscular">
-
 Distensão muscular
-
 </label>
 
 
 <label>
-
 <input type="checkbox" name="lesao" value="Cãibra">
-
 Cãibra
-
 </label>
 
 
 <label>
-
 <input type="checkbox" name="lesao" value="Contusão">
-
 Contusão
-
 </label>
 
 
 <label>
-
 <input type="checkbox" name="lesao" value="Tendinopatia">
-
 Tendinopatia
-
 </label>
 
 
 <label>
-
 <input type="checkbox" name="lesao" value="Luxação">
-
 Luxação
-
 </label>
 
 
 <label>
-
 <input type="checkbox" name="lesao" value="Suspeita de fratura">
-
 Suspeita de fratura
-
 </label>
 
 
 <label>
-
 <input type="checkbox" name="lesao" value="Outro">
-
 Outro
-
 </label>
 
 
 </div>
 
 </div>
+
 
 
 
@@ -547,11 +517,8 @@ Outro
 
 
 <h2>
-
 📌 Escala de dor (EVA)
-
 </h2>
-
 
 
 <input 
@@ -563,15 +530,12 @@ value="0"
 oninput="valorEVA.innerHTML=this.value">
 
 
-
 <h3>
 
 Dor:
 
 <span id="valorEVA">
-
 0
-
 </span>
 
 /10
@@ -586,13 +550,12 @@ Dor:
 
 
 
+
 <div class="card">
 
 
 <h2>
-
 📌 Condutas realizadas
-
 </h2>
 
 
@@ -600,214 +563,75 @@ Dor:
 <div class="form-grid">
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Crioterapia">
-
 Crioterapia
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Termoterapia">
-
 Termoterapia
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Liberação miofascial">
-
 Liberação miofascial
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Massagem">
-
 Massagem
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Alongamento">
-
 Alongamento
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Mobilização articular">
-
 Mobilização articular
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Bandagem funcional">
-
 Bandagem funcional
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Kinesio Taping">
-
 Kinesio Taping
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Exercícios">
-
 Exercícios
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Orientações">
-
 Orientações
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Encaminhamento médico">
-
 Encaminhamento médico
-
 </label>
 
 
-
 <label>
-
 <input type="checkbox" name="conduta" value="Outro">
-
 Outro
-
-</label>
-
-
-
-</div>
-
-
-</div>
-<div class="card">
-
-
-<h2>
-
-📌 Observações
-
-</h2>
-
-
-
-<textarea id="observacoes"></textarea>
-
-
-
-</div>
-
-
-
-
-
-
-
-<div class="card">
-
-
-<h2>
-
-📌 Situação ao final do atendimento
-
-</h2>
-
-
-
-<div class="radio-group">
-
-
-<label>
-
-<input type="radio" name="situacao" value="Retornou ao jogo">
-
-Retornou ao jogo
-
-</label>
-
-
-
-<label>
-
-<input type="radio" name="situacao" value="Liberado">
-
-Liberado
-
-</label>
-
-
-
-<label>
-
-<input type="radio" name="situacao" value="Encaminhado ao hospital">
-
-Encaminhado ao hospital
-
-</label>
-
-
-
-<label>
-
-<input type="radio" name="situacao" value="Encaminhado para avaliação médica">
-
-Encaminhado para avaliação médica
-
-</label>
-
-
-
-<label>
-
-<input type="radio" name="situacao" value="Permaneceu em observação">
-
-Permaneceu em observação
-
 </label>
 
 
@@ -815,79 +639,140 @@ Permaneceu em observação
 
 
 </div>
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Atendimento | LADRF Connect</title>
+
+
+<link rel="stylesheet" href="styles.css">
+
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
+</head>
+
+
+<body>
 
 
 
+<header class="topbar">
 
 
+<a href="index.html" class="btn-inicio">
 
-<!-- ÁREA DA AVALIAÇÃO -->
+<i class="fa-solid fa-house"></i>
 
-<div class="card" id="areaAvaliacao" style="display:none;text-align:center;">
-
-
-<h2>
-
-⭐ Avaliação do Atendimento
-
-</h2>
-
-
-<p>
-
-Peça para o paciente escanear o QR Code abaixo:
-
-</p>
-
-
-
-<div 
-id="qrcode"
-style="
-display:flex;
-justify-content:center;
-margin:25px;
-">
-
-</div>
-
-
-
-
-<a
-
-id="linkAvaliacao"
-
-target="_blank"
-
-class="btn-success"
-
-style="
-display:inline-block;
-text-decoration:none;
-">
-
-<i class="fa-solid fa-star"></i>
-
-Abrir Avaliação
+Início
 
 </a>
 
-  <br><br>
 
-<button
 
-id="btnProximoAtendimento"
+<div class="logo">
 
-class="btn-success"
+<i class="fa-solid fa-heart-pulse"></i>
 
-style="display:none;">
+<div>
 
-<i class="fa-solid fa-user-plus"></i>
+<h1>
+LADRF Connect
+</h1>
 
-Próximo Atendimento
+<p>
+Sistema de Gestão da Liga
+</p>
 
-</button>
+</div>
+
+</div>
+
+
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+Carregando...
+</strong>
+
+
+<span id="perfilUsuario">
+Perfil
+</span>
+
+
+<small id="horaAtual">
+--:--:--
+</small>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+<main class="container">
+
+
+<section class="page-title">
+
+<h1>
+Ficha de Atendimento LADRF
+</h1>
+
+<p>
+Registro completo do atendimento fisioterapêutico.
+</p>
+
+</section>
+
+
+
+
+
+<div class="card">
+
+
+<h2>
+📌 Dados do paciente
+</h2>
+
+
+
+<div class="form-grid">
+
+
+<div class="form-group">
+
+
+<label>
+Nome
+</label>
+
+
+<input 
+id="nome"
+type="text"
+placeholder="Digite o nome do paciente"
+autocomplete="off">
+
+
+<div id="resultadoPacientes"></div>
 
 
 </div>
@@ -896,107 +781,206 @@ Próximo Atendimento
 
 
 
+<div class="form-group">
 
-<button 
+<label>
+Idade
+</label>
 
-id="btnFinalizar"
 
-class="btn-success"
+<input 
+id="idade"
+type="number">
 
-onclick="salvarAtendimento()">
+</div>
 
 
-<i class="fa-solid fa-check"></i>
 
-Finalizar Atendimento
 
 
-</button>
+<div class="form-group">
 
+<label>
+Sexo
+</label>
 
 
-<button
+<select id="sexo">
 
-id="btnNovoAtendimento"
+<option value="">
+Selecione
+</option>
 
-class="btn-success"
+<option>
+Masculino
+</option>
 
-style="display:none;margin-top:15px;"
+<option>
+Feminino
+</option>
 
-onclick="proximoAtendimento()">
+<option>
+Outro
+</option>
 
+</select>
 
-<i class="fa-solid fa-user-plus"></i>
 
-Próximo Atendimento
+</div>
 
 
-</button>
 
 
 
+<div class="form-group">
 
-</main>
 
+<label>
+Modalidade esportiva
+</label>
 
 
+<select id="modalidade">
 
 
+<option value="">
+Selecione
+</option>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<option>
+Futebol
+</option>
 
 
-<script type="module" src="atendimento.js"></script>
+<option>
+CrossFit
+</option>
 
 
-<script type="module" src="permissoes.js"></script>
+<option>
+Vôlei
+</option>
 
 
+<option>
+Beach Tennis
+</option>
 
 
+<option>
+Corrida
+</option>
 
 
-<script>
+<option>
+Outro
+</option>
 
 
-function atualizarHora(){
+</select>
 
 
-const hora =
+</div>
 
-document.getElementById("horaAtual");
 
 
 
-if(hora){
 
+<div class="form-group">
 
-hora.innerHTML =
 
-new Date().toLocaleTimeString("pt-BR");
+<label>
+Evento/Ação
+</label>
 
 
-}
+<input 
+id="evento"
+type="text">
 
 
-}
+</div>
 
 
 
-setInterval(atualizarHora,1000);
 
 
-atualizarHora();
+<div class="form-group">
 
 
+<label>
+Membro responsável
+</label>
 
-</script>
 
+<input 
+id="membro"
+type="text">
 
 
+</div>
 
 
-</body>
 
-</html>
+
+
+<div class="form-group">
+
+
+<label>
+Maca
+</label>
+
+
+<input 
+id="maca"
+type="text">
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Horário início
+</label>
+
+
+<input 
+id="inicio"
+type="time">
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Horário término
+</label>
+
+
+<input 
+id="termino"
+type="time">
+
+
+</div>
+
+
+
+</div>
+
+
+</div>
