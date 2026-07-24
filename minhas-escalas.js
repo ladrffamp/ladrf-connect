@@ -1,5 +1,3 @@
-// minhas-escalas.js
-
 import { db, auth } from "./firebase.js";
 
 import {
@@ -9,20 +7,17 @@ doc,
 updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-
 import {
 onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
 
 
 const lista = document.getElementById("listaEscalas");
 
 
 
-
 // =====================================
-// CARREGAR ESCALAS DO MEMBRO
+// CARREGAR ESCALAS
 // =====================================
 
 async function carregarEscalas(uid){
@@ -33,15 +28,10 @@ if(!lista) return;
 
 
 lista.innerHTML = `
-
 <div style="text-align:center">
-
 <i class="fa-solid fa-spinner fa-spin"></i>
-
-Buscando escalas...
-
+Carregando escalas...
 </div>
-
 `;
 
 
@@ -49,9 +39,12 @@ Buscando escalas...
 try{
 
 
-const acoesSnapshot = await getDocs(
+const agenda = await getDocs(
 
-collection(db,"agenda")
+collection(
+db,
+"agenda"
+)
 
 );
 
@@ -59,74 +52,62 @@ collection(db,"agenda")
 
 lista.innerHTML = "";
 
-
-
 let encontrou = false;
 
 
 
-for(const acaoDoc of acoesSnapshot.docs){
+for(const acaoDoc of agenda.docs){
 
 
 const dadosAcao = acaoDoc.data();
 
 
 
-
-const participantesSnapshot = await getDocs(
+const participantes = await getDocs(
 
 collection(
-
 db,
-
-"acoes",
-
+"agenda",
 acaoDoc.id,
-
 "participantes"
-
 )
 
 );
 
 
 
+const meuRegistro = participantes.docs.find(
 
-const participanteDoc = participantesSnapshot.docs.find(
-
-(doc)=>doc.id === uid
+(item)=>item.id === uid
 
 );
 
 
 
-
-if(participanteDoc){
+if(meuRegistro){
 
 
 encontrou = true;
 
 
-
-const participante = participanteDoc.data();
-
+const dadosParticipante =
+meuRegistro.data();
 
 
 
 lista.innerHTML += `
 
-<div class="card" style="margin-bottom:20px;">
 
+<div class="card">
 
 
 <h2>
 
 <i class="fa-solid fa-calendar-check"></i>
 
-${dadosAcao.titulo || dadosAcao.nome || "Ação sem nome"}
+${dadosAcao.titulo || "Ação"}
 
 </h2>
-
 
 
 
@@ -134,14 +115,13 @@ ${dadosAcao.titulo || dadosAcao.nome || "Ação sem nome"}
 
 📅 Data:
 
-<strong>
+<b>
 
 ${dadosAcao.data || "-"}
 
-</strong>
+</b>
 
 </p>
-
 
 
 
@@ -149,14 +129,13 @@ ${dadosAcao.data || "-"}
 
 📍 Local:
 
-<strong>
+<b>
 
 ${dadosAcao.local || "-"}
 
-</strong>
+</b>
 
 </p>
-
 
 
 
@@ -164,33 +143,17 @@ ${dadosAcao.local || "-"}
 
 ⏰ Horário:
 
-<strong>
+<b>
 
-${dadosAcao.inicio || dadosAcao.horaInicio || "-"}
+${dadosAcao.inicio || "-"}
 
 até
 
-${dadosAcao.fim || dadosAcao.horaFim || "-"}
+${dadosAcao.fim || "-"}
 
-</strong>
-
-</p>
-
-
-
-
-<p>
-
-📌 Tipo:
-
-<strong>
-
-${dadosAcao.tipo || "-"}
-
-</strong>
+</b>
 
 </p>
-
 
 
 
@@ -200,22 +163,11 @@ Status:
 
 <b>
 
-${participante.presenca || "Pendente"}
+${dadosParticipante.presenca || "Pendente"}
 
 </b>
 
 </p>
-
-
-
-
-
-<div style="
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:15px;
-">
 
 
 
@@ -227,13 +179,9 @@ onclick="confirmarPresenca('${acaoDoc.id}')"
 
 >
 
-<i class="fa-solid fa-check"></i>
-
-Confirmar presença
+✅ Confirmar presença
 
 </button>
-
-
 
 
 
@@ -245,9 +193,7 @@ onclick="recusarPresenca('${acaoDoc.id}')"
 
 >
 
-<i class="fa-solid fa-xmark"></i>
-
-Não poderei comparecer
+❌ Não poderei comparecer
 
 </button>
 
@@ -255,9 +201,6 @@ Não poderei comparecer
 
 </div>
 
-
-
-</div>
 
 `;
 
@@ -268,7 +211,6 @@ Não poderei comparecer
 
 
 }
-
 
 
 
@@ -279,26 +221,17 @@ lista.innerHTML = `
 
 <div class="card">
 
-
 <h3>
-
 Nenhuma escala encontrada.
-
 </h3>
 
-
 <p>
-
 Você ainda não possui ações atribuídas.
-
 </p>
-
 
 </div>
 
 `;
-
-
 
 }
 
@@ -313,17 +246,8 @@ error
 );
 
 
-
-lista.innerHTML = `
-
-<div class="card">
-
-Erro ao carregar escalas.
-
-</div>
-
-`;
-
+lista.innerHTML =
+"Erro ao carregar escalas.";
 
 
 }
@@ -331,38 +255,23 @@ Erro ao carregar escalas.
 
 
 }
-
-
-
 
 
 
 
 // =====================================
-// CONFIRMAR PRESENÇA
+// CONFIRMAR
 // =====================================
 
 
-window.confirmarPresenca = async function(idAcao){
+window.confirmarPresenca = async function(id){
 
 
-if(!auth.currentUser){
-
-alert(
-"Usuário não autenticado."
-);
-
-return;
-
-}
+const usuario = auth.currentUser;
 
 
+if(!usuario) return;
 
-const uid = auth.currentUser.uid;
-
-
-
-try{
 
 
 await updateDoc(
@@ -371,13 +280,13 @@ doc(
 
 db,
 
-"acoes",
+"agenda",
 
-idAcao,
+id,
 
 "participantes",
 
-uid
+usuario.uid
 
 ),
 
@@ -397,23 +306,7 @@ alert(
 
 
 
-carregarEscalas(uid);
-
-
-
-}catch(error){
-
-
-console.error(error);
-
-
-alert(
-"Erro ao confirmar presença."
-);
-
-
-}
-
+carregarEscalas(usuario.uid);
 
 
 };
@@ -422,34 +315,19 @@ alert(
 
 
 
-
-
 // =====================================
-// RECUSAR PRESENÇA
+// RECUSAR
 // =====================================
 
 
-window.recusarPresenca = async function(idAcao){
+window.recusarPresenca = async function(id){
 
 
-
-if(!auth.currentUser){
-
-alert(
-"Usuário não autenticado."
-);
-
-return;
-
-}
+const usuario = auth.currentUser;
 
 
+if(!usuario) return;
 
-const uid = auth.currentUser.uid;
-
-
-
-try{
 
 
 await updateDoc(
@@ -458,13 +336,13 @@ doc(
 
 db,
 
-"acoes",
+"agenda",
 
-idAcao,
+id,
 
 "participantes",
 
-uid
+usuario.uid
 
 ),
 
@@ -484,29 +362,10 @@ alert(
 
 
 
-carregarEscalas(uid);
-
-
-
-}catch(error){
-
-
-console.error(error);
-
-
-alert(
-"Erro ao enviar resposta."
-);
-
-
-}
-
+carregarEscalas(usuario.uid);
 
 
 };
-
-
-
 
 
 
@@ -527,32 +386,19 @@ auth,
 if(usuario){
 
 
-carregarEscalas(usuario.uid);
-
+carregarEscalas(
+usuario.uid
+);
 
 
 }else{
 
 
-if(lista){
-
-lista.innerHTML = `
-
-<div class="card">
-
-Usuário não logado.
-
-</div>
-
-`;
-
-}
+lista.innerHTML =
+"Usuário não logado.";
 
 
 }
 
 
-
-}
-
-);
+});
