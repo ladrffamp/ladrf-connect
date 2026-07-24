@@ -13,7 +13,8 @@
 <link rel="stylesheet" href="styles.css">
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
@@ -22,7 +23,8 @@
 <body>
 
 
-<header>
+
+<header class="topbar">
 
 
 <a href="index.html" class="btn-inicio">
@@ -35,9 +37,12 @@ Início
 
 
 
+
 <div class="logo">
 
+
 <i class="fa-solid fa-heart-pulse"></i>
+
 
 <div>
 
@@ -45,32 +50,47 @@ Início
 LADRF Connect
 </h1>
 
+
 <p>
 Sistema de Gestão da Liga
 </p>
 
-</div>
 
 </div>
 
 
+</div>
 
 
-<div class="usuario">
 
-<h3 id="nomeUsuario">
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
 Carregando...
-</h3>
+
+</strong>
+
 
 <span id="perfilUsuario">
+
 Perfil
+
 </span>
 
-<p id="horaAtual">
---:--:--
-</p>
+
+<small id="horaAtual">
+
+00:00:00
+
+</small>
+
 
 </div>
+
 
 
 </header>
@@ -79,7 +99,33 @@ Perfil
 
 
 
+
 <main class="container">
+
+
+
+<section class="page-title">
+
+
+<h1>
+
+📅 Agenda LADRF
+
+</h1>
+
+
+<p>
+
+Eventos, ações e atividades da liga.
+
+</p>
+
+
+</section>
+
+
+
+
 
 
 
@@ -105,7 +151,9 @@ Agenda LADRF
 <div class="form-group">
 
 <label>
+
 Título do evento
+
 </label>
 
 <input 
@@ -117,13 +165,18 @@ placeholder="Título do evento">
 
 
 
+
 <div class="form-group">
 
 <label>
+
 Tipo
+
 </label>
 
+
 <select id="tipo">
+
 
 <option>Atendimento</option>
 
@@ -139,9 +192,12 @@ Tipo
 
 <option>Outro</option>
 
+
 </select>
 
+
 </div>
+
 
 
 
@@ -149,53 +205,79 @@ Tipo
 <div class="form-group">
 
 <label>
+
 Data
+
 </label>
 
-<input type="date" id="data">
-
-</div>
-
-
-
-
-<div class="form-group">
-
-<label>
-Início
-</label>
-
-<input type="time" id="inicio">
-
-</div>
-
-
-
-
-<div class="form-group">
-
-<label>
-Fim
-</label>
-
-<input type="time" id="fim">
-
-</div>
-
-
-
-
-<div class="form-group">
-
-<label>
-Local
-</label>
 
 <input 
+type="date"
+id="data">
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+
+Início
+
+</label>
+
+
+<input
+type="time"
+id="inicio">
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+
+Fim
+
+</label>
+
+
+<input
+type="time"
+id="fim">
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+
+Local
+
+</label>
+
+
+<input
 id="local"
 placeholder="Local">
 
+
 </div>
+
 
 
 
@@ -203,18 +285,25 @@ placeholder="Local">
 <div class="form-group">
 
 <label>
+
 Responsável
+
 </label>
 
-<input 
+
+<input
 id="responsavel"
 placeholder="Responsável">
 
+
+</div>
+
+
+
+
 </div>
 
 
-
-</div>
 
 
 
@@ -222,16 +311,25 @@ placeholder="Responsável">
 
 <div class="form-group">
 
+
 <label>
+
 Observações
+
 </label>
 
+
 <textarea
+
 id="observacoes"
+
 placeholder="Observações">
+
 </textarea>
 
+
 </div>
+
 
 
 
@@ -243,25 +341,35 @@ placeholder="Observações">
 
 
 
+
 <div class="botoes">
 
 
-<button 
+<button
+
 class="btn-success"
+
 onclick="salvarEvento()">
+
 
 <i class="fa-solid fa-floppy-disk"></i>
 
+
 Salvar Evento
+
 
 </button>
 
 
+
+</div>
+
+
+
+
 </div>
 
 
-
-</div>
 
 
 
@@ -276,7 +384,10 @@ Salvar Evento
 
 
 
+
+
 </main>
+
 
 
 
@@ -285,7 +396,10 @@ Salvar Evento
 
 <script type="module" src="agenda.js"></script>
 
+
 <script type="module" src="permissoes.js"></script>
+
+
 
 
 
@@ -295,26 +409,35 @@ Salvar Evento
 
 function atualizarHora(){
 
+
 const hora =
 document.getElementById("horaAtual");
 
 
 if(hora){
 
+
 hora.innerHTML =
 new Date().toLocaleTimeString("pt-BR");
 
-}
 
 }
+
+
+}
+
 
 
 setInterval(atualizarHora,1000);
 
+
 atualizarHora();
 
 
+
 </script>
+
+
 
 
 
