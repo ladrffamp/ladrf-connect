@@ -135,11 +135,9 @@ const dados = resultado.data();
 
 if(nomeAcao){
 
-
 nomeAcao.innerHTML =
 
-dados.nome || "Ação sem nome";
-
+dados.titulo || "Ação sem nome";
 
 }
 
