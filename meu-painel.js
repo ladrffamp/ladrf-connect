@@ -343,7 +343,9 @@ ${dadosParticipante.presenca || "Pendente"}
 
 if(
 
-dadosParticipante.presenca === "Confirmado"
+dadosParticipante.presenca === "Confirmado" ||
+
+dadosParticipante.presenca === "Confirmada"
 
 ){
 
