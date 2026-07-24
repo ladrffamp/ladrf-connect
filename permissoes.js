@@ -69,9 +69,16 @@ const dadosUsuario = usuarioDoc.data();
 const perfil = dadosUsuario.perfil;
 
 
-const paginaAtual = window.location.pathname
+let paginaAtual = window.location.pathname
 .split("/")
 .pop();
+
+
+if(!paginaAtual){
+
+paginaAtual = "index.html";
+
+}
 
 
 
