@@ -1,328 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
 <head>
 
 <meta charset="UTF-8">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Membros - LADRF Connect</title>
+<title>Membros | LADRF Connect</title>
 
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-
-body{
-
-background:#f4f6f9;
-
-}
-
-
-
-/* BOTÃO VOLTAR */
 <link rel="stylesheet" href="styles.css">
 
-.btn-voltar{
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-position:fixed;
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-top:20px;
-
-left:20px;
-
-z-index:9999;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
 </head>
 
-border-radius:10px;
 
-font-size:15px;
 <body>
 
-cursor:pointer;
 
-box-shadow:0 5px 15px rgba(0,0,0,.2);
 <header class="topbar">
 
-}
 
 <a href="index.html" class="btn-inicio">
 
 <i class="fa-solid fa-house"></i>
 
-.btn-voltar:hover{
 Início
 
-background:#08602f;
 </a>
 
-}
+
 
 
 <div class="logo">
 
 <i class="fa-solid fa-heart-pulse"></i>
 
+
 <div>
 
-header{
-<h1>LADRF Connect</h1>
+<h1>
 
-background:#0B7A3B;
-<p>Sistema de Gestão da Liga</p>
+LADRF Connect
 
-color:white;
+</h1>
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
 </div>
 
-padding:20px;
 </div>
 
-text-align:center;
 
-}
+
 
 
 <div class="usuario-info">
 
-.container{
 
-max-width:1200px;
 <strong id="nomeUsuario">
 
-margin:30px auto;
 Carregando...
 
-padding:20px;
 </strong>
 
-}
 
 <span id="perfilUsuario">
 
 Perfil
 
-.card{
 </span>
 
-background:white;
 
-padding:20px;
 <small id="horaAtual">
 
-border-radius:15px;
 00:00:00
 
-box-shadow:0 3px 10px rgba(0,0,0,.15);
 </small>
 
-margin-bottom:25px;
 
-}
 </div>
 
 
 </header>
 
-h2{
 
-margin-bottom:20px;
 
-color:#0B7A3B;
 
-}
 
 <main class="container">
 
 
-input,select{
 
-width:100%;
 <section class="page-title">
 
-padding:12px;
+
 <h1>
 
-margin-bottom:15px;
 👥 Cadastro de Membros
 
-border:1px solid #ccc;
 </h1>
 
-border-radius:8px;
+
 <p>
 
-}
-Gerenciamento da equipe LADRF.
+Gerenciamento dos integrantes da LADRF.
 
 </p>
 
+
 </section>
 
-button{
 
-background:#0B7A3B;
 
-color:white;
 
-border:none;
 
-padding:12px;
+
+
 <div class="card">
 
-width:100%;
 
-border-radius:8px;
 <h2>
 
-cursor:pointer;
+<i class="fa-solid fa-user-plus"></i>
+
 Novo Membro
 
-font-size:16px;
 </h2>
 
-}
 
 
 
-button:hover{
 <div class="form-grid">
 
-background:#08602f;
 
-}
+
 <div class="form-group">
 
 <label>
 
 Nome completo
 
-table{
 </label>
 
-width:100%;
-<input
+<input 
 id="nome"
 placeholder="Nome completo">
 
-border-collapse:collapse;
 </div>
 
-}
+
+
 
 
 <div class="form-group">
 
-th{
 <label>
 
-background:#0B7A3B;
 E-mail
 
-color:white;
 </label>
 
-padding:12px;
-<input
+<input 
 id="email"
 placeholder="E-mail">
 
-}
 </div>
 
 
 
-td{
+
+
 <div class="form-group">
 
-padding:10px;
 <label>
 
-border-bottom:1px solid #ddd;
 Telefone
 
-}
 </label>
 
-<input
+<input 
 id="telefone"
 placeholder="Telefone">
 
 </div>
 
-.acao{
 
-display:flex;
 
-gap:10px;
+
+
 <div class="form-group">
 
-}
 <label>
 
 Curso
 
 </label>
 
-.editar{
-<input
+<input 
 id="curso"
 placeholder="Curso">
 
-background:#1565C0;
 </div>
 
-}
+
+
 
 
 <div class="form-group">
 
-.excluir{
 <label>
 
-background:#C62828;
 Período
 
-}
 </label>
 
-<input
+<input 
 id="periodo"
 placeholder="Período">
 
 </div>
 
-</style>
 
-</head>
+
+
 
 <div class="form-group">
 
-<body>
 <label>
 
 Função
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
 </label>
 
-🏠 Menu Inicial
+
 <select id="funcao">
 
-</button>
 
 <option>Membro</option>
 
@@ -330,16 +248,12 @@ Função
 
 <option>Vice-presidente</option>
 
-<header>
 <option>Diretor Científico</option>
 
-<h1>LADRF Connect</h1>
 <option>Diretor Financeiro</option>
 
-<p>Cadastro de Membros</p>
 <option>Diretor de Marketing</option>
 
-</header>
 <option>Secretário</option>
 
 <option>Orientador</option>
@@ -347,102 +261,81 @@ Função
 
 </select>
 
+
 </div>
 
-<div class="container">
+
+
 
 
 <div class="form-group">
 
-<div class="card">
 <label>
 
 Status
 
-<h2>Novo Membro</h2>
 </label>
+
 
 <select id="status">
 
 
-<input
-id="nome"
-placeholder="Nome completo">
 <option>Ativo</option>
 
 <option>Inativo</option>
 
 
-<input
-id="email"
-placeholder="E-mail">
 </select>
 
-</div>
-
-
-<input
-id="telefone"
-placeholder="Telefone">
 
 </div>
 
 
-<input
-id="curso"
-placeholder="Curso">
 
 
-<div class="botoes">
+</div>
 
-<input
-id="periodo"
-placeholder="Período">
 
-<button
+
+
+
+<button 
 class="btn-success"
 onclick="salvarMembro()">
 
-<i class="fa-solid fa-user-plus"></i>
+
+<i class="fa-solid fa-save"></i>
 
 Cadastrar Membro
 
+
 </button>
 
-<select id="funcao">
+
 
 </div>
 
-<option>Membro</option>
 
 
-<option>Presidente</option>
-</div>
 
 
-<option>Vice-presidente</option>
 
 
-<option>Diretor Científico</option>
-
-
-<option>Diretor Financeiro</option>
 
 <div class="card">
 
-<option>Diretor de Marketing</option>
 
 <h2>
 
-<option>Secretário</option>
+<i class="fa-solid fa-users"></i>
+
 Membros Cadastrados
 
 </h2>
 
-<option>Orientador</option>
 
 
-</select>
+
 
 <div class="table-responsive">
 
@@ -450,44 +343,52 @@ Membros Cadastrados
 <table>
 
 
-<select id="status">
 <thead>
 
 <tr>
 
-<option>Ativo</option>
 <th>
+
 Nome
+
 </th>
 
+
 <th>
+
 Função
+
 </th>
 
-<option>Inativo</option>
+
 <th>
+
 Status
+
 </th>
+
 
 <th>
+
 Ações
+
 </th>
 
-</select>
+
 </tr>
+
 
 </thead>
 
 
 
+
 <tbody id="listaMembros">
 
-<button onclick="salvarMembro()">
+
 </tbody>
 
-Cadastrar Membro
 
-</button>
 
 </table>
 
@@ -499,78 +400,57 @@ Cadastrar Membro
 
 
 
-<div class="card">
-
-
-<h2>Membros Cadastrados</h2>
 
 
 
-<table>
-
-
-<thead>
-
-
-<tr>
-
-
-<th>Nome</th>
 </main>
 
 
-<th>Função</th>
 
 
-<th>Status</th>
 
 
-<th>Ações</th>
+
 <script type="module" src="membros.js"></script>
 
 <script type="module" src="permissoes.js"></script>
 
-</tr>
 
 
-</thead>
+
+
 <script>
 
 
 function atualizarHora(){
 
-<tbody id="listaMembros">
 
 const hora=document.getElementById("horaAtual");
 
-</tbody>
 
 if(hora){
 
-hora.innerHTML=new Date()
-
-</table>
-
-
-</div>
-.toLocaleTimeString("pt-BR");
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
 
 }
 
 
-</div>
 }
 
 
 setInterval(atualizarHora,1000);
 
+
 atualizarHora();
 
 
-<script type="module" src="membros.js"></script>
+
 </script>
 
-<script type="module" src="permissoes.js"></script>
+
 
 
 </body>
+
+</html>
