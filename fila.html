@@ -7,201 +7,13 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LADRF Connect - Fila</title>
+<title>Fila | LADRF Connect</title>
+
 
 <link rel="stylesheet" href="styles.css">
 
 
-<style>
-
-*{
-
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
-
-}
-
-
-body{
-
-background:#f4f6f9;
-
-}
-
-
-
-/* BOTÃO MENU */
-
-.btn-voltar{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-z-index:9999;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-font-size:15px;
-
-cursor:pointer;
-
-box-shadow:0 5px 15px rgba(0,0,0,.2);
-
-}
-
-
-
-.btn-voltar:hover{
-
-background:#075c2b;
-
-}
-
-
-
-
-header{
-
-background:#0B7A3B;
-
-color:white;
-
-padding:20px;
-
-}
-
-
-
-.container{
-
-padding:30px;
-
-}
-
-
-
-.topo{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-margin-bottom:20px;
-
-}
-
-
-
-button{
-
-padding:10px 18px;
-
-border:none;
-
-border-radius:8px;
-
-cursor:pointer;
-
-color:white;
-
-font-size:15px;
-
-}
-
-
-
-.chamar{
-
-background:#1976d2;
-
-}
-
-
-
-.chamar:hover{
-
-background:#125aa0;
-
-}
-
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-background:white;
-
-border-radius:10px;
-
-overflow:hidden;
-
-}
-
-
-
-th{
-
-background:#0B7A3B;
-
-color:white;
-
-padding:15px;
-
-}
-
-
-
-td{
-
-padding:15px;
-
-text-align:center;
-
-border-bottom:1px solid #eee;
-
-}
-
-
-
-.acao{
-
-background:#1976d2;
-
-}
-
-
-
-.vazio{
-
-text-align:center;
-
-padding:30px;
-
-color:#777;
-
-}
-
-
-
-</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
@@ -212,23 +24,83 @@ color:#777;
 
 
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
-
-🏠 Menu Inicial
-
-</button>
-
-
-
-
-
 <header>
+
+
+<a href="index.html" class="btn-inicio">
+
+
+<i class="fa-solid fa-house"></i>
+
+
+Início
+
+
+</a>
+
+
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
+
 
 <h1>
 
-Fila de Atendimento
+LADRF Connect
 
 </h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="usuario">
+
+
+<h3 id="nomeUsuario">
+
+Carregando...
+
+</h3>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<p id="horaAtual">
+
+--:--:--
+
+</p>
+
+
+</div>
+
+
 
 </header>
 
@@ -236,14 +108,50 @@ Fila de Atendimento
 
 
 
-<div class="container">
+
+
+<main class="container">
 
 
 
-<div class="topo">
+
+
+<section class="page-title">
+
+
+<h1>
+
+Fila de Atendimento
+
+</h1>
+
+
+<p>
+
+Controle dos pacientes aguardando atendimento.
+
+</p>
+
+
+</section>
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+
+<div class="flex-between">
 
 
 <h2>
+
+<i class="fa-solid fa-users"></i>
 
 Pacientes aguardando
 
@@ -251,9 +159,18 @@ Pacientes aguardando
 
 
 
-<button class="chamar" onclick="chamarProximo()">
+
+
+<button 
+class="btn-primary"
+onclick="chamarProximo()">
+
+
+<i class="fa-solid fa-bullhorn"></i>
+
 
 Chamar Próximo Paciente
+
 
 </button>
 
@@ -266,8 +183,12 @@ Chamar Próximo Paciente
 
 
 
+<div class="table-responsive">
+
+
 
 <table>
+
 
 
 <thead>
@@ -275,21 +196,39 @@ Chamar Próximo Paciente
 
 <tr>
 
-<th>Paciente</th>
 
-<th>Modalidade</th>
+<th>
+Paciente
+</th>
 
-<th>Status</th>
 
-<th>Maca</th>
+<th>
+Modalidade
+</th>
 
-<th>Ação</th>
+
+<th>
+Status
+</th>
+
+
+<th>
+Maca
+</th>
+
+
+<th>
+Ação
+</th>
+
 
 
 </tr>
 
 
+
 </thead>
+
 
 
 
@@ -308,12 +247,60 @@ Chamar Próximo Paciente
 
 
 
+</div>
+
+
+
+
+
+</main>
+
+
+
+
 
 
 
 <script type="module" src="fila.js"></script>
 
 <script type="module" src="auth.js"></script>
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora =
+document.getElementById("horaAtual");
+
+
+if(hora){
+
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
+
+}
+
+
+}
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
 
 
 
