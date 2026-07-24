@@ -21,10 +21,8 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 </head>
 
 
+
 <body>
-
-
-
 
 
 <header class="topbar">
@@ -32,15 +30,11 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 
 <a href="index.html" class="btn-inicio">
 
-
 <i class="fa-solid fa-house"></i>
-
 
 Início
 
-
 </a>
-
 
 
 
@@ -53,7 +47,6 @@ Início
 
 
 <div>
-
 
 <h1>
 
@@ -99,7 +92,7 @@ Perfil
 
 <small id="horaAtual">
 
-00:00:00
+--:--:--
 
 </small>
 
@@ -109,7 +102,6 @@ Perfil
 
 
 </header>
-
 
 
 
@@ -137,12 +129,13 @@ Minhas Escalas
 
 <p>
 
-Consulte seus eventos e atividades atribuídas.
+Consulte suas ações e confirme sua participação.
 
 </p>
 
 
 </section>
+
 
 
 
@@ -187,7 +180,15 @@ Carregando escalas...
 
 
 </div>
+
+
+
+
+
+
 </main>
+
+
 
 
 
@@ -206,26 +207,25 @@ Carregando escalas...
 
 
 
+
 <script>
 
 
 function atualizarHora(){
 
 
-const hora=document.getElementById("horaAtual");
-
+const hora = document.getElementById("horaAtual");
 
 
 if(hora){
 
 
-hora.innerHTML=new Date()
+hora.innerHTML = new Date()
 
 .toLocaleTimeString("pt-BR");
 
 
 }
-
 
 
 }
@@ -247,5 +247,6 @@ atualizarHora();
 
 
 </body>
+
 
 </html>
