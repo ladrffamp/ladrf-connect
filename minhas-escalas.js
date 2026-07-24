@@ -20,16 +20,13 @@ onAuthStateChanged
 
 
 
-
-
 const lista = document.getElementById("listaEscalas");
 
 
 
 
-
 // =====================================
-// CARREGAR ESCALAS DO MEMBRO
+// CARREGAR ESCALAS
 // =====================================
 
 
@@ -38,7 +35,7 @@ async function carregarEscalas(uid){
 
 console.log("======================");
 console.log("BUSCANDO ESCALAS");
-console.log("UID:", uid);
+console.log("UID:",uid);
 console.log("======================");
 
 
@@ -46,7 +43,7 @@ console.log("======================");
 if(!lista){
 
 console.error(
-"Elemento listaEscalas não encontrado"
+"listaEscalas não encontrada"
 );
 
 return;
@@ -93,7 +90,6 @@ agendaSnapshot.size
 lista.innerHTML = "";
 
 
-
 let encontrou = false;
 
 
@@ -103,19 +99,13 @@ for(const acaoDoc of agendaSnapshot.docs){
 
 
 
-console.log(
-"ID DA AÇÃO:",
-acaoDoc.id
-);
-
-
-
 const dadosAcao = acaoDoc.data();
 
 
 
 console.log(
-"DADOS DA AÇÃO:",
+"Verificando:",
+acaoDoc.id,
 dadosAcao
 );
 
@@ -142,10 +132,17 @@ acaoDoc.id,
 
 
 console.log(
-
-"Quantidade participantes:",
-
+"Participantes:",
 participantesSnapshot.size
+);
+
+
+
+
+
+const participanteDoc = participantesSnapshot.docs.find(
+
+(item)=>item.id === uid
 
 );
 
@@ -153,53 +150,21 @@ participantesSnapshot.size
 
 
 
-participantesSnapshot.forEach((item)=>{
+if(participanteDoc){
 
-
-console.log(
-"PARTICIPANTE UID:",
-item.id
-);
-
-
-console.log(
-"DADOS PARTICIPANTE:",
-item.data()
-);
-
-
-});
-
-
-
-
-
-
-const participante = participantesSnapshot.docs.find(
-
-(item)=> item.id === uid
-
-);
-
-
-
-
-
-
-if(participante){
 
 
 encontrou = true;
 
 
 
-const dadosParticipante = participante.data();
+const dadosParticipante =
+participanteDoc.data();
 
 
 
 
 lista.innerHTML += `
-
 
 <div class="card">
 
@@ -208,7 +173,7 @@ lista.innerHTML += `
 
 <i class="fa-solid fa-calendar-check"></i>
 
-${dadosAcao.titulo || dadosAcao.nome || "Ação sem título"}
+${dadosAcao.titulo || "Ação sem título"}
 
 </h2>
 
@@ -265,6 +230,36 @@ ${dadosAcao.fim || "-"}
 
 <p>
 
+👤 Responsável:
+
+<strong>
+
+${dadosAcao.responsavel || "-"}
+
+</strong>
+
+</p>
+
+
+
+
+<p>
+
+📌 Tipo:
+
+<strong>
+
+${dadosAcao.tipo || "-"}
+
+</strong>
+
+</p>
+
+
+
+
+<p>
+
 Status:
 
 <strong>
@@ -305,7 +300,6 @@ Confirmar presença
 
 
 
-
 <button
 
 class="btn-danger"
@@ -322,13 +316,11 @@ Não poderei comparecer
 
 
 
-
 </div>
 
 
 
 </div>
-
 
 `;
 
@@ -347,13 +339,6 @@ Não poderei comparecer
 if(!encontrou){
 
 
-console.warn(
-"Nenhuma escala encontrada para:",
-uid
-);
-
-
-
 lista.innerHTML = `
 
 
@@ -367,17 +352,11 @@ Nenhuma escala encontrada.
 </h3>
 
 
-
 <p>
 
-Usuário:
-
-<br>
-
-${uid}
+Você ainda não possui ações atribuídas.
 
 </p>
-
 
 
 </div>
@@ -386,9 +365,7 @@ ${uid}
 `;
 
 
-
 }
-
 
 
 
@@ -397,11 +374,8 @@ ${uid}
 
 
 console.error(
-
-"ERRO AO BUSCAR ESCALAS:",
-
+"Erro ao carregar escalas:",
 error
-
 );
 
 
@@ -415,7 +389,6 @@ Erro ao carregar escalas.
 </div>
 
 `;
-
 
 
 }
@@ -446,13 +419,12 @@ const usuario = auth.currentUser;
 if(!usuario){
 
 alert(
-"Usuário não autenticado."
+"Usuário não autenticado"
 );
 
 return;
 
 }
-
 
 
 
@@ -491,16 +463,16 @@ alert(
 
 
 
-carregarEscalas(usuario.uid);
+carregarEscalas(
+usuario.uid
+);
 
 
 
 }catch(error){
 
 
-console.error(
-error
-);
+console.error(error);
 
 
 alert(
@@ -520,12 +492,14 @@ alert(
 
 
 
+
 // =====================================
 // RECUSAR PRESENÇA
 // =====================================
 
 
 window.recusarPresenca = async function(idAcao){
+
 
 
 const usuario = auth.currentUser;
@@ -535,13 +509,12 @@ const usuario = auth.currentUser;
 if(!usuario){
 
 alert(
-"Usuário não autenticado."
+"Usuário não autenticado"
 );
 
 return;
 
 }
-
 
 
 
@@ -580,16 +553,16 @@ alert(
 
 
 
-carregarEscalas(usuario.uid);
+carregarEscalas(
+usuario.uid
+);
 
 
 
 }catch(error){
 
 
-console.error(
-error
-);
+console.error(error);
 
 
 alert(
@@ -625,7 +598,6 @@ auth,
 if(usuario){
 
 
-
 console.log("======================");
 
 console.log(
@@ -647,9 +619,7 @@ console.log("======================");
 
 
 carregarEscalas(
-
 usuario.uid
-
 );
 
 
@@ -666,10 +636,10 @@ console.log(
 if(lista){
 
 lista.innerHTML =
-
 "Usuário não logado.";
 
 }
+
 
 
 }
