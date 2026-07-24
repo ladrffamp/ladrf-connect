@@ -66,7 +66,7 @@ return;
 const dadosUsuario = usuarioDoc.data();
 
 
-const perfil = dadosUsuario.perfil;
+const perfil = dadosUsuario.perfil?.toLowerCase();
 
 
 let paginaAtual = window.location.pathname
