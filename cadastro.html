@@ -7,220 +7,13 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>LADRF Connect - Cadastro</title>
+<title>Cadastro | LADRF Connect</title>
 
 
-<style>
+<link rel="stylesheet" href="styles.css">
 
-*{
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
 
-
-body{
-
-background:#f4f6f9;
-
-margin:0;
-
-padding:30px;
-
-}
-
-
-
-/* BOTÃO MENU */
-
-.btn-voltar{
-
-position:fixed;
-
-top:20px;
-
-left:20px;
-
-z-index:9999;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-font-size:15px;
-
-cursor:pointer;
-
-box-shadow:0 5px 15px rgba(0,0,0,.2);
-
-}
-
-
-
-.btn-voltar:hover{
-
-background:#075c2b;
-
-}
-
-
-
-.container{
-
-max-width:500px;
-
-margin:auto;
-
-}
-
-
-
-.card{
-
-background:white;
-
-padding:30px;
-
-border-radius:20px;
-
-box-shadow:0 8px 20px rgba(0,0,0,.12);
-
-}
-
-
-
-h1{
-
-text-align:center;
-
-color:#0B7A3B;
-
-margin-bottom:25px;
-
-}
-
-
-
-label{
-
-display:block;
-
-font-weight:bold;
-
-margin-top:15px;
-
-}
-
-
-
-input,
-select,
-textarea{
-
-width:100%;
-
-padding:12px;
-
-margin-top:5px;
-
-border-radius:8px;
-
-border:1px solid #ccc;
-
-font-size:15px;
-
-}
-
-
-
-textarea{
-
-height:100px;
-
-resize:none;
-
-}
-
-
-
-button{
-
-width:100%;
-
-padding:14px;
-
-margin-top:25px;
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-border-radius:10px;
-
-font-size:17px;
-
-cursor:pointer;
-
-}
-
-
-
-button:hover{
-
-background:#075c2b;
-
-}
-
-
-
-.qr-box{
-
-margin-top:35px;
-
-padding-top:25px;
-
-border-top:1px solid #ddd;
-
-text-align:center;
-
-}
-
-
-
-#qrcode{
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-margin-top:20px;
-
-min-height:220px;
-
-}
-
-
-
-.info{
-
-color:#666;
-
-font-size:14px;
-
-}
-
-
-
-</style>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
@@ -230,32 +23,121 @@ font-size:14px;
 
 
 
-<button class="btn-voltar" onclick="window.location.href='index.html'">
-
-🏠 Menu Inicial
-
-</button>
+<header>
 
 
+<a href="index.html" class="btn-inicio">
+
+
+<i class="fa-solid fa-house"></i>
+
+
+Início
+
+
+</a>
 
 
 
-<div class="container">
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
+
+
+<h1>
+LADRF Connect
+</h1>
+
+
+<p>
+Sistema de Gestão da Liga
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="usuario">
+
+
+<h3 id="nomeUsuario">
+
+Carregando...
+
+</h3>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<p id="horaAtual">
+
+--:--:--
+
+</p>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+
+<main class="container">
+
+
+
 
 
 <div class="card">
 
 
-<h1>
+
+<h2>
+
+<i class="fa-solid fa-user-plus"></i>
 
 Cadastro de Paciente
 
-</h1>
+</h2>
+
+
+
+
 
 
 
 <form id="formCadastro">
 
+
+
+
+
+
+<div class="form-group">
 
 
 <label>
@@ -276,7 +158,15 @@ required
 >
 
 
+</div>
 
+
+
+
+
+
+
+<div class="form-group">
 
 
 <label>
@@ -295,7 +185,16 @@ id="whatsapp"
 >
 
 
+</div>
 
+
+
+
+
+
+
+
+<div class="form-group">
 
 
 <label>
@@ -314,7 +213,16 @@ id="idade"
 >
 
 
+</div>
 
+
+
+
+
+
+
+
+<div class="form-group">
 
 
 <label>
@@ -324,7 +232,9 @@ Modalidade
 </label>
 
 
+
 <select id="modalidade" required>
+
 
 <option value="">
 
@@ -336,7 +246,16 @@ Carregando modalidades...
 </select>
 
 
+</div>
 
+
+
+
+
+
+
+
+<div class="form-group">
 
 
 <label>
@@ -356,14 +275,29 @@ placeholder="Descreva a queixa">
 </textarea>
 
 
+</div>
 
 
 
-<button type="submit">
+
+
+
+
+<button 
+class="btn-success"
+type="submit">
+
+
+<i class="fa-solid fa-check"></i>
+
 
 Cadastrar Paciente
 
+
 </button>
+
+
+
 
 
 
@@ -374,17 +308,22 @@ Cadastrar Paciente
 
 
 
-<div class="qr-box">
+
+
+<div class="card">
 
 
 <h2>
+
+<i class="fa-solid fa-qrcode"></i>
 
 QR Code de acompanhamento
 
 </h2>
 
 
-<p class="info">
+
+<p>
 
 Entregue este QR Code ao paciente para acompanhar a fila.
 
@@ -393,17 +332,17 @@ Entregue este QR Code ao paciente para acompanhar a fila.
 
 
 
-<div id="qrcode">
-
-</div>
-
-
+<div id="qrcode" class="flex-center">
 
 
 </div>
 
 
 
+</div>
+
+
+
 
 
 
@@ -411,7 +350,12 @@ Entregue este QR Code ao paciente para acompanhar a fila.
 </div>
 
 
-</div>
+
+
+
+
+</main>
+
 
 
 
@@ -423,6 +367,48 @@ Entregue este QR Code ao paciente para acompanhar a fila.
 
 
 <script type="module" src="cadastro.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora =
+document.getElementById("horaAtual");
+
+
+if(hora){
+
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
+
+}
+
+
+}
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
+
+
 
 
 
