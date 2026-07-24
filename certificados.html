@@ -10,188 +10,11 @@
 <title>Certificados | LADRF Connect</title>
 
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
 
 
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
-
-
-<style>
-
-
-*{
-
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Poppins',sans-serif;
-
-}
-
-
-
-body{
-
-background:#eef3f7;
-
-}
-
-
-
-header{
-
-background:linear-gradient(90deg,#0B7A3B,#15A34A);
-
-color:white;
-
-padding:25px 40px;
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-}
-
-
-
-header h1{
-
-font-size:28px;
-
-}
-
-
-
-.btn{
-
-background:#0B7A3B;
-
-color:white;
-
-border:none;
-
-padding:12px 20px;
-
-border-radius:10px;
-
-cursor:pointer;
-
-font-weight:bold;
-
-}
-
-
-
-.container{
-
-max-width:1100px;
-
-margin:auto;
-
-padding:35px;
-
-}
-
-
-
-.card{
-
-background:white;
-
-padding:25px;
-
-border-radius:18px;
-
-box-shadow:0 8px 20px rgba(0,0,0,.1);
-
-margin-bottom:25px;
-
-}
-
-
-
-label{
-
-display:block;
-
-font-weight:bold;
-
-margin-top:15px;
-
-}
-
-
-
-input,
-select{
-
-width:100%;
-
-padding:12px;
-
-margin-top:5px;
-
-border-radius:8px;
-
-border:1px solid #ccc;
-
-}
-
-
-
-button{
-
-margin-top:20px;
-
-}
-
-
-
-.certificado-lista{
-
-margin-top:20px;
-
-}
-
-
-
-table{
-
-width:100%;
-
-border-collapse:collapse;
-
-}
-
-
-
-th{
-
-background:#0B7A3B;
-
-color:white;
-
-padding:12px;
-
-text-align:left;
-
-}
-
-
-
-td{
-
-padding:12px;
-
-border-bottom:1px solid #ddd;
-
-}
-
-
-
-</style>
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
 
 </head>
@@ -200,10 +23,95 @@ border-bottom:1px solid #ddd;
 <body>
 
 
-<header>
+
+<header class="topbar">
+
+
+<a href="index.html" class="btn-inicio">
+
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</a>
+
+
+
+
+<div class="logo">
+
+
+<i class="fa-solid fa-heart-pulse"></i>
 
 
 <div>
+
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p>
+
+Sistema de Gestão da Liga
+
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+<div class="usuario-info">
+
+
+<strong id="nomeUsuario">
+
+Carregando...
+
+</strong>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<small id="horaAtual">
+
+00:00:00
+
+</small>
+
+
+</div>
+
+
+
+</header>
+
+
+
+
+
+
+<main class="container">
+
+
+
+
+
+<section class="page-title">
+
 
 <h1>
 
@@ -216,37 +124,32 @@ Certificados
 
 <p>
 
-Emissão de certificados LADRF
+Emissão e controle de certificados da LADRF.
 
 </p>
 
 
-</div>
+</section>
 
 
 
-<button class="btn" onclick="window.location='index.html'">
-
-<i class="fa-solid fa-house"></i>
-
-Início
-
-</button>
-
-
-</header>
-
-<div class="container">
 
 <div class="card">
 
 
 <h2>
 
+<i class="fa-solid fa-file-circle-plus"></i>
+
 Gerar Certificado
 
 </h2>
 
+
+
+<div class="form-grid">
+
+<div class="form-group">
 
 
 <label>
@@ -258,7 +161,8 @@ Membro
 
 <select id="membro">
 
-<option value="">
+
+<option>
 
 Carregando membros...
 
@@ -269,6 +173,11 @@ Carregando membros...
 
 
 
+</div>
+
+
+
+<div class="form-group">
 
 
 <label>
@@ -281,7 +190,7 @@ Evento
 <select id="evento">
 
 
-<option value="">
+<option>
 
 Carregando eventos...
 
@@ -291,7 +200,11 @@ Carregando eventos...
 </select>
 
 
+</div>
 
+
+
+<div class="form-group">
 
 
 <label>
@@ -303,37 +216,57 @@ Carga horária
 
 <input
 
-type="text"
-
 id="cargaHoraria"
 
-placeholder="Ex: 10 horas"
-
->
+placeholder="Ex: 10 horas">
 
 
+</div>
 
 
+</div>
+<div class="botoes">
 
-<button class="btn" id="gerarCertificado">
+
+<button 
+class="btn-success"
+id="gerarCertificado">
 
 
 <i class="fa-solid fa-file-pdf"></i>
+
 
 Gerar Certificado PDF
 
 
 </button>
-  <br>
 
-<button class="btn" id="emitirTodos">
-    <i class="fa-solid fa-users"></i>
-    Emitir para todos os membros
+
+
+
+
+<button 
+class="btn-primary"
+id="emitirTodos">
+
+
+<i class="fa-solid fa-users"></i>
+
+
+Emitir para todos os membros
+
+
 </button>
 
 
 
 </div>
+
+
+
+</div>
+
+
 
 
 
@@ -344,16 +277,26 @@ Gerar Certificado PDF
 
 <h2>
 
-Certificados emitidos
+<i class="fa-solid fa-list"></i>
+
+Certificados Emitidos
 
 </h2>
+
+
+
+
+
+<div class="table-responsive">
 
 
 
 <table>
 
 
+
 <thead>
+
 
 <tr>
 
@@ -365,6 +308,7 @@ Nome
 </th>
 
 
+
 <th>
 
 Evento
@@ -372,11 +316,21 @@ Evento
 </th>
 
 
+
+<th>
+
+Carga Horária
+
+</th>
+
+
+
 <th>
 
 Data
 
 </th>
+
 
 
 <th>
@@ -389,46 +343,104 @@ Ação
 </tr>
 
 
+
 </thead>
+
+
 
 
 
 <tbody id="listaCertificados">
 
 
+
 <tr>
 
-<td colspan="4">
 
-Nenhum certificado emitido
+<td colspan="5" style="text-align:center;">
+
+
+Nenhum certificado emitido.
+
 
 </td>
 
+
 </tr>
+
 
 
 </tbody>
 
 
+
+
 </table>
 
 
-</div>
-
-
-
 
 
 </div>
 
 
 
+</div>
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+
+
+
+</main>
+
+
+
+
 
 
 <script type="module" src="certificados.js"></script>
+
+
+<script type="module" src="permissoes.js"></script>
+
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+
+const hora = document.getElementById("horaAtual");
+
+
+
+if(hora){
+
+
+hora.innerHTML = new Date()
+
+.toLocaleTimeString("pt-BR");
+
+
+}
+
+
+
+}
+
+
+
+setInterval(atualizarHora,1000);
+
+
+atualizarHora();
+
+
+
+</script>
+
 
 
 
