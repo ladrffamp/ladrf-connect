@@ -108,7 +108,7 @@ console.log("Buscando documento:", idAcao);
 
 const referencia = doc(
 db,
-"acoes",
+"agendas",
 idAcao
 );
 
