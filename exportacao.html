@@ -9,351 +9,177 @@
 
 <title>Exportação | LADRF Connect</title>
 
-
 <link rel="stylesheet" href="styles.css">
-
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
-
 </head>
-
 
 <body>
 
-
-
 <header class="topbar">
 
-
 <a href="index.html" class="btn-inicio">
-
 <i class="fa-solid fa-house"></i>
-
 Início
-
 </a>
-
-
-
-
 
 <div class="logo">
 
-
 <i class="fa-solid fa-heart-pulse"></i>
-
 
 <div>
 
-<h1>
+<h1>LADRF Connect</h1>
 
-LADRF Connect
-
-</h1>
-
-
-<p>
-
-Sistema de Gestão da Liga
-
-</p>
-
+<p>Sistema de Gestão da Liga</p>
 
 </div>
 
-
 </div>
-
-
-
-
 
 <div class="usuario-info">
 
-
 <strong id="nomeUsuario">
-
 Carregando...
-
 </strong>
 
-
 <span id="perfilUsuario">
-
 Perfil
-
 </span>
 
-
 <small id="horaAtual">
-
 00:00:00
-
 </small>
 
-
 </div>
-
-
 
 </header>
 
-
-
-
-
-
 <main class="container">
-
-
-
-
 
 <section class="page-title">
 
-
 <h1>
-
 <i class="fa-solid fa-file-export"></i>
-
 Exportação de Dados
-
 </h1>
 
-
 <p>
-
 Gere arquivos com os dados do sistema LADRF Connect.
-
 </p>
-
 
 </section>
 
-
-
-
-
-
 <div class="card">
 
-
 <h2>
-
 <i class="fa-solid fa-database"></i>
-
 Selecionar Dados
-
 </h2>
-
-
-
 
 <div class="form-grid">
 
-
 <div class="form-group">
 
-
-<label>
-
+<label for="tipoExportacao">
 Tipo de exportação
-
 </label>
-
-
 
 <select id="tipoExportacao">
 
+<option value="membros">Membros</option>
 
-<option value="membros">
+<option value="pacientes">Pacientes</option>
 
-Membros
+<option value="atendimentos">Atendimentos</option>
 
-</option>
+<option value="eventos">Eventos</option>
 
+<option value="materiais">Materiais</option>
 
-<option value="pacientes">
-
-Pacientes
-
-</option>
-
-
-<option value="atendimentos">
-
-Atendimentos
-
-</option>
-
-
-<option value="eventos">
-
-Eventos
-
-</option>
-
-
-<option value="materiais">
-
-Materiais
-
-</option>
-
-
-<option value="movimentacoes">
-
-Movimentações
-
-</option>
-
+<option value="movimentacoes">Movimentações</option>
 
 </select>
 
-
+</div>
 
 </div>
 
-
-</div>
 <div class="botoes">
 
-
-<button 
-class="btn-success"
-id="exportarExcel">
-
+<button
+id="exportarExcel"
+class="btn-success">
 
 <i class="fa-solid fa-file-excel"></i>
 
-
 Exportar Excel
-
 
 </button>
 
-
-
-
-
-<button 
-class="btn-primary"
-id="exportarPDF">
-
+<button
+id="exportarPDF"
+class="btn-primary">
 
 <i class="fa-solid fa-file-pdf"></i>
 
-
 Exportar PDF
-
 
 </button>
 
-
-
 </div>
 
-
-
 </div>
-
-
-
-
-
-
 
 <div class="card">
-
 
 <h2>
 
 <i class="fa-solid fa-table"></i>
 
-Dados Exportados
+Pré-visualização
 
 </h2>
 
-
-
-
-
 <div class="table-responsive">
-
 
 <table>
 
-
 <thead>
-
 
 <tr>
 
+<th>Campo</th>
 
-<th>
-
-Campo
-
-</th>
-
-
-<th>
-
-Valor
-
-</th>
-
+<th>Valor</th>
 
 </tr>
-
 
 </thead>
 
-
-
 <tbody id="previewDados">
-
 
 <tr>
 
-
 <td colspan="2" style="text-align:center;">
 
-
-Selecione uma opção para visualizar.
-
+Selecione uma coleção.
 
 </td>
 
-
 </tr>
-
-
 
 </tbody>
 
-
-
 </table>
 
-
-
 </div>
 
-
-
 </div>
-
-
-
-
-
-
 
 <div class="card">
-
 
 <h2>
 
@@ -363,73 +189,47 @@ Informações
 
 </h2>
 
-
-
 <p>
 
 Os arquivos exportados podem ser utilizados para relatórios,
-
 prestação de contas e organização administrativa da LADRF.
 
 </p>
 
-
-
 </div>
+
 </main>
 
+<!-- XLSX -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
+<!-- jsPDF -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
-
-
-
+<!-- Sistema -->
 <script type="module" src="exportacao.js"></script>
-
 
 <script type="module" src="permissoes.js"></script>
 
-
-
-
-
-
 <script>
-
 
 function atualizarHora(){
 
-
-const hora = document.getElementById("horaAtual");
-
-
+const hora=document.getElementById("horaAtual");
 
 if(hora){
 
-
-hora.innerHTML = new Date()
-
-.toLocaleTimeString("pt-BR");
-
+hora.innerHTML=new Date().toLocaleTimeString("pt-BR");
 
 }
 
-
-
 }
-
-
 
 setInterval(atualizarHora,1000);
 
-
 atualizarHora();
 
-
-
 </script>
-
-
-
 
 </body>
 
