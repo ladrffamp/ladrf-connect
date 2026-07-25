@@ -44,16 +44,17 @@ async function carregarDados() {
         console.error(erro);
 
         previewDados.innerHTML = `
-        <tr>
-            <td colspan="2">
-                Erro ao carregar dados.
-            </td>
-        </tr>
+            <tr>
+                <td colspan="2">
+                    Erro ao carregar dados.
+                </td>
+            </tr>
         `;
 
     }
 
 }
+
 // ======================================
 // PREVIEW
 // ======================================
@@ -65,11 +66,11 @@ function atualizarPreview() {
     if (dadosExportacao.length === 0) {
 
         previewDados.innerHTML = `
-        <tr>
-            <td colspan="2" style="text-align:center;">
-                Nenhum registro encontrado.
-            </td>
-        </tr>
+            <tr>
+                <td colspan="2" style="text-align:center;">
+                    Nenhum registro encontrado.
+                </td>
+            </tr>
         `;
 
         return;
@@ -89,20 +90,27 @@ function atualizarPreview() {
             typeof valor === "object" &&
             valor.seconds
         ) {
+
             valor = new Date(
                 valor.seconds * 1000
             ).toLocaleString("pt-BR");
+
         }
 
-        if (typeof valor === "object") {
+        if (
+            typeof valor === "object" &&
+            valor !== null
+        ) {
+
             valor = JSON.stringify(valor);
+
         }
 
         previewDados.innerHTML += `
-        <tr>
-            <td><strong>${campo}</strong></td>
-            <td>${valor ?? "-"}</td>
-        </tr>
+            <tr>
+                <td><strong>${campo}</strong></td>
+                <td>${valor ?? "-"}</td>
+            </tr>
         `;
 
     });
@@ -118,8 +126,9 @@ tipoExportacao.addEventListener(
     carregarDados
 );
 
-// carregar ao abrir
+// Carregar ao abrir
 carregarDados();
+
 // ======================================
 // EXPORTAR EXCEL
 // ======================================
@@ -127,8 +136,10 @@ carregarDados();
 btnExcel.addEventListener("click", () => {
 
     if (dadosExportacao.length === 0) {
+
         alert("Não existem dados para exportar.");
         return;
+
     }
 
     const planilha = XLSX.utils.json_to_sheet(dadosExportacao);
@@ -148,8 +159,6 @@ btnExcel.addEventListener("click", () => {
 
 });
 
-
-
 // ======================================
 // EXPORTAR PDF
 // ======================================
@@ -157,8 +166,10 @@ btnExcel.addEventListener("click", () => {
 btnPDF.addEventListener("click", () => {
 
     if (dadosExportacao.length === 0) {
+
         alert("Não existem dados para exportar.");
         return;
+
     }
 
     const { jsPDF } = window.jspdf;
@@ -194,7 +205,8 @@ btnPDF.addEventListener("click", () => {
         );
 
         y += 8;
-              Object.entries(item).forEach(([campo, valor]) => {
+
+        Object.entries(item).forEach(([campo, valor]) => {
 
             if (campo === "id") return;
 
@@ -203,13 +215,20 @@ btnPDF.addEventListener("click", () => {
                 typeof valor === "object" &&
                 valor.seconds
             ) {
+
                 valor = new Date(
                     valor.seconds * 1000
                 ).toLocaleString("pt-BR");
+
             }
 
-            if (typeof valor === "object") {
+            if (
+                typeof valor === "object" &&
+                valor !== null
+            ) {
+
                 valor = JSON.stringify(valor);
+
             }
 
             pdf.text(
@@ -223,7 +242,6 @@ btnPDF.addEventListener("click", () => {
             if (y > 275) {
 
                 pdf.addPage();
-
                 y = 20;
 
             }
@@ -234,28 +252,8 @@ btnPDF.addEventListener("click", () => {
 
     });
 
-    pdf.save(`${tipoExportacao.value}.pdf`);
-
-});
-// ======================================
-// FINALIZAÇÃO PDF
-// ======================================
-
-        // quebra de página automática
-        if (y > 275) {
-
-            pdf.addPage();
-
-            y = 20;
-
-        }
-
-    });
-
-
     pdf.save(
         `${tipoExportacao.value}.pdf`
     );
-
 
 });
