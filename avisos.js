@@ -9,15 +9,20 @@ import {
 
 const avisosRef = collection(db, "avisos");
 
-// ===============================
+// ======================================
 // PUBLICAR AVISO
-// ===============================
+// ======================================
 
 window.salvarAviso = async function () {
 
     const titulo = document.getElementById("titulo").value.trim();
     const categoria = document.getElementById("categoria").value;
     const prioridade = document.getElementById("prioridade").value;
+
+    const dataEvento = document.getElementById("dataEvento").value;
+    const horaEvento = document.getElementById("horaEvento").value;
+    const localEvento = document.getElementById("localEvento").value.trim();
+
     const mensagem = document.getElementById("mensagem").value.trim();
     const fixado = document.getElementById("fixado").checked;
 
@@ -36,18 +41,24 @@ window.salvarAviso = async function () {
             titulo,
             categoria,
             prioridade,
+            dataEvento,
+            horaEvento,
+            localEvento,
             mensagem,
             fixado,
-            data: Timestamp.now()
+            dataPublicacao: Timestamp.now()
 
         });
 
         alert("Aviso publicado com sucesso!");
 
         document.getElementById("titulo").value = "";
-        document.getElementById("mensagem").value = "";
         document.getElementById("categoria").selectedIndex = 0;
         document.getElementById("prioridade").selectedIndex = 0;
+        document.getElementById("dataEvento").value = "";
+        document.getElementById("horaEvento").value = "";
+        document.getElementById("localEvento").value = "";
+        document.getElementById("mensagem").value = "";
         document.getElementById("fixado").checked = false;
 
     } catch (erro) {
@@ -60,9 +71,9 @@ window.salvarAviso = async function () {
 
 };
 
-// ===============================
+// ======================================
 // LISTAR AVISOS
-// ===============================
+// ======================================
 
 onSnapshot(avisosRef, (snapshot) => {
 
@@ -82,16 +93,38 @@ onSnapshot(avisosRef, (snapshot) => {
 
     }
 
+    const avisos = [];
+
     snapshot.forEach((doc) => {
 
-        const aviso = doc.data();
+        avisos.push({
+            id: doc.id,
+            ...doc.data()
+        });
 
-        let data = "-";
+    });
 
-        if (aviso.data?.seconds) {
+    // Avisos fixados aparecem primeiro
+    avisos.sort((a, b) => {
 
-            data = new Date(
-                aviso.data.seconds * 1000
+        if (a.fixado && !b.fixado) return -1;
+        if (!a.fixado && b.fixado) return 1;
+
+        const dataA = a.dataPublicacao?.seconds || 0;
+        const dataB = b.dataPublicacao?.seconds || 0;
+
+        return dataB - dataA;
+
+    });
+
+    avisos.forEach((aviso) => {
+
+        let dataPublicacao = "-";
+
+        if (aviso.dataPublicacao?.seconds) {
+
+            dataPublicacao = new Date(
+                aviso.dataPublicacao.seconds * 1000
             ).toLocaleString("pt-BR");
 
         }
@@ -106,9 +139,19 @@ onSnapshot(avisosRef, (snapshot) => {
 
             <p><strong>Prioridade:</strong> ${aviso.prioridade}</p>
 
+            <p><strong>📅 Data:</strong> ${aviso.dataEvento || "-"}</p>
+
+            <p><strong>🕒 Horário:</strong> ${aviso.horaEvento || "-"}</p>
+
+            <p><strong>📍 Local:</strong> ${aviso.localEvento || "-"}</p>
+
+            <hr>
+
             <p>${aviso.mensagem}</p>
 
-            <small>${data}</small>
+            <small>
+                Publicado em ${dataPublicacao}
+            </small>
 
         </div>
 
