@@ -103,7 +103,8 @@ return;
 
 const dados = {
 
-nome,
+nomeCompleto: nome,
+nome: nome,
 email,
 telefone,
 curso,
