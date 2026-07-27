@@ -851,28 +851,42 @@ ${aviso.mensagem}
 <p>
 
 <strong>
-
-📅 Data:
-
+📅 Data do evento:
 </strong>
 
-${data}
+${aviso.dataEvento || "Não informado"}
 
 </p>
-
 
 
 <p>
 
 <strong>
-
-📍 Local:
-
+🕒 Horário:
 </strong>
 
-${aviso.local || "Não informado"}
+${aviso.horaEvento || "Não informado"}
 
 </p>
+
+
+<p>
+
+<strong>
+📍 Local:
+</strong>
+
+${aviso.localEvento || "Não informado"}
+
+</p>
+
+
+<small>
+
+Publicado em:
+${dataPublicacao}
+
+</small>
 
 
 
