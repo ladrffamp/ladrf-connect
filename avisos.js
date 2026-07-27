@@ -6,9 +6,9 @@ import {
     onSnapshot,
     Timestamp,
     doc,
-    deleteDoc
+    deleteDoc,
+    updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
 
 
 const avisosRef = collection(db, "avisos");
