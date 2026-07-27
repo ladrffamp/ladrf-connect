@@ -1,4 +1,10 @@
 import {
+db,
+authSecundario
+} from "./firebase.js";
+
+
+import {
 
 collection,
 
@@ -22,11 +28,6 @@ createUserWithEmailAndPassword
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-import {
-
-createUserWithEmailAndPassword
-
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 // ELEMENTOS
@@ -35,6 +36,9 @@ const lista = document.getElementById("listaUsuarios");
 
 const botaoCadastro = document.getElementById("btnCadastrarUsuario");
 
+
+
+console.log("Página usuários carregada");
 
 
 
@@ -56,6 +60,9 @@ lista.innerHTML = "";
 
 
 snapshot.forEach((documento)=>{
+
+
+console.log(documento.data());
 
 
 const usuario = documento.data();
@@ -156,7 +163,6 @@ Remover
 
 
 </tr>
-
 
 
 `;
@@ -309,21 +315,17 @@ alert(
 
 
 // =====================================
-// BOTÃO CADASTRAR USUÁRIO
+// CADASTRAR USUÁRIO
 // =====================================
 
 
 if(botaoCadastro){
 
 
-botaoCadastro.addEventListener(
-
-"click",
-
-async()=>{
+botaoCadastro.onclick = async()=>{
 
 
-const nome =
+const nome = 
 document.getElementById("nomeUsuarioNovo").value;
 
 
@@ -359,9 +361,7 @@ return;
 try{
 
 
-const usuarioCriado =
-
-await createUserWithEmailAndPassword(
+const resultado = await createUserWithEmailAndPassword(
 
 authSecundario,
 
@@ -375,7 +375,7 @@ senha
 
 await setDoc(
 
-doc(db,"usuarios",usuarioCriado.user.uid),
+doc(db,"usuarios",resultado.user.uid),
 
 {
 
@@ -410,14 +410,14 @@ catch(error){
 
 
 console.error(
-"Erro ao cadastrar usuário:",
+"Erro ao cadastrar:",
 error
 );
 
 
 
 alert(
-"Erro ao cadastrar: " + error.message
+"Erro ao cadastrar usuário: " + error.message
 );
 
 
@@ -425,9 +425,7 @@ alert(
 
 
 
-}
-
-);
+};
 
 
 }
