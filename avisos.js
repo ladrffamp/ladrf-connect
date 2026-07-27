@@ -507,17 +507,27 @@ alert(
 // EDITAR AVISO
 // ======================================
 
-
 window.editarAviso = async function(id){
 
 
 const novoTitulo = prompt(
-"Digite o novo título do aviso:"
+"Novo título do aviso:"
 );
 
 
-
 if(!novoTitulo){
+
+return;
+
+}
+
+
+const novaMensagem = prompt(
+"Nova mensagem do aviso:"
+);
+
+
+if(!novaMensagem){
 
 return;
 
@@ -534,7 +544,9 @@ doc(db,"avisos",id),
 
 {
 
-titulo:novoTitulo
+titulo: novoTitulo,
+
+mensagem: novaMensagem
 
 }
 
@@ -543,7 +555,7 @@ titulo:novoTitulo
 
 
 alert(
-"Aviso atualizado!"
+"Aviso atualizado com sucesso!"
 );
 
 
