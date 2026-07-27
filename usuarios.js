@@ -307,7 +307,7 @@ alert(
 
 
 // =====================================
-// BOTÃO CADASTRAR
+// BOTÃO CADASTRAR USUÁRIO
 // =====================================
 
 
@@ -318,7 +318,7 @@ botaoCadastro.addEventListener(
 
 "click",
 
-()=>{
+async()=>{
 
 
 const nome =
@@ -354,9 +354,82 @@ return;
 
 
 
-alert(
-"Formulário pronto. O cadastro precisa ser conectado ao serviço administrativo seguro."
+try{
+
+
+const resultado =
+
+await createUserWithEmailAndPassword(
+
+authSecundario,
+
+email,
+
+senha
+
 );
+
+
+
+await setDoc(
+
+doc(db,"usuarios",resultado.user.uid),
+
+{
+
+nome:nome,
+
+email:email,
+
+perfil:perfil
+
+}
+
+);
+
+
+
+alert(
+"Usuário cadastrado com sucesso!"
+);
+
+
+
+// limpar campos
+
+document.getElementById("nomeUsuarioNovo").value="";
+
+document.getElementById("emailUsuarioNovo").value="";
+
+document.getElementById("senhaUsuarioNova").value="";
+
+
+
+}
+
+
+catch(error){
+
+
+console.error(
+"Erro ao cadastrar:",
+error
+);
+
+
+
+alert(
+
+"Erro ao cadastrar usuário: "
+
++
+
+error.message
+
+);
+
+
+}
 
 
 
