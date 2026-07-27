@@ -41,10 +41,21 @@ const firebaseConfig = {
 
 
 // =====================================
-// INICIALIZAÇÃO DO FIREBASE
+// APLICAÇÃO PRINCIPAL
 // =====================================
 
 const app = initializeApp(firebaseConfig);
+
+
+// =====================================
+// APLICAÇÃO SECUNDÁRIA
+// (usada apenas para criar usuários)
+// =====================================
+
+const appSecundario = initializeApp(
+  firebaseConfig,
+  "cadastroUsuarios"
+);
 
 
 // =====================================
@@ -53,10 +64,11 @@ const app = initializeApp(firebaseConfig);
 
 const auth = getAuth(app);
 
+const authSecundario = getAuth(appSecundario);
+
 const db = getFirestore(app);
 
 let messaging = null;
-
 
 try{
 
@@ -82,6 +94,8 @@ export {
   app,
 
   auth,
+
+  authSecundario,
 
   db,
 
