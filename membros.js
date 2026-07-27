@@ -33,7 +33,7 @@ lista.innerHTML += `
 
 <tr>
 
-<td>${membro.nome}</td>
+${membro.nomeCompleto || membro.nome || "-"}
 
 <td>${membro.funcao}</td>
 
