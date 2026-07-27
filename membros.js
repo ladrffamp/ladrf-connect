@@ -169,7 +169,8 @@ if(documento.id===id){
 
 const membro=documento.data();
 
-document.getElementById("nome").value=membro.nome;
+document.getElementById("nome").value =
+membro.nomeCompleto || membro.nome || "";
 
 document.getElementById("email").value=membro.email;
 
