@@ -145,6 +145,22 @@ Membro
 
 <button
 
+class="btn-primary"
+
+onclick="editarUsuario('${id}')">
+
+
+<i class="fa-solid fa-pen"></i>
+
+Editar
+
+
+</button>
+
+
+
+<button
+
 class="btn-danger"
 
 onclick="removerUsuario('${id}')">
