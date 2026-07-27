@@ -33,11 +33,17 @@ lista.innerHTML += `
 
 <tr>
 
+<td>
 ${membro.nomeCompleto || membro.nome || "-"}
+</td>
 
-<td>${membro.funcao}</td>
+<td>
+${membro.funcao || "Membro"}
+</td>
 
-<td>${membro.status}</td>
+<td>
+${membro.status || "Ativo"}
+</td>
 
 <td>
 
