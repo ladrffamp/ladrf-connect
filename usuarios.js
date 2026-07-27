@@ -407,6 +407,32 @@ perfil:perfil
 
 
 
+// =====================================
+// CRIAR MEMBRO AUTOMATICAMENTE
+// =====================================
+
+await setDoc(
+
+doc(db,"membros",resultado.user.uid),
+
+{
+
+nome:nome,
+
+email:email,
+
+perfil:perfil,
+
+status:"ativo",
+
+cargo:"Membro"
+
+}
+
+);
+
+
+
 alert(
 "Usuário cadastrado com sucesso!"
 );
