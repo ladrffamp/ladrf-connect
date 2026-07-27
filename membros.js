@@ -101,17 +101,26 @@ alert("Informe o nome.");
 return;
 
 }
-
 const dados = {
 
+uid: "",
+
 nomeCompleto: nome,
+
 nome: nome,
+
 email,
+
 telefone,
+
 curso,
+
 periodo,
+
 funcao,
+
 status,
+
 dataCadastro: Timestamp.now()
 
 };
