@@ -78,7 +78,7 @@ Comunicados oficiais da LADRF.
 
 <div class="card">
 
-<h2>
+<h2 id="tituloFormulario">
 
 <i class="fa-solid fa-plus"></i>
 
@@ -159,7 +159,6 @@ id="localEvento"
 placeholder="Ex: Arena Match Point">
 
 </div>
-
 <div class="form-group">
 
 <label>
@@ -190,12 +189,25 @@ placeholder="Digite o comunicado"></textarea>
 <div class="botoes">
 
 <button
+id="btnSalvarAviso"
 class="btn-success"
 onclick="salvarAviso()">
 
 <i class="fa-solid fa-paper-plane"></i>
 
 Publicar Aviso
+
+</button>
+
+<button
+id="btnCancelarEdicao"
+class="btn-danger"
+style="display:none;"
+onclick="cancelarEdicao()">
+
+<i class="fa-solid fa-xmark"></i>
+
+Cancelar edição
 
 </button>
 
@@ -226,7 +238,6 @@ Nenhum aviso publicado.
 </div>
 
 </main>
-
 <script type="module" src="avisos.js"></script>
 
 <script type="module" src="permissoes.js"></script>
@@ -235,17 +246,21 @@ Nenhum aviso publicado.
 
 function atualizarHora(){
 
-const hora=document.getElementById("horaAtual");
+const hora = document.getElementById("horaAtual");
 
 if(hora){
 
-hora.innerHTML=new Date().toLocaleTimeString("pt-BR");
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
 
 }
 
 }
 
-setInterval(atualizarHora,1000);
+setInterval(
+atualizarHora,
+1000
+);
 
 atualizarHora();
 
