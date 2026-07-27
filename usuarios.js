@@ -419,7 +419,11 @@ doc(db,"membros",resultado.user.uid),
 
 {
 
+uid: resultado.user.uid,
+
 nomeCompleto:nome,
+
+nome:nome,
 
 email:email,
 
