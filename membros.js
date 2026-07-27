@@ -34,7 +34,7 @@ lista.innerHTML += `
 <tr>
 
 <td>
-${membro.nomeCompleto || membro.nome || "-"}
+${membro.nomeCompleto || membro.nome || membro.nomeMembro || "Sem nome"}
 </td>
 
 <td>
