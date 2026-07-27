@@ -930,7 +930,193 @@ Ver detalhes
 
 
 
+<script type="module">
 
+import { db } from "./firebase.js";
+
+
+import {
+
+collection,
+
+onSnapshot,
+
+query,
+
+where,
+
+orderBy,
+
+limit
+
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+
+// =====================================
+// TOTAL DE PACIENTES
+// =====================================
+
+onSnapshot(
+
+collection(db,"pacientes"),
+
+(snapshot)=>{
+
+
+document.getElementById("totalPacientes").innerHTML =
+snapshot.size;
+
+
+}
+
+);
+
+
+
+
+// =====================================
+// MACAS OCUPADAS
+// =====================================
+
+const macasOcupadas = query(
+
+collection(db,"macas"),
+
+where("status","==","Ocupada")
+
+);
+
+
+
+onSnapshot(
+
+macasOcupadas,
+
+(snapshot)=>{
+
+
+document.getElementById("totalMacas").innerHTML =
+snapshot.size;
+
+
+}
+
+);
+
+
+
+
+// =====================================
+// TOTAL DE ATENDIMENTOS
+// =====================================
+
+onSnapshot(
+
+collection(db,"atendimentos"),
+
+(snapshot)=>{
+
+
+document.getElementById("totalAtendimentos").innerHTML =
+snapshot.size;
+
+
+}
+
+);
+
+
+
+
+// =====================================
+// TOTAL DE MEMBROS
+// =====================================
+
+onSnapshot(
+
+collection(db,"membros"),
+
+(snapshot)=>{
+
+
+document.getElementById("totalMembros").innerHTML =
+snapshot.size;
+
+
+}
+
+);
+
+
+
+
+// =====================================
+// PRÓXIMO EVENTO
+// =====================================
+
+const eventos = query(
+
+collection(db,"eventos"),
+
+orderBy("data","asc"),
+
+limit(1)
+
+);
+
+
+
+onSnapshot(
+
+eventos,
+
+(snapshot)=>{
+
+
+const campo =
+document.getElementById("proximoEvento");
+
+
+
+if(snapshot.empty){
+
+
+campo.innerHTML =
+"Nenhum evento cadastrado";
+
+
+return;
+
+
+}
+
+
+
+const evento =
+snapshot.docs[0].data();
+
+
+
+campo.innerHTML = `
+
+<strong>${evento.nome || "-"}</strong>
+
+<br>
+
+${evento.data || ""}
+
+`;
+
+
+
+}
+
+);
+
+
+</script>
+  
 <script type="module" src="permissoes.js"></script>
 
 
