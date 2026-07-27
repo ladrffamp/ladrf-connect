@@ -17,8 +17,11 @@ deleteDoc
 
 
 
-const lista =
-document.getElementById("listaUsuarios");
+// ELEMENTOS
+
+const lista = document.getElementById("listaUsuarios");
+
+const botaoCadastro = document.getElementById("btnCadastrarUsuario");
 
 
 
@@ -36,7 +39,7 @@ collection(db,"usuarios"),
 (snapshot)=>{
 
 
-lista.innerHTML="";
+lista.innerHTML = "";
 
 
 
@@ -46,6 +49,7 @@ snapshot.forEach((documento)=>{
 const usuario = documento.data();
 
 const id = documento.id;
+
 
 
 
@@ -71,15 +75,16 @@ ${usuario.email || "-"}
 
 
 
+
 <td>
 
 
-<select onchange="alterarPerfil('${id}',this.value)">
+<select onchange="alterarPerfil('${id}', this.value)">
 
 
 <option value="admin"
 
-${usuario.perfil==="admin"?"selected":""}>
+${usuario.perfil === "admin" ? "selected" : ""}>
 
 Administrador
 
@@ -89,7 +94,7 @@ Administrador
 
 <option value="recepcao"
 
-${usuario.perfil==="recepcao"?"selected":""}>
+${usuario.perfil === "recepcao" ? "selected" : ""}>
 
 Recepção
 
@@ -99,18 +104,19 @@ Recepção
 
 <option value="membro"
 
-${usuario.perfil==="membro"?"selected":""}>
+${usuario.perfil === "membro" ? "selected" : ""}>
 
 Membro
 
 </option>
 
 
+
 </select>
 
 
-
 </td>
+
 
 
 
@@ -148,7 +154,6 @@ Remover
 });
 
 
-
 },
 
 (error)=>{
@@ -170,12 +175,13 @@ error
 
 
 
+
 // =====================================
 // ALTERAR PERFIL
 // =====================================
 
 
-window.alterarPerfil = async(id,perfil)=>{
+window.alterarPerfil = async(id, perfil)=>{
 
 
 try{
@@ -187,7 +193,7 @@ doc(db,"usuarios",id),
 
 {
 
-perfil:perfil
+perfil: perfil
 
 }
 
@@ -195,9 +201,8 @@ perfil:perfil
 
 
 
-console.log(
-"Perfil atualizado:",
-perfil
+alert(
+"Perfil atualizado."
 );
 
 
@@ -207,10 +212,7 @@ perfil
 catch(error){
 
 
-console.error(
-"Erro ao atualizar perfil:",
-error
-);
+console.error(error);
 
 
 alert(
@@ -230,8 +232,9 @@ alert(
 
 
 
+
 // =====================================
-// REMOVER PERFIL
+// REMOVER USUÁRIO
 // =====================================
 
 
@@ -240,13 +243,13 @@ window.removerUsuario = async(id)=>{
 
 const confirmar = confirm(
 
-"Remover este usuário do sistema?"
+"Deseja remover este usuário?"
 
 );
 
 
 
-if(!confirmar)return;
+if(!confirmar) return;
 
 
 
@@ -261,15 +264,18 @@ doc(db,"usuarios",id)
 
 
 
+alert(
+"Usuário removido."
+);
+
+
+
 }
 
 catch(error){
 
 
-console.error(
-"Erro ao remover:",
-error
-);
+console.error(error);
 
 
 alert(
@@ -282,3 +288,71 @@ alert(
 
 
 };
+
+
+
+
+
+
+
+
+// =====================================
+// BOTÃO CADASTRAR
+// =====================================
+
+
+if(botaoCadastro){
+
+
+botaoCadastro.addEventListener(
+
+"click",
+
+()=>{
+
+
+const nome =
+document.getElementById("nomeUsuarioNovo").value;
+
+
+const email =
+document.getElementById("emailUsuarioNovo").value;
+
+
+const senha =
+document.getElementById("senhaUsuarioNova").value;
+
+
+const perfil =
+document.getElementById("perfilUsuarioNovo").value;
+
+
+
+
+if(!nome || !email || !senha){
+
+
+alert(
+"Preencha todos os campos."
+);
+
+
+return;
+
+
+}
+
+
+
+alert(
+"Formulário pronto. O cadastro precisa ser conectado ao serviço administrativo seguro."
+);
+
+
+
+}
+
+);
+
+
+}
