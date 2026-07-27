@@ -1,9 +1,4 @@
 import {
-db,
-authSecundario
-} from "./firebase.js";
-
-import {
 
 collection,
 
@@ -18,6 +13,13 @@ deleteDoc,
 setDoc
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+import {
+
+createUserWithEmailAndPassword
+
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 import {
