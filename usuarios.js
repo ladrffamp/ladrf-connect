@@ -395,6 +395,8 @@ doc(db,"usuarios",resultado.user.uid),
 
 {
 
+uid: resultado.user.uid,
+
 nome:nome,
 
 email:email,
