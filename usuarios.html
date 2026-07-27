@@ -24,7 +24,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <body>
 
 
-
 <header>
 
 
@@ -35,7 +34,6 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 Início
 
 </a>
-
 
 
 
@@ -72,7 +70,6 @@ Sistema de Gestão da Liga
 
 
 
-
 <div class="usuario">
 
 
@@ -83,13 +80,11 @@ Carregando...
 </h3>
 
 
-
 <span id="perfilUsuario">
 
 Perfil
 
 </span>
-
 
 
 <p id="horaAtual">
@@ -99,9 +94,7 @@ Perfil
 </p>
 
 
-
 </div>
-
 
 
 
@@ -112,10 +105,7 @@ Perfil
 
 
 
-
 <main class="container">
-
-
 
 
 
@@ -144,6 +134,178 @@ Controle de acessos e permissões do sistema.
 
 
 
+
+<!-- CADASTRO DE USUÁRIO -->
+
+
+<div class="card">
+
+
+<h2>
+
+<i class="fa-solid fa-user-plus"></i>
+
+Cadastrar Usuário
+
+</h2>
+
+
+
+
+<div class="form-grid">
+
+
+
+<div class="input-group">
+
+
+<label>
+
+Nome
+
+</label>
+
+
+<input
+
+type="text"
+
+id="nomeUsuarioNovo"
+
+placeholder="Nome completo">
+
+
+</div>
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+
+E-mail
+
+</label>
+
+
+<input
+
+type="email"
+
+id="emailUsuarioNovo"
+
+placeholder="email@exemplo.com">
+
+
+</div>
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+
+Senha
+
+</label>
+
+
+<input
+
+type="password"
+
+id="senhaUsuarioNova"
+
+placeholder="Mínimo 6 caracteres">
+
+
+</div>
+
+
+
+
+
+<div class="input-group">
+
+
+<label>
+
+Perfil
+
+</label>
+
+
+
+<select id="perfilUsuarioNovo">
+
+
+<option value="membro">
+
+Membro
+
+</option>
+
+
+<option value="recepcao">
+
+Recepção
+
+</option>
+
+
+<option value="admin">
+
+Administrador
+
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<button
+
+id="btnCadastrarUsuario"
+
+class="btn-primary">
+
+
+<i class="fa-solid fa-user-plus"></i>
+
+
+Cadastrar Usuário
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- LISTA DE USUÁRIOS -->
 
 
 <div class="card">
@@ -199,9 +361,7 @@ Ação
 </tr>
 
 
-
 </thead>
-
 
 
 
@@ -211,7 +371,6 @@ Ação
 
 
 </tbody>
-
 
 
 
@@ -233,7 +392,6 @@ Ação
 
 
 </main>
-
 
 
 
@@ -271,7 +429,6 @@ hora.innerHTML = new Date()
 
 
 }
-
 
 
 }
