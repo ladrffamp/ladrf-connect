@@ -508,14 +508,58 @@ alert(
 // ======================================
 
 
-window.editarAviso = function(id){
+window.editarAviso = async function(id){
+
+
+const novoTitulo = prompt(
+"Digite o novo título do aviso:"
+);
+
+
+
+if(!novoTitulo){
+
+return;
+
+}
+
+
+
+try{
+
+
+await updateDoc(
+
+doc(db,"avisos",id),
+
+{
+
+titulo:novoTitulo
+
+}
+
+);
+
 
 
 alert(
-
-"Função de edição será adicionada na próxima etapa."
-
+"Aviso atualizado!"
 );
+
+
+
+}catch(erro){
+
+
+console.error(erro);
+
+
+alert(
+"Erro ao editar aviso."
+);
+
+
+}
 
 
 };
