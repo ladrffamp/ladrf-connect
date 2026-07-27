@@ -359,7 +359,7 @@ return;
 try{
 
 
-const resultado =
+const usuarioCriado =
 
 await createUserWithEmailAndPassword(
 
@@ -375,7 +375,7 @@ senha
 
 await setDoc(
 
-doc(db,"usuarios",resultado.user.uid),
+doc(db,"usuarios",usuarioCriado.user.uid),
 
 {
 
@@ -397,8 +397,6 @@ alert(
 
 
 
-// limpar campos
-
 document.getElementById("nomeUsuarioNovo").value="";
 
 document.getElementById("emailUsuarioNovo").value="";
@@ -406,28 +404,20 @@ document.getElementById("emailUsuarioNovo").value="";
 document.getElementById("senhaUsuarioNova").value="";
 
 
-
 }
-
 
 catch(error){
 
 
 console.error(
-"Erro ao cadastrar:",
+"Erro ao cadastrar usuário:",
 error
 );
 
 
 
 alert(
-
-"Erro ao cadastrar usuário: "
-
-+
-
-error.message
-
+"Erro ao cadastrar: " + error.message
 );
 
 
