@@ -793,20 +793,16 @@ documento.data();
 
 
 
-let data = "";
+let dataPublicacao = "";
 
+if(aviso.dataPublicacao?.seconds){
 
-
-if(aviso.data?.seconds){
-
-
-data =
+dataPublicacao =
 new Date(
-aviso.data.seconds * 1000
+aviso.dataPublicacao.seconds * 1000
 )
 
 .toLocaleString("pt-BR");
-
 
 }
 
