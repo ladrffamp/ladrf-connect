@@ -417,15 +417,19 @@ doc(db,"membros",resultado.user.uid),
 
 {
 
-nome:nome,
+nomeCompleto:nome,
 
 email:email,
 
-perfil:perfil,
+telefone:"",
 
-status:"ativo",
+curso:"",
 
-cargo:"Membro"
+periodo:"",
+
+funcao:"Membro",
+
+status:"Ativo"
 
 }
 
