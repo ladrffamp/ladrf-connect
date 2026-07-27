@@ -171,7 +171,7 @@ if(documento.id===id){
 const membro=documento.data();
 
 document.getElementById("nome").value =
-membro.nomeCompleto || membro.nome || "";
+membro.nomeCompleto || membro.nome || membro.nomeMembro || "";
 
 document.getElementById("email").value=membro.email;
 
