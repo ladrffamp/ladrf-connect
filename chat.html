@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Chat | LADRF Connect</title>
+
+
+<link rel="stylesheet" href="styles.css">
+
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+
+
+</head>
+
+
+<body>
+
+
+<header>
+
+
+<a href="index.html" class="btn-inicio">
+
+<i class="fa-solid fa-house"></i>
+
+Início
+
+</a>
+
+
+
+<div class="logo">
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+
+<div>
+
+<h1>
+LADRF Connect
+</h1>
+
+
+<p>
+Sistema de Gestão da Liga
+</p>
+
+
+</div>
+
+</div>
+
+
+
+<div class="usuario">
+
+<h3 id="nomeUsuario">
+
+Carregando...
+
+</h3>
+
+
+<span id="perfilUsuario">
+
+Perfil
+
+</span>
+
+
+<p id="horaAtual">
+
+00:00:00
+
+</p>
+
+
+</div>
+
+
+</header>
+
+
+
+
+
+<main class="container">
+
+
+<section class="page-title">
+
+<h1>
+
+💬 Chat LADRF
+
+</h1>
+
+
+<p>
+
+Comunicação entre membros da liga.
+
+</p>
+
+
+</section>
+
+
+
+
+
+<section class="card">
+
+
+<div id="listaMensagens" class="chat-box">
+
+
+<p>
+Carregando mensagens...
+</p>
+
+
+</div>
+
+
+
+<div class="chat-input">
+
+
+<input
+
+id="mensagem"
+
+placeholder="Digite uma mensagem..."
+
+>
+
+
+<button
+
+class="btn-success"
+
+id="btnEnviar">
+
+<i class="fa-solid fa-paper-plane"></i>
+
+Enviar
+
+</button>
+
+
+</div>
+
+
+</section>
+
+
+
+</main>
+
+
+
+
+
+<script type="module" src="chat.js"></script>
+
+
+
+<script>
+
+
+function atualizarHora(){
+
+const hora =
+document.getElementById("horaAtual");
+
+
+if(hora){
+
+hora.innerHTML =
+new Date().toLocaleTimeString("pt-BR");
+
+}
+
+}
+
+
+setInterval(atualizarHora,1000);
+
+atualizarHora();
+
+
+</script>
+
+
+
+</body>
+
+</html>
