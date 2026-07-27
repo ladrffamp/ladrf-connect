@@ -445,3 +445,69 @@ alert(
 
 
 }
+// =====================================
+// EDITAR USUÁRIO
+// =====================================
+
+window.editarUsuario = async(id)=>{
+
+
+const novoNome = prompt(
+"Digite o novo nome do usuário:"
+);
+
+
+
+if(!novoNome){
+
+return;
+
+}
+
+
+
+try{
+
+
+await updateDoc(
+
+doc(db,"usuarios",id),
+
+{
+
+nome: novoNome
+
+}
+
+);
+
+
+
+alert(
+"Nome atualizado com sucesso!"
+);
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+"Erro ao editar usuário:",
+error
+);
+
+
+
+alert(
+"Erro ao atualizar nome."
+);
+
+
+
+}
+
+
+};
