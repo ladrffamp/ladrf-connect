@@ -1,134 +1,184 @@
 import { db } from "./firebase.js";
 
 import {
-collection,
-query,
-orderBy,
-limit,
-onSnapshot
+    collection,
+    query,
+    orderBy,
+    limit,
+    onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-const area = document.getElementById("avisosInicio");
+// Área dos avisos no Dashboard
 
+const areaAvisos = document.getElementById("avisosInicio");
 
-if(area){
 
+// Só executa se existir o espaço no index.html
 
-const consulta = query(
+if (areaAvisos) {
 
-collection(db,"avisos"),
 
-orderBy("data","desc"),
+    const consulta = query(
 
-limit(3)
+        collection(db, "avisos"),
 
-);
+        orderBy(
+            "data",
+            "desc"
+        ),
 
+        limit(3)
 
+    );
 
-onSnapshot(consulta,(snapshot)=>{
 
 
-area.innerHTML="";
+    onSnapshot(
+        consulta,
 
+        (snapshot) => {
 
-if(snapshot.empty){
 
+            areaAvisos.innerHTML = "";
 
-area.innerHTML=`
 
-<p>
-Nenhum aviso publicado.
-</p>
 
-`;
+            if (snapshot.empty) {
 
-return;
 
+                areaAvisos.innerHTML = `
 
-}
+                <p style="text-align:center;">
 
+                Nenhum aviso publicado.
 
+                </p>
 
-snapshot.forEach((doc)=>{
+                `;
 
 
-const aviso = doc.data();
+                return;
 
+            }
 
-let data="";
 
 
-if(aviso.data?.seconds){
 
 
-data = new Date(
+            snapshot.forEach((documento)=>{
 
-aviso.data.seconds * 1000
 
-).toLocaleString("pt-BR");
+                const aviso = documento.data();
 
 
-}
 
+                let data = "";
 
 
-area.innerHTML += `
 
+                if(
+                    aviso.data &&
+                    aviso.data.seconds
+                ){
 
-<div class="aviso-dashboard">
 
+                    data = new Date(
 
-<h3>
+                        aviso.data.seconds * 1000
 
-${aviso.fixado ? "📌 " : ""}
+                    ).toLocaleString("pt-BR");
 
-${aviso.titulo}
 
-</h3>
+                }
 
 
-<p>
 
-<strong>${aviso.categoria}</strong>
 
--
 
-${aviso.prioridade}
+                areaAvisos.innerHTML += `
 
-</p>
 
+                <div class="aviso-item">
 
-<p>
 
-${aviso.mensagem.substring(0,120)}
+                    <h3>
 
-${aviso.mensagem.length > 120 ? "..." : ""}
+                    ${aviso.fixado ? "📌 " : ""}
 
-</p>
+                    ${aviso.titulo}
 
+                    </h3>
 
-<small>
 
-${data}
 
-</small>
+                    <p>
 
+                    <strong>
 
-</div>
+                    Categoria:
 
+                    </strong>
 
-<hr>
+                    ${aviso.categoria}
 
+                    </p>
 
-`;
 
 
-});
+                    <p>
 
+                    <strong>
 
-});
+                    Prioridade:
+
+                    </strong>
+
+                    ${aviso.prioridade}
+
+                    </p>
+
+
+
+
+                    <p>
+
+                    ${aviso.mensagem}
+
+                    </p>
+
+
+
+
+                    <small>
+
+                    <i class="fa-solid fa-clock"></i>
+
+                    Publicado em:
+
+                    ${data}
+
+                    </small>
+
+
+                </div>
+
+
+                <hr>
+
+
+                `;
+
+
+
+            });
+
+
+
+        }
+
+
+    );
 
 
 }
