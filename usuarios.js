@@ -1,5 +1,7 @@
-import { db } from "./firebase.js";
-
+import {
+db,
+authSecundario
+} from "./firebase.js";
 
 import {
 
