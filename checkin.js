@@ -2,20 +2,23 @@ import { auth, db } from "./firebase.js";
 
 
 import {
+
 doc,
+
 getDoc,
-addDoc,
-collection,
+
+setDoc,
+
 Timestamp
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 import {
 
 onAuthStateChanged
 
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
 
@@ -35,6 +38,24 @@ document.getElementById("nomeEvento");
 
 
 
+const eventoConfirmado =
+
+document.getElementById("eventoConfirmado");
+
+
+
+const horaCheckin =
+
+document.getElementById("horaCheckin");
+
+
+
+const resultadoCheckin =
+
+document.getElementById("resultadoCheckin");
+
+
+
 const botao =
 
 document.getElementById("btnCheckin");
@@ -43,6 +64,13 @@ document.getElementById("btnCheckin");
 
 let usuario;
 
+let eventoAtual;
+
+
+
+// ================================
+// CARREGAR EVENTO E USUÁRIO
+// ================================
 
 
 onAuthStateChanged(auth, async(u)=>{
@@ -50,11 +78,15 @@ onAuthStateChanged(auth, async(u)=>{
 
 if(!u){
 
+
 window.location.href="login.html";
+
 
 return;
 
+
 }
+
 
 
 usuario=u;
@@ -63,7 +95,15 @@ usuario=u;
 
 const evento = await getDoc(
 
-doc(db,"agenda",eventoId)
+doc(
+
+db,
+
+"agenda",
+
+eventoId
+
+)
 
 );
 
@@ -72,9 +112,28 @@ doc(db,"agenda",eventoId)
 if(evento.exists()){
 
 
+eventoAtual = evento.data();
+
+
+
+if(nomeEvento){
+
 nomeEvento.innerHTML =
 
-evento.data().titulo;
+eventoAtual.titulo;
+
+}
+
+
+
+if(eventoConfirmado){
+
+eventoConfirmado.innerHTML =
+
+"🟢 " + eventoAtual.titulo;
+
+}
+
 
 
 }
@@ -87,7 +146,22 @@ evento.data().titulo;
 
 
 
+
+
+// ================================
+// CONFIRMAR PRESENÇA
+// ================================
+
+
 botao.onclick = async()=>{
+
+
+if(!usuario){
+
+return;
+
+}
+
 
 
 const membro = await getDoc(
@@ -103,6 +177,22 @@ usuario.uid
 )
 
 );
+
+
+
+const nome =
+
+membro.exists()
+
+?
+
+membro.data().nome
+
+:
+
+usuario.email;
+
+
 
 
 
@@ -125,9 +215,7 @@ usuario.uid
 {
 
 
-nome:
-
-membro.data().nome,
+nome:nome,
 
 
 email:
@@ -147,16 +235,47 @@ Timestamp.now()
 
 }
 
-
 );
 
 
 
-alert(
 
-"Presença confirmada!"
+// esconder botão
 
-);
+botao.style.display="none";
+
+
+
+// mostrar confirmação
+
+if(resultadoCheckin){
+
+resultadoCheckin.style.display="block";
+
+}
+
+
+
+if(nomeEvento){
+
+nomeEvento.style.display="none";
+
+}
+
+
+
+if(horaCheckin){
+
+
+horaCheckin.innerHTML =
+
+new Date()
+
+.toLocaleTimeString("pt-BR");
+
+
+}
+
 
 
 };
