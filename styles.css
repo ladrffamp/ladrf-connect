@@ -1663,7 +1663,7 @@ footer{
 }
 
 /* ==========================================================
-   BOTÃO PERFIL NO CABEÇALHO (INDEX)
+   BOTÃO PERFIL NO CABEÇALHO
 ========================================================== */
 
 .btn-perfil{
@@ -1693,7 +1693,6 @@ footer{
 }
 
 
-
 .btn-perfil:hover{
 
     background:#f1f1f1;
@@ -1703,22 +1702,8 @@ footer{
 }
 
 
-
 .btn-perfil i{
 
     font-size:15px;
-
-}
-
-
-.acoes-header{
-
-    display:flex;
-
-    align-items:center;
-
-    justify-content:flex-end;
-
-    margin-bottom:8px;
 
 }
