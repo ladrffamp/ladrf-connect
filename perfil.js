@@ -4,15 +4,17 @@ import {
 collection,
 doc,
 getDoc,
-getDocs,
 query,
 where,
-onSnapshot
+onSnapshot,
+updateDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
-onAuthStateChanged
+onAuthStateChanged,
+updatePassword
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
 
 // =====================================
 // ELEMENTOS
@@ -44,17 +46,27 @@ const certificados = document.getElementById("totalCertificados");
 
 const horas = document.getElementById("totalHoras");
 
-const listaEventos = document.getElementById("listaEventos");
+const listaEventos =
+document.getElementById("listaEventos");
 
-const listaCertificados = document.getElementById("listaCertificados");
+const listaCertificados =
+document.getElementById("listaCertificados");
 
-const historico = document.getElementById("historicoPerfil");
+const historico =
+document.getElementById("historicoPerfil");
+
+const listaConquistas =
+document.getElementById("listaConquistas");
+
+let usuarioAtual = null;
+
+let uid =
+new URLSearchParams(window.location.search).get("id");
+
 
 // =====================================
-// IDENTIFICA O MEMBRO
+// LOGIN
 // =====================================
-
-let uid = new URLSearchParams(window.location.search).get("id");
 
 onAuthStateChanged(auth, async(usuario)=>{
 
@@ -66,6 +78,8 @@ onAuthStateChanged(auth, async(usuario)=>{
 
     }
 
+    usuarioAtual = usuario;
+
     if(!uid){
 
         uid = usuario.uid;
@@ -75,31 +89,37 @@ onAuthStateChanged(auth, async(usuario)=>{
     carregarPerfil(uid);
 
 });
+
+
 // =====================================
-// CARREGAR DADOS DO MEMBRO
+// CARREGAR PERFIL
 // =====================================
 
-async function carregarPerfil(uid){
+async function carregarPerfil(id){
 
     try{
 
-        const membroRef = doc(db,"membros",uid);
+        const membroRef =
+        doc(db,"membros",id);
 
-        const membroSnap = await getDoc(membroRef);
+        const membroSnap =
+        await getDoc(membroRef);
 
         if(!membroSnap.exists()){
 
-            nome.innerHTML = "Membro não encontrado.";
+            nome.innerHTML =
+            "Membro não encontrado.";
 
             return;
 
         }
 
-        const membro = membroSnap.data();
+        const membro =
+        membroSnap.data();
 
         // FOTO
 
-        if(membro.foto && membro.foto !== ""){
+        if(membro.foto){
 
             foto.src = membro.foto;
 
@@ -108,16 +128,20 @@ async function carregarPerfil(uid){
             foto.src =
             "https://ui-avatars.com/api/?name=" +
             encodeURIComponent(
-                membro.nomeCompleto || membro.nome || "Membro"
+                membro.nomeCompleto ||
+                membro.nome ||
+                "Membro"
             ) +
             "&background=0B7A3D&color=ffffff&size=300";
 
         }
 
-        // DADOS PESSOAIS
+        // DADOS
 
         nome.innerHTML =
-        membro.nomeCompleto || membro.nome || "-";
+        membro.nomeCompleto ||
+        membro.nome ||
+        "-";
 
         funcao.innerHTML =
         `<i class="fa-solid fa-user-tie"></i> ${membro.funcao || "Membro"}`;
@@ -137,15 +161,82 @@ async function carregarPerfil(uid){
         periodo.innerHTML =
         membro.periodo || "-";
 
-        // Carrega os demais módulos
 
-        carregarFrequencia(uid);
+carregarFrequencia(id);
 
-        carregarEventos();
+carregarEventos();
 
-        carregarCertificados(uid);
+carregarCertificados(id);
 
-        carregarHistorico(uid);
+carregarHistorico(id);
+
+carregarConquistas();
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        nome.innerHTML =
+        "Erro ao carregar perfil.";
+
+    }
+
+}
+
+
+// =====================================
+// EDITAR PERFIL
+// =====================================
+
+window.editarPerfil = async()=>{
+
+    const telefoneNovo = prompt(
+        "Telefone:",
+        telefone.innerText
+    );
+
+    if(telefoneNovo===null) return;
+
+    const cursoNovo = prompt(
+        "Curso:",
+        curso.innerText
+    );
+
+    if(cursoNovo===null) return;
+
+    const periodoNovo = prompt(
+        "Período:",
+        periodo.innerText
+    );
+
+    if(periodoNovo===null) return;
+
+    try{
+
+        await updateDoc(
+
+            doc(db,"membros",uid),
+
+            {
+
+                telefone:telefoneNovo,
+
+                curso:cursoNovo,
+
+                periodo:periodoNovo
+
+            }
+
+        );
+
+        telefone.innerHTML = telefoneNovo;
+
+        curso.innerHTML = cursoNovo;
+
+        periodo.innerHTML = periodoNovo;
+
+        alert("Perfil atualizado!");
 
     }
 
@@ -153,354 +244,706 @@ async function carregarPerfil(uid){
 
         console.error(error);
 
-        nome.innerHTML = "Erro ao carregar perfil.";
+        alert("Erro ao atualizar perfil.");
 
     }
 
-}
+};
 // =====================================
-// FREQUÊNCIA
+// CARREGAR FREQUÊNCIA
 // =====================================
 
-async function carregarFrequencia(uid){
+function carregarFrequencia(id){
 
-    const q = query(
-        collection(db,"frequencias"),
-        where("uid","==",uid)
+    const frequenciaRef =
+    collection(db,"frequencia");
+
+
+    const q =
+    query(
+        frequenciaRef,
+        where("membroId","==",id)
     );
+
 
     onSnapshot(q,(snapshot)=>{
 
-        let totalPresencas = 0;
-        let totalFaltas = 0;
-        let totalHoras = 0;
 
-        snapshot.forEach((doc)=>{
+        let presentes = 0;
 
-            const item = doc.data();
+        let ausentes = 0;
 
-            if(item.presente === true){
 
-                totalPresencas++;
+        snapshot.forEach(doc=>{
+
+
+            const dados =
+            doc.data();
+
+
+            if(dados.presente){
+
+                presentes++;
 
             }else{
 
-                totalFaltas++;
+                ausentes++;
 
             }
 
-            totalHoras += Number(item.horas || 0);
 
         });
 
-        presencas.innerHTML = totalPresencas;
-        faltas.innerHTML = totalFaltas;
-        horas.innerHTML = totalHoras + "h";
+
+        presencas.innerHTML =
+        presentes;
+
+
+        faltas.innerHTML =
+        ausentes;
+
+
+        participacoes.innerHTML =
+        snapshot.size;
+
 
     });
+
 
 }
 
 
 
 // =====================================
-// CERTIFICADOS
+// CARREGAR EVENTOS
 // =====================================
 
-async function carregarCertificados(uid){
+function carregarEventos(){
 
-    const q = query(
-        collection(db,"certificados"),
-        where("uid","==",uid)
-    );
 
-    onSnapshot(q,(snapshot)=>{
+    const eventosRef =
+    collection(db,"eventos");
 
-        certificados.innerHTML = snapshot.size;
 
-        listaCertificados.innerHTML = "";
+    onSnapshot(eventosRef,(snapshot)=>{
+
+
+        listaEventos.innerHTML="";
+
 
         if(snapshot.empty){
 
-            listaCertificados.innerHTML = `
-            <p style="text-align:center">
-            Nenhum certificado encontrado.
-            </p>
-            `;
+
+            listaEventos.innerHTML =
+            "<p>Nenhum evento encontrado.</p>";
+
 
             return;
 
         }
 
+
+
         snapshot.forEach((doc)=>{
 
-            const cert = doc.data();
 
-            listaCertificados.innerHTML += `
+            const evento =
+            doc.data();
 
-            <div class="card">
 
-                <h3>${cert.evento || "Certificado"}</h3>
 
-                <p>Carga horária: ${cert.cargaHoraria || 0}h</p>
+            const div =
+            document.createElement("div");
 
-                <a href="${cert.arquivo || "#"}"
-                class="btn-success"
-                target="_blank">
 
-                Baixar PDF
+            div.className =
+            "itemPerfil";
 
-                </a>
 
-            </div>
+            div.innerHTML = `
+
+
+            <h4>
+            <i class="fa-solid fa-calendar"></i>
+            ${evento.nome || "Evento"}
+            </h4>
+
+
+            <p>
+            ${evento.data || ""}
+            </p>
+
+
+            <span>
+            ${evento.local || ""}
+            </span>
+
 
             `;
 
+
+            listaEventos.appendChild(div);
+
+
+
         });
+
+
 
     });
 
-}
 
-
-
-// =====================================
-// EVENTOS
-// =====================================
-
-async function carregarEventos(){
-
-    onSnapshot(
-
-        query(collection(db,"agenda")),
-
-        (snapshot)=>{
-
-            listaEventos.innerHTML = "";
-
-            if(snapshot.empty){
-
-                listaEventos.innerHTML = `
-                <p style="text-align:center">
-                Nenhum evento encontrado.
-                </p>
-                `;
-
-                return;
-
-            }
-
-            snapshot.forEach((doc)=>{
-
-                const evento = doc.data();
-
-                listaEventos.innerHTML += `
-
-                <div class="card">
-
-                    <h3>${evento.titulo || "-"}</h3>
-
-                    <p>
-
-                    📅 ${evento.data || "-"}
-
-                    </p>
-
-                    <p>
-
-                    🕒 ${evento.inicio || "-"} às ${evento.fim || "-"}
-
-                    </p>
-
-                    <p>
-
-                    📍 ${evento.local || "-"}
-
-                    </p>
-
-                </div>
-
-                `;
-
-            });
-
-        }
-
-    );
 
 }
 
 
 
 // =====================================
-// HISTÓRICO
+// CARREGAR CERTIFICADOS
 // =====================================
 
-async function carregarHistorico(uid){
+function carregarCertificados(id){
 
-    const q = query(
-        collection(db,"atendimentos"),
-        where("uid","==",uid)
+
+    const certificadosRef =
+    collection(db,"certificados");
+
+
+    const q =
+    query(
+        certificadosRef,
+        where("membroId","==",id)
     );
+
+
 
     onSnapshot(q,(snapshot)=>{
 
-        participacoes.innerHTML = snapshot.size;
 
-        historico.innerHTML = "";
+        listaCertificados.innerHTML="";
+
+
+        certificados.innerHTML =
+        snapshot.size;
+
+
 
         if(snapshot.empty){
 
-            historico.innerHTML = `
-            <p style="text-align:center">
-            Nenhuma participação registrada.
-            </p>
-            `;
+
+            listaCertificados.innerHTML =
+            "<p>Nenhum certificado disponível.</p>";
+
 
             return;
 
+
         }
+
+
+
+        let totalHoras = 0;
+
+
 
         snapshot.forEach((doc)=>{
 
-            const item = doc.data();
 
-            historico.innerHTML += `
+            const cert =
+            doc.data();
 
-            <div class="card">
 
-                <strong>${item.evento || "Atendimento"}</strong>
 
-                <br>
+            totalHoras +=
+            Number(cert.horas || 0);
 
-                ${item.data || ""}
 
-                <br>
 
-                ${item.local || ""}
+            const div =
+            document.createElement("div");
 
-            </div>
+
+
+            div.className =
+            "itemPerfil";
+
+
+
+            div.innerHTML = `
+
+
+            <h4>
+
+            <i class="fa-solid fa-certificate"></i>
+
+            ${cert.nome || "Certificado"}
+
+            </h4>
+
+
+            <p>
+
+            ${cert.horas || 0} horas
+
+            </p>
+
 
             `;
 
+
+            listaCertificados.appendChild(div);
+
+
+
         });
+
+
+
+        horas.innerHTML =
+        totalHoras;
+
+
 
     });
 
+
+
 }
+
+
+
+// =====================================
+// CARREGAR HISTÓRICO
+// =====================================
+
+function carregarHistorico(id){
+
+
+    const historicoRef =
+    collection(db,"historico");
+
+
+    const q =
+    query(
+        historicoRef,
+        where("membroId","==",id)
+    );
+
+
+
+    onSnapshot(q,(snapshot)=>{
+
+
+        historico.innerHTML="";
+
+
+
+        if(snapshot.empty){
+
+
+            historico.innerHTML =
+            "<p>Nenhuma atividade registrada.</p>";
+
+
+            return;
+
+
+        }
+
+
+
+        snapshot.forEach((doc)=>{
+
+
+            const item =
+            doc.data();
+
+
+
+            const div =
+            document.createElement("div");
+
+
+
+            div.className =
+            "itemPerfil";
+
+
+
+            div.innerHTML = `
+
+
+            <h4>
+
+            <i class="fa-solid fa-clock-rotate-left"></i>
+
+            ${item.titulo || "Atividade"}
+
+            </h4>
+
+
+            <p>
+
+            ${item.data || ""}
+
+            </p>
+
+
+            <small>
+
+            ${item.descricao || ""}
+
+            </small>
+
+
+            `;
+
+
+            historico.appendChild(div);
+
+
+
+        });
+
+
+
+    });
+
+
+
+}
+
+
 
 // =====================================
 // CONQUISTAS
 // =====================================
 
-function atualizarConquistas(){
+function carregarConquistas(){
 
-    const conquistas =
-    document.getElementById("listaConquistas");
 
-    if(!conquistas) return;
+    const conquistas = [
 
-    const pres =
-    Number(presencas.innerHTML || 0);
 
-    const cert =
-    Number(certificados.innerHTML || 0);
+        {
+            titulo:"Membro ativo",
+            icone:"fa-star"
+        },
 
-    const part =
-    Number(participacoes.innerHTML || 0);
 
-    let html = "";
+        {
+            titulo:"Participou de ações",
+            icone:"fa-hand-holding-medical"
+        },
 
-    html += `
-    <div class="card">
-        <i class="fa-solid fa-user-check"></i>
-        <h3>Membro Ativo</h3>
-        <p>Cadastro realizado.</p>
-    </div>
-    `;
 
-    if(pres >= 10){
+        {
+            titulo:"Certificado conquistado",
+            icone:"fa-certificate"
+        }
 
-        html += `
-        <div class="card">
-            <i class="fa-solid fa-medal"></i>
-            <h3>10 Presenças</h3>
-            <p>Participação frequente.</p>
-        </div>
+
+    ];
+
+
+
+    listaConquistas.innerHTML="";
+
+
+
+    conquistas.forEach(c=>{
+
+
+        const div =
+        document.createElement("div");
+
+
+
+        div.className =
+        "conquista";
+
+
+
+        div.innerHTML = `
+
+
+        <i class="fa-solid ${c.icone}"></i>
+
+
+        <span>
+
+        ${c.titulo}
+
+        </span>
+
+
         `;
 
-    }
 
-    if(part >= 20){
 
-        html += `
-        <div class="card">
-            <i class="fa-solid fa-trophy"></i>
-            <h3>20 Participações</h3>
-            <p>Grande atuação na liga.</p>
-        </div>
-        `;
+        listaConquistas.appendChild(div);
 
-    }
 
-    if(cert >= 5){
 
-        html += `
-        <div class="card">
-            <i class="fa-solid fa-award"></i>
-            <h3>Certificado Expert</h3>
-            <p>Mais de 5 certificados emitidos.</p>
-        </div>
-        `;
+    });
 
-    }
 
-    conquistas.innerHTML = html;
 
 }
 
-
-
 // =====================================
-// ATUALIZA CONQUISTAS
+// ALTERAR SENHA
 // =====================================
 
-setInterval(
+window.alterarSenha = async()=>{
 
-atualizarConquistas,
 
-1000
-
-);
+    const novaSenha =
+    prompt("Digite a nova senha:");
 
 
 
-// =====================================
-// FOTO DO PERFIL
-// =====================================
+    if(!novaSenha){
 
-window.alterarFoto = function(){
+        return;
 
-    const url = prompt(
+    }
 
-        "Informe a URL da nova foto"
 
-    );
 
-    if(!url) return;
+    if(novaSenha.length < 6){
 
-    foto.src = url;
+        alert(
+        "A senha deve ter no mínimo 6 caracteres."
+        );
+
+        return;
+
+    }
+
+
+
+    try{
+
+
+        await updatePassword(
+            usuarioAtual,
+            novaSenha
+        );
+
+
+
+        alert(
+        "Senha alterada com sucesso!"
+        );
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(error);
+
+
+        alert(
+        "Não foi possível alterar a senha. Faça login novamente e tente."
+        );
+
+
+    }
+
+
 
 };
 
 
 
+
+
 // =====================================
-// LOG
+// ATUALIZAR FOTO
 // =====================================
 
-console.log(
+window.atualizarFoto = async()=>{
 
-"Perfil carregado com sucesso."
 
-);
+    const novaFoto =
+    prompt(
+    "Cole o link da nova foto:"
+    );
+
+
+
+    if(!novaFoto){
+
+        return;
+
+    }
+
+
+
+    try{
+
+
+        await updateDoc(
+
+            doc(
+                db,
+                "membros",
+                uid
+            ),
+
+            {
+
+                foto:novaFoto
+
+            }
+
+        );
+
+
+
+        foto.src =
+        novaFoto;
+
+
+
+        alert(
+        "Foto atualizada!"
+        );
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(error);
+
+
+        alert(
+        "Erro ao atualizar foto."
+        );
+
+
+    }
+
+
+
+};
+
+
+
+
+
+
+// =====================================
+// SAIR DA CONTA
+// =====================================
+
+window.sairConta = async()=>{
+
+
+    try{
+
+
+        await auth.signOut();
+
+
+        window.location.href =
+        "login.html";
+
+
+    }
+
+
+    catch(error){
+
+
+        console.error(error);
+
+
+    }
+
+
+
+};
+
+
+
+
+
+// =====================================
+// ATUALIZAÇÃO EM TEMPO REAL DO MEMBRO
+// =====================================
+
+function observarPerfil(id){
+
+
+    const membroRef =
+    doc(
+        db,
+        "membros",
+        id
+    );
+
+
+
+    onSnapshot(
+        membroRef,
+        (snapshot)=>{
+
+
+            if(!snapshot.exists()){
+
+                return;
+
+            }
+
+
+
+            const dados =
+            snapshot.data();
+
+
+
+            if(dados.foto){
+
+                foto.src =
+                dados.foto;
+
+            }
+
+
+
+            nome.innerHTML =
+            dados.nomeCompleto ||
+            dados.nome ||
+            "-";
+
+
+
+            funcao.innerHTML =
+            `<i class="fa-solid fa-user-tie"></i> ${
+            dados.funcao || "Membro"
+            }`;
+
+
+
+            status.innerHTML =
+            `<i class="fa-solid fa-circle-check"></i> ${
+            dados.status || "Ativo"
+            }`;
+
+
+
+        }
+
+    );
+
+
+
+}
