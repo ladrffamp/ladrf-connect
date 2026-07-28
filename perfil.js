@@ -5,7 +5,6 @@ import {
 
 collection,
 doc,
-getDoc,
 getDocs,
 query,
 where,
@@ -104,7 +103,6 @@ document.getElementById("listaConquistas");
 
 
 
-
 // MODAIS
 
 
@@ -118,16 +116,10 @@ document.getElementById("modalSenha");
 
 
 
-
 let usuarioAtual = null;
 
 
-let uid =
-new URLSearchParams(
-window.location.search
-).get("id");
-
-
+let uid = null;
 
 
 
@@ -161,27 +153,11 @@ usuarioAtual = usuario;
 
 
 
-if(!uid){
-
-
-uid = usuario.uid;
-
-
-}
-
-
-
-carregarPerfil(uid);
-
-
-observarPerfil(uid);
+carregarPerfil();
 
 
 
 });
-
-
-
 
 
 
@@ -192,7 +168,7 @@ observarPerfil(uid);
 // =====================================
 
 
-async function carregarPerfil(id){
+async function carregarPerfil(){
 
 
 try{
@@ -223,6 +199,20 @@ await getDocs(q);
 
 
 
+console.log(
+"Email pesquisado:",
+usuarioAtual.email
+);
+
+
+
+console.log(
+"Encontrados:",
+snap.size
+);
+
+
+
 if(snap.empty){
 
 
@@ -237,13 +227,19 @@ return;
 
 
 
+const membroDoc =
+snap.docs[0];
+
+
 const membro =
-snap.docs[0].data();
+membroDoc.data();
 
 
 
-const membroId =
-snap.docs[0].id;
+uid =
+membroDoc.id;
+
+
 
 
 
@@ -264,8 +260,10 @@ membro.nome ||
 
 
 nome.innerHTML =
+
 membro.nome ||
 "-";
+
 
 
 
@@ -281,6 +279,7 @@ ${membro.funcao || "Membro"}
 
 
 
+
 status.innerHTML =
 
 `
@@ -290,6 +289,7 @@ status.innerHTML =
 ${membro.status || "Ativo"}
 
 `;
+
 
 
 
@@ -313,19 +313,21 @@ membro.periodo || "-";
 
 
 
-carregarFrequencia(membroId);
+
+carregarFrequencia(uid);
 
 carregarEventos();
 
-carregarCertificados(membroId);
+carregarCertificados(uid);
 
-carregarHistorico(membroId);
+carregarHistorico(uid);
 
 carregarConquistas();
 
 
 
 }
+
 
 
 catch(error){
@@ -339,6 +341,7 @@ nome.innerHTML =
 
 
 }
+
 
 
 }
@@ -370,7 +373,6 @@ id
 
 
 
-
 onSnapshot(
 q,
 (snapshot)=>{
@@ -391,6 +393,7 @@ item.data();
 
 
 if(dados.presente){
+
 
 totalPresencas++;
 
@@ -456,7 +459,6 @@ db,
 
 
 
-
 onSnapshot(
 ref,
 (snapshot)=>{
@@ -466,13 +468,13 @@ listaEventos.innerHTML = "";
 
 
 
-
 if(snapshot.empty){
 
 
 listaEventos.innerHTML =
 
 "<p>Nenhum evento encontrado.</p>";
+
 
 return;
 
@@ -526,7 +528,6 @@ ${evento.data || ""}
 ${evento.local || ""}
 
 </span>
-
 
 `;
 
@@ -584,8 +585,6 @@ id
 
 
 
-
-
 onSnapshot(
 q,
 (snapshot)=>{
@@ -594,15 +593,12 @@ q,
 listaCertificados.innerHTML = "";
 
 
-
 certificados.innerHTML =
 snapshot.size;
 
 
 
 let totalHoras = 0;
-
-
 
 
 
@@ -619,9 +615,7 @@ horas.innerHTML =
 "0h";
 
 
-
 return;
-
 
 
 }
@@ -629,10 +623,7 @@ return;
 
 
 
-
-
 snapshot.forEach((item)=>{
-
 
 
 const cert =
@@ -640,13 +631,10 @@ item.data();
 
 
 
-
-
 totalHoras +=
 Number(
 cert.horas || 0
 );
-
 
 
 
@@ -661,8 +649,6 @@ div.className =
 
 
 
-
-
 div.innerHTML =
 
 `
@@ -674,7 +660,6 @@ div.innerHTML =
 ${cert.nome || "Certificado"}
 
 </h4>
-
 
 
 <p>
@@ -695,10 +680,8 @@ listaCertificados.appendChild(div);
 
 
 
-
 horas.innerHTML =
 totalHoras+"h";
-
 
 
 
@@ -709,8 +692,6 @@ totalHoras+"h";
 
 
 }
-
-
 
 
 
@@ -735,7 +716,6 @@ db,
 
 
 
-
 const q =
 query(
 ref,
@@ -748,15 +728,12 @@ id
 
 
 
-
-
 onSnapshot(
 q,
 (snapshot)=>{
 
 
-historico.innerHTML="";
-
+historico.innerHTML = "";
 
 
 
@@ -775,14 +752,11 @@ return;
 
 
 
-
-
 snapshot.forEach((item)=>{
 
 
 const dado =
 item.data();
-
 
 
 
@@ -793,8 +767,6 @@ document.createElement("div");
 
 div.className =
 "itemPerfil";
-
-
 
 
 
@@ -818,7 +790,6 @@ ${dado.data || ""}
 </p>
 
 
-
 <small>
 
 ${dado.descricao || ""}
@@ -826,7 +797,6 @@ ${dado.descricao || ""}
 </small>
 
 `;
-
 
 
 
@@ -852,14 +822,12 @@ historico.appendChild(div);
 
 
 
-
 // =====================================
 // CONQUISTAS
 // =====================================
 
 
 function carregarConquistas(){
-
 
 
 listaConquistas.innerHTML = "";
@@ -900,9 +868,6 @@ titulo:"Certificados conquistados"
 
 
 
-
-
-
 conquistas.forEach((item)=>{
 
 
@@ -918,18 +883,15 @@ div.className =
 
 div.innerHTML =
 
-
 `
 
 <i class="fa-solid ${item.icone}"></i>
-
 
 <h3>
 
 ${item.titulo}
 
 </h3>
-
 
 `;
 
@@ -944,428 +906,172 @@ listaConquistas.appendChild(div);
 
 
 }
+import { db, auth } from "./firebase.js";
+
+import {
+collection,
+doc,
+getDoc,
+query,
+where,
+onSnapshot,
+updateDoc,
+getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+import {
+onAuthStateChanged,
+updatePassword,
+signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
 
 // =====================================
-// OBSERVAR ALTERAÇÕES DO PERFIL
+// ELEMENTOS
 // =====================================
 
-function observarPerfil(id){
+
+const foto = document.getElementById("fotoPerfil");
+
+const nome = document.getElementById("nomePerfil");
+
+const funcao = document.getElementById("funcaoPerfil");
+
+const status = document.getElementById("statusPerfil");
+
+const email = document.getElementById("emailPerfil");
+
+const telefone = document.getElementById("telefonePerfil");
+
+const curso = document.getElementById("cursoPerfil");
+
+const periodo = document.getElementById("periodoPerfil");
+
+
+const presencas = document.getElementById("totalPresencas");
+
+const faltas = document.getElementById("totalFaltas");
+
+const participacoes = document.getElementById("totalParticipacoes");
+
+const certificados = document.getElementById("totalCertificados");
+
+const horas = document.getElementById("totalHoras");
+
+
+const listaEventos = document.getElementById("listaEventos");
+
+const listaCertificados = document.getElementById("listaCertificados");
+
+const historico = document.getElementById("historicoPerfil");
+
+const listaConquistas = document.getElementById("listaConquistas");
+
+
+
+const modalEditar = document.getElementById("modalEditar");
+
+const modalSenha = document.getElementById("modalSenha");
+
+
+
+let usuarioAtual = null;
+
+let uid = null;
+
+
+
+// =====================================
+// LOGIN
+// =====================================
+
+
+onAuthStateChanged(
+auth,
+async(usuario)=>{
+
+
+if(!usuario){
+
+window.location.href="login.html";
+
+return;
 
 }
 
 
-// =====================================
-// ABRIR MODAL EDITAR
-// =====================================
+usuarioAtual = usuario;
 
 
-document
-.getElementById("btnEditarPerfil")
-?.addEventListener(
-"click",
-()=>{
+// tenta pelo UID
 
-
-document.getElementById("editarTelefone").value =
-telefone.innerText;
-
-
-document.getElementById("editarCurso").value =
-curso.innerText;
-
-
-document.getElementById("editarPeriodo").value =
-periodo.innerText;
-
-
-
-modalEditar.style.display =
-"flex";
-
-
-}
-
-);
-
-
-
-
-
-
-
-
-// =====================================
-// SALVAR PERFIL
-// =====================================
-
-
-document
-.getElementById("btnSalvarPerfil")
-?.addEventListener(
-"click",
-async()=>{
-
-
-try{
-
-
-await updateDoc(
-
-doc(
+let membroRef = doc(
 db,
 "membros",
-uid
-),
-
-{
-
-
-telefone:
-
-document.getElementById(
-"editarTelefone"
-).value,
-
-
-
-curso:
-
-document.getElementById(
-"editarCurso"
-).value,
-
-
-
-periodo:
-
-document.getElementById(
-"editarPeriodo"
-).value
-
-
-}
-
+usuario.uid
 );
 
 
-
-
-modalEditar.style.display =
-"none";
+let membroSnap = await getDoc(membroRef);
 
 
 
-alert(
-"Perfil atualizado!"
-);
+if(membroSnap.exists()){
 
+
+uid = usuario.uid;
 
 
 carregarPerfil(uid);
 
 
 
-}
+}else{
 
 
+// busca pelo email
 
-catch(error){
+const q = query(
 
+collection(db,"membros"),
 
-console.error(error);
-
-
-alert(
-"Erro ao atualizar perfil."
-);
-
-
-
-}
-
-
-}
-
-);
-
-
-
-
-
-
-
-
-
-// =====================================
-// CANCELAR EDITAR
-// =====================================
-
-
-document
-.getElementById("btnCancelarPerfil")
-?.addEventListener(
-"click",
-()=>{
-
-
-modalEditar.style.display =
-"none";
-
-
-}
-
-);
-
-
-
-
-
-
-
-
-// =====================================
-// ABRIR MODAL SENHA
-// =====================================
-
-
-document
-.getElementById("btnAlterarSenha")
-?.addEventListener(
-"click",
-()=>{
-
-
-modalSenha.style.display =
-"flex";
-
-
-}
-
-);
-
-
-
-
-
-
-
-
-// =====================================
-// SALVAR NOVA SENHA
-// =====================================
-
-
-document
-.getElementById("btnSalvarSenha")
-?.addEventListener(
-"click",
-async()=>{
-
-
-
-const senha =
-document.getElementById(
-"novaSenha"
-).value;
-
-
-
-const confirmar =
-document.getElementById(
-"confirmarSenha"
-).value;
-
-
-
-
-
-if(senha !== confirmar){
-
-
-alert(
-"As senhas não coincidem."
-);
-
-
-return;
-
-
-}
-
-
-
-
-
-if(senha.length < 6){
-
-
-alert(
-"A senha deve ter no mínimo 6 caracteres."
-);
-
-
-return;
-
-
-}
-
-
-
-
-try{
-
-
-await updatePassword(
-usuarioAtual,
-senha
-);
-
-
-
-
-modalSenha.style.display =
-"none";
-
-
-
-document.getElementById(
-"novaSenha"
-).value="";
-
-
-
-document.getElementById(
-"confirmarSenha"
-).value="";
-
-
-
-alert(
-"Senha alterada com sucesso!"
-);
-
-
-
-}
-
-
-
-catch(error){
-
-
-console.error(error);
-
-
-alert(
-"Faça login novamente para alterar a senha."
-);
-
-
-
-}
-
-
-
-}
-
-);
-
-
-
-
-
-
-
-
-// =====================================
-// CANCELAR SENHA
-// =====================================
-
-
-document
-.getElementById("btnCancelarSenha")
-?.addEventListener(
-"click",
-()=>{
-
-
-modalSenha.style.display =
-"none";
-
-
-}
-
-);
-
-
-
-
-
-
-
-
-// =====================================
-// ALTERAR FOTO
-// =====================================
-
-
-document
-.getElementById("btnAlterarFoto")
-?.addEventListener(
-"click",
-()=>{
-
-
-const novaFoto =
-prompt(
-"Digite o link da nova foto:"
-);
-
-
-
-if(!novaFoto) return;
-
-
-
-
-updateDoc(
-
-doc(
-db,
-"membros",
-uid
-),
-
-{
-
-foto:novaFoto
-
-}
-
+where(
+"email",
+"==",
+usuario.email
 )
-.then(()=>{
 
-
-foto.src =
-novaFoto;
-
-
-alert(
-"Foto atualizada!"
 );
 
 
 
-})
-.catch((erro)=>{
+const resultado = await getDocs(q);
 
 
-console.error(erro);
+
+if(!resultado.empty){
 
 
-alert(
-"Erro ao atualizar foto."
-);
+uid = resultado.docs[0].id;
+
+
+carregarPerfil(uid);
+
+
+
+}else{
+
+
+nome.innerHTML =
+"Membro não encontrado.";
+
+}
+
+
+
+}
 
 
 
@@ -1373,38 +1079,130 @@ alert(
 
 
 
-}
 
+
+// =====================================
+// CARREGAR PERFIL
+// =====================================
+
+
+async function carregarPerfil(id){
+
+
+try{
+
+
+const ref = doc(
+db,
+"membros",
+id
 );
 
 
 
+const snap = await getDoc(ref);
+
+
+
+if(!snap.exists()){
+
+
+nome.innerHTML =
+"Membro não encontrado.";
+
+
+return;
+
+}
+
+
+
+const membro = snap.data();
+
+
+
+foto.src = membro.foto ||
+
+"https://ui-avatars.com/api/?name="+
+encodeURIComponent(
+membro.nome || "Membro"
+)
++
+"&background=0B7A3D&color=fff";
 
 
 
 
 
-// =====================================
-// SAIR
-// =====================================
-
-
-document
-.getElementById("btnSair")
-?.addEventListener(
-"click",
-async()=>{
-
-
-await signOut(auth);
+nome.innerHTML =
+membro.nome || "-";
 
 
 
-window.location.href =
-"login.html";
+funcao.innerHTML =
+
+`
+<i class="fa-solid fa-user-tie"></i>
+
+${membro.funcao || "Membro"}
+
+`;
+
+
+
+status.innerHTML =
+
+`
+<i class="fa-solid fa-circle-check"></i>
+
+${membro.status || "Ativo"}
+
+`;
+
+
+
+email.innerHTML =
+membro.email || "-";
+
+
+
+telefone.innerHTML =
+membro.telefone || "-";
+
+
+
+curso.innerHTML =
+membro.curso || "-";
+
+
+
+periodo.innerHTML =
+membro.periodo || "-";
+
+
+
+carregarFrequencia(id);
+
+carregarEventos();
+
+carregarCertificados(id);
+
+carregarHistorico(id);
+
+carregarConquistas();
 
 
 
 }
+catch(error){
 
-);
+console.error(error);
+
+nome.innerHTML =
+"Erro ao carregar perfil.";
+
+}
+
+
+
+}
