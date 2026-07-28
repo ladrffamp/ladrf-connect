@@ -1002,16 +1002,36 @@ alert(
 window.concluirEvento = async function(id){
 
 
-
 const confirmar = confirm(
+"Marcar este evento como concluído e liberar certificados?"
+);
 
-"Marcar este evento como concluído?"
 
+if(!confirmar){
+return;
+}
+
+
+try{
+
+
+const eventoRef = doc(
+db,
+"agenda",
+id
 );
 
 
 
-if(!confirmar){
+const eventoSnap = await getDoc(
+eventoRef
+);
+
+
+
+if(!eventoSnap.exists()){
+
+alert("Evento não encontrado.");
 
 return;
 
@@ -1019,29 +1039,19 @@ return;
 
 
 
-try{
+const evento = eventoSnap.data();
 
 
+
+// muda status do evento
 
 await updateDoc(
 
-doc(
-
-db,
-
-"agenda",
-
-id
-
-),
+eventoRef,
 
 {
 
-
-status:
-
-"Concluído"
-
+status:"Concluído"
 
 }
 
@@ -1049,10 +1059,107 @@ status:
 
 
 
+// busca participantes do evento
+
+const participantes = await getDocs(
+
+collection(
+
+db,
+
+"agenda",
+
+id,
+
+"participantes"
+
+)
+
+);
+
+
+
+
+// cria certificados
+
+for(const participante of participantes.docs){
+
+
+const dados = participante.data();
+
+
+
+if(
+
+dados.presenca === "Confirmado" ||
+
+dados.presenca === "Confirmada"
+
+){
+
+
+
+await addDoc(
+
+collection(db,"certificados"),
+
+{
+
+
+membroId:
+
+participante.id,
+
+
+nome:
+
+evento.titulo,
+
+
+eventoId:
+
+id,
+
+
+evento:
+
+evento.titulo,
+
+
+horas:
+
+calcularHoras(evento),
+
+
+data:
+
+evento.data,
+
+
+criadoEm:
+
+Timestamp.now(),
+
+
+status:
+
+"Disponível"
+
+
+}
+
+);
+
+
+}
+
+
+}
+
+
+
 alert(
-
-"Evento concluído."
-
+"Evento concluído e certificados liberados!"
 );
 
 
@@ -1062,21 +1169,15 @@ alert(
 catch(error){
 
 
-
 console.error(error);
 
 
-
 alert(
-
-"Erro ao concluir."
-
+"Erro ao concluir evento."
 );
 
 
-
 }
-
 
 
 };
