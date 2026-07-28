@@ -147,6 +147,13 @@ const resultado = await getDocs(q);
 if(!resultado.empty){
 
 
+console.log(
+"Membro encontrado:",
+resultado.docs[0].id,
+resultado.docs[0].data()
+);
+
+
 uid = resultado.docs[0].id;
 
 
@@ -155,6 +162,12 @@ carregarPerfil(uid);
 
 
 }else{
+
+
+console.log(
+"Nenhum membro encontrado para:",
+usuario.email
+);
 
 
 nome.innerHTML =
