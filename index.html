@@ -647,7 +647,6 @@ import { auth, db } from "./firebase.js";
 import {
 
 onAuthStateChanged,
-
 signOut
 
 }
@@ -661,17 +660,11 @@ from
 import {
 
 collection,
-
+doc,
+getDoc,
 onSnapshot,
-
 query,
-
-where,
-
-getDocs,
-
 orderBy,
-
 limit
 
 }
@@ -688,9 +681,7 @@ from
 // ==============================
 
 
-onAuthStateChanged(
-auth,
-async(usuario)=>{
+onAuthStateChanged(auth, async (usuario)=>{
 
 
 if(!usuario){
@@ -712,40 +703,43 @@ document.getElementById("perfilUsuario");
 
 
 
-const busca = query(
 
-collection(db,"membros"),
+try{
 
-where(
-"email",
-"==",
-usuario.email
-)
+
+const membroRef = doc(
+
+db,
+
+"membros",
+
+usuario.uid
 
 );
 
 
 
-const resultado =
-await getDocs(busca);
+const membroSnap =
+await getDoc(membroRef);
 
 
 
-if(!resultado.empty){
+
+if(membroSnap.exists()){
 
 
-const membro =
-resultado.docs[0].data();
+const dados =
+membroSnap.data();
 
 
 
 nome.innerText =
-membro.nome || usuario.email;
+dados.nome || dados.nomeCompleto || "Usuário";
 
 
 
 perfil.innerText =
-membro.funcao || "Membro";
+dados.funcao || "Membro";
 
 
 
@@ -756,8 +750,36 @@ nome.innerText =
 usuario.email;
 
 
+
 perfil.innerText =
-"Usuário";
+"Membro";
+
+
+
+}
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+"Erro ao buscar membro:",
+error
+);
+
+
+
+nome.innerText =
+usuario.email;
+
+
+
+perfil.innerText =
+"Membro";
+
 
 
 }
@@ -765,6 +787,8 @@ perfil.innerText =
 
 
 });
+
+
 
 
 
@@ -875,14 +899,21 @@ documento.data();
 
 let dataPublicacao = "";
 
+
+
 if(aviso.dataPublicacao?.seconds){
 
+
 dataPublicacao =
+
 new Date(
+
 aviso.dataPublicacao.seconds * 1000
+
 )
 
 .toLocaleString("pt-BR");
+
 
 }
 
@@ -931,7 +962,9 @@ ${aviso.mensagem}
 <p>
 
 <strong>
+
 📅 Data do evento:
+
 </strong>
 
 ${aviso.dataEvento || "Não informado"}
@@ -942,7 +975,9 @@ ${aviso.dataEvento || "Não informado"}
 <p>
 
 <strong>
+
 🕒 Horário:
+
 </strong>
 
 ${aviso.horaEvento || "Não informado"}
@@ -953,7 +988,9 @@ ${aviso.horaEvento || "Não informado"}
 <p>
 
 <strong>
+
 📍 Local:
+
 </strong>
 
 ${aviso.localEvento || "Não informado"}
@@ -961,12 +998,18 @@ ${aviso.localEvento || "Não informado"}
 </p>
 
 
+
 <small>
 
 Publicado em:
+
 ${dataPublicacao}
 
 </small>
+
+
+
+<br><br>
 
 
 
