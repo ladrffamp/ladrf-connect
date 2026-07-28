@@ -195,26 +195,35 @@ observarPerfil(uid);
 async function carregarPerfil(id){
 
 
-
 try{
 
 
-const ref =
-doc(
+const membrosRef =
+collection(
 db,
-"membros",
-id
+"membros"
+);
+
+
+
+const q =
+query(
+membrosRef,
+where(
+"email",
+"==",
+usuarioAtual.email
+)
 );
 
 
 
 const snap =
-await getDoc(ref);
+await getDocs(q);
 
 
 
-
-if(!snap.exists()){
+if(snap.empty){
 
 
 nome.innerHTML =
@@ -228,11 +237,13 @@ return;
 
 
 
-
 const membro =
-snap.data();
+snap.docs[0].data();
 
 
+
+const membroId =
+snap.docs[0].id;
 
 
 
@@ -243,7 +254,7 @@ membro.foto ||
 "https://ui-avatars.com/api/?name="+
 
 encodeURIComponent(
-membro.nomeCompleto ||
+membro.nome ||
 "Membro"
 )
 
@@ -252,16 +263,9 @@ membro.nomeCompleto ||
 
 
 
-
-
-
 nome.innerHTML =
-
-membro.nomeCompleto ||
 membro.nome ||
 "-";
-
-
 
 
 
@@ -277,8 +281,6 @@ ${membro.funcao || "Membro"}
 
 
 
-
-
 status.innerHTML =
 
 `
@@ -291,11 +293,8 @@ ${membro.status || "Ativo"}
 
 
 
-
-
 email.innerHTML =
 membro.email || "-";
-
 
 
 
@@ -304,10 +303,8 @@ membro.telefone || "-";
 
 
 
-
 curso.innerHTML =
 membro.curso || "-";
-
 
 
 
@@ -316,25 +313,19 @@ membro.periodo || "-";
 
 
 
-
-
-
-carregarFrequencia(id);
+carregarFrequencia(membroId);
 
 carregarEventos();
 
-carregarCertificados(id);
+carregarCertificados(membroId);
 
-carregarHistorico(id);
+carregarHistorico(membroId);
 
 carregarConquistas();
 
 
 
-
-
 }
-
 
 
 catch(error){
@@ -348,7 +339,6 @@ nome.innerHTML =
 
 
 }
-
 
 
 }
