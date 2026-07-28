@@ -684,7 +684,9 @@ from
 // ==============================
 
 
-onAuthStateChanged(auth,(usuario)=>{
+onAuthStateChanged(
+auth,
+async(usuario)=>{
 
 
 if(!usuario){
@@ -701,11 +703,58 @@ const nome =
 document.getElementById("nomeUsuario");
 
 
+const perfil =
+document.getElementById("perfilUsuario");
 
-if(nome){
+
+
+const busca = query(
+
+collection(db,"membros"),
+
+where(
+"email",
+"==",
+usuario.email
+)
+
+);
+
+
+
+const resultado =
+await getDocs(busca);
+
+
+
+if(!resultado.empty){
+
+
+const membro =
+resultado.docs[0].data();
+
+
 
 nome.innerText =
-usuario.displayName || usuario.email;
+membro.nome || usuario.email;
+
+
+
+perfil.innerText =
+membro.funcao || "Membro";
+
+
+
+}else{
+
+
+nome.innerText =
+usuario.email;
+
+
+perfil.innerText =
+"Usuário";
+
 
 }
 
