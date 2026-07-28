@@ -1637,6 +1637,43 @@ verificarEventosHoje();
 
 
 
+function calcularHoras(evento){
+
+
+if(!evento.inicio || !evento.fim){
+
+return 0;
+
+}
+
+
+
+const inicio = evento.inicio.split(":");
+
+const fim = evento.fim.split(":");
+
+
+
+const minutosInicio =
+Number(inicio[0]) * 60 +
+Number(inicio[1]);
+
+
+
+const minutosFim =
+Number(fim[0]) * 60 +
+Number(fim[1]);
+
+
+
+return Number(
+(
+(minutosFim - minutosInicio) / 60
+).toFixed(1)
+);
+
+
+}
 
 
 
