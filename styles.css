@@ -1709,3 +1709,16 @@ footer{
     font-size:15px;
 
 }
+
+
+.acoes-header{
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:flex-end;
+
+    margin-bottom:8px;
+
+}
