@@ -95,6 +95,7 @@ return;
 
 
 usuarioAtual = usuario;
+  console.log("Usuário logado:", usuario.email);
 
 
 // tenta pelo UID
