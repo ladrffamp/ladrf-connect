@@ -1544,3 +1544,88 @@ console.log(
 "LADRF Connect Agenda carregada com sucesso."
 
 );
+
+
+// =====================================
+// GERAR QR CODE DO EVENTO
+// =====================================
+
+window.gerarQRCode = function(id){
+
+
+const link =
+
+window.location.origin +
+
+"/ladrf-connect/checkin.html?evento=" +
+
+id;
+
+
+
+const janela = window.open(
+"",
+"_blank"
+);
+
+
+
+janela.document.write(`
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<title>QR Code Evento</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+</head>
+
+
+<body style="text-align:center;font-family:Arial">
+
+
+<h2>
+
+Check-in LADRF Connect
+
+</h2>
+
+
+<div id="qrcode"></div>
+
+
+<p>
+
+Aponte a câmera para participar
+
+</p>
+
+
+
+<script>
+
+
+new QRCode(
+
+document.getElementById("qrcode"),
+
+"${link}"
+
+);
+
+
+</script>
+
+
+</body>
+
+</html>
+
+`);
+
+
+}
