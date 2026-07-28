@@ -13,7 +13,11 @@ query,
 
 orderBy,
 
-serverTimestamp
+serverTimestamp,
+
+deleteDoc,
+
+doc
 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
@@ -25,9 +29,6 @@ onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 
-
-
-// ELEMENTOS
 
 const lista =
 document.getElementById("listaMensagens");
@@ -46,11 +47,15 @@ document.getElementById("nomeUsuario");
 
 
 
-
-// USUÁRIO ATUAL
-
 let usuarioAtual = null;
 
+let ultimaMensagem = null;
+
+
+
+// ===============================
+// USUÁRIO LOGADO
+// ===============================
 
 
 onAuthStateChanged(auth,(usuario)=>{
@@ -78,18 +83,14 @@ usuario.displayName || usuario.email;
 }
 
 
-
 });
 
 
 
 
-
-
-
-// =====================================
+// ===============================
 // CARREGAR MENSAGENS
-// =====================================
+// ===============================
 
 
 const mensagensQuery = query(
@@ -109,28 +110,6 @@ lista.innerHTML="";
 
 
 
-if(snapshot.empty){
-
-
-lista.innerHTML = `
-
-<p style="text-align:center">
-
-Nenhuma mensagem ainda.
-
-</p>
-
-`;
-
-
-return;
-
-}
-
-
-
-
-
 snapshot.forEach((documento)=>{
 
 
@@ -138,16 +117,77 @@ const msg = documento.data();
 
 
 
+const minhaMensagem =
+msg.uid === usuarioAtual?.uid;
+
+
+
+// NOTIFICAÇÃO NOVA
+
+if(
+ultimaMensagem &&
+documento.id !== ultimaMensagem &&
+!minhaMensagem
+){
+
+mostrarNotificacao(
+msg.nome + ": " + msg.mensagem
+);
+
+}
+
+
+
+ultimaMensagem = documento.id;
+
+
+
 lista.innerHTML += `
+
 
 <div class="mensagem-chat">
 
 
+<div class="cabecalho-msg">
+
+
 <strong>
+
+<i class="fa-solid fa-user"></i>
 
 ${msg.nome || "Membro"}
 
 </strong>
+
+
+${
+minhaMensagem
+
+?
+
+`
+
+<button
+
+class="btn-apagar-msg"
+
+onclick="apagarMensagem('${documento.id}')">
+
+<i class="fa-solid fa-trash"></i>
+
+</button>
+
+`
+
+:
+
+""
+
+}
+
+
+</div>
+
 
 
 <p>
@@ -155,7 +195,6 @@ ${msg.nome || "Membro"}
 ${msg.mensagem}
 
 </p>
-
 
 
 <small>
@@ -173,7 +212,7 @@ msg.data.seconds * 1000
 
 :
 
-""
+"Enviando..."
 
 }
 
@@ -181,6 +220,7 @@ msg.data.seconds * 1000
 
 
 </div>
+
 
 `;
 
@@ -190,11 +230,8 @@ msg.data.seconds * 1000
 
 
 
-// jogar para última mensagem
-
 lista.scrollTop =
 lista.scrollHeight;
-
 
 
 });
@@ -203,12 +240,9 @@ lista.scrollHeight;
 
 
 
-
-
-
-// =====================================
+// ===============================
 // ENVIAR MENSAGEM
-// =====================================
+// ===============================
 
 
 botaoEnviar.onclick = async()=>{
@@ -219,28 +253,12 @@ campoMensagem.value.trim();
 
 
 
-if(!texto){
+if(!texto || !usuarioAtual){
 
 return;
 
 }
 
-
-
-if(!usuarioAtual){
-
-alert(
-"Usuário não identificado."
-);
-
-return;
-
-}
-
-
-
-
-try{
 
 
 await addDoc(
@@ -251,18 +269,27 @@ collection(db,"mensagens"),
 
 
 uid:
+
 usuarioAtual.uid,
 
 
 nome:
+
 usuarioAtual.displayName || usuarioAtual.email,
 
 
+foto:
+
+usuarioAtual.photoURL || "",
+
+
 mensagem:
+
 texto,
 
 
 data:
+
 serverTimestamp()
 
 
@@ -275,27 +302,86 @@ serverTimestamp()
 campoMensagem.value="";
 
 
-
-}
-
-catch(error){
+};
 
 
-console.error(
-"Erro ao enviar mensagem:",
-error
+
+
+
+// ===============================
+// APAGAR MENSAGEM
+// ===============================
+
+
+window.apagarMensagem = async(id)=>{
+
+
+const confirmar =
+confirm(
+"Excluir esta mensagem?"
 );
 
 
 
-alert(
-"Erro ao enviar mensagem."
-);
+if(!confirmar){
 
-
+return;
 
 }
 
+
+
+await deleteDoc(
+
+doc(db,"mensagens",id)
+
+);
 
 
 };
+
+
+
+
+
+// ===============================
+// NOTIFICAÇÃO
+// ===============================
+
+
+function mostrarNotificacao(texto){
+
+
+if(
+Notification.permission === "granted"
+){
+
+new Notification(
+
+"LADRF Chat",
+
+{
+
+body:texto,
+
+icon:"icon-192.png"
+
+}
+
+);
+
+
+}
+
+
+}
+
+
+
+if(
+Notification.permission === "default"
+){
+
+Notification.requestPermission();
+
+}
