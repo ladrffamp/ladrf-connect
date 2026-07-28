@@ -388,3 +388,119 @@ async function carregarHistorico(uid){
     });
 
 }
+
+// =====================================
+// CONQUISTAS
+// =====================================
+
+function atualizarConquistas(){
+
+    const conquistas =
+    document.getElementById("listaConquistas");
+
+    if(!conquistas) return;
+
+    const pres =
+    Number(presencas.innerHTML || 0);
+
+    const cert =
+    Number(certificados.innerHTML || 0);
+
+    const part =
+    Number(participacoes.innerHTML || 0);
+
+    let html = "";
+
+    html += `
+    <div class="card">
+        <i class="fa-solid fa-user-check"></i>
+        <h3>Membro Ativo</h3>
+        <p>Cadastro realizado.</p>
+    </div>
+    `;
+
+    if(pres >= 10){
+
+        html += `
+        <div class="card">
+            <i class="fa-solid fa-medal"></i>
+            <h3>10 Presenças</h3>
+            <p>Participação frequente.</p>
+        </div>
+        `;
+
+    }
+
+    if(part >= 20){
+
+        html += `
+        <div class="card">
+            <i class="fa-solid fa-trophy"></i>
+            <h3>20 Participações</h3>
+            <p>Grande atuação na liga.</p>
+        </div>
+        `;
+
+    }
+
+    if(cert >= 5){
+
+        html += `
+        <div class="card">
+            <i class="fa-solid fa-award"></i>
+            <h3>Certificado Expert</h3>
+            <p>Mais de 5 certificados emitidos.</p>
+        </div>
+        `;
+
+    }
+
+    conquistas.innerHTML = html;
+
+}
+
+
+
+// =====================================
+// ATUALIZA CONQUISTAS
+// =====================================
+
+setInterval(
+
+atualizarConquistas,
+
+1000
+
+);
+
+
+
+// =====================================
+// FOTO DO PERFIL
+// =====================================
+
+window.alterarFoto = function(){
+
+    const url = prompt(
+
+        "Informe a URL da nova foto"
+
+    );
+
+    if(!url) return;
+
+    foto.src = url;
+
+};
+
+
+
+// =====================================
+// LOG
+// =====================================
+
+console.log(
+
+"Perfil carregado com sucesso."
+
+);
