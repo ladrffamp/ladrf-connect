@@ -1661,3 +1661,51 @@ footer{
 
 
 }
+
+/* ==========================================================
+   BOTÃO PERFIL NO CABEÇALHO (INDEX)
+========================================================== */
+
+.btn-perfil{
+
+    background:white;
+
+    color:var(--verde);
+
+    padding:8px 14px;
+
+    border-radius:10px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:7px;
+
+    font-size:14px;
+
+    font-weight:600;
+
+    transition:.25s;
+
+    margin-bottom:8px;
+
+}
+
+
+
+.btn-perfil:hover{
+
+    background:#f1f1f1;
+
+    transform:translateY(-2px);
+
+}
+
+
+
+.btn-perfil i{
+
+    font-size:15px;
+
+}
