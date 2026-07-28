@@ -2,19 +2,12 @@ import { auth, db } from "./firebase.js";
 
 
 import {
-
 doc,
-
 getDoc,
-
-setDoc,
-
+addDoc,
+collection,
 Timestamp
-
-}
-
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import {
 
