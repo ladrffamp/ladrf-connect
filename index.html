@@ -1110,18 +1110,23 @@ return;
 
 
 
-const evento =
-snapshot.docs[0].data();
-
-
+const evento = snapshot.docs[0].data();
 
 campo.innerHTML = `
 
-<strong>${evento.nome || "-"}</strong>
+<strong>${evento.titulo || "-"}</strong>
 
 <br>
 
-${evento.data || ""}
+📅 ${evento.data || "-"}
+
+<br>
+
+🕒 ${evento.inicio || "-"} às ${evento.fim || "-"}
+
+<br>
+
+📍 ${evento.local || "-"}
 
 `;
 
