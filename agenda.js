@@ -616,6 +616,21 @@ onclick="abrirEscala('${item.id}')"
 
 
 
+<button
+
+class="salvar"
+
+onclick="gerarQRCode('${item.id}')"
+
+>
+
+<i class="fa-solid fa-qrcode"></i>
+
+Gerar QR Code
+
+</button>
+
+
 
 <button
 
