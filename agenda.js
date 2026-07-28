@@ -1712,35 +1712,252 @@ janela.document.write(`
 
 <!DOCTYPE html>
 
-<html>
+<html lang="pt-BR">
+
 
 <head>
 
-<title>QR Code Evento</title>
+
+<meta charset="UTF-8">
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>QR Code | LADRF Connect</title>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+
+
+<style>
+
+
+*{
+
+box-sizing:border-box;
+
+}
+
+
+
+body{
+
+
+margin:0;
+
+min-height:100vh;
+
+background:#f4f7f5;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-family:Poppins,Arial;
+
+
+}
+
+
+
+.card{
+
+
+background:white;
+
+width:90%;
+
+max-width:430px;
+
+padding:35px;
+
+border-radius:25px;
+
+text-align:center;
+
+box-shadow:0 15px 35px rgba(0,0,0,.12);
+
+
+}
+
+
+
+.logo{
+
+
+width:75px;
+
+height:75px;
+
+margin:auto;
+
+background:#0B7A3D;
+
+color:white;
+
+border-radius:50%;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-size:38px;
+
+
+}
+
+
+
+h1{
+
+
+font-size:26px;
+
+color:#0B7A3D;
+
+margin:20px 0 5px;
+
+
+}
+
+
+
+.subtitulo{
+
+
+color:#666;
+
+margin-bottom:25px;
+
+
+}
+
+
+
+#qrcode{
+
+
+background:white;
+
+padding:20px;
+
+border-radius:20px;
+
+display:flex;
+
+justify-content:center;
+
+margin:20px auto;
+
+
+}
+
+
+
+.instrucao{
+
+
+background:#eaf5ef;
+
+color:#0B7A3D;
+
+padding:15px;
+
+border-radius:15px;
+
+font-weight:600;
+
+
+}
+
+
+
+.rodape{
+
+
+margin-top:20px;
+
+font-size:13px;
+
+color:#888;
+
+
+}
+
+
+
+</style>
+
 
 </head>
 
 
-<body style="text-align:center;font-family:Arial">
+
+<body>
 
 
-<h2>
 
-Check-in LADRF Connect
+<div class="card">
 
-</h2>
+
+<div class="logo">
+
+<i>❤</i>
+
+</div>
+
+
+
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+
+<div class="subtitulo">
+
+Check-in do evento
+
+</div>
+
 
 
 <div id="qrcode"></div>
 
 
-<p>
 
-Aponte a câmera para participar
+<div class="instrucao">
 
-</p>
+📱 Aponte a câmera para participar
+
+</div>
+
+
+
+<div class="rodape">
+
+Sua presença será registrada automaticamente.
+
+</div>
+
+
+
+</div>
+
+
+
 
 
 
@@ -1759,11 +1976,14 @@ document.getElementById("qrcode"),
 </script>
 
 
+
 </body>
 
+
 </html>
+
 
 `);
 
 
-}
+};
