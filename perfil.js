@@ -171,6 +171,9 @@ carregarCertificados(id);
 carregarHistorico(id);
 
 carregarConquistas();
+
+observarPerfil(id);
+        
     }
 
     catch(error){
