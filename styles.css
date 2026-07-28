@@ -1707,3 +1707,78 @@ footer{
     font-size:15px;
 
 }
+
+/* ==========================================================
+   ESCALA DE MEMBROS - GERENCIAR AÇÃO
+========================================================== */
+
+
+#listaMembros .card{
+
+    width:100%;
+
+}
+
+
+
+#listaMembros label{
+
+    display:flex !important;
+
+    flex-direction:row;
+
+    align-items:center;
+
+    justify-content:flex-start;
+
+    gap:15px;
+
+    width:100%;
+
+    margin:0;
+
+    text-align:left;
+
+}
+
+
+
+#listaMembros label > div{
+
+    flex:1;
+
+    text-align:left;
+
+}
+
+
+
+#listaMembros input[type="checkbox"]{
+
+    width:20px;
+
+    height:20px;
+
+    flex:none;
+
+}
+
+
+
+#listaMembros strong{
+
+    display:block;
+
+    text-align:left;
+
+}
+
+
+
+#listaMembros small{
+
+    display:block;
+
+    text-align:left;
+
+}
