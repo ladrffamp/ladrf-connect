@@ -1,124 +1,173 @@
-// meu-painel.js
+// gerenciar-acao.js
 
-
-import { auth, db } from "./firebase.js";
-
+import { db } from "./firebase.js";
 
 import {
-onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-
-
-import {
+doc,
+getDoc,
+getDocs,
 collection,
-getDocs
+setDoc,
+serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
 
-
-
-const boasVindas =
-document.getElementById("boasVindas");
-
-
-const listaEscalas =
-document.getElementById("listaEscalas");
-
-
-const totalEventos =
-document.getElementById("totalEventos");
-
-
-const totalHoras =
-document.getElementById("totalHoras");
-
-
-const totalPresencas =
-document.getElementById("totalPresencas");
-
-
-
-
-
-
-
-
-
 // =====================================
-// LOGIN
+// ID DA AÇÃO
 // =====================================
 
-
-onAuthStateChanged(
-
-auth,
-
-(usuario)=>{
+const idAcao = new URLSearchParams(
+    window.location.search
+).get("id");
 
 
-if(!usuario){
+console.log(
+    "ID AÇÃO:",
+    idAcao
+);
 
 
-window.location.href =
-"login.html";
 
+if(!idAcao){
 
-return;
+    alert("Ação não encontrada.");
 
+    throw new Error("ID ausente");
 
 }
 
 
 
-boasVindas.innerHTML =
 
-`👋 Bem-vindo ${usuario.email}`;
+// =====================================
+// ELEMENTOS
+// =====================================
 
-
-
-carregarPainel(
-usuario.uid
-);
+const nomeAcao =
+document.getElementById("nomeAcao");
 
 
-
-}
-
-);
+const listaMembros =
+document.getElementById("listaMembros");
 
 
-
-
+const botaoSalvar =
+document.getElementById("salvar");
 
 
 
 
 
 // =====================================
-// CARREGAR PAINEL
+// CARREGAR AÇÃO
 // =====================================
 
-
-async function carregarPainel(uid){
-
+async function carregarAcao(){
 
 
 try{
 
 
+const referencia = doc(
+    db,
+    "agenda",
+    idAcao
+);
 
-listaEscalas.innerHTML = `
 
 
-<div class="card">
+const resultado = await getDoc(
+    referencia
+);
+
+
+
+if(resultado.exists()){
+
+
+const dados = resultado.data();
+
+
+
+nomeAcao.innerHTML = `
+
+${dados.titulo || "Sem título"}
+
+<br>
+
+<small>
+
+📅 ${dados.data || "-"}
+
+<br>
+
+📍 ${dados.local || "-"}
+
+<br>
+
+⏰ ${dados.inicio || "-"} até ${dados.fim || "-"}
+
+</small>
+
+`;
+
+
+
+}else{
+
+
+nomeAcao.innerHTML =
+"Ação não encontrada";
+
+
+}
+
+
+
+}catch(error){
+
+
+console.error(
+"Erro ao carregar ação:",
+error
+);
+
+
+
+nomeAcao.innerHTML =
+"Erro ao carregar ação";
+
+
+}
+
+
+}
+
+
+
+
+
+
+// =====================================
+// CARREGAR MEMBROS
+// =====================================
+
+async function carregarMembros(){
+
+
+try{
+
+
+listaMembros.innerHTML = `
+
+<div style="text-align:center">
 
 <i class="fa-solid fa-spinner fa-spin"></i>
 
-Carregando escalas...
+Carregando membros...
 
 </div>
-
 
 `;
 
@@ -126,12 +175,13 @@ Carregando escalas...
 
 
 
+// buscar usuários
 
-const agendaSnapshot = await getDocs(
+const usuarios = await getDocs(
 
 collection(
 db,
-"agenda"
+"usuarios"
 )
 
 );
@@ -139,48 +189,9 @@ db,
 
 
 
+// buscar escalados
 
-
-let eventos = 0;
-
-let horas = 0;
-
-let presencas = 0;
-
-
-
-let encontrou = false;
-
-
-
-let escalasMostradas = new Set();
-
-
-
-
-
-
-listaEscalas.innerHTML = "";
-
-
-
-
-
-
-
-for(const acao of agendaSnapshot.docs){
-
-
-
-const dadosAcao =
-acao.data();
-
-
-
-
-
-
-const participantesSnapshot = await getDocs(
+const participantes = await getDocs(
 
 collection(
 
@@ -188,7 +199,7 @@ db,
 
 "agenda",
 
-acao.id,
+idAcao,
 
 "participantes"
 
@@ -200,175 +211,162 @@ acao.id,
 
 
 
-
-const participante =
-
-participantesSnapshot.docs.find(
-
-(item)=>item.id === uid
-
-);
+const escalados = {};
 
 
 
+participantes.forEach((item)=>{
 
 
+escalados[item.id] =
+item.data();
 
 
-if(participante){
-
-
-
-encontrou = true;
+});
 
 
 
 
 
-// evita aparecer duas vezes
 
-if(escalasMostradas.has(acao.id)){
+listaMembros.innerHTML = "";
 
-continue;
+
+
+
+
+usuarios.forEach((usuario)=>{
+
+
+const dados =
+usuario.data();
+
+
+
+
+
+if(
+
+dados.perfil?.toLowerCase() === "membro"
+
+){
+
+
+
+const escalado =
+escalados[usuario.id];
+
+
+
+let status = "";
+
+
+
+if(escalado){
+
+
+if(escalado.presenca === "Confirmado"){
+
+status =
+"🟢 Confirmado";
+
+
+}
+
+else if(escalado.presenca === "Recusado"){
+
+
+status =
+"🔴 Recusado";
+
+
+}
+
+else{
+
+
+status =
+"🟡 Pendente";
+
+
+}
+
 
 }
 
 
 
-escalasMostradas.add(
-acao.id
-);
+
+
+listaMembros.innerHTML += `
+
+
+<div class="card" style="margin-bottom:10px;">
+
+
+<label style="
+
+display:flex;
+
+align-items:center;
+
+gap:12px;
+
+cursor:pointer;
+
+">
+
+
+<input
+
+type="checkbox"
+
+class="membro"
+
+value="${usuario.id}"
+
+data-nome="${dados.nome || ""}"
+
+data-email="${dados.email || ""}"
+
+${escalado ? "checked" : ""}
+
+>
 
 
 
+<div>
 
-
-
-const dadosParticipante =
-participante.data();
-
-
-
-
-
-
-
-listaEscalas.innerHTML += `
-
-
-
-<div class="card">
-
-
-
-<h3>
-
-<i class="fa-solid fa-calendar-check"></i>
-
-${dadosAcao.titulo || "Sem título"}
-
-</h3>
-
-
-
-
-<p>
-
-📅 Data:
 
 <strong>
 
-${dadosAcao.data || "-"}
+${dados.nome || "Sem nome"}
 
 </strong>
 
-</p>
+
+<br>
+
+
+<small>
+
+${dados.email || ""}
+
+</small>
 
 
 
+${status ? `
 
+<br>
 
-<p>
+<span>
 
-📍 Local:
+${status}
 
-<strong>
+</span>
 
-${dadosAcao.local || "-"}
-
-</strong>
-
-</p>
-
-
-
-
-
-<p>
-
-⏰ Horário:
-
-<strong>
-
-${dadosAcao.inicio || "-"}
-
-até
-
-${dadosAcao.fim || "-"}
-
-</strong>
-
-</p>
-
-
-
-
-
-<p>
-
-👤 Responsável:
-
-<strong>
-
-${dadosAcao.responsavel || "-"}
-
-</strong>
-
-</p>
-
-
-
-
-
-<p>
-
-📌 Tipo:
-
-<strong>
-
-${dadosAcao.tipo || "-"}
-
-</strong>
-
-</p>
-
-
-
-
-
-<p>
-
-Status:
-
-<strong>
-
-${dadosParticipante.presenca || "Pendente"}
-
-</strong>
-
-</p>
-
-
+`:""}
 
 
 
@@ -376,104 +374,8 @@ ${dadosParticipante.presenca || "Pendente"}
 
 
 
-`;
+</label>
 
-
-
-
-
-
-
-
-// =====================================
-// CONTAGEM DE PARTICIPAÇÃO
-// =====================================
-
-
-
-if(
-
-dadosParticipante.presenca === "Confirmado"
-
-){
-
-
-
-presencas++;
-
-
-eventos++;
-
-
-
-
-
-if(
-
-dadosAcao.inicio &&
-
-dadosAcao.fim
-
-){
-
-
-horas += calcularHoras(
-
-dadosAcao.inicio,
-
-dadosAcao.fim
-
-);
-
-
-}
-
-
-
-}
-
-
-
-
-
-
-
-}
-
-
-
-
-
-}
-
-
-
-
-
-
-
-if(!encontrou){
-
-
-
-listaEscalas.innerHTML = `
-
-
-<div class="card">
-
-
-<h3>
-
-Nenhuma escala encontrada.
-
-</h3>
-
-
-<p>
-
-Você ainda não possui ações atribuídas.
-
-</p>
 
 
 </div>
@@ -487,24 +389,7 @@ Você ainda não possui ações atribuídas.
 
 
 
-
-
-
-
-// atualizar resumo
-
-
-totalEventos.innerHTML =
-eventos;
-
-
-totalHoras.innerHTML =
-horas + "h";
-
-
-totalPresencas.innerHTML =
-presencas;
-
+});
 
 
 
@@ -513,35 +398,25 @@ presencas;
 }catch(error){
 
 
-
 console.error(
-"Erro ao carregar painel:",
+
+"Erro ao carregar membros:",
+
 error
+
 );
 
 
 
-listaEscalas.innerHTML = `
+listaMembros.innerHTML =
 
-
-<div class="card">
-
-Erro ao carregar escalas.
-
-</div>
-
-
-`;
-
+"Erro ao carregar membros.";
 
 
 }
 
 
-
 }
-
-
 
 
 
@@ -550,58 +425,173 @@ Erro ao carregar escalas.
 
 
 // =====================================
-// CALCULAR HORAS
+// SALVAR ESCALA
 // =====================================
 
-
-function calcularHoras(
-inicio,
-fim
-){
+if(botaoSalvar){
 
 
 
-const inicioPartes =
-inicio.split(":");
+botaoSalvar.addEventListener(
+
+"click",
+
+async()=>{
 
 
 
-const fimPartes =
-fim.split(":");
+const selecionados =
 
+document.querySelectorAll(
 
+".membro:checked"
 
-
-const inicioMinutos =
-
-(Number(inicioPartes[0]) * 60)
-
-+
-
-Number(inicioPartes[1]);
+);
 
 
 
 
-
-const fimMinutos =
-
-(Number(fimPartes[0]) * 60)
-
-+
-
-Number(fimPartes[1]);
+if(selecionados.length === 0){
 
 
+alert(
+
+"Selecione pelo menos um membro."
+
+);
+
+
+return;
+
+
+}
 
 
 
-return (
 
-fimMinutos - inicioMinutos
+try{
 
-) / 60;
+
+
+for(const membro of selecionados){
+
+
+
+await setDoc(
+
+
+doc(
+
+db,
+
+"agenda",
+
+idAcao,
+
+"participantes",
+
+membro.value
+
+),
+
+
+{
+
+
+nome:
+
+membro.dataset.nome,
+
+
+email:
+
+membro.dataset.email,
+
+
+presenca:
+
+"Pendente",
+
+
+escaladoEm:
+
+serverTimestamp()
+
+
+},
+
+
+{
+
+merge:true
+
+}
+
+
+);
 
 
 
 }
+
+
+
+
+
+alert(
+
+"Escala salva com sucesso!"
+
+);
+
+
+
+carregarMembros();
+
+
+
+}catch(error){
+
+
+console.error(
+
+"Erro ao salvar escala:",
+
+error
+
+);
+
+
+
+alert(
+
+"Erro ao salvar escala."
+
+);
+
+
+}
+
+
+
+}
+
+
+);
+
+
+}
+
+
+
+
+
+
+// =====================================
+// INICIAR
+// =====================================
+
+
+carregarAcao();
+
+carregarMembros();
