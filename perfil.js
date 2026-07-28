@@ -1,6 +1,8 @@
 import { db, auth } from "./firebase.js";
 
+
 import {
+
 collection,
 doc,
 getDoc,
@@ -8,158 +10,312 @@ query,
 where,
 onSnapshot,
 updateDoc
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+
+
 import {
+
 onAuthStateChanged,
-updatePassword
+updatePassword,
+signOut
+
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+
 
 
 // =====================================
 // ELEMENTOS
 // =====================================
 
-const foto = document.getElementById("fotoPerfil");
 
-const nome = document.getElementById("nomePerfil");
+const foto =
+document.getElementById("fotoPerfil");
 
-const funcao = document.getElementById("funcaoPerfil");
 
-const status = document.getElementById("statusPerfil");
+const nome =
+document.getElementById("nomePerfil");
 
-const email = document.getElementById("emailPerfil");
 
-const telefone = document.getElementById("telefonePerfil");
+const funcao =
+document.getElementById("funcaoPerfil");
 
-const curso = document.getElementById("cursoPerfil");
 
-const periodo = document.getElementById("periodoPerfil");
+const status =
+document.getElementById("statusPerfil");
 
-const presencas = document.getElementById("totalPresencas");
 
-const faltas = document.getElementById("totalFaltas");
+const email =
+document.getElementById("emailPerfil");
 
-const participacoes = document.getElementById("totalParticipacoes");
 
-const certificados = document.getElementById("totalCertificados");
+const telefone =
+document.getElementById("telefonePerfil");
 
-const horas = document.getElementById("totalHoras");
+
+const curso =
+document.getElementById("cursoPerfil");
+
+
+const periodo =
+document.getElementById("periodoPerfil");
+
+
+
+const presencas =
+document.getElementById("totalPresencas");
+
+
+const faltas =
+document.getElementById("totalFaltas");
+
+
+const participacoes =
+document.getElementById("totalParticipacoes");
+
+
+const certificados =
+document.getElementById("totalCertificados");
+
+
+const horas =
+document.getElementById("totalHoras");
+
+
 
 const listaEventos =
 document.getElementById("listaEventos");
 
+
 const listaCertificados =
 document.getElementById("listaCertificados");
+
 
 const historico =
 document.getElementById("historicoPerfil");
 
+
 const listaConquistas =
 document.getElementById("listaConquistas");
 
+
+
+
+
+// MODAIS
+
+
+const modalEditar =
+document.getElementById("modalEditar");
+
+
+const modalSenha =
+document.getElementById("modalSenha");
+
+
+
+
+
 let usuarioAtual = null;
 
+
 let uid =
-new URLSearchParams(window.location.search).get("id");
+new URLSearchParams(
+window.location.search
+).get("id");
+
+
+
+
+
 
 
 // =====================================
 // LOGIN
 // =====================================
 
-onAuthStateChanged(auth, async(usuario)=>{
 
-    if(!usuario){
+onAuthStateChanged(
+auth,
+async(usuario)=>{
 
-        window.location.href="login.html";
 
-        return;
+if(!usuario){
 
-    }
 
-    usuarioAtual = usuario;
+window.location.href =
+"login.html";
 
-    if(!uid){
 
-        uid = usuario.uid;
+return;
 
-    }
 
-    carregarPerfil(uid);
+}
+
+
+
+usuarioAtual = usuario;
+
+
+
+if(!uid){
+
+
+uid = usuario.uid;
+
+
+}
+
+
+
+carregarPerfil(uid);
+
+
+observarPerfil(uid);
+
+
 
 });
+
+
+
+
+
+
 
 
 // =====================================
 // CARREGAR PERFIL
 // =====================================
 
+
 async function carregarPerfil(id){
 
-    try{
 
-        const membroRef =
-        doc(db,"membros",id);
 
-        const membroSnap =
-        await getDoc(membroRef);
+try{
 
-        if(!membroSnap.exists()){
 
-            nome.innerHTML =
-            "Membro não encontrado.";
+const ref =
+doc(
+db,
+"membros",
+id
+);
 
-            return;
 
-        }
 
-        const membro =
-        membroSnap.data();
+const snap =
+await getDoc(ref);
 
-        // FOTO
 
-        if(membro.foto){
 
-            foto.src = membro.foto;
 
-        }else{
+if(!snap.exists()){
 
-            foto.src =
-            "https://ui-avatars.com/api/?name=" +
-            encodeURIComponent(
-                membro.nomeCompleto ||
-                membro.nome ||
-                "Membro"
-            ) +
-            "&background=0B7A3D&color=ffffff&size=300";
 
-        }
+nome.innerHTML =
+"Membro não encontrado.";
 
-        // DADOS
 
-        nome.innerHTML =
-        membro.nomeCompleto ||
-        membro.nome ||
-        "-";
+return;
 
-        funcao.innerHTML =
-        `<i class="fa-solid fa-user-tie"></i> ${membro.funcao || "Membro"}`;
 
-        status.innerHTML =
-        `<i class="fa-solid fa-circle-check"></i> ${membro.status || "Ativo"}`;
+}
 
-        email.innerHTML =
-        membro.email || "-";
 
-        telefone.innerHTML =
-        membro.telefone || "-";
 
-        curso.innerHTML =
-        membro.curso || "-";
 
-        periodo.innerHTML =
-        membro.periodo || "-";
+const membro =
+snap.data();
+
+
+
+
+
+foto.src =
+
+membro.foto ||
+
+"https://ui-avatars.com/api/?name="+
+
+encodeURIComponent(
+membro.nomeCompleto ||
+"Membro"
+)
+
++"&background=0B7A3D&color=fff";
+
+
+
+
+
+
+
+nome.innerHTML =
+
+membro.nomeCompleto ||
+membro.nome ||
+"-";
+
+
+
+
+
+funcao.innerHTML =
+
+`
+
+<i class="fa-solid fa-user-tie"></i>
+
+${membro.funcao || "Membro"}
+
+`;
+
+
+
+
+
+status.innerHTML =
+
+`
+
+<i class="fa-solid fa-circle-check"></i>
+
+${membro.status || "Ativo"}
+
+`;
+
+
+
+
+
+email.innerHTML =
+membro.email || "-";
+
+
+
+
+telefone.innerHTML =
+membro.telefone || "-";
+
+
+
+
+curso.innerHTML =
+membro.curso || "-";
+
+
+
+
+periodo.innerHTML =
+membro.periodo || "-";
+
+
+
+
 
 
 carregarFrequencia(id);
@@ -172,228 +328,230 @@ carregarHistorico(id);
 
 carregarConquistas();
 
-observarPerfil(id);
-        
-    }
 
-    catch(error){
 
-        console.error(error);
 
-        nome.innerHTML =
-        "Erro ao carregar perfil.";
-
-    }
 
 }
 
 
+
+catch(error){
+
+
+console.error(error);
+
+
+nome.innerHTML =
+"Erro ao carregar perfil.";
+
+
+}
+
+
+
+}
 // =====================================
-// EDITAR PERFIL
+// FREQUÊNCIA
 // =====================================
 
-window.editarPerfil = async()=>{
-
-    const telefoneNovo = prompt(
-        "Telefone:",
-        telefone.innerText
-    );
-
-    if(telefoneNovo===null) return;
-
-    const cursoNovo = prompt(
-        "Curso:",
-        curso.innerText
-    );
-
-    if(cursoNovo===null) return;
-
-    const periodoNovo = prompt(
-        "Período:",
-        periodo.innerText
-    );
-
-    if(periodoNovo===null) return;
-
-    try{
-
-        await updateDoc(
-
-            doc(db,"membros",uid),
-
-            {
-
-                telefone:telefoneNovo,
-
-                curso:cursoNovo,
-
-                periodo:periodoNovo
-
-            }
-
-        );
-
-        telefone.innerHTML = telefoneNovo;
-
-        curso.innerHTML = cursoNovo;
-
-        periodo.innerHTML = periodoNovo;
-
-        alert("Perfil atualizado!");
-
-    }
-
-    catch(error){
-
-        console.error(error);
-
-        alert("Erro ao atualizar perfil.");
-
-    }
-
-};
-// =====================================
-// CARREGAR FREQUÊNCIA
-// =====================================
 
 function carregarFrequencia(id){
 
-    const frequenciaRef =
-    collection(db,"frequencia");
+
+const ref =
+collection(
+db,
+"frequencia"
+);
 
 
-    const q =
-    query(
-        frequenciaRef,
-        where("membroId","==",id)
-    );
+
+const q =
+query(
+ref,
+where(
+"membroId",
+"==",
+id
+)
+);
 
 
-    onSnapshot(q,(snapshot)=>{
 
 
-        let presentes = 0;
-
-        let ausentes = 0;
-
-
-        snapshot.forEach(doc=>{
+onSnapshot(
+q,
+(snapshot)=>{
 
 
-            const dados =
-            doc.data();
+let totalPresencas = 0;
+
+let totalFaltas = 0;
 
 
-            if(dados.presente){
 
-                presentes++;
-
-            }else{
-
-                ausentes++;
-
-            }
+snapshot.forEach((item)=>{
 
 
-        });
+const dados =
+item.data();
 
 
-        presencas.innerHTML =
-        presentes;
+
+if(dados.presente){
+
+totalPresencas++;
 
 
-        faltas.innerHTML =
-        ausentes;
+}else{
 
 
-        participacoes.innerHTML =
-        snapshot.size;
-
-
-    });
+totalFaltas++;
 
 
 }
 
 
 
+});
+
+
+
+
+presencas.innerHTML =
+totalPresencas;
+
+
+
+faltas.innerHTML =
+totalFaltas;
+
+
+
+participacoes.innerHTML =
+snapshot.size;
+
+
+
+}
+
+);
+
+
+
+}
+
+
+
+
+
+
+
 // =====================================
-// CARREGAR EVENTOS
+// EVENTOS
 // =====================================
+
 
 function carregarEventos(){
 
 
-    const eventosRef =
-    collection(db,"eventos");
 
-
-    onSnapshot(eventosRef,(snapshot)=>{
-
-
-        listaEventos.innerHTML="";
-
-
-        if(snapshot.empty){
-
-
-            listaEventos.innerHTML =
-            "<p>Nenhum evento encontrado.</p>";
-
-
-            return;
-
-        }
+const ref =
+collection(
+db,
+"eventos"
+);
 
 
 
-        snapshot.forEach((doc)=>{
+
+onSnapshot(
+ref,
+(snapshot)=>{
 
 
-            const evento =
-            doc.data();
-
-
-
-            const div =
-            document.createElement("div");
-
-
-            div.className =
-            "itemPerfil";
-
-
-            div.innerHTML = `
-
-
-            <h4>
-            <i class="fa-solid fa-calendar"></i>
-            ${evento.nome || "Evento"}
-            </h4>
-
-
-            <p>
-            ${evento.data || ""}
-            </p>
-
-
-            <span>
-            ${evento.local || ""}
-            </span>
-
-
-            `;
-
-
-            listaEventos.appendChild(div);
+listaEventos.innerHTML = "";
 
 
 
-        });
+
+if(snapshot.empty){
+
+
+listaEventos.innerHTML =
+
+"<p>Nenhum evento encontrado.</p>";
+
+return;
+
+
+}
 
 
 
-    });
+
+
+snapshot.forEach((item)=>{
+
+
+const evento =
+item.data();
+
+
+
+const div =
+document.createElement("div");
+
+
+
+div.className =
+"itemPerfil";
+
+
+
+div.innerHTML =
+
+`
+
+<h4>
+
+<i class="fa-solid fa-calendar"></i>
+
+${evento.nome || "Evento"}
+
+</h4>
+
+
+<p>
+
+${evento.data || ""}
+
+</p>
+
+
+<span>
+
+${evento.local || ""}
+
+</span>
+
+
+`;
+
+
+
+listaEventos.appendChild(div);
+
+
+
+});
+
+
+
+}
+
+);
 
 
 
@@ -401,113 +559,77 @@ function carregarEventos(){
 
 
 
+
+
+
+
+
 // =====================================
-// CARREGAR CERTIFICADOS
+// CERTIFICADOS
 // =====================================
+
 
 function carregarCertificados(id){
 
 
-    const certificadosRef =
-    collection(db,"certificados");
 
-
-    const q =
-    query(
-        certificadosRef,
-        where("membroId","==",id)
-    );
+const ref =
+collection(
+db,
+"certificados"
+);
 
 
 
-    onSnapshot(q,(snapshot)=>{
-
-
-        listaCertificados.innerHTML="";
-
-
-        certificados.innerHTML =
-        snapshot.size;
-
-
-
-        if(snapshot.empty){
-
-
-            listaCertificados.innerHTML =
-            "<p>Nenhum certificado disponível.</p>";
-
-
-            return;
-
-
-        }
+const q =
+query(
+ref,
+where(
+"membroId",
+"==",
+id
+)
+);
 
 
 
-        let totalHoras = 0;
+
+
+onSnapshot(
+q,
+(snapshot)=>{
+
+
+listaCertificados.innerHTML = "";
 
 
 
-        snapshot.forEach((doc)=>{
-
-
-            const cert =
-            doc.data();
+certificados.innerHTML =
+snapshot.size;
 
 
 
-            totalHoras +=
-            Number(cert.horas || 0);
+let totalHoras = 0;
 
 
 
-            const div =
-            document.createElement("div");
+
+
+if(snapshot.empty){
+
+
+listaCertificados.innerHTML =
+
+"<p>Nenhum certificado disponível.</p>";
 
 
 
-            div.className =
-            "itemPerfil";
+horas.innerHTML =
+"0h";
 
 
 
-            div.innerHTML = `
-
-
-            <h4>
-
-            <i class="fa-solid fa-certificate"></i>
-
-            ${cert.nome || "Certificado"}
-
-            </h4>
-
-
-            <p>
-
-            ${cert.horas || 0} horas
-
-            </p>
-
-
-            `;
-
-
-            listaCertificados.appendChild(div);
-
-
-
-        });
-
-
-
-        horas.innerHTML =
-        totalHoras;
-
-
-
-    });
+return;
 
 
 
@@ -515,106 +637,228 @@ function carregarCertificados(id){
 
 
 
+
+
+
+snapshot.forEach((item)=>{
+
+
+
+const cert =
+item.data();
+
+
+
+
+
+totalHoras +=
+Number(
+cert.horas || 0
+);
+
+
+
+
+
+const div =
+document.createElement("div");
+
+
+
+div.className =
+"itemPerfil";
+
+
+
+
+
+div.innerHTML =
+
+`
+
+<h4>
+
+<i class="fa-solid fa-certificate"></i>
+
+${cert.nome || "Certificado"}
+
+</h4>
+
+
+
+<p>
+
+${cert.horas || 0} horas
+
+</p>
+
+`;
+
+
+
+listaCertificados.appendChild(div);
+
+
+
+});
+
+
+
+
+horas.innerHTML =
+totalHoras+"h";
+
+
+
+
+}
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
 // =====================================
-// CARREGAR HISTÓRICO
+// HISTÓRICO
 // =====================================
+
 
 function carregarHistorico(id){
 
 
-    const historicoRef =
-    collection(db,"historico");
 
-
-    const q =
-    query(
-        historicoRef,
-        where("membroId","==",id)
-    );
+const ref =
+collection(
+db,
+"historico"
+);
 
 
 
-    onSnapshot(q,(snapshot)=>{
 
-
-        historico.innerHTML="";
-
-
-
-        if(snapshot.empty){
-
-
-            historico.innerHTML =
-            "<p>Nenhuma atividade registrada.</p>";
-
-
-            return;
-
-
-        }
+const q =
+query(
+ref,
+where(
+"membroId",
+"==",
+id
+)
+);
 
 
 
-        snapshot.forEach((doc)=>{
 
 
-            const item =
-            doc.data();
+onSnapshot(
+q,
+(snapshot)=>{
 
 
-
-            const div =
-            document.createElement("div");
-
-
-
-            div.className =
-            "itemPerfil";
+historico.innerHTML="";
 
 
 
-            div.innerHTML = `
+
+if(snapshot.empty){
 
 
-            <h4>
+historico.innerHTML =
 
-            <i class="fa-solid fa-clock-rotate-left"></i>
+"<p>Nenhuma participação registrada.</p>";
 
-            ${item.titulo || "Atividade"}
-
-            </h4>
+return;
 
 
-            <p>
-
-            ${item.data || ""}
-
-            </p>
-
-
-            <small>
-
-            ${item.descricao || ""}
-
-            </small>
-
-
-            `;
-
-
-            historico.appendChild(div);
+}
 
 
 
-        });
 
 
 
-    });
+snapshot.forEach((item)=>{
+
+
+const dado =
+item.data();
+
+
+
+
+const div =
+document.createElement("div");
+
+
+
+div.className =
+"itemPerfil";
+
+
+
+
+
+div.innerHTML =
+
+`
+
+<h4>
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+${dado.titulo || "Atividade"}
+
+</h4>
+
+
+<p>
+
+${dado.data || ""}
+
+</p>
+
+
+
+<small>
+
+${dado.descricao || ""}
+
+</small>
+
+`;
+
+
+
+
+historico.appendChild(div);
+
+
+
+});
 
 
 
 }
+
+);
+
+
+
+}
+
+
+
+
+
 
 
 
@@ -622,331 +866,631 @@ function carregarHistorico(id){
 // CONQUISTAS
 // =====================================
 
+
 function carregarConquistas(){
 
 
-    const conquistas = [
 
-
-        {
-            titulo:"Membro ativo",
-            icone:"fa-star"
-        },
-
-
-        {
-            titulo:"Participou de ações",
-            icone:"fa-hand-holding-medical"
-        },
-
-
-        {
-            titulo:"Certificado conquistado",
-            icone:"fa-certificate"
-        }
-
-
-    ];
+listaConquistas.innerHTML = "";
 
 
 
-    listaConquistas.innerHTML="";
+const conquistas = [
+
+
+{
+
+icone:"fa-star",
+
+titulo:"Membro LADRF"
+
+},
+
+
+{
+
+icone:"fa-hand-holding-medical",
+
+titulo:"Participação em ações"
+
+},
+
+
+{
+
+icone:"fa-certificate",
+
+titulo:"Certificados conquistados"
+
+}
+
+
+];
 
 
 
-    conquistas.forEach(c=>{
-
-
-        const div =
-        document.createElement("div");
 
 
 
-        div.className =
-        "conquista";
+conquistas.forEach((item)=>{
+
+
+const div =
+document.createElement("div");
 
 
 
-        div.innerHTML = `
-
-
-        <i class="fa-solid ${c.icone}"></i>
-
-
-        <span>
-
-        ${c.titulo}
-
-        </span>
-
-
-        `;
+div.className =
+"card";
 
 
 
-        listaConquistas.appendChild(div);
+div.innerHTML =
+
+
+`
+
+<i class="fa-solid ${item.icone}"></i>
+
+
+<h3>
+
+${item.titulo}
+
+</h3>
+
+
+`;
 
 
 
-    });
+listaConquistas.appendChild(div);
+
+
+
+});
 
 
 
 }
-
 // =====================================
-// ALTERAR SENHA
-// =====================================
-
-window.alterarSenha = async()=>{
-
-
-    const novaSenha =
-    prompt("Digite a nova senha:");
-
-
-
-    if(!novaSenha){
-
-        return;
-
-    }
-
-
-
-    if(novaSenha.length < 6){
-
-        alert(
-        "A senha deve ter no mínimo 6 caracteres."
-        );
-
-        return;
-
-    }
-
-
-
-    try{
-
-
-        await updatePassword(
-            usuarioAtual,
-            novaSenha
-        );
-
-
-
-        alert(
-        "Senha alterada com sucesso!"
-        );
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(error);
-
-
-        alert(
-        "Não foi possível alterar a senha. Faça login novamente e tente."
-        );
-
-
-    }
-
-
-
-};
-
-
-
-
-
-// =====================================
-// ATUALIZAR FOTO
+// OBSERVAR ALTERAÇÕES DO PERFIL
 // =====================================
 
-window.atualizarFoto = async()=>{
-
-
-    const novaFoto =
-    prompt(
-    "Cole o link da nova foto:"
-    );
-
-
-
-    if(!novaFoto){
-
-        return;
-
-    }
-
-
-
-    try{
-
-
-        await updateDoc(
-
-            doc(
-                db,
-                "membros",
-                uid
-            ),
-
-            {
-
-                foto:novaFoto
-
-            }
-
-        );
-
-
-
-        foto.src =
-        novaFoto;
-
-
-
-        alert(
-        "Foto atualizada!"
-        );
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(error);
-
-
-        alert(
-        "Erro ao atualizar foto."
-        );
-
-
-    }
-
-
-
-};
-
-
-
-
-
-
-// =====================================
-// SAIR DA CONTA
-// =====================================
-
-window.sairConta = async()=>{
-
-
-    try{
-
-
-        await auth.signOut();
-
-
-        window.location.href =
-        "login.html";
-
-
-    }
-
-
-    catch(error){
-
-
-        console.error(error);
-
-
-    }
-
-
-
-};
-
-
-
-
-
-// =====================================
-// ATUALIZAÇÃO EM TEMPO REAL DO MEMBRO
-// =====================================
 
 function observarPerfil(id){
 
 
-    const membroRef =
-    doc(
-        db,
-        "membros",
-        id
-    );
+const ref =
+doc(
+db,
+"membros",
+id
+);
 
 
 
-    onSnapshot(
-        membroRef,
-        (snapshot)=>{
+onSnapshot(
+ref,
+(snapshot)=>{
 
 
-            if(!snapshot.exists()){
-
-                return;
-
-            }
+if(!snapshot.exists()) return;
 
 
 
-            const dados =
-            snapshot.data();
+const dados =
+snapshot.data();
 
 
 
-            if(dados.foto){
+if(dados.foto){
 
-                foto.src =
-                dados.foto;
+foto.src =
+dados.foto;
 
-            }
-
-
-
-            nome.innerHTML =
-            dados.nomeCompleto ||
-            dados.nome ||
-            "-";
+}
 
 
 
-            funcao.innerHTML =
-            `<i class="fa-solid fa-user-tie"></i> ${
-            dados.funcao || "Membro"
-            }`;
+nome.innerHTML =
+dados.nomeCompleto ||
+dados.nome ||
+"-";
 
 
 
-            status.innerHTML =
-            `<i class="fa-solid fa-circle-check"></i> ${
-            dados.status || "Ativo"
-            }`;
+funcao.innerHTML =
+
+`
+
+<i class="fa-solid fa-user-tie"></i>
+
+${dados.funcao || "Membro"}
+
+`;
 
 
 
-        }
+status.innerHTML =
 
-    );
+`
+
+<i class="fa-solid fa-circle-check"></i>
+
+${dados.status || "Ativo"}
+
+`;
 
 
 
 }
+
+);
+
+
+
+}
+
+
+
+
+
+
+
+
+
+// =====================================
+// ABRIR MODAL EDITAR
+// =====================================
+
+
+document
+.getElementById("btnEditarPerfil")
+?.addEventListener(
+"click",
+()=>{
+
+
+document.getElementById("editarTelefone").value =
+telefone.innerText;
+
+
+document.getElementById("editarCurso").value =
+curso.innerText;
+
+
+document.getElementById("editarPeriodo").value =
+periodo.innerText;
+
+
+
+modalEditar.style.display =
+"flex";
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+// =====================================
+// SALVAR PERFIL
+// =====================================
+
+
+document
+.getElementById("btnSalvarPerfil")
+?.addEventListener(
+"click",
+async()=>{
+
+
+try{
+
+
+await updateDoc(
+
+doc(
+db,
+"membros",
+uid
+),
+
+{
+
+
+telefone:
+
+document.getElementById(
+"editarTelefone"
+).value,
+
+
+
+curso:
+
+document.getElementById(
+"editarCurso"
+).value,
+
+
+
+periodo:
+
+document.getElementById(
+"editarPeriodo"
+).value
+
+
+}
+
+);
+
+
+
+
+modalEditar.style.display =
+"none";
+
+
+
+alert(
+"Perfil atualizado!"
+);
+
+
+
+carregarPerfil(uid);
+
+
+
+}
+
+
+
+catch(error){
+
+
+console.error(error);
+
+
+alert(
+"Erro ao atualizar perfil."
+);
+
+
+
+}
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+
+// =====================================
+// CANCELAR EDITAR
+// =====================================
+
+
+document
+.getElementById("btnCancelarPerfil")
+?.addEventListener(
+"click",
+()=>{
+
+
+modalEditar.style.display =
+"none";
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+// =====================================
+// ABRIR MODAL SENHA
+// =====================================
+
+
+document
+.getElementById("btnAlterarSenha")
+?.addEventListener(
+"click",
+()=>{
+
+
+modalSenha.style.display =
+"flex";
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+// =====================================
+// SALVAR NOVA SENHA
+// =====================================
+
+
+document
+.getElementById("btnSalvarSenha")
+?.addEventListener(
+"click",
+async()=>{
+
+
+
+const senha =
+document.getElementById(
+"novaSenha"
+).value;
+
+
+
+const confirmar =
+document.getElementById(
+"confirmarSenha"
+).value;
+
+
+
+
+
+if(senha !== confirmar){
+
+
+alert(
+"As senhas não coincidem."
+);
+
+
+return;
+
+
+}
+
+
+
+
+
+if(senha.length < 6){
+
+
+alert(
+"A senha deve ter no mínimo 6 caracteres."
+);
+
+
+return;
+
+
+}
+
+
+
+
+try{
+
+
+await updatePassword(
+usuarioAtual,
+senha
+);
+
+
+
+
+modalSenha.style.display =
+"none";
+
+
+
+document.getElementById(
+"novaSenha"
+).value="";
+
+
+
+document.getElementById(
+"confirmarSenha"
+).value="";
+
+
+
+alert(
+"Senha alterada com sucesso!"
+);
+
+
+
+}
+
+
+
+catch(error){
+
+
+console.error(error);
+
+
+alert(
+"Faça login novamente para alterar a senha."
+);
+
+
+
+}
+
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+// =====================================
+// CANCELAR SENHA
+// =====================================
+
+
+document
+.getElementById("btnCancelarSenha")
+?.addEventListener(
+"click",
+()=>{
+
+
+modalSenha.style.display =
+"none";
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+// =====================================
+// ALTERAR FOTO
+// =====================================
+
+
+document
+.getElementById("btnAlterarFoto")
+?.addEventListener(
+"click",
+()=>{
+
+
+const novaFoto =
+prompt(
+"Digite o link da nova foto:"
+);
+
+
+
+if(!novaFoto) return;
+
+
+
+
+updateDoc(
+
+doc(
+db,
+"membros",
+uid
+),
+
+{
+
+foto:novaFoto
+
+}
+
+)
+.then(()=>{
+
+
+foto.src =
+novaFoto;
+
+
+alert(
+"Foto atualizada!"
+);
+
+
+
+})
+.catch((erro)=>{
+
+
+console.error(erro);
+
+
+alert(
+"Erro ao atualizar foto."
+);
+
+
+
+});
+
+
+
+}
+
+);
+
+
+
+
+
+
+
+
+// =====================================
+// SAIR
+// =====================================
+
+
+document
+.getElementById("btnSair")
+?.addEventListener(
+"click",
+async()=>{
+
+
+await signOut(auth);
+
+
+
+window.location.href =
+"login.html";
+
+
+
+}
+
+);
