@@ -944,91 +944,14 @@ listaConquistas.appendChild(div);
 
 
 }
+
 // =====================================
 // OBSERVAR ALTERAÇÕES DO PERFIL
 // =====================================
 
-
 function observarPerfil(id){
 
-
-const ref =
-doc(
-db,
-"membros",
-id
-);
-
-
-
-onSnapshot(
-ref,
-(snapshot)=>{
-
-
-if(!snapshot.exists()) return;
-
-
-
-const dados =
-snapshot.data();
-
-
-
-if(dados.foto){
-
-foto.src =
-dados.foto;
-
 }
-
-
-
-nome.innerHTML =
-dados.nomeCompleto ||
-dados.nome ||
-"-";
-
-
-
-funcao.innerHTML =
-
-`
-
-<i class="fa-solid fa-user-tie"></i>
-
-${dados.funcao || "Membro"}
-
-`;
-
-
-
-status.innerHTML =
-
-`
-
-<i class="fa-solid fa-circle-check"></i>
-
-${dados.status || "Ativo"}
-
-`;
-
-
-
-}
-
-);
-
-
-
-}
-
-
-
-
-
-
-
 
 
 // =====================================
