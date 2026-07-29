@@ -181,7 +181,7 @@ const usuarios = await getDocs(
 
 collection(
 db,
-"usuarios"
+"membros"
 )
 
 );
