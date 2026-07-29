@@ -6,15 +6,6 @@ import {
 
 
 // =====================================
-// ELEMENTOS
-// =====================================
-
-const botao = document.getElementById("btnEntrar");
-
-const mensagem = document.getElementById("erro");
-
-
-// =====================================
 // LOGIN
 // =====================================
 
@@ -30,6 +21,10 @@ async function login(){
     const senha = document
         .getElementById("senha")
         .value;
+
+
+    const mensagem = document
+        .getElementById("erro");
 
 
 
@@ -52,21 +47,16 @@ async function login(){
         "Login realizado!";
 
 
-        setTimeout(()=>{
-
+        setTimeout(() => {
 
             window.location.href =
             "index.html";
 
-
-        },1000);
-
+        }, 1000);
 
 
-    }
 
-
-    catch(error){
+    } catch(error) {
 
 
         console.log(
@@ -137,28 +127,42 @@ async function login(){
 
     }
 
-
 }
 
 
-document.addEventListener("DOMContentLoaded", () => {
 
-    const botao = document.getElementById("btnEntrar");
+// =====================================
+// BOTÃO ENTRAR
+// =====================================
 
-    if (!botao) {
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-        console.error(
-            "Botão btnEntrar não encontrado"
+
+        const botao =
+        document.getElementById("btnEntrar");
+
+
+        if(!botao){
+
+
+            console.error(
+                "Botão btnEntrar não encontrado"
+            );
+
+
+            return;
+
+        }
+
+
+
+        botao.addEventListener(
+            "click",
+            login
         );
 
-        return;
 
     }
-
-
-    botao.addEventListener(
-        "click",
-        login
-    );
-
-});
+);
