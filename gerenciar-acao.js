@@ -618,6 +618,71 @@ alert(
 
 
 
+// =====================================
+// SELECIONAR TODOS
+// =====================================
+
+
+const selecionarTodos =
+document.getElementById("selecionarTodos");
+
+
+const desmarcarTodos =
+document.getElementById("desmarcarTodos");
+
+
+
+if(selecionarTodos){
+
+
+selecionarTodos.addEventListener(
+"click",
+()=>{
+
+
+document
+.querySelectorAll(".membro")
+.forEach((checkbox)=>{
+
+checkbox.checked = true;
+
+});
+
+
+}
+
+);
+
+
+}
+
+
+
+
+if(desmarcarTodos){
+
+
+desmarcarTodos.addEventListener(
+"click",
+()=>{
+
+
+document
+.querySelectorAll(".membro")
+.forEach((checkbox)=>{
+
+checkbox.checked = false;
+
+});
+
+
+}
+
+);
+
+
+}
+
 
 // =====================================
 // INICIAR
