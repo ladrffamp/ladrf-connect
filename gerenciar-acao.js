@@ -239,20 +239,21 @@ membro.id;
 
 
 
-// FILTRO DE MEMBROS
+// FILTRO DE ESCALA
+// Mostra todos, exceto recepção
 
 const perfil =
-dados.perfil?.toLowerCase() || "";
+dados.perfil?.toLowerCase().trim() || "";
 
 const funcao =
-dados.funcao?.toLowerCase() || "";
+dados.funcao?.toLowerCase().trim() || "";
 
-
-// ignora apenas administradores
 
 if(
-perfil === "admin" ||
-funcao === "admin"
+perfil === "recepção" ||
+perfil === "recepcao" ||
+funcao === "recepção" ||
+funcao === "recepcao"
 ){
 
 return;
