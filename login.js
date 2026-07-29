@@ -145,11 +145,25 @@ async function login(){
 // CLIQUE
 // =====================================
 
-if (botao) {
+document.addEventListener("DOMContentLoaded", () => {
+
+    const botao = document.getElementById("btnEntrar");
+
+    if (!botao) {
+
+        console.error(
+            "Botão btnEntrar não encontrado"
+        );
+
+        return;
+
+    }
+
 
     botao.addEventListener(
         "click",
         login
     );
 
-}
+
+});
