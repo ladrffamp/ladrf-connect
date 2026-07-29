@@ -609,68 +609,73 @@ alert(
 
 
 // =====================================
-// SELECIONAR TODOS / DESMARCAR TODOS
+// BOTÕES SELECIONAR TODOS
 // =====================================
+
+const botaoSelecionar =
+document.getElementById("selecionarTodos");
+
+
+const botaoDesmarcar =
+document.getElementById("desmarcarTodos");
+
+
+
+if(botaoSelecionar){
+
+
+botaoSelecionar.onclick = ()=>{
 
 
 document
-.getElementById("selecionarTodos")
-?.addEventListener(
-"click",
-()=>{
+.querySelectorAll(".membro")
+.forEach((checkbox)=>{
 
-
-const checkboxes =
-document.querySelectorAll(".membro");
-
-
-checkboxes.forEach((checkbox)=>{
 
 checkbox.checked = true;
 
+
 });
 
 
 console.log(
-"Selecionados:",
-checkboxes.length
+"Todos selecionados"
 );
+
+
+};
 
 
 }
 
-);
 
 
+if(botaoDesmarcar){
+
+
+botaoDesmarcar.onclick = ()=>{
 
 
 document
-.getElementById("desmarcarTodos")
-?.addEventListener(
-"click",
-()=>{
+.querySelectorAll(".membro")
+.forEach((checkbox)=>{
 
-
-const checkboxes =
-document.querySelectorAll(".membro");
-
-
-checkboxes.forEach((checkbox)=>{
 
 checkbox.checked = false;
+
 
 });
 
 
 console.log(
-"Desmarcados:",
-checkboxes.length
+"Todos desmarcados"
 );
+
+
+};
 
 
 }
-
-);
 
 
 
