@@ -12,7 +12,6 @@ serverTimestamp
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
-
 // =====================================
 // ID DA AÇÃO
 // =====================================
@@ -39,7 +38,6 @@ if(!idAcao){
 
 
 
-
 // =====================================
 // ELEMENTOS
 // =====================================
@@ -54,8 +52,6 @@ document.getElementById("listaMembros");
 
 const botaoSalvar =
 document.getElementById("salvar");
-
-
 
 
 
@@ -147,8 +143,6 @@ nomeAcao.innerHTML =
 
 
 
-
-
 // =====================================
 // CARREGAR MEMBROS
 // =====================================
@@ -173,15 +167,13 @@ Carregando membros...
 
 
 
+// BUSCA MEMBROS
 
-
-// buscar usuários
-
-const usuarios = await getDocs(
+const membrosSnapshot = await getDocs(
 
 collection(
 db,
-"usuarios"
+"membros"
 )
 
 );
@@ -189,9 +181,9 @@ db,
 
 
 
-// buscar escalados
+// BUSCA ESCALADOS
 
-const participantes = await getDocs(
+const participantesSnapshot = await getDocs(
 
 collection(
 
@@ -209,13 +201,11 @@ idAcao,
 
 
 
-
-
 const escalados = {};
 
 
 
-participantes.forEach((item)=>{
+participantesSnapshot.forEach((item)=>{
 
 
 escalados[item.id] =
@@ -227,34 +217,46 @@ item.data();
 
 
 
-
-
 listaMembros.innerHTML = "";
 
 
 
+let total = 0;
 
 
-usuarios.forEach((usuario)=>{
+
+membrosSnapshot.forEach((membro)=>{
 
 
 const dados =
-usuario.data();
+membro.data();
 
 
 
+const idMembro =
+membro.id;
 
+
+
+// ignora membros inativos
 
 if(
-
-dados.perfil?.toLowerCase() === "membro"
-
+dados.status &&
+dados.status !== "ativo"
 ){
+
+return;
+
+}
+
+
+
+total++;
 
 
 
 const escalado =
-escalados[usuario.id];
+escalados[idMembro];
 
 
 
@@ -266,6 +268,7 @@ if(escalado){
 
 
 if(escalado.presenca === "Confirmado"){
+
 
 status =
 "🟢 Confirmado";
@@ -297,7 +300,6 @@ status =
 
 
 
-
 listaMembros.innerHTML += `
 
 
@@ -317,13 +319,14 @@ cursor:pointer;
 ">
 
 
+
 <input
 
 type="checkbox"
 
 class="membro"
 
-value="${usuario.id}"
+value="${idMembro}"
 
 data-nome="${dados.nome || ""}"
 
@@ -332,6 +335,7 @@ data-email="${dados.email || ""}"
 ${escalado ? "checked" : ""}
 
 >
+
 
 
 
@@ -377,7 +381,6 @@ ${status}
 </label>
 
 
-
 </div>
 
 
@@ -385,13 +388,33 @@ ${status}
 
 
 
+});
+
+
+
+
+
+if(total === 0){
+
+
+listaMembros.innerHTML = `
+
+<div class="card">
+
+Nenhum membro encontrado.
+
+</div>
+
+`;
+
 }
 
 
 
-});
-
-
+console.log(
+"Membros carregados:",
+total
+);
 
 
 
@@ -450,7 +473,6 @@ document.querySelectorAll(
 
 
 
-
 if(selecionados.length === 0){
 
 
@@ -465,7 +487,6 @@ return;
 
 
 }
-
 
 
 
