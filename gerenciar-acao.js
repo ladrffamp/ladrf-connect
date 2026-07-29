@@ -608,7 +608,69 @@ alert(
 
 
 
+// =====================================
+// SELECIONAR TODOS / DESMARCAR TODOS
+// =====================================
 
+
+document
+.getElementById("selecionarTodos")
+?.addEventListener(
+"click",
+()=>{
+
+
+const checkboxes =
+document.querySelectorAll(".membro");
+
+
+checkboxes.forEach((checkbox)=>{
+
+checkbox.checked = true;
+
+});
+
+
+console.log(
+"Selecionados:",
+checkboxes.length
+);
+
+
+}
+
+);
+
+
+
+
+document
+.getElementById("desmarcarTodos")
+?.addEventListener(
+"click",
+()=>{
+
+
+const checkboxes =
+document.querySelectorAll(".membro");
+
+
+checkboxes.forEach((checkbox)=>{
+
+checkbox.checked = false;
+
+});
+
+
+console.log(
+"Desmarcados:",
+checkboxes.length
+);
+
+
+}
+
+);
 
 
 
