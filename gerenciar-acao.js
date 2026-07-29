@@ -17,11 +17,11 @@ serverTimestamp
 // =====================================
 
 const idAcao = new URLSearchParams(
-    window.location.search
+window.location.search
 ).get("id");
 
 
-console.log("ID AÇÃO:", idAcao);
+console.log("ID DA AÇÃO:", idAcao);
 
 
 
@@ -63,23 +63,22 @@ async function carregarAcao(){
 try{
 
 
-const referencia = doc(
+const ref = doc(
 db,
 "agenda",
 idAcao
 );
 
 
-const resultado = await getDoc(
-referencia
-);
+const snap = await getDoc(ref);
 
 
 
-if(resultado.exists()){
+if(snap.exists()){
 
 
-const dados = resultado.data();
+const dados = snap.data();
+
 
 
 nomeAcao.innerHTML = `
@@ -121,13 +120,9 @@ nomeAcao.innerHTML =
 
 
 console.error(
-"Erro ao carregar ação:",
+"Erro ação:",
 error
 );
-
-
-nomeAcao.innerHTML =
-"Erro ao carregar ação";
 
 
 }
@@ -141,7 +136,7 @@ nomeAcao.innerHTML =
 
 
 // =====================================
-// CARREGAR PARTICIPANTES
+// CARREGAR USUÁRIOS
 // =====================================
 
 async function carregarMembros(){
@@ -164,7 +159,7 @@ Carregando participantes...
 
 
 
-// BUSCAR USUÁRIOS
+// TODOS OS USUÁRIOS
 
 const usuariosSnapshot = await getDocs(
 
@@ -177,8 +172,7 @@ db,
 
 
 
-
-// BUSCAR ESCALADOS
+// PARTICIPANTES JÁ ESCALADOS
 
 const participantesSnapshot = await getDocs(
 
@@ -226,7 +220,9 @@ usuario.data();
 
 console.log(
 "USUARIO:",
-dados
+dados.nome,
+dados.email,
+dados.perfil
 );
 
 
@@ -236,25 +232,17 @@ usuario.id;
 
 
 
-const perfil =
-dados.perfil?.toLowerCase().trim() || "";
-
-
 const email =
 dados.email?.toLowerCase().trim() || "";
 
 
 
 // =====================================
-// REMOVE SOMENTE ADMIN
+// REMOVE SOMENTE ADMINISTRADOR
 // =====================================
 
 if(
-
-perfil === "admin" ||
-
 email === "admin@ladrf.com"
-
 ){
 
 return;
@@ -263,27 +251,23 @@ return;
 
 
 
-
 // =====================================
 // DEFINIR CARGO
 // =====================================
 
-
-let cargoEscala = "Membro";
+let cargo =
+"Membro";
 
 
 
 if(
-
 email === "antonio.felipe@ladrf.com"
-
 ){
 
-cargoEscala =
+cargo =
 "Orientador Responsável";
 
 }
-
 
 
 
@@ -306,7 +290,6 @@ if(escalado){
 
 if(escalado.presenca === "Confirmado"){
 
-
 status =
 "🟢 Confirmado";
 
@@ -314,7 +297,6 @@ status =
 }
 
 else if(escalado.presenca === "Recusado"){
-
 
 status =
 "🔴 Recusado";
@@ -324,16 +306,13 @@ status =
 
 else{
 
-
 status =
 "🟡 Pendente";
 
-
 }
 
 
 }
-
 
 
 
@@ -358,7 +337,6 @@ cursor:pointer;
 ">
 
 
-
 <input
 
 type="checkbox"
@@ -371,7 +349,7 @@ data-nome="${dados.nome || ""}"
 
 data-email="${dados.email || ""}"
 
-data-cargo="${cargoEscala}"
+data-cargo="${cargo}"
 
 ${escalado ? "checked" : ""}
 
@@ -395,10 +373,9 @@ ${dados.nome || "Sem nome"}
 
 <span>
 
-${cargoEscala}
+${cargo}
 
 </span>
-
 
 
 <br>
@@ -453,7 +430,7 @@ listaMembros.innerHTML = `
 
 <div class="card">
 
-Nenhum participante encontrado.
+Nenhum usuário encontrado.
 
 </div>
 
@@ -464,10 +441,8 @@ Nenhum participante encontrado.
 
 
 console.log(
-
-"Participantes carregados:",
+"TOTAL MOSTRADO:",
 total
-
 );
 
 
@@ -476,15 +451,14 @@ total
 
 
 console.error(
-
-"Erro ao carregar participantes:",
+"Erro ao carregar usuários:",
 error
-
 );
 
 
+
 listaMembros.innerHTML =
-"Erro ao carregar participantes.";
+"Erro ao carregar usuários.";
 
 
 }
@@ -501,9 +475,7 @@ listaMembros.innerHTML =
 // SALVAR ESCALA
 // =====================================
 
-
 if(botaoSalvar){
-
 
 
 botaoSalvar.addEventListener(
@@ -513,15 +485,10 @@ botaoSalvar.addEventListener(
 async()=>{
 
 
-
 const selecionados =
-
 document.querySelectorAll(
-
 ".membro:checked"
-
 );
-
 
 
 
@@ -529,26 +496,20 @@ if(selecionados.length === 0){
 
 
 alert(
-
 "Selecione pelo menos um participante."
-
 );
 
 
 return;
 
-
 }
-
-
 
 
 
 try{
 
 
-
-for(const participante of selecionados){
+for(const pessoa of selecionados){
 
 
 
@@ -564,7 +525,7 @@ idAcao,
 
 "participantes",
 
-participante.value
+pessoa.value
 
 ),
 
@@ -573,27 +534,22 @@ participante.value
 
 
 nome:
-
-participante.dataset.nome,
+pessoa.dataset.nome,
 
 
 email:
-
-participante.dataset.email,
+pessoa.dataset.email,
 
 
 cargo:
-
-participante.dataset.cargo,
+pessoa.dataset.cargo,
 
 
 presenca:
-
 "Pendente",
 
 
 escaladoEm:
-
 serverTimestamp()
 
 
@@ -610,17 +566,13 @@ merge:true
 );
 
 
-
 }
 
 
 
 
-
 alert(
-
 "Escala salva com sucesso!"
-
 );
 
 
@@ -633,18 +585,13 @@ carregarMembros();
 
 
 console.error(
-
-"Erro ao salvar escala:",
+"Erro salvar escala:",
 error
-
 );
-
 
 
 alert(
-
 "Erro ao salvar escala."
-
 );
 
 
@@ -659,82 +606,6 @@ alert(
 
 }
 
-
-
-
-
-
-// =====================================
-// SELECIONAR TODOS
-// =====================================
-
-
-const selecionarTodos =
-document.getElementById("selecionarTodos");
-
-
-const desmarcarTodos =
-document.getElementById("desmarcarTodos");
-
-
-
-if(selecionarTodos){
-
-
-selecionarTodos.addEventListener(
-
-"click",
-
-()=>{
-
-
-document
-.querySelectorAll(".membro")
-.forEach((checkbox)=>{
-
-
-checkbox.checked = true;
-
-
-});
-
-
-}
-
-);
-
-
-}
-
-
-
-if(desmarcarTodos){
-
-
-desmarcarTodos.addEventListener(
-
-"click",
-
-()=>{
-
-
-document
-.querySelectorAll(".membro")
-.forEach((checkbox)=>{
-
-
-checkbox.checked = false;
-
-
-});
-
-
-}
-
-);
-
-
-}
 
 
 
@@ -744,7 +615,6 @@ checkbox.checked = false;
 // =====================================
 // INICIAR
 // =====================================
-
 
 carregarAcao();
 
