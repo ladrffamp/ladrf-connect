@@ -124,7 +124,7 @@ admin:[
 
 "modalidades.html",
 
-"gerenciar-acao.html"
+"gerenciar-acao.html",
 "avisos.html"
 
 ],
