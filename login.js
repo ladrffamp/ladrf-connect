@@ -141,11 +141,24 @@ async function login(){
 }
 
 
-// =====================================
-// CLIQUE
-// =====================================
+document.addEventListener("DOMContentLoaded", () => {
 
-botao.addEventListener(
-    "click",
-    login
-);
+    const botao = document.getElementById("btnEntrar");
+
+    if (!botao) {
+
+        console.error(
+            "Botão btnEntrar não encontrado"
+        );
+
+        return;
+
+    }
+
+
+    botao.addEventListener(
+        "click",
+        login
+    );
+
+});
