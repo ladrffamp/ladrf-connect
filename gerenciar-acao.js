@@ -21,18 +21,15 @@ const idAcao = new URLSearchParams(
 ).get("id");
 
 
-console.log(
-    "ID AÇÃO:",
-    idAcao
-);
+console.log("ID AÇÃO:", idAcao);
 
 
 
 if(!idAcao){
 
-    alert("Ação não encontrada.");
+alert("Ação não encontrada.");
 
-    throw new Error("ID ausente");
+throw new Error("ID ausente");
 
 }
 
@@ -55,6 +52,7 @@ document.getElementById("salvar");
 
 
 
+
 // =====================================
 // CARREGAR AÇÃO
 // =====================================
@@ -66,15 +64,14 @@ try{
 
 
 const referencia = doc(
-    db,
-    "agenda",
-    idAcao
+db,
+"agenda",
+idAcao
 );
 
 
-
 const resultado = await getDoc(
-    referencia
+referencia
 );
 
 
@@ -83,7 +80,6 @@ if(resultado.exists()){
 
 
 const dados = resultado.data();
-
 
 
 nomeAcao.innerHTML = `
@@ -130,7 +126,6 @@ error
 );
 
 
-
 nomeAcao.innerHTML =
 "Erro ao carregar ação";
 
@@ -143,8 +138,10 @@ nomeAcao.innerHTML =
 
 
 
+
+
 // =====================================
-// CARREGAR MEMBROS
+// CARREGAR PARTICIPANTES
 // =====================================
 
 async function carregarMembros(){
@@ -159,7 +156,7 @@ listaMembros.innerHTML = `
 
 <i class="fa-solid fa-spinner fa-spin"></i>
 
-Carregando membros...
+Carregando participantes...
 
 </div>
 
@@ -167,9 +164,9 @@ Carregando membros...
 
 
 
-// BUSCA USUÁRIOS
+// BUSCAR USUÁRIOS
 
-const membrosSnapshot = await getDocs(
+const usuariosSnapshot = await getDocs(
 
 collection(
 db,
@@ -181,20 +178,15 @@ db,
 
 
 
-// BUSCA ESCALADOS
+// BUSCAR ESCALADOS
 
 const participantesSnapshot = await getDocs(
 
 collection(
-
 db,
-
 "agenda",
-
 idAcao,
-
 "participantes"
-
 )
 
 );
@@ -220,40 +212,49 @@ item.data();
 listaMembros.innerHTML = "";
 
 
-
 let total = 0;
 
 
 
-membrosSnapshot.forEach((membro)=>{
+usuariosSnapshot.forEach((usuario)=>{
 
 
 const dados =
-membro.data();
-console.log("USUÁRIO:", membro.id, dados);
+usuario.data();
 
 
 
-const idMembro =
-membro.id;
+console.log(
+"USUARIO:",
+dados
+);
 
 
 
-// FILTRO DE ESCALA
-// Mostra todos, exceto recepção
+const idUsuario =
+usuario.id;
+
+
 
 const perfil =
 dados.perfil?.toLowerCase().trim() || "";
 
-const funcao =
-dados.funcao?.toLowerCase().trim() || "";
 
+const email =
+dados.email?.toLowerCase().trim() || "";
+
+
+
+// =====================================
+// REMOVE SOMENTE ADMIN
+// =====================================
 
 if(
-perfil === "recepção" ||
-perfil === "recepcao" ||
-funcao === "recepção" ||
-funcao === "recepcao"
+
+perfil === "admin" ||
+
+email === "admin@ladrf.com"
+
 ){
 
 return;
@@ -262,12 +263,37 @@ return;
 
 
 
+
+// =====================================
+// DEFINIR CARGO
+// =====================================
+
+
+let cargoEscala = "Membro";
+
+
+
+if(
+
+email === "antonio.felipe@ladrf.com"
+
+){
+
+cargoEscala =
+"Orientador Responsável";
+
+}
+
+
+
+
+
 total++;
 
 
 
 const escalado =
-escalados[idMembro];
+escalados[idUsuario];
 
 
 
@@ -311,6 +337,8 @@ status =
 
 
 
+
+
 listaMembros.innerHTML += `
 
 
@@ -337,11 +365,13 @@ type="checkbox"
 
 class="membro"
 
-value="${idMembro}"
+value="${idUsuario}"
 
 data-nome="${dados.nome || ""}"
 
 data-email="${dados.email || ""}"
+
+data-cargo="${cargoEscala}"
 
 ${escalado ? "checked" : ""}
 
@@ -358,6 +388,17 @@ ${escalado ? "checked" : ""}
 ${dados.nome || "Sem nome"}
 
 </strong>
+
+
+<br>
+
+
+<span>
+
+${cargoEscala}
+
+</span>
+
 
 
 <br>
@@ -412,7 +453,7 @@ listaMembros.innerHTML = `
 
 <div class="card">
 
-Nenhum membro encontrado.
+Nenhum participante encontrado.
 
 </div>
 
@@ -423,8 +464,10 @@ Nenhum membro encontrado.
 
 
 console.log(
-"Membros carregados:",
+
+"Participantes carregados:",
 total
+
 );
 
 
@@ -434,24 +477,20 @@ total
 
 console.error(
 
-"Erro ao carregar membros:",
-
+"Erro ao carregar participantes:",
 error
 
 );
 
 
-
 listaMembros.innerHTML =
-
-"Erro ao carregar membros.";
-
-
-}
+"Erro ao carregar participantes.";
 
 
 }
 
+
+}
 
 
 
@@ -461,6 +500,7 @@ listaMembros.innerHTML =
 // =====================================
 // SALVAR ESCALA
 // =====================================
+
 
 if(botaoSalvar){
 
@@ -484,12 +524,13 @@ document.querySelectorAll(
 
 
 
+
 if(selecionados.length === 0){
 
 
 alert(
 
-"Selecione pelo menos um membro."
+"Selecione pelo menos um participante."
 
 );
 
@@ -501,16 +542,17 @@ return;
 
 
 
+
+
 try{
 
 
 
-for(const membro of selecionados){
+for(const participante of selecionados){
 
 
 
 await setDoc(
-
 
 doc(
 
@@ -522,7 +564,7 @@ idAcao,
 
 "participantes",
 
-membro.value
+participante.value
 
 ),
 
@@ -532,12 +574,17 @@ membro.value
 
 nome:
 
-membro.dataset.nome,
+participante.dataset.nome,
 
 
 email:
 
-membro.dataset.email,
+participante.dataset.email,
+
+
+cargo:
+
+participante.dataset.cargo,
 
 
 presenca:
@@ -588,7 +635,6 @@ carregarMembros();
 console.error(
 
 "Erro ao salvar escala:",
-
 error
 
 );
@@ -608,11 +654,11 @@ alert(
 
 }
 
-
 );
 
 
 }
+
 
 
 
@@ -636,7 +682,9 @@ if(selecionarTodos){
 
 
 selecionarTodos.addEventListener(
+
 "click",
+
 ()=>{
 
 
@@ -644,7 +692,9 @@ document
 .querySelectorAll(".membro")
 .forEach((checkbox)=>{
 
+
 checkbox.checked = true;
+
 
 });
 
@@ -655,7 +705,6 @@ checkbox.checked = true;
 
 
 }
-
 
 
 
@@ -663,7 +712,9 @@ if(desmarcarTodos){
 
 
 desmarcarTodos.addEventListener(
+
 "click",
+
 ()=>{
 
 
@@ -671,7 +722,9 @@ document
 .querySelectorAll(".membro")
 .forEach((checkbox)=>{
 
+
 checkbox.checked = false;
+
 
 });
 
@@ -682,6 +735,10 @@ checkbox.checked = false;
 
 
 }
+
+
+
+
 
 
 // =====================================
