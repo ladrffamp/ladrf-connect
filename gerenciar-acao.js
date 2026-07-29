@@ -230,6 +230,7 @@ membrosSnapshot.forEach((membro)=>{
 
 const dados =
 membro.data();
+console.log("USUÁRIO:", membro.id, dados);
 
 
 
@@ -238,15 +239,20 @@ membro.id;
 
 
 
-// aceita somente membros
+// FILTRO DE MEMBROS
 
 const perfil =
-dados.perfil?.toLowerCase();
+dados.perfil?.toLowerCase() || "";
 
+const funcao =
+dados.funcao?.toLowerCase() || "";
+
+
+// ignora apenas administradores
 
 if(
-perfil &&
-perfil !== "membro"
+perfil === "admin" ||
+funcao === "admin"
 ){
 
 return;
