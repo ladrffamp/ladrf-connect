@@ -145,7 +145,11 @@ async function login(){
 // CLIQUE
 // =====================================
 
-botao.addEventListener(
-    "click",
-    login
-);
+if (botao) {
+
+    botao.addEventListener(
+        "click",
+        login
+    );
+
+}
