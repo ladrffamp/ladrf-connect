@@ -167,13 +167,13 @@ Carregando membros...
 
 
 
-// BUSCA MEMBROS
+// BUSCA USUÁRIOS
 
 const membrosSnapshot = await getDocs(
 
 collection(
 db,
-"membros"
+"usuarios"
 )
 
 );
@@ -238,11 +238,15 @@ membro.id;
 
 
 
-// ignora membros inativos
+// aceita somente membros
+
+const perfil =
+dados.perfil?.toLowerCase();
+
 
 if(
-dados.status &&
-dados.status !== "ativo"
+perfil &&
+perfil !== "membro"
 ){
 
 return;
