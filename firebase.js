@@ -12,10 +12,6 @@ import {
   getFirestore
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-import {
-  getMessaging
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-messaging.js";
-
 
 // =====================================
 // CONFIGURAÇÃO FIREBASE LADRF CONNECT
@@ -49,7 +45,7 @@ const app = initializeApp(firebaseConfig);
 
 // =====================================
 // APLICAÇÃO SECUNDÁRIA
-// (usada apenas para criar usuários)
+// Usada para criação de usuários
 // =====================================
 
 const appSecundario = initializeApp(
@@ -59,7 +55,7 @@ const appSecundario = initializeApp(
 
 
 // =====================================
-// SERVIÇOS
+// SERVIÇOS FIREBASE
 // =====================================
 
 const auth = getAuth(app);
@@ -68,21 +64,14 @@ const authSecundario = getAuth(appSecundario);
 
 const db = getFirestore(app);
 
-let messaging = null;
 
-try{
+// =====================================
+// FIREBASE MESSAGING
+// Temporariamente desativado
+// para corrigir carregamento do login
+// =====================================
 
-    messaging = getMessaging(app);
-
-}
-catch(error){
-
-    console.log(
-        "Firebase Messaging não inicializado:",
-        error
-    );
-
-}
+const messaging = null;
 
 
 // =====================================
