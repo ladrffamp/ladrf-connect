@@ -219,15 +219,20 @@ const dados = doc.data();
 
 
 
+const perfil =
+dados.perfil?.toLowerCase();
+
+
 if(
-dados.perfil?.toLowerCase() === "membro"
+perfil === "membro" ||
+perfil === "adm" ||
+perfil === "admin" ||
+perfil === "administrador"
 ){
 
 membros++;
 
 }
-
-});
 
 
 
@@ -1394,8 +1399,15 @@ const dados = doc.data();
 
 
 
+const perfil =
+dados.perfil?.toLowerCase();
+
+
 if(
-dados.perfil?.toLowerCase() === "membro"
+perfil === "membro" ||
+perfil === "adm" ||
+perfil === "admin" ||
+perfil === "administrador"
 ){
 
 
