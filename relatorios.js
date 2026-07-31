@@ -1673,4 +1673,19 @@ window.print();
 
 
 
+ativarExportacoes();
+
+
+}
+
+console.log("RELATORIOS JS CARREGADO");
+
+console.log(
+"Botões:",
+document.getElementById("exportarPDF"),
+document.getElementById("exportarExcel"),
+document.getElementById("imprimirRelatorio")
+);
+
+
 iniciarRelatorios();
