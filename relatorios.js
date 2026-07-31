@@ -276,27 +276,29 @@ resumo[modalidade]++;
 
 if(resumoAtendimentos){
 
-if(resumoAtendimentos){
+    resumoAtendimentos.innerHTML = "";
 
-resumoAtendimentos.innerHTML += `
+    Object.entries(resumo).forEach(([nome, quantidade])=>{
 
-<tr>
+        resumoAtendimentos.innerHTML += `
 
-<td>
-${nome}
-</td>
+        <tr>
 
-<td>
-${quantidade}
-</td>
+        <td>
+        ${nome}
+        </td>
 
-</tr>
+        <td>
+        ${quantidade}
+        </td>
 
-`;
+        </tr>
+
+        `;
+
+    });
 
 }
-
-});
 
 
 
@@ -1479,7 +1481,11 @@ resumo[modalidade] =
 
 
 
-resumoAtendimentos.innerHTML="";
+if(resumoAtendimentos){
+
+    resumoAtendimentos.innerHTML="";
+
+}
 
 
 
