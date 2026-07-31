@@ -34,8 +34,10 @@ document.getElementById("listaEventos");
 // DADOS GLOBAIS
 // =====================================
 
-let listaAtendimentos = [];
-let listaAvaliacoes = [];
+let graficoAvaliacoes = null;
+let graficoMes = null;
+let graficoModalidades = null;
+let graficoResolucao = null;
 
 
 // =====================================
@@ -669,8 +671,11 @@ notas[nota]++;
 });
 
 
+if(graficoAvaliacoes){
+    graficoAvaliacoes.destroy();
+}
 
-new Chart(canvas,{
+graficoAvaliacoes = new Chart(canvas,{
 
 type:"bar",
 
