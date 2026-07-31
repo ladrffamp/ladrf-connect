@@ -9,22 +9,18 @@
 
 <title>Relatórios | LADRF Connect</title>
 
-
 <link rel="stylesheet" href="styles.css">
-
 
 <link rel="stylesheet"
 href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
-
 <body>
 
-
 <header class="topbar">
-
 
 <a href="index.html" class="btn-inicio">
 
@@ -34,42 +30,21 @@ Início
 
 </a>
 
-
-
-
 <div class="logo">
-
 
 <i class="fa-solid fa-heart-pulse"></i>
 
-
 <div>
 
-<h1>
+<h1>LADRF Connect</h1>
 
-LADRF Connect
-
-</h1>
-
-
-<p>
-
-Sistema de Gestão da Liga
-
-</p>
-
+<p>Sistema de Gestão da Liga</p>
 
 </div>
 
-
 </div>
-
-
-
-
 
 <div class="usuario-info">
-
 
 <strong id="nomeUsuario">
 
@@ -77,13 +52,11 @@ Carregando...
 
 </strong>
 
-
 <span id="perfilUsuario">
 
 Perfil
 
 </span>
-
 
 <small id="horaAtual">
 
@@ -91,158 +64,348 @@ Perfil
 
 </small>
 
-
 </div>
-
-
 
 </header>
 
-
-
-
-
-
 <main class="container">
 
-
-
-
-
 <section class="page-title">
-
 
 <h1>
 
 <i class="fa-solid fa-chart-line"></i>
 
-Relatórios
+Relatórios e Indicadores
 
 </h1>
 
-
 <p>
 
-Indicadores e estatísticas da LADRF.
+Acompanhe o desempenho da LADRF em tempo real.
 
 </p>
 
-
 </section>
 
+<!-- ========================= -->
+<!-- FILTROS -->
+<!-- ========================= -->
 
+<div class="card">
 
+<h2>
 
+<i class="fa-solid fa-filter"></i>
 
+Filtros
+
+</h2>
+
+<div class="grid-3">
+
+<div>
+
+<label>Período</label>
+
+<select id="filtroPeriodo">
+
+<option value="todos">Todos</option>
+
+<option value="hoje">Hoje</option>
+
+<option value="7dias">Últimos 7 dias</option>
+
+<option value="30dias">Últimos 30 dias</option>
+
+<option value="ano">Este ano</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Evento</label>
+
+<select id="filtroEvento">
+
+<option value="todos">
+
+Todos os eventos
+
+</option>
+
+</select>
+
+</div>
+
+<div>
+
+<label>Membro</label>
+
+<select id="filtroMembro">
+
+<option value="todos">
+
+Todos os membros
+
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+<br>
+
+<button class="btn-success" id="aplicarFiltros">
+
+<i class="fa-solid fa-filter"></i>
+
+Aplicar filtros
+
+</button>
+
+</div>
+
+<!-- ========================= -->
+<!-- INDICADORES -->
+<!-- ========================= -->
 
 <section class="stats">
 
-
 <div class="stat">
 
+<i class="fa-solid fa-user-group"></i>
 
-<i class="fa-solid fa-users"></i>
+<h3>Pacientes</h3>
 
-
-<h3>
-
-Membros
-
-</h3>
-
-
-<span id="totalMembros">
-
-0
-
-</span>
-
+<span id="totalPacientes">0</span>
 
 </div>
 
-
-
-
-
 <div class="stat">
-
 
 <i class="fa-solid fa-user-doctor"></i>
 
+<h3>Atendimentos</h3>
 
-<h3>
-
-Atendimentos
-
-</h3>
-
-
-<span id="totalAtendimentos">
-
-0
-
-</span>
-
+<span id="totalAtendimentos">0</span>
 
 </div>
 
-
-
-
-
 <div class="stat">
-
 
 <i class="fa-solid fa-calendar-check"></i>
 
+<h3>Eventos</h3>
 
-<h3>
-
-Eventos
-
-</h3>
-
-
-<span id="totalEventos">
-
-0
-
-</span>
-
+<span id="totalEventos">0</span>
 
 </div>
-
-
-
-
 
 <div class="stat">
 
+<i class="fa-solid fa-users"></i>
 
-<i class="fa-solid fa-clock"></i>
+<h3>Membros</h3>
 
-
-<h3>
-
-Horas de atuação
-
-</h3>
-
-
-<span id="totalHoras">
-
-0
-
-</span>
-
+<span id="totalMembros">0</span>
 
 </div>
 
+<div class="stat">
 
+<i class="fa-solid fa-star"></i>
+
+<h3>Nota Média</h3>
+
+<span id="notaMedia">0</span>
+
+</div>
+
+<div class="stat">
+
+<i class="fa-solid fa-thumbs-up"></i>
+
+<h3>Recomendação</h3>
+
+<span id="taxaRecomendacao">0%</span>
+
+</div>
+
+<div class="stat">
+
+<i class="fa-solid fa-circle-check"></i>
+
+<h3>Resolvidos</h3>
+
+<span id="problemasResolvidos">0%</span>
+
+</div>
+
+<div class="stat">
+
+<i class="fa-solid fa-clock"></i>
+
+<h3>Espera Média</h3>
+
+<span id="tempoEspera">0 min</span>
+
+</div>
 
 </section>
+
+<!-- ========================= -->
+<!-- GRÁFICOS -->
+<!-- ========================= -->
+
 <div class="card">
 
+<h2>
+
+<i class="fa-solid fa-chart-column"></i>
+
+Atendimentos por Mês
+
+</h2>
+
+<canvas id="graficoMes"></canvas>
+
+</div>
+
+<div class="card">
+
+<h2>
+
+<i class="fa-solid fa-heart-pulse"></i>
+
+Modalidades Atendidas
+
+</h2>
+
+<canvas id="graficoModalidades"></canvas>
+
+</div>
+
+<div class="card">
+
+<h2>
+
+<i class="fa-solid fa-star"></i>
+
+Distribuição das Avaliações
+
+</h2>
+
+<canvas id="graficoAvaliacoes"></canvas>
+
+</div>
+<!-- ========================= -->
+<!-- GRÁFICO PROBLEMAS RESOLVIDOS -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h2>
+
+<i class="fa-solid fa-circle-check"></i>
+
+Problemas Resolvidos
+
+</h2>
+
+<canvas id="graficoResolucao"></canvas>
+
+</div>
+
+<!-- ========================= -->
+<!-- RANKING DOS MEMBROS -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h2>
+
+<i class="fa-solid fa-trophy"></i>
+
+Ranking dos Membros
+
+</h2>
+
+<div class="table-responsive">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>Posição</th>
+
+<th>Membro</th>
+
+<th>Atendimentos</th>
+
+<th>Nota Média</th>
+
+</tr>
+
+</thead>
+
+<tbody id="rankingMembros">
+
+<tr>
+
+<td colspan="4" style="text-align:center;">
+
+Carregando ranking...
+
+</td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- ÚLTIMAS AVALIAÇÕES -->
+<!-- ========================= -->
+
+<div class="card">
+
+<h2>
+
+<i class="fa-solid fa-comments"></i>
+
+Últimas Avaliações
+
+</h2>
+
+<div id="ultimasAvaliacoes">
+
+<p style="text-align:center">
+
+Carregando avaliações...
+
+</p>
+
+</div>
+
+</div>
+
+<!-- ========================= -->
+<!-- RESUMO DOS ATENDIMENTOS -->
+<!-- ========================= -->
+
+<div class="card">
 
 <h2>
 
@@ -252,89 +415,47 @@ Resumo dos Atendimentos
 
 </h2>
 
-
-
-
 <div class="table-responsive">
-
 
 <table>
 
-
 <thead>
-
 
 <tr>
 
+<th>Categoria</th>
 
-<th>
-
-Categoria
-
-</th>
-
-
-<th>
-
-Quantidade
-
-</th>
-
+<th>Quantidade</th>
 
 </tr>
 
-
 </thead>
-
-
-
 
 <tbody id="resumoAtendimentos">
 
-
 <tr>
 
-<td>
+<td colspan="2" style="text-align:center;">
 
 Carregando...
 
 </td>
 
-
-<td>
-
--
-
-</td>
-
-
 </tr>
-
 
 </tbody>
 
-
-
-
 </table>
 
-
+</div>
 
 </div>
 
-
-
-</div>
-
-
-
-
-
-
-
+<!-- ========================= -->
+<!-- EVENTOS -->
+<!-- ========================= -->
 
 <div class="card">
-
 
 <h2>
 
@@ -344,204 +465,220 @@ Eventos Realizados
 
 </h2>
 
-
-
-
-
 <div class="table-responsive">
-
 
 <table>
 
-
 <thead>
-
 
 <tr>
 
+<th>Evento</th>
 
-<th>
+<th>Data</th>
 
-Evento
-
-</th>
-
-
-<th>
-
-Data
-
-</th>
-
-
-<th>
-
-Participantes
-
-</th>
-
+<th>Participantes</th>
 
 </tr>
-
 
 </thead>
 
-
-
 <tbody id="listaEventos">
-
-
 
 <tr>
 
-
 <td colspan="3" style="text-align:center;">
-
 
 Carregando eventos...
 
-
 </td>
-
 
 </tr>
 
-
-
 </tbody>
-
-
 
 </table>
 
-
+</div>
 
 </div>
 
-
-
-</div>
-
-
-
-
-
-
+<!-- ========================= -->
+<!-- EXPORTAÇÃO -->
+<!-- ========================= -->
 
 <div class="card">
-
 
 <h2>
 
 <i class="fa-solid fa-download"></i>
 
-Exportar Relatório
+Exportar Relatórios
 
 </h2>
 
-
-
 <div class="botoes">
 
-
-
-<button 
+<button
 class="btn-success"
 id="exportarPDF">
 
-
 <i class="fa-solid fa-file-pdf"></i>
-
 
 Exportar PDF
 
-
 </button>
 
-
-
-
-
-
-<button 
+<button
 class="btn-primary"
 id="exportarExcel">
 
-
 <i class="fa-solid fa-file-excel"></i>
-
 
 Exportar Excel
 
+</button>
+
+<button
+class="btn-warning"
+id="imprimirRelatorio">
+
+<i class="fa-solid fa-print"></i>
+
+Imprimir
 
 </button>
 
+</div>
 
+</div>
+<!-- ===================================== -->
+<!-- CENTRO DE DOCUMENTOS -->
+<!-- ===================================== -->
 
+<div class="card">
+
+    <h2>
+        <i class="fa-solid fa-folder-open"></i>
+        Centro de Documentos
+    </h2>
+
+    <p style="margin-bottom:20px;color:#666;">
+        Acesse os documentos oficiais da LADRF.
+    </p>
+
+    <div class="grid-documentos">
+
+        <a href="estatuto.html" class="card-documento">
+            <i class="fa-solid fa-scale-balanced"></i>
+            <h3>Estatuto</h3>
+            <p>Estatuto oficial da Liga.</p>
+        </a>
+
+        <a href="regimento.html" class="card-documento">
+            <i class="fa-solid fa-book"></i>
+            <h3>Regimento Interno</h3>
+            <p>Normas e funcionamento.</p>
+        </a>
+
+        <a href="atas.html" class="card-documento">
+            <i class="fa-solid fa-file-signature"></i>
+            <h3>Atas</h3>
+            <p>Reuniões e deliberações.</p>
+        </a>
+
+        <a href="certificados.html" class="card-documento">
+            <i class="fa-solid fa-certificate"></i>
+            <h3>Certificados</h3>
+            <p>Consulta de certificados.</p>
+        </a>
+
+        <a href="modelos.html" class="card-documento">
+            <i class="fa-solid fa-file-lines"></i>
+            <h3>Modelos</h3>
+            <p>Documentos e formulários.</p>
+        </a>
+
+        <a href="https://sonafe.org.br" target="_blank" class="card-documento">
+            <i class="fa-solid fa-globe"></i>
+            <h3>SONAFE Brasil</h3>
+            <p>Documentos e materiais oficiais.</p>
+        </a>
+
+    </div>
 
 </div>
 
+<style>
 
+.grid-documentos{
 
-</div>
-</main>
+    display:grid;
 
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
 
+    gap:18px;
 
-
-
-
-
-<script type="module" src="relatorios.js"></script>
-
-
-<script type="module" src="permissoes.js"></script>
-
-
-
-
-
-
-<script>
-
-
-function atualizarHora(){
-
-
-const hora = document.getElementById("horaAtual");
-
-
-
-if(hora){
-
-
-hora.innerHTML = new Date()
-
-.toLocaleTimeString("pt-BR");
-
+    margin-top:20px;
 
 }
 
+.card-documento{
 
+    background:#fff;
+
+    border:1px solid #e5e7eb;
+
+    border-radius:14px;
+
+    padding:24px;
+
+    text-align:center;
+
+    text-decoration:none;
+
+    color:#333;
+
+    transition:.25s;
 
 }
 
+.card-documento:hover{
 
+    transform:translateY(-4px);
 
-setInterval(atualizarHora,1000);
+    box-shadow:0 10px 25px rgba(0,0,0,.10);
 
+    border-color:#0B7A3B;
 
-atualizarHora();
+}
 
+.card-documento i{
 
+    font-size:42px;
 
-</script>
+    color:#0B7A3B;
 
+    margin-bottom:15px;
 
+}
 
+.card-documento h3{
 
+    margin-bottom:10px;
 
-<script type="module" src="cabecalho.js"></script>
-</body>
+    color:#0B7A3B;
 
-</html>
+}
+
+.card-documento p{
+
+    font-size:14px;
+
+    color:#666;
+
+    line-height:1.5;
+
+}
+
+</style>
