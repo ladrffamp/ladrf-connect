@@ -1502,33 +1502,6 @@ carregarRanking();
 
 }
 
-async function iniciarRelatorios(){
-
-
-await carregarRelatorios();
-
-
-await carregarFiltros();
-
-
-await carregarAvaliacoes();
-
-
-
-carregarRanking();
-
-
-
-criarGraficoMes();
-
-
-criarGraficoModalidades();
-
-
-criarGraficoResolucao();
-
-
-}
 
 
 // =====================================
@@ -1556,7 +1529,6 @@ ativarExportacoes();
 }
 
 
-
 // =====================================
 // EXPORTAÇÕES
 // =====================================
@@ -1577,8 +1549,6 @@ document.getElementById("imprimirRelatorio");
 
 
 
-// PDF
-
 if(botaoPDF){
 
 botaoPDF.onclick = () => {
@@ -1591,8 +1561,6 @@ window.print();
 
 
 
-// EXCEL
-
 if(botaoExcel){
 
 botaoExcel.onclick = () => {
@@ -1602,15 +1570,11 @@ const conteudo =
 document.querySelector(".container").innerHTML;
 
 
-
 const arquivo = `
 
 <html>
-
 <head>
-
 <meta charset="UTF-8">
-
 </head>
 
 <body>
@@ -1624,7 +1588,6 @@ ${conteudo}
 `;
 
 
-
 const blob =
 new Blob(
 [arquivo],
@@ -1632,7 +1595,6 @@ new Blob(
 type:"application/vnd.ms-excel"
 }
 );
-
 
 
 const link =
@@ -1656,8 +1618,6 @@ link.click();
 
 
 
-// IMPRIMIR
-
 if(botaoImprimir){
 
 botaoImprimir.onclick = () => {
@@ -1673,19 +1633,7 @@ window.print();
 
 
 
-ativarExportacoes();
-
-
-}
-
 console.log("RELATORIOS JS CARREGADO");
-
-console.log(
-"Botões:",
-document.getElementById("exportarPDF"),
-document.getElementById("exportarExcel"),
-document.getElementById("imprimirRelatorio")
-);
 
 
 iniciarRelatorios();
