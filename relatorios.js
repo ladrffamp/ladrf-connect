@@ -74,9 +74,15 @@ await getDocs(
 
 listaAtendimentos =
 atendimentosSnapshot.docs.map(doc=>({
-    id:doc.id,
+    id: doc.id,
     ...doc.data()
 }));
+
+
+console.log(
+"ATENDIMENTOS ENCONTRADOS:",
+listaAtendimentos.length
+);
 
 
 totalAtendimentos.innerHTML =
@@ -314,9 +320,6 @@ Math.round(totalMinutos / quantidade)
 
 
 
-// iniciar
-
-carregarRelatorios();
 // =====================================
 // AVALIAÇÕES
 // =====================================
@@ -1059,17 +1062,20 @@ membro
 
 
 // =====================================
-// INICIAR GRÁFICOS
+// INICIAR SISTEMA
 // =====================================
 
-setTimeout(()=>{
+carregarRelatorios()
+.then(()=>{
 
+    carregarAvaliacoes();
 
-criarGraficoMes();
+    carregarRanking();
 
-criarGraficoModalidades();
+    criarGraficoMes();
 
-criarGraficoResolucao();
+    criarGraficoModalidades();
 
+    criarGraficoResolucao();
 
-},1000);
+});
