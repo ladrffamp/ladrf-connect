@@ -33,7 +33,11 @@ document.getElementById("listaEventos");
 // =====================================
 
 let listaAtendimentos = [];
+let listaAtendimentosFiltrados = [];
+
 let listaAvaliacoes = [];
+let listaEventos = [];
+let listaUsuarios = [];
 
 let graficoAvaliacoes = null;
 let graficoMes = null;
@@ -80,6 +84,7 @@ atendimentosSnapshot.docs.map(doc=>({
     id:doc.id,
     ...doc.data()
 }));
+listaAtendimentosFiltrados = [...listaAtendimentos];
 
 
 console.log(
@@ -102,6 +107,11 @@ await getDocs(
     collection(db,"agenda")
 );
 
+listaEventos =
+eventosSnapshot.docs.map(doc=>({
+    id:doc.id,
+    ...doc.data()
+}));
 
 let eventosRealizados = [];
 
@@ -1143,33 +1153,145 @@ document.getElementById(
 
 if(botaoFiltro){
 
-
 botaoFiltro.addEventListener(
 "click",
 ()=>{
 
 
-console.log({
-
-periodo:
-document.getElementById(
-"filtroPeriodo"
-).value,
+const periodo =
+document.getElementById("filtroPeriodo").value;
 
 
-evento:
-document.getElementById(
-"filtroEvento"
-).value,
+const evento =
+document.getElementById("filtroEvento").value;
 
 
-membro:
-document.getElementById(
-"filtroMembro"
-).value
+const membro =
+document.getElementById("filtroMembro").value;
+
+
+
+listaAtendimentosFiltrados =
+listaAtendimentos.filter(atendimento=>{
+
+
+let passa = true;
+
+
+
+// filtro membro
+
+if(
+membro !== "todos" &&
+atendimento.membro !== membro
+){
+
+passa = false;
+
+}
+
+
+
+// filtro evento
+
+if(
+evento !== "todos" &&
+atendimento.eventoId !== evento
+){
+
+passa = false;
+
+}
+
+
+
+// filtro período
+
+if(periodo !== "todos" && atendimento.data){
+
+
+const data =
+new Date(
+atendimento.data.seconds
+?
+atendimento.data.seconds * 1000
+:
+atendimento.data
+);
+
+
+
+const hoje =
+new Date();
+
+
+
+if(periodo==="hoje"){
+
+if(
+data.toDateString()
+!== hoje.toDateString()
+){
+
+passa=false;
+
+}
+
+}
+
+
+
+if(periodo==="7dias"){
+
+const limite =
+new Date();
+
+limite.setDate(
+hoje.getDate()-7
+);
+
+
+if(data < limite){
+
+passa=false;
+
+}
+
+}
+
+
+
+if(periodo==="30dias"){
+
+const limite =
+new Date();
+
+limite.setDate(
+hoje.getDate()-30
+);
+
+
+if(data < limite){
+
+passa=false;
+
+}
+
+}
+
+
+}
+
+
+
+return passa;
 
 
 });
+
+
+
+atualizarIndicadoresFiltro();
 
 
 });
@@ -1310,6 +1432,64 @@ error
 // =====================================
 // INICIALIZAÇÃO FINAL
 // =====================================
+function atualizarIndicadoresFiltro(){
+
+
+if(totalAtendimentos){
+
+totalAtendimentos.innerHTML =
+listaAtendimentosFiltrados.length;
+
+}
+
+
+
+const resumo = {};
+
+
+
+listaAtendimentosFiltrados.forEach(atendimento=>{
+
+
+const modalidade =
+atendimento.modalidade || "Outros";
+
+
+resumo[modalidade] =
+(resumo[modalidade] || 0)+1;
+
+
+});
+
+
+
+resumoAtendimentos.innerHTML="";
+
+
+
+Object.entries(resumo)
+.forEach(([nome,quantidade])=>{
+
+
+resumoAtendimentos.innerHTML += `
+
+<tr>
+
+<td>${nome}</td>
+
+<td>${quantidade}</td>
+
+</tr>
+
+`;
+
+});
+
+
+carregarRanking();
+
+
+}
 
 async function iniciarRelatorios(){
 
