@@ -36,7 +36,7 @@ let listaAtendimentos = [];
 let listaAtendimentosFiltrados = [];
 
 let listaAvaliacoes = [];
-let listaEventos = [];
+let dadosEventos = [];
 let listaUsuarios = [];
 
 let graficoAvaliacoes = null;
@@ -107,7 +107,7 @@ await getDocs(
     collection(db,"agenda")
 );
 
-listaEventos =
+dadosEventos =
 eventosSnapshot.docs.map(doc=>({
     id:doc.id,
     ...doc.data()
