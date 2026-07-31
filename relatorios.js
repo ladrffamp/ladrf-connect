@@ -24,13 +24,11 @@ const tempoEspera = document.getElementById("tempoEspera");
 const resumoAtendimentos =
 document.getElementById("resumoAtendimentos");
 
-console.log(
-"Resumo encontrado:",
-resumoAtendimentos
-);
-
 const listaEventos =
 document.getElementById("listaEventos");
+
+
+console.log("Resumo encontrado:", resumoAtendimentos);
 
 
 // =====================================
@@ -42,7 +40,6 @@ let listaAtendimentosFiltrados = [];
 
 let listaAvaliacoes = [];
 let dadosEventos = [];
-let listaUsuarios = [];
 
 let graficoAvaliacoes = null;
 let graficoMes = null;
@@ -59,37 +56,48 @@ async function carregarRelatorios(){
 try{
 
 
-// =====================================
+// ===============================
 // PACIENTES
-// =====================================
+// ===============================
 
 const pacientesSnapshot =
 await getDocs(
-    collection(db,"pacientes")
+collection(db,"pacientes")
 );
 
+
+if(totalPacientes){
 
 totalPacientes.innerHTML =
 pacientesSnapshot.size;
 
+}
 
 
-// =====================================
+// ===============================
 // ATENDIMENTOS
-// =====================================
+// ===============================
 
 const atendimentosSnapshot =
 await getDocs(
-    collection(db,"atendimentos")
+collection(db,"atendimentos")
 );
+
 
 
 listaAtendimentos =
 atendimentosSnapshot.docs.map(doc=>({
-    id:doc.id,
-    ...doc.data()
+
+id:doc.id,
+...doc.data()
+
 }));
-listaAtendimentosFiltrados = [...listaAtendimentos];
+
+
+
+listaAtendimentosFiltrados =
+[...listaAtendimentos];
+
 
 
 console.log(
@@ -98,48 +106,72 @@ listaAtendimentos.length
 );
 
 
+
+console.log(
+"DADOS ATENDIMENTOS:",
+listaAtendimentos
+);
+
+
+
+if(totalAtendimentos){
+
 totalAtendimentos.innerHTML =
 listaAtendimentos.length;
 
+}
 
 
-// =====================================
+// ===============================
 // EVENTOS
-// =====================================
+// ===============================
 
 const eventosSnapshot =
 await getDocs(
-    collection(db,"agenda")
+collection(db,"agenda")
 );
+
+
 
 dadosEventos =
 eventosSnapshot.docs.map(doc=>({
-    id:doc.id,
-    ...doc.data()
+
+id:doc.id,
+...doc.data()
+
 }));
 
-let eventosRealizados = [];
+
+let eventosRealizados=[];
 
 
 
 eventosSnapshot.forEach(doc=>{
 
+
 const dados = doc.data();
 
-let dataEvento = new Date(dados.data);
 
-let hoje = new Date();
+const dataEvento =
+new Date(dados.data);
+
+
+const hoje =
+new Date();
+
 
 
 if(
-    !isNaN(dataEvento) &&
-    dataEvento <= hoje
+!isNaN(dataEvento) &&
+dataEvento <= hoje
 ){
 
-    eventosRealizados.push({
-        id:doc.id,
-        ...dados
-    });
+eventosRealizados.push({
+
+id:doc.id,
+...dados
+
+});
 
 }
 
@@ -148,9 +180,16 @@ if(
 
 
 
+if(totalEventos){
+
 totalEventos.innerHTML =
 eventosRealizados.length;
 
+}
+
+
+
+if(listaEventos){
 
 
 listaEventos.innerHTML="";
@@ -168,13 +207,16 @@ listaEventos.innerHTML += `
 ${evento.titulo || evento.nome || "-"}
 </td>
 
+
 <td>
 ${evento.data || "-"}
 </td>
 
+
 <td>
 ${evento.participantes || 0}
 </td>
+
 
 </tr>
 
@@ -184,9 +226,9 @@ ${evento.participantes || 0}
 
 
 
-if(eventosRealizados.length === 0){
+if(eventosRealizados.length===0){
 
-listaEventos.innerHTML = `
+listaEventos.innerHTML=`
 
 <tr>
 
@@ -202,54 +244,66 @@ Nenhum evento realizado.
 
 }
 
+}
 
 
-// =====================================
+
+// ===============================
 // MEMBROS
-// =====================================
+// ===============================
 
 const usuariosSnapshot =
 await getDocs(
-    collection(db,"usuarios")
+collection(db,"usuarios")
 );
 
 
-let membros = 0;
+
+let membros=0;
 
 
 
 usuariosSnapshot.forEach(doc=>{
 
-const dados = doc.data();
+
+const dados =
+doc.data();
+
 
 const perfil =
 dados.perfil?.toLowerCase();
 
 
+
 if(
-perfil === "membro" ||
-perfil === "adm" ||
-perfil === "admin" ||
-perfil === "administrador"
+perfil==="membro" ||
+perfil==="adm" ||
+perfil==="admin" ||
+perfil==="administrador"
 ){
 
 membros++;
 
 }
 
+
 });
 
+
+
+if(totalMembros){
 
 totalMembros.innerHTML =
 membros;
 
+}
 
 
-// =====================================
+// ===============================
 // RESUMO ATENDIMENTOS
-// =====================================
+// ===============================
 
-const resumo = {};
+const resumo={};
 
 
 
@@ -260,43 +314,80 @@ const modalidade =
 atendimento.modalidade || "Outros";
 
 
-if(!resumo[modalidade]){
-
-resumo[modalidade]=0;
-
-}
-
-
-resumo[modalidade]++;
+resumo[modalidade] =
+(resumo[modalidade] || 0)+1;
 
 
 });
 
 
 
+console.log(
+"RESUMO:",
+Object.entries(resumo)
+);
+
+
+
 if(resumoAtendimentos){
 
-    resumoAtendimentos.innerHTML = "";
 
-    Object.entries(resumo).forEach(([nome, quantidade])=>{
+resumoAtendimentos.innerHTML="";
 
-        resumoAtendimentos.innerHTML += `
 
-        <tr>
 
-        <td>
-        ${nome}
-        </td>
+const dadosResumo =
+Object.entries(resumo);
 
-        <td>
-        ${quantidade}
-        </td>
 
-        </tr>
 
-        `;
+if(dadosResumo.length===0){
 
-    });
+
+resumoAtendimentos.innerHTML=`
+
+<tr>
+
+<td colspan="2">
+
+Nenhum atendimento encontrado.
+
+</td>
+
+</tr>
+
+`;
+
+
+}else{
+
+
+dadosResumo.forEach(([nome,quantidade])=>{
+
+
+resumoAtendimentos.innerHTML += `
+
+<tr>
+
+<td>
+${nome}
+</td>
+
+
+<td>
+${quantidade}
+</td>
+
+
+</tr>
+
+`;
+
+});
+
+
+}
+
 
 }
 
@@ -308,17 +399,17 @@ calcularTempoEspera();
 
 }catch(error){
 
+
 console.error(
 "Erro ao carregar relatórios:",
 error
 );
 
-}
-
 
 }
 
 
+}
 // =====================================
 // TEMPO DE ESPERA
 // =====================================
@@ -346,12 +437,16 @@ const fim =
 atendimento.termino.split(":");
 
 
+
 const minutosInicio =
-Number(inicio[0])*60 + Number(inicio[1]);
+Number(inicio[0])*60 +
+Number(inicio[1]);
 
 
 const minutosFim =
-Number(fim[0])*60 + Number(fim[1]);
+Number(fim[0])*60 +
+Number(fim[1]);
+
 
 
 totalMinutos +=
@@ -368,6 +463,8 @@ quantidade++;
 
 
 
+if(tempoEspera){
+
 tempoEspera.innerHTML =
 quantidade
 ?
@@ -375,8 +472,13 @@ Math.round(totalMinutos/quantidade)+" min"
 :
 "0 min";
 
+}
+
 
 }
+
+
+
 // =====================================
 // AVALIAÇÕES
 // =====================================
@@ -388,7 +490,7 @@ try{
 
 const snapshot =
 await getDocs(
-    collection(db,"avaliacoes")
+collection(db,"avaliacoes")
 );
 
 
@@ -403,7 +505,9 @@ id:doc.id,
 
 
 
-let total = listaAvaliacoes.length;
+let total =
+listaAvaliacoes.length;
+
 
 let somaNotas = 0;
 
@@ -422,9 +526,7 @@ avaliacao.nota || 0
 
 
 
-if(
-avaliacao.indicaria === "Sim"
-){
+if(avaliacao.indicaria === "Sim"){
 
 indicados++;
 
@@ -432,9 +534,7 @@ indicados++;
 
 
 
-if(
-avaliacao.resolucao === "Sim"
-){
+if(avaliacao.resolucao === "Sim"){
 
 resolvidos++;
 
@@ -445,100 +545,126 @@ resolvidos++;
 
 
 
-const media = total
+const media =
+total
 ?
 (somaNotas / total).toFixed(1)
 :
-"0,0";
+"0.0";
 
 
 
-const recomendacao = total
+const recomendacao =
+total
 ?
 Math.round(
-(indicados / total) * 100
+(indicados / total)*100
 )
 :
 0;
 
 
 
-const resolucao = total
+const resolucao =
+total
 ?
 Math.round(
-(resolvidos / total) * 100
+(resolvidos / total)*100
 )
 :
 0;
 
 
-
-// painel inferior
 
 const totalAvaliacoes =
-document.getElementById("totalAvaliacoes");
+document.getElementById(
+"totalAvaliacoes"
+);
 
 
 const notaMedia =
-document.getElementById("notaMedia");
+document.getElementById(
+"notaMedia"
+);
 
 
 const percentualIndicacao =
-document.getElementById("percentualIndicacao");
+document.getElementById(
+"percentualIndicacao"
+);
 
 
 const percentualResolvido =
-document.getElementById("percentualResolvido");
+document.getElementById(
+"percentualResolvido"
+);
 
 
 
-if(totalAvaliacoes)
+if(totalAvaliacoes){
+
 totalAvaliacoes.innerHTML =
 total;
 
+}
 
 
-if(notaMedia)
+
+if(notaMedia){
+
 notaMedia.innerHTML =
 media;
 
+}
 
 
-if(percentualIndicacao)
+
+if(percentualIndicacao){
+
 percentualIndicacao.innerHTML =
 recomendacao+"%";
 
+}
 
 
-if(percentualResolvido)
+
+if(percentualResolvido){
+
 percentualResolvido.innerHTML =
 resolucao+"%";
 
+}
 
 
 
-// cards superiores
+if(notaMediaTopo){
 
-if(notaMediaTopo)
 notaMediaTopo.innerHTML =
 media;
 
+}
 
 
-if(taxaRecomendacao)
+
+if(taxaRecomendacao){
+
 taxaRecomendacao.innerHTML =
 recomendacao+"%";
 
+}
 
 
-if(problemasResolvidos)
+
+if(problemasResolvidos){
+
 problemasResolvidos.innerHTML =
 resolucao+"%";
+
+}
 
 
 
 carregarUltimasAvaliacoes();
-
 
 criarGraficoAvaliacoes();
 
@@ -546,16 +672,17 @@ criarGraficoAvaliacoes();
 
 }catch(error){
 
+
 console.error(
 "Erro avaliações:",
 error
 );
 
-}
-
 
 }
 
+
+}
 
 
 
@@ -592,13 +719,18 @@ area.innerHTML += `
 
 <div class="avaliacao-item">
 
+
 <strong>
+
 ⭐ ${avaliacao.nota || 0}/5
+
 </strong>
 
 
 <p>
+
 ${avaliacao.comentario || "Sem comentário"}
+
 </p>
 
 
@@ -623,8 +755,6 @@ ${avaliacao.espera || "-"}
 
 
 }
-
-
 
 
 
@@ -659,14 +789,8 @@ atendimento.membro || "Não informado";
 
 
 
-if(!ranking[membro]){
-
-ranking[membro]=0;
-
-}
-
-
-ranking[membro]++;
+ranking[membro] =
+(ranking[membro] || 0)+1;
 
 
 });
@@ -687,7 +811,8 @@ tabela.innerHTML="";
 
 if(lista.length===0){
 
-tabela.innerHTML = `
+
+tabela.innerHTML=`
 
 <tr>
 
@@ -704,7 +829,6 @@ Nenhum atendimento encontrado.
 return;
 
 }
-
 
 
 
@@ -732,7 +856,6 @@ ${item[1]}
 
 <td>
 -
-
 </td>
 
 
@@ -751,7 +874,10 @@ ${item[1]}
 function criarGraficoAvaliacoes(){
 
 const canvas =
-document.getElementById("graficoAvaliacoes");
+document.getElementById(
+"graficoAvaliacoes"
+);
+
 
 
 if(!canvas)
@@ -776,6 +902,7 @@ listaAvaliacoes.forEach(avaliacao=>{
 
 const nota =
 String(avaliacao.nota || 0);
+
 
 
 if(notas[nota] !== undefined){
@@ -803,6 +930,7 @@ type:"bar",
 
 data:{
 
+
 labels:[
 
 "1 estrela",
@@ -812,6 +940,7 @@ labels:[
 "5 estrelas"
 
 ],
+
 
 datasets:[{
 
@@ -831,11 +960,13 @@ notas["5"]
 
 },
 
+
 options:{
 
 responsive:true
 
 }
+
 
 });
 
@@ -844,15 +975,17 @@ responsive:true
 
 
 
-
 // =====================================
-// GRÁFICO ATENDIMENTOS POR MÊS
+// GRÁFICO POR MÊS
 // =====================================
 
 function criarGraficoMes(){
 
 const canvas =
-document.getElementById("graficoMes");
+document.getElementById(
+"graficoMes"
+);
+
 
 
 if(!canvas)
@@ -860,7 +993,7 @@ return;
 
 
 
-const meses = {
+const meses={
 
 Jan:0,
 Fev:0,
@@ -952,6 +1085,7 @@ data:{
 
 labels:Object.keys(meses),
 
+
 datasets:[{
 
 label:"Atendimentos",
@@ -962,11 +1096,13 @@ data:Object.values(meses)
 
 },
 
+
 options:{
 
 responsive:true
 
 }
+
 
 });
 
@@ -995,7 +1131,7 @@ return;
 
 
 
-const dados = {};
+const dados={};
 
 
 
@@ -1004,7 +1140,6 @@ listaAtendimentos.forEach(atendimento=>{
 
 const modalidade =
 atendimento.modalidade || "Outros";
-
 
 
 dados[modalidade] =
@@ -1032,6 +1167,7 @@ data:{
 
 labels:Object.keys(dados),
 
+
 datasets:[{
 
 label:"Modalidades",
@@ -1042,11 +1178,13 @@ data:Object.values(dados)
 
 },
 
+
 options:{
 
 responsive:true
 
 }
+
 
 });
 
@@ -1075,18 +1213,16 @@ return;
 
 
 
-let sim = 0;
+let sim=0;
 
-let nao = 0;
+let nao=0;
 
 
 
 listaAvaliacoes.forEach(avaliacao=>{
 
 
-if(
-avaliacao.resolucao === "Sim"
-){
+if(avaliacao.resolucao==="Sim"){
 
 sim++;
 
@@ -1135,18 +1271,18 @@ nao
 
 },
 
+
 options:{
 
 responsive:true
 
 }
 
+
 });
 
 
 }
-
-
 
 
 
@@ -1163,22 +1299,36 @@ document.getElementById(
 
 if(botaoFiltro){
 
+
 botaoFiltro.addEventListener(
 "click",
 ()=>{
 
-console.log("Filtro clicado");
+
+console.log(
+"Filtro aplicado"
+);
+
+
 
 const periodo =
-document.getElementById("filtroPeriodo").value;
+document.getElementById(
+"filtroPeriodo"
+)?.value || "todos";
+
 
 
 const evento =
-document.getElementById("filtroEvento").value;
+document.getElementById(
+"filtroEvento"
+)?.value || "todos";
+
 
 
 const membro =
-document.getElementById("filtroMembro").value;
+document.getElementById(
+"filtroMembro"
+)?.value || "todos";
 
 
 
@@ -1186,46 +1336,43 @@ listaAtendimentosFiltrados =
 listaAtendimentos.filter(atendimento=>{
 
 
-let passa = true;
+let passa=true;
 
 
-
-// filtro membro
 
 if(
 membro !== "todos" &&
 atendimento.membro !== membro
 ){
 
-passa = false;
+passa=false;
 
 }
 
 
-
-// filtro evento
 
 if(
 evento !== "todos" &&
 atendimento.eventoId !== evento
 ){
 
-passa = false;
+passa=false;
 
 }
 
 
 
-// filtro período
-
-if(periodo !== "todos" && atendimento.data){
+if(
+periodo !== "todos" &&
+atendimento.data
+){
 
 
 const data =
 new Date(
 atendimento.data.seconds
 ?
-atendimento.data.seconds * 1000
+atendimento.data.seconds*1000
 :
 atendimento.data
 );
@@ -1241,7 +1388,7 @@ if(periodo==="hoje"){
 
 if(
 data.toDateString()
-!== hoje.toDateString()
+!==hoje.toDateString()
 ){
 
 passa=false;
@@ -1254,12 +1401,15 @@ passa=false;
 
 if(periodo==="7dias"){
 
+
 const limite =
 new Date();
+
 
 limite.setDate(
 hoje.getDate()-7
 );
+
 
 
 if(data < limite){
@@ -1267,6 +1417,7 @@ if(data < limite){
 passa=false;
 
 }
+
 
 }
 
@@ -1274,12 +1425,15 @@ passa=false;
 
 if(periodo==="30dias"){
 
+
 const limite =
 new Date();
+
 
 limite.setDate(
 hoje.getDate()-30
 );
+
 
 
 if(data < limite){
@@ -1288,7 +1442,9 @@ passa=false;
 
 }
 
+
 }
+
 
 
 }
@@ -1309,147 +1465,10 @@ atualizarIndicadoresFiltro();
 
 
 }
-
-
-
 // =====================================
-// CARREGAR FILTROS
+// ATUALIZAR INDICADORES DO FILTRO
 // =====================================
 
-async function carregarFiltros(){
-
-try{
-
-
-// =============================
-// FILTRO EVENTOS
-// =============================
-
-const selectEvento =
-document.getElementById("filtroEvento");
-
-
-if(selectEvento){
-
-
-const eventosSnapshot =
-await getDocs(
-collection(db,"agenda")
-);
-
-
-selectEvento.innerHTML = `
-
-<option value="todos">
-Todos os eventos
-</option>
-
-`;
-
-
-eventosSnapshot.forEach(doc=>{
-
-
-const dados = doc.data();
-
-
-selectEvento.innerHTML += `
-
-<option value="${doc.id}">
-${dados.titulo || dados.nome || "Evento sem nome"}
-</option>
-
-`;
-
-});
-
-
-}
-
-
-
-// =============================
-// FILTRO MEMBROS
-// =============================
-
-
-const selectMembro =
-document.getElementById("filtroMembro");
-
-
-
-if(selectMembro){
-
-
-const membrosSnapshot =
-await getDocs(
-collection(db,"usuarios")
-);
-
-
-
-selectMembro.innerHTML = `
-
-<option value="todos">
-Todos os membros
-</option>
-
-`;
-
-
-
-membrosSnapshot.forEach(doc=>{
-
-
-const dados = doc.data();
-
-
-
-const perfil =
-dados.perfil?.toLowerCase();
-
-
-if(
-perfil === "membro" ||
-perfil === "adm" ||
-perfil === "admin" ||
-perfil === "administrador"
-){
-
-
-selectMembro.innerHTML += `
-
-<option value="${dados.nome}">
-${dados.nome || dados.email || "Membro"}
-</option>
-
-`;
-
-}
-
-
-});
-
-
-}
-
-
-
-}catch(error){
-
-console.error(
-"Erro ao carregar filtros:",
-error
-);
-
-}
-
-
-}
-
-// =====================================
-// INICIALIZAÇÃO FINAL
-// =====================================
 function atualizarIndicadoresFiltro(){
 
 
@@ -1483,9 +1502,8 @@ resumo[modalidade] =
 
 if(resumoAtendimentos){
 
-    resumoAtendimentos.innerHTML="";
 
-}
+resumoAtendimentos.innerHTML = "";
 
 
 
@@ -1497,9 +1515,15 @@ resumoAtendimentos.innerHTML += `
 
 <tr>
 
-<td>${nome}</td>
+<td>
+${nome}
+</td>
 
-<td>${quantidade}</td>
+
+<td>
+${quantidade}
+</td>
+
 
 </tr>
 
@@ -1508,6 +1532,10 @@ resumoAtendimentos.innerHTML += `
 });
 
 
+}
+
+
+
 carregarRanking();
 
 
@@ -1516,28 +1544,152 @@ carregarRanking();
 
 
 // =====================================
-// INICIALIZAÇÃO FINAL
+// CARREGAR FILTROS
 // =====================================
 
-async function iniciarRelatorios(){
+async function carregarFiltros(){
 
-await carregarRelatorios();
+try{
 
-await carregarFiltros();
 
-await carregarAvaliacoes();
+// EVENTOS
 
-carregarRanking();
+const selectEvento =
+document.getElementById(
+"filtroEvento"
+);
 
-criarGraficoMes();
 
-criarGraficoModalidades();
 
-criarGraficoResolucao();
+if(selectEvento){
 
-ativarExportacoes();
+
+const eventosSnapshot =
+await getDocs(
+collection(db,"agenda")
+);
+
+
+
+selectEvento.innerHTML = `
+
+<option value="todos">
+Todos os eventos
+</option>
+
+`;
+
+
+
+eventosSnapshot.forEach(doc=>{
+
+
+const dados =
+doc.data();
+
+
+
+selectEvento.innerHTML += `
+
+<option value="${doc.id}">
+
+${dados.titulo || dados.nome || "Evento"}
+
+</option>
+
+`;
+
+});
+
 
 }
+
+
+
+// MEMBROS
+
+const selectMembro =
+document.getElementById(
+"filtroMembro"
+);
+
+
+
+if(selectMembro){
+
+
+const membrosSnapshot =
+await getDocs(
+collection(db,"usuarios")
+);
+
+
+
+selectMembro.innerHTML = `
+
+<option value="todos">
+
+Todos os membros
+
+</option>
+
+`;
+
+
+
+membrosSnapshot.forEach(doc=>{
+
+
+const dados =
+doc.data();
+
+
+
+if(
+dados.perfil &&
+(
+dados.perfil.toLowerCase()==="membro" ||
+dados.perfil.toLowerCase()==="adm" ||
+dados.perfil.toLowerCase()==="admin" ||
+dados.perfil.toLowerCase()==="administrador"
+)
+){
+
+
+selectMembro.innerHTML += `
+
+<option value="${dados.nome}">
+
+${dados.nome || dados.email}
+
+</option>
+
+`;
+
+}
+
+
+});
+
+
+}
+
+
+
+}catch(error){
+
+
+console.error(
+"Erro filtros:",
+error
+);
+
+
+}
+
+
+}
+
 
 
 // =====================================
@@ -1548,45 +1700,67 @@ function ativarExportacoes(){
 
 
 const botaoPDF =
-document.getElementById("exportarPDF");
+document.getElementById(
+"exportarPDF"
+);
 
 
 const botaoExcel =
-document.getElementById("exportarExcel");
+document.getElementById(
+"exportarExcel"
+);
 
 
 const botaoImprimir =
-document.getElementById("imprimirRelatorio");
+document.getElementById(
+"imprimirRelatorio"
+);
 
 
+
+// PDF
 
 if(botaoPDF){
 
-botaoPDF.onclick = () => {
+
+botaoPDF.onclick = ()=>{
+
 
 window.print();
 
+
 };
+
 
 }
 
 
 
+// EXCEL
+
 if(botaoExcel){
 
-botaoExcel.onclick = () => {
+
+botaoExcel.onclick = ()=>{
 
 
 const conteudo =
-document.querySelector(".container").innerHTML;
+document.querySelector(
+".container"
+).innerHTML;
+
 
 
 const arquivo = `
 
 <html>
+
 <head>
+
 <meta charset="UTF-8">
+
 </head>
+
 
 <body>
 
@@ -1594,9 +1768,11 @@ ${conteudo}
 
 </body>
 
+
 </html>
 
 `;
+
 
 
 const blob =
@@ -1608,12 +1784,14 @@ type:"application/vnd.ms-excel"
 );
 
 
+
 const link =
 document.createElement("a");
 
 
 link.href =
 URL.createObjectURL(blob);
+
 
 
 link.download =
@@ -1625,17 +1803,24 @@ link.click();
 
 };
 
+
 }
 
 
 
+// IMPRIMIR
+
 if(botaoImprimir){
 
-botaoImprimir.onclick = () => {
+
+botaoImprimir.onclick = ()=>{
+
 
 window.print();
 
+
 };
+
 
 }
 
@@ -1648,8 +1833,48 @@ window.print();
 // INICIALIZAÇÃO
 // =====================================
 
-document.addEventListener("DOMContentLoaded", ()=>{
+async function iniciarRelatorios(){
 
-    iniciarRelatorios();
+
+await carregarRelatorios();
+
+
+await carregarFiltros();
+
+
+await carregarAvaliacoes();
+
+
+carregarRanking();
+
+
+criarGraficoMes();
+
+
+criarGraficoModalidades();
+
+
+criarGraficoResolucao();
+
+
+ativarExportacoes();
+
+
+}
+
+
+
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+
+iniciarRelatorios();
+
 
 });
+
+
+console.log(
+"RELATORIOS JS CARREGADO"
+);
