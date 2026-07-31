@@ -16,11 +16,26 @@ const perfilUsuario = document.getElementById("perfilUsuario");
 
 onAuthStateChanged(auth, async (usuario) => {
 
-  if (!usuario) {
-    window.location.href = "login.html";
+  // Se a página não possui cabeçalho, não faz nada.
+  if (!nomeUsuario && !perfilUsuario) {
     return;
   }
 
+  // Usuário não logado
+  if (!usuario) {
+
+    if (nomeUsuario) {
+      nomeUsuario.textContent = "Visitante";
+    }
+
+    if (perfilUsuario) {
+      perfilUsuario.textContent = "";
+    }
+
+    return;
+  }
+
+  // Exibe o e-mail enquanto busca os dados
   if (nomeUsuario) {
     nomeUsuario.textContent = usuario.email;
   }
@@ -28,7 +43,7 @@ onAuthStateChanged(auth, async (usuario) => {
   try {
 
     const q = query(
-      collection(db, "membros"),
+      collection(db, "usuarios"),
       where("email", "==", usuario.email)
     );
 
@@ -36,20 +51,33 @@ onAuthStateChanged(auth, async (usuario) => {
 
     if (!resultado.empty) {
 
-      const membro = resultado.docs[0].data();
+      const dados = resultado.docs[0].data();
 
       if (nomeUsuario) {
-        nomeUsuario.textContent = membro.nome || usuario.email;
+        nomeUsuario.textContent = dados.nome || usuario.email;
       }
 
       if (perfilUsuario) {
-        perfilUsuario.textContent = membro.funcao || "Membro";
+        perfilUsuario.textContent =
+          dados.perfil || dados.funcao || "Membro";
+      }
+
+    } else {
+
+      if (perfilUsuario) {
+        perfilUsuario.textContent = "Usuário";
       }
 
     }
 
   } catch (erro) {
+
     console.error("Erro ao carregar cabeçalho:", erro);
+
+    if (perfilUsuario) {
+      perfilUsuario.textContent = "Usuário";
+    }
+
   }
 
 });
