@@ -1412,7 +1412,7 @@ perfil === "administrador"
 
 selectMembro.innerHTML += `
 
-<option value="${doc.id}">
+<option value="${dados.nome}">
 ${dados.nome || dados.email || "Membro"}
 </option>
 
