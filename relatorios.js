@@ -1531,5 +1531,120 @@ criarGraficoResolucao();
 }
 
 
+// =====================================
+// EXPORTAÇÃO DE RELATÓRIOS
+// =====================================
+
+const botaoPDF =
+document.getElementById("exportarPDF");
+
+
+const botaoExcel =
+document.getElementById("exportarExcel");
+
+
+const botaoImprimir =
+document.getElementById("imprimirRelatorio");
+
+
+
+// PDF
+
+if(botaoPDF){
+
+botaoPDF.addEventListener("click",()=>{
+
+
+window.print();
+
+
+});
+
+
+}
+
+
+
+// EXCEL
+
+if(botaoExcel){
+
+botaoExcel.addEventListener("click",()=>{
+
+
+let tabela =
+document.querySelector(".container");
+
+
+let conteudo =
+tabela.innerHTML;
+
+
+
+let arquivo =
+`
+<html>
+<head>
+<meta charset="UTF-8">
+</head>
+
+<body>
+
+${conteudo}
+
+</body>
+
+</html>
+`;
+
+
+
+let blob =
+new Blob(
+[arquivo],
+{
+type:"application/vnd.ms-excel"
+}
+);
+
+
+
+let link =
+document.createElement("a");
+
+
+link.href =
+URL.createObjectURL(blob);
+
+
+link.download =
+"Relatorio_LADRF.xls";
+
+
+link.click();
+
+
+
+});
+
+
+}
+
+
+
+// IMPRIMIR
+
+if(botaoImprimir){
+
+botaoImprimir.addEventListener("click",()=>{
+
+
+window.print();
+
+
+});
+
+
+}
 
 iniciarRelatorios();
