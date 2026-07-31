@@ -111,9 +111,15 @@ eventosSnapshot.forEach(doc=>{
 
 const dados = doc.data();
 
+let dataEvento = new Date(dados.data);
 
-// somente eventos que já aconteceram
-if(dados.status === "Finalizado" || dados.realizado === true){
+let hoje = new Date();
+
+
+if(
+    !isNaN(dataEvento) &&
+    dataEvento <= hoje
+){
 
     eventosRealizados.push({
         id:doc.id,
@@ -121,6 +127,7 @@ if(dados.status === "Finalizado" || dados.realizado === true){
     });
 
 }
+
 
 });
 
