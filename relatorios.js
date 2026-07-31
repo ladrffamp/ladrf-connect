@@ -217,8 +217,6 @@ usuariosSnapshot.forEach(doc=>{
 
 const dados = doc.data();
 
-
-
 const perfil =
 dados.perfil?.toLowerCase();
 
@@ -234,6 +232,7 @@ membros++;
 
 }
 
+});
 
 
 totalMembros.innerHTML =
