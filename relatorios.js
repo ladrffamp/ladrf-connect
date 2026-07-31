@@ -1179,7 +1179,133 @@ document.getElementById(
 
 
 
+// =====================================
+// CARREGAR FILTROS
+// =====================================
 
+async function carregarFiltros(){
+
+try{
+
+
+// =============================
+// FILTRO EVENTOS
+// =============================
+
+const selectEvento =
+document.getElementById("filtroEvento");
+
+
+if(selectEvento){
+
+
+const eventosSnapshot =
+await getDocs(
+collection(db,"agenda")
+);
+
+
+selectEvento.innerHTML = `
+
+<option value="todos">
+Todos os eventos
+</option>
+
+`;
+
+
+eventosSnapshot.forEach(doc=>{
+
+
+const dados = doc.data();
+
+
+selectEvento.innerHTML += `
+
+<option value="${doc.id}">
+${dados.titulo || dados.nome || "Evento sem nome"}
+</option>
+
+`;
+
+});
+
+
+}
+
+
+
+// =============================
+// FILTRO MEMBROS
+// =============================
+
+
+const selectMembro =
+document.getElementById("filtroMembro");
+
+
+
+if(selectMembro){
+
+
+const membrosSnapshot =
+await getDocs(
+collection(db,"usuarios")
+);
+
+
+
+selectMembro.innerHTML = `
+
+<option value="todos">
+Todos os membros
+</option>
+
+`;
+
+
+
+membrosSnapshot.forEach(doc=>{
+
+
+const dados = doc.data();
+
+
+
+if(
+dados.perfil?.toLowerCase() === "membro"
+){
+
+
+selectMembro.innerHTML += `
+
+<option value="${doc.id}">
+${dados.nome || dados.email || "Membro"}
+</option>
+
+`;
+
+}
+
+
+});
+
+
+}
+
+
+
+}catch(error){
+
+console.error(
+"Erro ao carregar filtros:",
+error
+);
+
+}
+
+
+}
 
 // =====================================
 // INICIALIZAÇÃO FINAL
@@ -1189,6 +1315,9 @@ async function iniciarRelatorios(){
 
 
 await carregarRelatorios();
+
+
+await carregarFiltros();
 
 
 await carregarAvaliacoes();
