@@ -1,5 +1,3 @@
-// relatorios.js
-
 import { db } from "./firebase.js";
 
 import {
@@ -34,6 +32,9 @@ document.getElementById("listaEventos");
 // DADOS GLOBAIS
 // =====================================
 
+let listaAtendimentos = [];
+let listaAvaliacoes = [];
+
 let graficoAvaliacoes = null;
 let graficoMes = null;
 let graficoModalidades = null;
@@ -49,9 +50,9 @@ async function carregarRelatorios(){
 try{
 
 
-// =============================
+// =====================================
 // PACIENTES
-// =============================
+// =====================================
 
 const pacientesSnapshot =
 await getDocs(
@@ -64,9 +65,9 @@ pacientesSnapshot.size;
 
 
 
-// =============================
+// =====================================
 // ATENDIMENTOS
-// =============================
+// =====================================
 
 const atendimentosSnapshot =
 await getDocs(
@@ -76,7 +77,7 @@ await getDocs(
 
 listaAtendimentos =
 atendimentosSnapshot.docs.map(doc=>({
-    id: doc.id,
+    id:doc.id,
     ...doc.data()
 }));
 
@@ -92,9 +93,9 @@ listaAtendimentos.length;
 
 
 
-// =============================
+// =====================================
 // EVENTOS
-// =============================
+// =====================================
 
 const eventosSnapshot =
 await getDocs(
@@ -102,19 +103,39 @@ await getDocs(
 );
 
 
+let eventosRealizados = [];
+
+
+
+eventosSnapshot.forEach(doc=>{
+
+const dados = doc.data();
+
+
+// somente eventos que já aconteceram
+if(dados.status === "Finalizado" || dados.realizado === true){
+
+    eventosRealizados.push({
+        id:doc.id,
+        ...dados
+    });
+
+}
+
+});
+
+
+
 totalEventos.innerHTML =
-eventosSnapshot.size;
-
-
-listaEventos.innerHTML = "";
+eventosRealizados.length;
 
 
 
-for(const evento of eventosSnapshot.docs){
+listaEventos.innerHTML="";
 
 
-const dados = evento.data();
 
+eventosRealizados.forEach(evento=>{
 
 
 listaEventos.innerHTML += `
@@ -122,27 +143,26 @@ listaEventos.innerHTML += `
 <tr>
 
 <td>
-${dados.titulo || "-"}
+${evento.titulo || evento.nome || "-"}
 </td>
 
 <td>
-${dados.data || "-"}
+${evento.data || "-"}
 </td>
 
 <td>
--
-
+${evento.participantes || 0}
 </td>
 
 </tr>
 
 `;
 
-}
+});
 
 
 
-if(!listaEventos.innerHTML){
+if(eventosRealizados.length === 0){
 
 listaEventos.innerHTML = `
 
@@ -150,7 +170,7 @@ listaEventos.innerHTML = `
 
 <td colspan="3">
 
-Nenhum evento encontrado.
+Nenhum evento realizado.
 
 </td>
 
@@ -162,17 +182,18 @@ Nenhum evento encontrado.
 
 
 
-// =============================
+// =====================================
 // MEMBROS
-// =============================
+// =====================================
 
 const usuariosSnapshot =
 await getDocs(
-collection(db,"usuarios")
+    collection(db,"usuarios")
 );
 
 
 let membros = 0;
+
 
 
 usuariosSnapshot.forEach(doc=>{
@@ -180,10 +201,9 @@ usuariosSnapshot.forEach(doc=>{
 const dados = doc.data();
 
 
+
 if(
-dados.perfil?.toLowerCase()
-===
-"membro"
+dados.perfil?.toLowerCase() === "membro"
 ){
 
 membros++;
@@ -193,15 +213,15 @@ membros++;
 });
 
 
+
 totalMembros.innerHTML =
 membros;
 
 
 
-// =============================
+// =====================================
 // RESUMO ATENDIMENTOS
-// =============================
-
+// =====================================
 
 const resumo = {};
 
@@ -232,7 +252,7 @@ resumoAtendimentos.innerHTML="";
 
 
 
-Object.keys(resumo).forEach(item=>{
+Object.entries(resumo).forEach(([nome,quantidade])=>{
 
 
 resumoAtendimentos.innerHTML += `
@@ -240,11 +260,11 @@ resumoAtendimentos.innerHTML += `
 <tr>
 
 <td>
-${item}
+${nome}
 </td>
 
 <td>
-${resumo[item]}
+${quantidade}
 </td>
 
 </tr>
@@ -272,35 +292,49 @@ error
 }
 
 
-
 // =====================================
 // TEMPO DE ESPERA
 // =====================================
 
 function calcularTempoEspera(){
 
-
 let totalMinutos = 0;
-
 let quantidade = 0;
-
 
 
 listaAtendimentos.forEach(atendimento=>{
 
 
 if(
-!atendimento.pacienteId ||
-!atendimento.inicio
+atendimento.inicio &&
+atendimento.termino
 ){
 
-return;
 
-}
+const inicio =
+atendimento.inicio.split(":");
 
+
+const fim =
+atendimento.termino.split(":");
+
+
+const minutosInicio =
+Number(inicio[0])*60 + Number(inicio[1]);
+
+
+const minutosFim =
+Number(fim[0])*60 + Number(fim[1]);
+
+
+totalMinutos +=
+(minutosFim-minutosInicio);
 
 
 quantidade++;
+
+
+}
 
 
 });
@@ -310,18 +344,12 @@ quantidade++;
 tempoEspera.innerHTML =
 quantidade
 ?
-Math.round(totalMinutos / quantidade)
-+
-" min"
+Math.round(totalMinutos/quantidade)+" min"
 :
 "0 min";
 
 
 }
-
-
-
-
 // =====================================
 // AVALIAÇÕES
 // =====================================
@@ -331,16 +359,19 @@ async function carregarAvaliacoes(){
 try{
 
 
-const avaliacoesSnapshot =
+const snapshot =
 await getDocs(
     collection(db,"avaliacoes")
 );
 
 
+
 listaAvaliacoes =
-avaliacoesSnapshot.docs.map(doc=>({
-    id:doc.id,
-    ...doc.data()
+snapshot.docs.map(doc=>({
+
+id:doc.id,
+...doc.data()
+
 }));
 
 
@@ -358,12 +389,15 @@ let resolvidos = 0;
 listaAvaliacoes.forEach(avaliacao=>{
 
 
-somaNotas +=
-Number(avaliacao.nota || 0);
+somaNotas += Number(
+avaliacao.nota || 0
+);
 
 
 
-if(avaliacao.indicaria === "Sim"){
+if(
+avaliacao.indicaria === "Sim"
+){
 
 indicados++;
 
@@ -371,7 +405,9 @@ indicados++;
 
 
 
-if(avaliacao.resolucao === "Sim"){
+if(
+avaliacao.resolucao === "Sim"
+){
 
 resolvidos++;
 
@@ -382,8 +418,7 @@ resolvidos++;
 
 
 
-const media =
-total
+const media = total
 ?
 (somaNotas / total).toFixed(1)
 :
@@ -391,19 +426,21 @@ total
 
 
 
-const percentualIndicacao =
-total
+const recomendacao = total
 ?
-Math.round((indicados / total)*100)
+Math.round(
+(indicados / total) * 100
+)
 :
 0;
 
 
 
-const percentualResolvido =
-total
+const resolucao = total
 ?
-Math.round((resolvidos / total)*100)
+Math.round(
+(resolvidos / total) * 100
+)
 :
 0;
 
@@ -411,52 +448,69 @@ Math.round((resolvidos / total)*100)
 
 // painel inferior
 
-document.getElementById("totalAvaliacoes").innerHTML =
+const totalAvaliacoes =
+document.getElementById("totalAvaliacoes");
+
+
+const notaMedia =
+document.getElementById("notaMedia");
+
+
+const percentualIndicacao =
+document.getElementById("percentualIndicacao");
+
+
+const percentualResolvido =
+document.getElementById("percentualResolvido");
+
+
+
+if(totalAvaliacoes)
+totalAvaliacoes.innerHTML =
 total;
 
 
-document.getElementById("notaMedia").innerHTML =
+
+if(notaMedia)
+notaMedia.innerHTML =
 media;
 
 
-document.getElementById("percentualIndicacao").innerHTML =
-percentualIndicacao + "%";
+
+if(percentualIndicacao)
+percentualIndicacao.innerHTML =
+recomendacao+"%";
 
 
-document.getElementById("percentualResolvido").innerHTML =
-percentualResolvido + "%";
+
+if(percentualResolvido)
+percentualResolvido.innerHTML =
+resolucao+"%";
+
 
 
 
 // cards superiores
 
-if(notaMediaTopo){
-
+if(notaMediaTopo)
 notaMediaTopo.innerHTML =
 media;
 
-}
 
 
-if(taxaRecomendacao){
-
+if(taxaRecomendacao)
 taxaRecomendacao.innerHTML =
-percentualIndicacao + "%";
-
-}
+recomendacao+"%";
 
 
-if(problemasResolvidos){
 
+if(problemasResolvidos)
 problemasResolvidos.innerHTML =
-percentualResolvido + "%";
-
-}
+resolucao+"%";
 
 
 
 carregarUltimasAvaliacoes();
-
 
 
 criarGraficoAvaliacoes();
@@ -478,7 +532,6 @@ error
 
 
 
-
 // =====================================
 // ÚLTIMAS AVALIAÇÕES
 // =====================================
@@ -487,11 +540,14 @@ function carregarUltimasAvaliacoes(){
 
 
 const area =
-document.getElementById("ultimasAvaliacoes");
+document.getElementById(
+"ultimasAvaliacoes"
+);
 
 
 
-if(!area) return;
+if(!area)
+return;
 
 
 
@@ -509,10 +565,10 @@ area.innerHTML += `
 
 <div class="avaliacao-item">
 
-
 <strong>
 ⭐ ${avaliacao.nota || 0}/5
 </strong>
+
 
 <p>
 ${avaliacao.comentario || "Sem comentário"}
@@ -524,7 +580,8 @@ ${avaliacao.comentario || "Sem comentário"}
 Equipe:
 ${avaliacao.equipe || "-"}
 
-|
+<br>
+
 Espera:
 ${avaliacao.espera || "-"}
 
@@ -543,18 +600,23 @@ ${avaliacao.espera || "-"}
 
 
 
+
 // =====================================
 // RANKING DOS MEMBROS
 // =====================================
 
-async function carregarRanking(){
+function carregarRanking(){
 
 
 const tabela =
-document.getElementById("rankingMembros");
+document.getElementById(
+"rankingMembros"
+);
 
 
-if(!tabela) return;
+
+if(!tabela)
+return;
 
 
 
@@ -586,11 +648,36 @@ ranking[membro]++;
 
 const lista =
 Object.entries(ranking)
-.sort((a,b)=>b[1]-a[1]);
+.sort(
+(a,b)=>b[1]-a[1]
+);
 
 
 
 tabela.innerHTML="";
+
+
+
+if(lista.length===0){
+
+tabela.innerHTML = `
+
+<tr>
+
+<td colspan="4">
+
+Nenhum atendimento encontrado.
+
+</td>
+
+</tr>
+
+`;
+
+return;
+
+}
+
 
 
 
@@ -605,17 +692,22 @@ tabela.innerHTML += `
 ${index+1}
 </td>
 
+
 <td>
 ${item[0]}
 </td>
+
 
 <td>
 ${item[1]}
 </td>
 
+
 <td>
 -
+
 </td>
+
 
 </tr>
 
@@ -625,21 +717,18 @@ ${item[1]}
 
 
 }
-
-
-
 // =====================================
 // GRÁFICO AVALIAÇÕES
 // =====================================
 
 function criarGraficoAvaliacoes(){
 
-
 const canvas =
 document.getElementById("graficoAvaliacoes");
 
 
-if(!canvas) return;
+if(!canvas)
+return;
 
 
 
@@ -671,50 +760,55 @@ notas[nota]++;
 });
 
 
+
 if(graficoAvaliacoes){
-    graficoAvaliacoes.destroy();
+
+graficoAvaliacoes.destroy();
+
 }
 
-graficoAvaliacoes = new Chart(canvas,{
+
+
+graficoAvaliacoes =
+new Chart(canvas,{
 
 type:"bar",
 
 data:{
 
-
 labels:[
+
 "1 estrela",
 "2 estrelas",
 "3 estrelas",
 "4 estrelas",
 "5 estrelas"
-],
 
+],
 
 datasets:[{
 
 label:"Avaliações",
 
 data:[
+
 notas["1"],
 notas["2"],
 notas["3"],
 notas["4"],
 notas["5"]
+
 ]
 
 }]
 
-
 },
-
 
 options:{
 
 responsive:true
 
 }
-
 
 });
 
@@ -725,41 +819,34 @@ responsive:true
 
 
 // =====================================
-// INICIAR COMPLEMENTOS
-// =====================================
-
-carregarAvaliacoes();
-
-carregarRanking();
-// =====================================
 // GRÁFICO ATENDIMENTOS POR MÊS
 // =====================================
 
 function criarGraficoMes(){
 
-
 const canvas =
 document.getElementById("graficoMes");
 
 
-if(!canvas) return;
+if(!canvas)
+return;
 
 
 
 const meses = {
 
-"Jan":0,
-"Fev":0,
-"Mar":0,
-"Abr":0,
-"Mai":0,
-"Jun":0,
-"Jul":0,
-"Ago":0,
-"Set":0,
-"Out":0,
-"Nov":0,
-"Dez":0
+Jan:0,
+Fev:0,
+Mar:0,
+Abr:0,
+Mai:0,
+Jun:0,
+Jul:0,
+Ago:0,
+Set:0,
+Out:0,
+Nov:0,
+Dez:0
 
 };
 
@@ -768,64 +855,75 @@ const meses = {
 listaAtendimentos.forEach(atendimento=>{
 
 
-let data;
+if(!atendimento.data)
+return;
 
 
-if(atendimento.data){
 
-data = new Date(atendimento.data);
+const data =
+new Date(
+atendimento.data.seconds
+?
+atendimento.data.seconds*1000
+:
+atendimento.data
+);
 
-}
 
 
-if(data && !isNaN(data)){
+if(isNaN(data))
+return;
 
 
-const nomeMes =
+
+const mes =
 data.toLocaleString(
 "pt-BR",
 {
 month:"short"
 }
-);
+)
+.substring(0,3);
 
 
-Object.keys(meses).forEach(mes=>{
+
+Object.keys(meses)
+.forEach(nome=>{
 
 
 if(
-nomeMes
-.substring(0,3)
-.toLowerCase()
+nome.toLowerCase()
 ===
-mes
-.substring(0,3)
-.toLowerCase()
+mes.toLowerCase()
 ){
 
-meses[mes]++;
+meses[nome]++;
 
 }
 
 });
 
 
-}
-
-
 });
 
 
 
+if(graficoMes){
+
+graficoMes.destroy();
+
+}
+
+
+
+graficoMes =
 new Chart(canvas,{
 
 type:"line",
 
 data:{
 
-
 labels:Object.keys(meses),
-
 
 datasets:[{
 
@@ -835,16 +933,13 @@ data:Object.values(meses)
 
 }]
 
-
 },
-
 
 options:{
 
 responsive:true
 
 }
-
 
 });
 
@@ -861,16 +956,19 @@ responsive:true
 
 function criarGraficoModalidades(){
 
-
 const canvas =
-document.getElementById("graficoModalidades");
+document.getElementById(
+"graficoModalidades"
+);
 
 
-if(!canvas) return;
+
+if(!canvas)
+return;
 
 
 
-const modalidades = {};
+const dados = {};
 
 
 
@@ -881,41 +979,41 @@ const modalidade =
 atendimento.modalidade || "Outros";
 
 
-if(!modalidades[modalidade]){
 
-modalidades[modalidade]=0;
-
-}
-
-
-modalidades[modalidade]++;
+dados[modalidade] =
+(dados[modalidade] || 0)+1;
 
 
 });
 
 
 
+if(graficoModalidades){
+
+graficoModalidades.destroy();
+
+}
+
+
+
+graficoModalidades =
 new Chart(canvas,{
 
 type:"doughnut",
 
 data:{
 
-
-labels:Object.keys(modalidades),
-
+labels:Object.keys(dados),
 
 datasets:[{
 
 label:"Modalidades",
 
-data:Object.values(modalidades)
+data:Object.values(dados)
 
 }]
 
-
 },
-
 
 options:{
 
@@ -923,11 +1021,11 @@ responsive:true
 
 }
 
-
 });
 
 
 }
+
 
 
 
@@ -938,12 +1036,15 @@ responsive:true
 
 function criarGraficoResolucao(){
 
-
 const canvas =
-document.getElementById("graficoResolucao");
+document.getElementById(
+"graficoResolucao"
+);
 
 
-if(!canvas) return;
+
+if(!canvas)
+return;
 
 
 
@@ -956,7 +1057,9 @@ let nao = 0;
 listaAvaliacoes.forEach(avaliacao=>{
 
 
-if(avaliacao.resolucao === "Sim"){
+if(
+avaliacao.resolucao === "Sim"
+){
 
 sim++;
 
@@ -966,17 +1069,24 @@ nao++;
 
 }
 
-
 });
 
 
 
+if(graficoResolucao){
+
+graficoResolucao.destroy();
+
+}
+
+
+
+graficoResolucao =
 new Chart(canvas,{
 
 type:"pie",
 
 data:{
-
 
 labels:[
 
@@ -985,16 +1095,18 @@ labels:[
 
 ],
 
-
 datasets:[{
 
-data:[sim,nao]
+data:[
+
+sim,
+nao
+
+]
 
 }]
 
-
 },
-
 
 options:{
 
@@ -1002,11 +1114,11 @@ responsive:true
 
 }
 
-
 });
 
 
 }
+
 
 
 
@@ -1016,7 +1128,9 @@ responsive:true
 // =====================================
 
 const botaoFiltro =
-document.getElementById("aplicarFiltros");
+document.getElementById(
+"aplicarFiltros"
+);
 
 
 
@@ -1028,59 +1142,67 @@ botaoFiltro.addEventListener(
 ()=>{
 
 
-const periodo =
+console.log({
+
+periodo:
 document.getElementById(
 "filtroPeriodo"
-).value;
+).value,
 
 
-
-const evento =
+evento:
 document.getElementById(
 "filtroEvento"
-).value;
+).value,
 
 
-
-const membro =
+membro:
 document.getElementById(
 "filtroMembro"
-).value;
-
-
-
-console.log(
-"Filtros:",
-{
-periodo,
-evento,
-membro
-}
-);
+).value
 
 
 });
+
+
+});
+
 
 }
 
 
 
 
+
 // =====================================
-// INICIAR SISTEMA
+// INICIALIZAÇÃO FINAL
 // =====================================
 
-carregarRelatorios()
-.then(()=>{
+async function iniciarRelatorios(){
 
-    carregarAvaliacoes();
 
-    carregarRanking();
+await carregarRelatorios();
 
-    criarGraficoMes();
 
-    criarGraficoModalidades();
+await carregarAvaliacoes();
 
-    criarGraficoResolucao();
 
-});
+
+carregarRanking();
+
+
+
+criarGraficoMes();
+
+
+criarGraficoModalidades();
+
+
+criarGraficoResolucao();
+
+
+}
+
+
+
+iniciarRelatorios();
