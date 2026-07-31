@@ -24,6 +24,11 @@ const tempoEspera = document.getElementById("tempoEspera");
 const resumoAtendimentos =
 document.getElementById("resumoAtendimentos");
 
+console.log(
+"Resumo encontrado:",
+resumoAtendimentos
+);
+
 const listaEventos =
 document.getElementById("listaEventos");
 
@@ -269,12 +274,9 @@ resumo[modalidade]++;
 
 
 
-resumoAtendimentos.innerHTML="";
+if(resumoAtendimentos){
 
-
-
-Object.entries(resumo).forEach(([nome,quantidade])=>{
-
+if(resumoAtendimentos){
 
 resumoAtendimentos.innerHTML += `
 
@@ -291,6 +293,8 @@ ${quantidade}
 </tr>
 
 `;
+
+}
 
 });
 
@@ -1161,6 +1165,7 @@ botaoFiltro.addEventListener(
 "click",
 ()=>{
 
+console.log("Filtro clicado");
 
 const periodo =
 document.getElementById("filtroPeriodo").value;
