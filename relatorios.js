@@ -5,8 +5,8 @@ import { db } from "./firebase.js";
 
 
 import {
-collection,
-getDocs
+    collection,
+    getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -472,4 +472,67 @@ inicioMinutos
 
 
 
+// =====================================
+// PAINEL DE INDICADORES
+// =====================================
+
+async function carregarIndicadores(){
+
+    try{
+
+        const avaliacoes = await getDocs(
+            collection(db,"avaliacoes")
+        );
+
+        let total = 0;
+        let somaNotas = 0;
+        let recomendariam = 0;
+        let resolvidos = 0;
+
+        avaliacoes.forEach((doc)=>{
+
+            const dados = doc.data();
+
+            total++;
+
+            somaNotas += Number(dados.nota || 0);
+
+            if(dados.indicaria === "Sim"){
+                recomendariam++;
+            }
+
+            if(dados.resolucao === "Sim"){
+                resolvidos++;
+            }
+
+        });
+
+        document.getElementById("totalAvaliacoes").innerHTML =
+            total;
+
+        document.getElementById("notaMedia").innerHTML =
+            total ? (somaNotas/total).toFixed(1) : "0,0";
+
+        document.getElementById("percentualIndicacao").innerHTML =
+            total ? Math.round((recomendariam/total)*100) + "%" : "0%";
+
+        document.getElementById("percentualResolvido").innerHTML =
+            total ? Math.round((resolvidos/total)*100) + "%" : "0%";
+
+    }catch(error){
+
+        console.error(
+            "Erro ao carregar indicadores:",
+            error
+        );
+
+    }
+
+}
+
+// =====================================
+// INICIAR
+// =====================================
+
 carregarRelatorios();
+carregarIndicadores();
