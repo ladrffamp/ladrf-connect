@@ -1532,8 +1532,37 @@ criarGraficoResolucao();
 
 
 // =====================================
-// EXPORTAÇÃO DE RELATÓRIOS
+// INICIALIZAÇÃO FINAL
 // =====================================
+
+async function iniciarRelatorios(){
+
+await carregarRelatorios();
+
+await carregarFiltros();
+
+await carregarAvaliacoes();
+
+carregarRanking();
+
+criarGraficoMes();
+
+criarGraficoModalidades();
+
+criarGraficoResolucao();
+
+ativarExportacoes();
+
+}
+
+
+
+// =====================================
+// EXPORTAÇÕES
+// =====================================
+
+function ativarExportacoes(){
+
 
 const botaoPDF =
 document.getElementById("exportarPDF");
@@ -1552,14 +1581,11 @@ document.getElementById("imprimirRelatorio");
 
 if(botaoPDF){
 
-botaoPDF.addEventListener("click",()=>{
-
+botaoPDF.onclick = () => {
 
 window.print();
 
-
-});
-
+};
 
 }
 
@@ -1569,23 +1595,22 @@ window.print();
 
 if(botaoExcel){
 
-botaoExcel.addEventListener("click",()=>{
+botaoExcel.onclick = () => {
 
 
-let tabela =
-document.querySelector(".container");
-
-
-let conteudo =
-tabela.innerHTML;
+const conteudo =
+document.querySelector(".container").innerHTML;
 
 
 
-let arquivo =
-`
+const arquivo = `
+
 <html>
+
 <head>
+
 <meta charset="UTF-8">
+
 </head>
 
 <body>
@@ -1595,11 +1620,12 @@ ${conteudo}
 </body>
 
 </html>
+
 `;
 
 
 
-let blob =
+const blob =
 new Blob(
 [arquivo],
 {
@@ -1609,7 +1635,7 @@ type:"application/vnd.ms-excel"
 
 
 
-let link =
+const link =
 document.createElement("a");
 
 
@@ -1624,9 +1650,7 @@ link.download =
 link.click();
 
 
-
-});
-
+};
 
 }
 
@@ -1636,15 +1660,17 @@ link.click();
 
 if(botaoImprimir){
 
-botaoImprimir.addEventListener("click",()=>{
-
+botaoImprimir.onclick = () => {
 
 window.print();
 
+};
 
-});
+}
 
 
 }
+
+
 
 iniciarRelatorios();
