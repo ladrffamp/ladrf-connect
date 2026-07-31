@@ -80,30 +80,39 @@ pacientesSnapshot.size;
 
 const atendimentosSnapshot =
 await getDocs(
-collection(db,"atendimentos")
+    collection(db,"atendimentos")
+);
+
+console.log(
+"ATENDIMENTOS TOTAL FIRESTORE:",
+atendimentosSnapshot.size
 );
 
 
+listaAtendimentos = atendimentosSnapshot.docs.map(doc=>({
 
-listaAtendimentos =
-atendimentosSnapshot.docs.map(doc=>({
-
-id:doc.id,
+id: doc.id,
 ...doc.data()
 
 }));
 
 
-
-listaAtendimentosFiltrados =
-[...listaAtendimentos];
-
+listaAtendimentosFiltrados = [...listaAtendimentos];
 
 
 console.log(
-"ATENDIMENTOS ENCONTRADOS:",
-listaAtendimentos.length
+"ATENDIMENTOS CARREGADOS:",
+listaAtendimentos
 );
+
+
+
+if(totalAtendimentos){
+
+totalAtendimentos.innerHTML =
+listaAtendimentos.length;
+
+}
 
 
 
@@ -1353,7 +1362,7 @@ passa=false;
 
 if(
 evento !== "todos" &&
-atendimento.eventoId !== evento
+atendimento.evento !== evento
 ){
 
 passa=false;
@@ -1489,7 +1498,7 @@ listaAtendimentosFiltrados.forEach(atendimento=>{
 
 
 const modalidade =
-atendimento.modalidade || "Outros";
+atendimento.modalidade?.trim() || "Outros";
 
 
 resumo[modalidade] =
@@ -1591,7 +1600,7 @@ doc.data();
 
 selectEvento.innerHTML += `
 
-<option value="${doc.id}">
+<option value="${dados.titulo || dados.nome}">
 
 ${dados.titulo || dados.nome || "Evento"}
 
@@ -1871,6 +1880,13 @@ document.addEventListener(
 
 iniciarRelatorios();
 
+document.addEventListener(
+"DOMContentLoaded",
+()=>{
+
+iniciarRelatorios();
+
+});
 
 });
 
