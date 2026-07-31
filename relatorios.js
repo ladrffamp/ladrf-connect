@@ -1633,7 +1633,12 @@ window.print();
 
 
 
-console.log("RELATORIOS JS CARREGADO");
+// =====================================
+// INICIALIZAÇÃO
+// =====================================
 
+document.addEventListener("DOMContentLoaded", ()=>{
 
-iniciarRelatorios();
+    iniciarRelatorios();
+
+});
