@@ -7,14 +7,13 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Agenda | LADRF Connect</title>
+<title>Agenda LADRF</title>
 
 
 <link rel="stylesheet" href="styles.css">
 
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+<link rel="icon" href="logo.png">
 
 
 </head>
@@ -23,74 +22,47 @@ href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
 <body>
 
 
+<!-- =====================================================
+     TOPO PADRÃO
+===================================================== -->
 
 <header class="topbar">
 
+    <div class="topbar-left">
 
-<a href="index.html" class="btn-inicio">
+        <a href="index.html" class="btn-voltar">
+            🏠 Início
+        </a>
 
-<i class="fa-solid fa-house"></i>
-
-Início
-
-</a>
-
+    </div>
 
 
+    <div class="topbar-title">
 
-<div class="logo">
+        📅 Agenda LADRF
 
-
-<i class="fa-solid fa-heart-pulse"></i>
-
-
-<div>
-
-<h1>
-LADRF Connect
-</h1>
+    </div>
 
 
-<p>
-Sistema de Gestão da Liga
-</p>
+    <div class="user-profile">
 
+        <div class="user-avatar">
+            U
+        </div>
 
-</div>
+        <div class="user-data">
 
+            <span class="user-name" id="nomeUsuario">
+                Usuário
+            </span>
 
-</div>
+            <span class="user-role" id="cargoUsuario">
+                Membro
+            </span>
 
+        </div>
 
-
-
-
-<div class="usuario-info">
-
-
-<strong id="nomeUsuario">
-
-Carregando...
-
-</strong>
-
-
-<span id="perfilUsuario">
-
-Perfil
-
-</span>
-
-
-<small id="horaAtual">
-
-00:00:00
-
-</small>
-
-
-</div>
-
+    </div>
 
 
 </header>
@@ -98,336 +70,74 @@ Perfil
 
 
 
+<!-- =====================================================
+     CONTEÚDO
+===================================================== -->
 
 
-<main class="container">
+<main class="main-content">
 
 
+<section class="page-header">
 
-<section class="page-title">
 
+<div>
 
 <h1>
-
-📅 Agenda LADRF
-
+📅 Calendário Acadêmico Integrado
 </h1>
 
 
 <p>
-
-Eventos, ações e atividades da liga.
-
+Eventos, ações, aulas, provas e atividades da LADRF.
 </p>
+
+
+</div>
+
+
+
+<button class="btn-success" id="btnNovoEvento">
+
+➕ Novo evento
+
+</button>
+
 
 
 </section>
 
 
 
+<!-- =====================================================
+     ÁREA PRINCIPAL
+===================================================== -->
+
+
+<div class="agenda-layout">
 
 
 
+<div class="card calendario-area">
 
-<div class="card">
+
+<div class="calendar-header">
 
 
-<h2>
+<button id="mesAnterior">
+◀
+</button>
 
-<i class="fa-solid fa-calendar-days"></i>
 
-Agenda LADRF
 
+<h2 id="mesAno">
+Agosto 2026
 </h2>
 
 
 
-
-
-<div class="form-grid">
-
-
-
-<div class="form-group">
-
-<label>
-
-Título do evento
-
-</label>
-
-<input 
-id="titulo"
-placeholder="Título do evento">
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-
-Tipo
-
-</label>
-
-
-<select id="tipo">
-
-<optgroup label="LADRF">
-
-<option value="Atendimento">Atendimento</option>
-<option value="Curso">Curso</option>
-<option value="Palestra">Palestra</option>
-<option value="Reunião">Reunião</option>
-<option value="Treinamento">Treinamento</option>
-<option value="Ação Social">Ação Social</option>
-
-</optgroup>
-
-<optgroup label="Acadêmico">
-
-<option value="Prova">Prova</option>
-<option value="Trabalho">Trabalho</option>
-<option value="Aula Prática">Aula Prática</option>
-<option value="Calendário Acadêmico">Calendário Acadêmico</option>
-<option value="Estágio">Estágio</option>
-<option value="TCC">TCC</option>
-
-</optgroup>
-
-<optgroup label="Eventos">
-
-<option value="Congresso">Congresso</option>
-<option value="Workshop">Workshop</option>
-<option value="Simpósio">Simpósio</option>
-
-</optgroup>
-
-<option value="Outro">Outro</option>
-
-</select>
-
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-
-Data
-
-</label>
-
-
-<input 
-type="date"
-id="data">
-
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-
-Início
-
-</label>
-
-
-<input
-type="time"
-id="inicio">
-
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-
-Fim
-
-</label>
-
-
-<input
-type="time"
-id="fim">
-
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-
-Local
-
-</label>
-
-
-<input
-id="local"
-placeholder="Local">
-
-
-</div>
-
-
-
-
-
-<div class="form-group">
-
-<label>
-
-Responsável
-
-<div class="form-group">
-
-<label>Disciplina</label>
-
-<input
-id="disciplina"
-placeholder="Ex.: Traumato-Ortopedia">
-
-</div>
-
-<div class="form-group">
-
-<label>Professor</label>
-
-<input
-id="professor"
-placeholder="Professor responsável">
-
-</div>
-
-</label>
-
-
-<input
-id="responsavel"
-placeholder="Responsável">
-
-
-</div>
-
-
-
-
-</div>
-
-
-
-
-
-
-
-<div class="form-group">
-
-
-<label>
-
-Observações
-<div class="form-grid">
-
-<div class="form-group">
-
-<label>Categoria</label>
-
-<select id="categoria">
-
-<option value="LADRF">LADRF</option>
-
-<option value="Acadêmico">Acadêmico</option>
-
-<option value="Estágio">Estágio</option>
-
-<option value="Congresso">Congresso</option>
-
-<option value="Outro">Outro</option>
-
-</select>
-
-</div>
-
-<div class="form-group">
-
-<label>Cor do Evento</label>
-
-<input
-type="color"
-id="cor"
-value="#198754">
-
-</div>
-
-</div>
-
-</label>
-
-
-<textarea
-
-id="observacoes"
-
-placeholder="Observações">
-
-</textarea>
-
-
-</div>
-
-
-
-
-
-
-<input type="hidden" id="eventoId">
-
-
-
-
-
-
-<div class="botoes">
-
-
-<button
-
-class="btn-success"
-
-onclick="salvarEvento()">
-
-
-<i class="fa-solid fa-floppy-disk"></i>
-
-
-Salvar Evento
-
-
+<button id="proximoMes">
+▶
 </button>
 
 
@@ -436,54 +146,619 @@ Salvar Evento
 
 
 
+<div class="calendar-week">
+
+
+<div>
+Dom
+</div>
+
+
+<div>
+Seg
+</div>
+
+
+<div>
+Ter
+</div>
+
+
+<div>
+Qua
+</div>
+
+
+<div>
+Qui
+</div>
+
+
+<div>
+Sex
+</div>
+
+
+<div>
+Sáb
+</div>
+
+
+</div>
+
+
+
+<div id="calendario" class="calendar-grid">
+
+
+</div>
+
+
+
+</div>
+
+
+<!-- =====================================================
+     LATERAL DE EVENTOS
+===================================================== -->
+
+
+<aside class="card agenda-lateral">
+
+
+<h2>
+📌 Próximos eventos
+</h2>
+
+
+
+<div id="listaProximosEventos">
+
+
+<div class="empty-state">
+
+<div class="icone">
+📅
+</div>
+
+
+<h3>
+Nenhum evento carregado
+</h3>
+
+
+<p>
+Os próximos eventos aparecerão aqui.
+</p>
+
+
+</div>
+
+
+</div>
+
+
+
+</aside>
+
+
 
 </div>
 
 
 
 
-<div class="card">
+<!-- =====================================================
+     FILTROS
+===================================================== -->
+
+
+<section class="card">
+
+
+<div class="card-header">
+
 
 <h2>
-
-<i class="fa-solid fa-filter"></i>
-
-Filtros
-
+🔎 Filtros
 </h2>
 
-<div class="form-grid">
+
+</div>
+
+
+
+<div class="filters">
+
+
+<div class="filter-item">
+
+
+<label>
+Categoria
+</label>
+
 
 <select id="filtroCategoria">
 
-<option value="Todos">Todos</option>
 
-<option value="LADRF">LADRF</option>
+<option value="todos">
+Todos
+</option>
 
-<option value="Acadêmico">Acadêmico</option>
 
-<option value="Estágio">Estágio</option>
+<option value="LADRF">
+LADRF
+</option>
 
-<option value="Congresso">Congresso</option>
+
+<option value="Aula">
+Aula
+</option>
+
+
+<option value="Prova">
+Prova
+</option>
+
+
+<option value="Estágio">
+Estágio
+</option>
+
+
+<option value="Congresso">
+Congresso
+</option>
+
+
+<option value="Reunião">
+Reunião
+</option>
+
 
 </select>
 
-<input
-id="pesquisaEvento"
-placeholder="Pesquisar evento...">
-
-</div>
 
 </div>
 
 
 
-<section id="listaEventos">
+
+
+<div class="filter-item">
+
+
+<label>
+Tipo
+</label>
+
+
+<select id="filtroTipo">
+
+
+<option value="todos">
+Todos
+</option>
+
+
+<option value="Atendimento">
+Atendimento
+</option>
+
+
+<option value="Evento">
+Evento
+</option>
+
+
+<option value="Acadêmico">
+Acadêmico
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="filter-item">
+
+
+<label>
+Busca
+</label>
+
+
+<input 
+type="text"
+id="buscarEvento"
+placeholder="Pesquisar evento..."
+>
+
+
+</div>
+
+
+
+</div>
+
 
 
 </section>
 
 
+
+
+<!-- =====================================================
+     MODAL NOVO EVENTO
+===================================================== -->
+
+
+<div id="modalEvento" class="modal">
+
+
+<div class="modal-content">
+
+
+<div class="modal-header">
+
+
+<h2>
+📅 Novo Evento
+</h2>
+
+
+
+<span 
+class="modal-close"
+id="fecharModal">
+✖
+</span>
+
+
+</div>
+
+
+
+
+
+<form id="formEvento">
+
+
+
+<div class="form-grid">
+
+
+
+<div class="form-group">
+
+<label>
+Título do evento
+</label>
+
+<input 
+type="text"
+id="titulo"
+placeholder="Ex.: Atendimento CrossFit"
+required
+>
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Categoria
+</label>
+
+
+<select id="categoria">
+
+
+<option value="LADRF">
+LADRF
+</option>
+
+
+<option value="Aula">
+Aula
+</option>
+
+
+<option value="Prova">
+Prova
+</option>
+
+
+<option value="Estágio">
+Estágio
+</option>
+
+
+<option value="Congresso">
+Congresso
+</option>
+
+
+<option value="Reunião">
+Reunião
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+<label>
+Tipo
+</label>
+
+
+<select id="tipo">
+
+
+<option value="Evento">
+Evento
+</option>
+
+
+<option value="Atendimento">
+Atendimento
+</option>
+
+
+<option value="Acadêmico">
+Acadêmico
+</option>
+
+
+</select>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Data
+</label>
+
+
+<input
+type="date"
+id="data"
+required
+>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Início
+</label>
+
+
+<input
+type="time"
+id="inicio"
+>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Fim
+</label>
+
+
+<input
+type="time"
+id="fim"
+>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Local
+</label>
+
+
+<input
+type="text"
+id="local"
+placeholder="Local do evento"
+>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Responsável
+</label>
+
+
+<input
+type="text"
+id="responsavel"
+placeholder="Responsável"
+>
+
+
+</div>
+
+
+
+<div class="form-group">
+
+
+<label>
+Disciplina
+</label>
+
+
+<input
+type="text"
+id="disciplina"
+placeholder="Ex.: Traumato-Ortopedia"
+>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Professor
+</label>
+
+
+<input
+type="text"
+id="professor"
+placeholder="Professor responsável"
+>
+
+
+</div>
+
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Cor do evento
+</label>
+
+
+<input
+type="color"
+id="cor"
+value="#2e7d32"
+>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<div class="form-group">
+
+
+<label>
+Observações
+</label>
+
+
+<textarea
+id="observacoes"
+placeholder="Informações adicionais..."
+></textarea>
+
+
+</div>
+
+
+
+
+<div class="botoes">
+
+
+<button 
+type="submit"
+class="btn-success">
+
+💾 Salvar Evento
+
+</button>
+
+
+
+<button 
+type="button"
+id="cancelarEvento"
+class="btn-danger">
+
+Cancelar
+
+</button>
+
+
+</div>
+
+
+
+
+</form>
+
+
+
+</div>
+
+
+</div>
 
 
 
@@ -495,56 +770,15 @@ placeholder="Pesquisar evento...">
 
 
 
+<!-- =====================================================
+     FIREBASE / JAVASCRIPT
+===================================================== -->
 
 
-<script type="module" src="cabecalho.js"></script>
 <script type="module" src="agenda.js"></script>
 
 
-<script type="module" src="permissoes.js"></script>
-
-
-
-
-
-
-<script>
-
-
-function atualizarHora(){
-
-
-const hora =
-document.getElementById("horaAtual");
-
-
-if(hora){
-
-
-hora.innerHTML =
-new Date().toLocaleTimeString("pt-BR");
-
-
-}
-
-
-}
-
-
-
-setInterval(atualizarHora,1000);
-
-
-atualizarHora();
-
-
-
-</script>
-
-
-
-
-
 </body>
+
 
 </html>
