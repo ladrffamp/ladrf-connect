@@ -177,21 +177,37 @@ Tipo
 
 <select id="tipo">
 
+<optgroup label="LADRF">
 
-<option>Atendimento</option>
+<option value="Atendimento">Atendimento</option>
+<option value="Curso">Curso</option>
+<option value="Palestra">Palestra</option>
+<option value="Reunião">Reunião</option>
+<option value="Treinamento">Treinamento</option>
+<option value="Ação Social">Ação Social</option>
 
-<option>Curso</option>
+</optgroup>
 
-<option>Palestra</option>
+<optgroup label="Acadêmico">
 
-<option>Reunião</option>
+<option value="Prova">Prova</option>
+<option value="Trabalho">Trabalho</option>
+<option value="Aula Prática">Aula Prática</option>
+<option value="Calendário Acadêmico">Calendário Acadêmico</option>
+<option value="Estágio">Estágio</option>
+<option value="TCC">TCC</option>
 
-<option>Treinamento</option>
+</optgroup>
 
-<option>Ação Social</option>
+<optgroup label="Eventos">
 
-<option>Outro</option>
+<option value="Congresso">Congresso</option>
+<option value="Workshop">Workshop</option>
+<option value="Simpósio">Simpósio</option>
 
+</optgroup>
+
+<option value="Outro">Outro</option>
 
 </select>
 
@@ -288,6 +304,26 @@ placeholder="Local">
 
 Responsável
 
+<div class="form-group">
+
+<label>Disciplina</label>
+
+<input
+id="disciplina"
+placeholder="Ex.: Traumato-Ortopedia">
+
+</div>
+
+<div class="form-group">
+
+<label>Professor</label>
+
+<input
+id="professor"
+placeholder="Professor responsável">
+
+</div>
+
 </label>
 
 
@@ -315,6 +351,40 @@ placeholder="Responsável">
 <label>
 
 Observações
+<div class="form-grid">
+
+<div class="form-group">
+
+<label>Categoria</label>
+
+<select id="categoria">
+
+<option value="LADRF">LADRF</option>
+
+<option value="Acadêmico">Acadêmico</option>
+
+<option value="Estágio">Estágio</option>
+
+<option value="Congresso">Congresso</option>
+
+<option value="Outro">Outro</option>
+
+</select>
+
+</div>
+
+<div class="form-group">
+
+<label>Cor do Evento</label>
+
+<input
+type="color"
+id="cor"
+value="#198754">
+
+</div>
+
+</div>
 
 </label>
 
@@ -372,6 +442,39 @@ Salvar Evento
 
 
 
+<div class="card">
+
+<h2>
+
+<i class="fa-solid fa-filter"></i>
+
+Filtros
+
+</h2>
+
+<div class="form-grid">
+
+<select id="filtroCategoria">
+
+<option value="Todos">Todos</option>
+
+<option value="LADRF">LADRF</option>
+
+<option value="Acadêmico">Acadêmico</option>
+
+<option value="Estágio">Estágio</option>
+
+<option value="Congresso">Congresso</option>
+
+</select>
+
+<input
+id="pesquisaEvento"
+placeholder="Pesquisar evento...">
+
+</div>
+
+</div>
 
 
 

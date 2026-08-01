@@ -19,109 +19,92 @@ getDocs
 // REFERÊNCIA FIRESTORE
 // =====================================
 
-const eventosRef = collection(
-    db,
-    "agenda"
-);
-
+const eventosRef = collection(db, "agenda");
 
 let editando = null;
-
 
 
 // =====================================
 // ELEMENTOS
 // =====================================
 
-const titulo =
-document.getElementById("titulo");
+const titulo = document.getElementById("titulo");
+const tipo = document.getElementById("tipo");
 
-const tipo =
-document.getElementById("tipo");
+const categoria = document.getElementById("categoria");
+const disciplina = document.getElementById("disciplina");
+const professor = document.getElementById("professor");
+const cor = document.getElementById("cor");
 
-const data =
-document.getElementById("data");
+const data = document.getElementById("data");
+const inicio = document.getElementById("inicio");
+const fim = document.getElementById("fim");
 
-const inicio =
-document.getElementById("inicio");
+const local = document.getElementById("local");
+const responsavel = document.getElementById("responsavel");
+const observacoes = document.getElementById("observacoes");
 
-const fim =
-document.getElementById("fim");
+const listaEventos = document.getElementById("listaEventos");
 
-const local =
-document.getElementById("local");
+const filtroCategoria =
+document.getElementById("filtroCategoria");
 
-const responsavel =
-document.getElementById("responsavel");
-
-const observacoes =
-document.getElementById("observacoes");
-
-const listaEventos =
-document.getElementById("listaEventos");
-
-
+const pesquisaEvento =
+document.getElementById("pesquisaEvento");
 
 
 // =====================================
 // SALVAR EVENTO
 // =====================================
 
-
 window.salvarEvento = async function(){
-
 
 try{
 
-
-const evento = {
-
+const evento={
 
 titulo:
 titulo.value.trim(),
 
-
 tipo:
 tipo.value,
 
+categoria:
+categoria ? categoria.value : "LADRF",
+
+disciplina:
+disciplina ? disciplina.value.trim() : "",
+
+professor:
+professor ? professor.value.trim() : "",
 
 data:
 data.value,
 
-
 inicio:
 inicio.value,
-
 
 fim:
 fim.value,
 
-
 local:
 local.value.trim(),
-
 
 responsavel:
 responsavel.value.trim(),
 
-
 observacoes:
 observacoes.value.trim(),
 
+cor:
+cor ? cor.value : "#198754",
 
-status:
-"Programado",
-
+status:"Programado",
 
 criadoEm:
 Timestamp.now()
 
-
 };
-
-
-
-
 
 if(
 !evento.titulo ||
@@ -129,103 +112,65 @@ if(
 !evento.inicio
 ){
 
-
-alert(
-"Preencha título, data e horário."
-);
-
+alert("Preencha título, data e horário.");
 
 return;
 
-
 }
-
-
 
 if(editando){
 
-
 await updateDoc(
 
-doc(
-db,
-"agenda",
-editando
-),
+doc(db,"agenda",editando),
 
 evento
 
 );
-
-
 
 editando=null;
 
-
-
 }else{
 
-
-await addDoc(
-
-eventosRef,
-
-evento
-
-);
-
-
+await addDoc(eventosRef,evento);
 
 }
 
-
-
 limparFormulario();
 
-
-
-alert(
-"Evento salvo com sucesso!"
-);
-
-
+alert("Evento salvo com sucesso!");
 
 }
 
 catch(error){
 
+console.error(error);
 
-console.error(
-"Erro ao salvar:",
-error
-);
-
-
-alert(
-"Erro ao salvar evento."
-);
-
+alert("Erro ao salvar evento.");
 
 }
 
-
 };
-
-
-
 
 
 // =====================================
 // LIMPAR FORMULÁRIO
 // =====================================
 
-
 function limparFormulario(){
-
 
 titulo.value="";
 
 tipo.selectedIndex=0;
+
+if(categoria)
+categoria.selectedIndex=0;
+
+if(disciplina)
+disciplina.value="";
+
+if(professor)
+professor.value="";
 
 data.value="";
 
@@ -239,23 +184,18 @@ responsavel.value="";
 
 observacoes.value="";
 
+if(cor)
+cor.value="#198754";
 
 }
 // =====================================
-// LISTAR EVENTOS TEMPO REAL
+// LISTAR EVENTOS EM TEMPO REAL
 // =====================================
 
-
 const consulta = query(
-
     eventosRef,
-
-    orderBy(
-        "data"
-    )
-
+    orderBy("data")
 );
-
 
 
 onSnapshot(
@@ -266,7 +206,6 @@ async(snapshot)=>{
 
 
 listaEventos.innerHTML="";
-
 
 
 if(snapshot.empty){
@@ -289,9 +228,7 @@ Nenhum evento cadastrado
 
 return;
 
-
 }
-
 
 
 
@@ -304,39 +241,34 @@ listaEventos.innerHTML +=
 await renderizarEvento(item);
 
 
-
 }
 
 
 
+aplicarFiltros();
+
+
 }
-
-
 
 );
 
 
 
 
-
-
 // =====================================
-// RENDERIZAÇÃO DOS EVENTOS
+// RENDERIZAR EVENTO
 // =====================================
 
 
 async function renderizarEvento(item){
 
 
-const evento =
-item.data();
+const evento = item.data();
 
 
 
-// =====================================
+
 // BUSCAR PARTICIPANTES
-// =====================================
-
 
 const participantesSnapshot = await getDocs(
 
@@ -372,14 +304,16 @@ participantesSnapshot.forEach((membro)=>{
 total++;
 
 
-const dados =
-membro.data();
+const dados = membro.data();
 
 
 
 if(
+
 dados.presenca === "Confirmado" ||
+
 dados.presenca === "Confirmada"
+
 ){
 
 
@@ -389,7 +323,9 @@ confirmados++;
 }
 
 else if(
+
 dados.presenca === "Recusado"
+
 ){
 
 
@@ -407,15 +343,29 @@ pendentes++;
 }
 
 
+
 });
 
 
 
 
 
+const corEvento =
 
-const classe =
-corStatus(evento.status);
+evento.cor ||
+
+corCategoria(
+evento.categoria
+);
+
+
+
+const classeStatus =
+
+corStatus(
+evento.status
+);
+
 
 
 
@@ -423,7 +373,25 @@ corStatus(evento.status);
 return `
 
 
-<div class="evento">
+
+<div
+
+class="evento"
+
+data-categoria="${evento.categoria || "LADRF"}"
+
+>
+
+
+
+<div style="
+
+border-left:7px solid ${corEvento};
+
+padding-left:15px;
+
+">
+
 
 
 <h2>
@@ -435,12 +403,70 @@ ${escaparTexto(evento.titulo)}
 
 
 
+<span style="
+
+background:${corEvento};
+
+color:white;
+
+padding:5px 12px;
+
+border-radius:20px;
+
+font-size:12px;
+
+font-weight:bold;
+
+">
+
+${escaparTexto(
+evento.categoria || "LADRF"
+)}
+
+</span>
+
+
+
+</div>
+
+
+
+
+
 
 <p>
 
 <b>Tipo:</b>
 
 ${escaparTexto(evento.tipo)}
+
+</p>
+
+
+
+
+
+<p>
+
+<b>Disciplina:</b>
+
+${escaparTexto(
+evento.disciplina || "-"
+)}
+
+</p>
+
+
+
+
+
+<p>
+
+<b>Professor:</b>
+
+${escaparTexto(
+evento.professor || "-"
+)}
 
 </p>
 
@@ -515,12 +541,11 @@ ${escaparTexto(evento.observacoes)}
 
 
 
-<span class="status ${classe}">
+<span class="status ${classeStatus}">
 
 ${evento.status}
 
 </span>
-
 
 
 
@@ -536,9 +561,8 @@ border-radius:12px;
 
 background:#f2f2f2;
 
-color:#222;
-
 ">
+
 
 
 <h3>
@@ -546,6 +570,7 @@ color:#222;
 👥 Equipe escalada
 
 </h3>
+
 
 
 
@@ -559,6 +584,7 @@ Total:
 
 
 
+
 <p>
 
 🟢 Confirmados:
@@ -569,6 +595,7 @@ Total:
 
 
 
+
 <p>
 
 🟡 Pendentes:
@@ -576,6 +603,7 @@ Total:
 <b>${pendentes}</b>
 
 </p>
+
 
 
 
@@ -590,8 +618,6 @@ Total:
 
 
 </div>
-
-
 
 
 
@@ -626,9 +652,11 @@ onclick="gerarQRCode('${item.id}')"
 
 <i class="fa-solid fa-qrcode"></i>
 
-Gerar QR Code
+QR Code
 
 </button>
+
+
 
 
 
@@ -682,1308 +710,1572 @@ onclick="excluirEvento('${item.id}')"
 
 
 
+
+
 </div>
+
 
 
 `;
 
-
-
 }
-// =====================================
-// FORMATAR DATA
-// =====================================
+/* ==========================================================
+   FORMULÁRIOS
+========================================================== */
 
-
-function formatarData(dataTexto){
-
-
-if(!dataTexto){
-
-return "-";
-
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 18px;
+    margin-bottom: 20px;
 }
 
 
-
-const partes =
-
-dataTexto.split("-");
-
-
-
-if(partes.length !== 3){
-
-return dataTexto;
-
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
 }
 
 
-
-return `${partes[2]}/${partes[1]}/${partes[0]}`;
-
-
+label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
 }
 
 
+/* INPUTS */
 
-
-
-
-// =====================================
-// PROTEGER TEXTO
-// =====================================
-
-
-function escaparTexto(texto){
-
-
-if(!texto){
-
-return "";
-
+input,
+select,
+textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: #fff;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+    box-sizing: border-box;
 }
 
 
-
-return texto
-
-.replaceAll("&","&amp;")
-
-.replaceAll("<","&lt;")
-
-.replaceAll(">","&gt;")
-
-.replaceAll('"',"&quot;")
-
-.replaceAll("'","&#039;");
-
-
+textarea {
+    min-height: 120px;
+    resize: vertical;
 }
 
 
-
-
-
-
-// =====================================
-// STATUS
-// =====================================
-
-
-function corStatus(status){
-
-
-switch(status){
-
-
-case "Em andamento":
-
-return "andamento";
-
-
-case "Concluído":
-
-return "concluido";
-
-
-case "Cancelado":
-
-return "cancelado";
-
-
-default:
-
-return "programado";
-
-
+input:focus,
+select:focus,
+textarea:focus {
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 3px rgba(46,125,50,0.15);
 }
 
 
-
+input::placeholder,
+textarea::placeholder {
+    color: #999;
 }
 
 
+/* ==========================================================
+   BOTÕES
+========================================================== */
 
-
-
-
-// =====================================
-// ABRIR ESCALA
-// =====================================
-
-
-window.abrirEscala = function(id){
-
-
-console.log(
-
-"Abrindo escala:",
-
-id
-
-);
-
-
-
-window.location.href =
-
-"gerenciar-acao.html?id="+id;
-
-
-
-};
-
-
-
-
-
-
-
-// =====================================
-// EDITAR EVENTO
-// =====================================
-
-
-window.editarEvento = async function(id){
-
-
-
-try{
-
-
-
-const referencia = doc(
-
-db,
-
-"agenda",
-
-id
-
-);
-
-
-
-const resultado = await getDoc(
-
-referencia
-
-);
-
-
-
-if(!resultado.exists()){
-
-
-alert(
-
-"Evento não encontrado."
-
-);
-
-
-return;
-
-
+button {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: 0.2s;
 }
 
 
-
-const evento = resultado.data();
-
-
-
-editando=id;
-
-
-
-titulo.value =
-evento.titulo || "";
-
-
-
-tipo.value =
-evento.tipo || "";
-
-
-
-data.value =
-evento.data || "";
-
-
-
-inicio.value =
-evento.inicio || "";
-
-
-
-fim.value =
-evento.fim || "";
-
-
-
-local.value =
-evento.local || "";
-
-
-
-responsavel.value =
-evento.responsavel || "";
-
-
-
-observacoes.value =
-evento.observacoes || "";
-
-
-
-
-window.scrollTo({
-
-top:0,
-
-behavior:"smooth"
-
-});
-
-
-
-
-alert(
-
-"Evento carregado para edição."
-
-);
-
-
-
-}
-
-catch(error){
-
-
-console.error(
-
-"Erro editar:",
-
-error
-
-);
-
-
-
-alert(
-
-"Erro ao carregar evento."
-
-);
-
-
-
+button:hover {
+    transform: translateY(-1px);
+    opacity: 0.9;
 }
 
 
-
-};
-
-
-
-
-
-
-
-
-// =====================================
-// CONCLUIR EVENTO
-// =====================================
-
-
-window.concluirEvento = async function(id){
-
-
-const confirmar = confirm(
-"Marcar este evento como concluído e liberar certificados?"
-);
-
-
-if(!confirmar){
-return;
+.btn-success,
+.btn-verde,
+button.verde {
+    background: #2e7d32;
+    color: white;
 }
 
 
-try{
-
-
-const eventoRef = doc(
-db,
-"agenda",
-id
-);
-
-
-
-const eventoSnap = await getDoc(
-eventoRef
-);
-
-
-
-if(!eventoSnap.exists()){
-
-alert("Evento não encontrado.");
-
-return;
-
+.btn-primary,
+.btn-azul {
+    background: #1976d2;
+    color: white;
 }
 
 
-
-const evento = eventoSnap.data();
-
-
-
-// muda status do evento
-
-await updateDoc(
-
-eventoRef,
-
-{
-
-status:"Concluído"
-
-}
-
-);
-
-
-
-// busca participantes do evento
-
-const participantes = await getDocs(
-
-collection(
-
-db,
-
-"agenda",
-
-id,
-
-"participantes"
-
-)
-
-);
-
-
-
-
-// cria certificados
-
-for(const participante of participantes.docs){
-
-
-const dados = participante.data();
-
-
-
-if(
-
-dados.presenca === "Confirmado" ||
-
-dados.presenca === "Confirmada"
-
-){
-
-
-
-await addDoc(
-
-collection(db,"certificados"),
-
-{
-
-
-membroId:
-
-participante.id,
-
-
-nome:
-
-evento.titulo,
-
-
-eventoId:
-
-id,
-
-
-evento:
-
-evento.titulo,
-
-
-horas:
-
-calcularHoras(evento),
-
-
-data:
-
-evento.data,
-
-
-criadoEm:
-
-Timestamp.now(),
-
-
-status:
-
-"Disponível"
-
-
-}
-
-);
-
-
+.btn-danger,
+.btn-vermelho {
+    background: #d32f2f;
+    color: white;
 }
 
 
+.btn-warning {
+    background: #f9a825;
+    color: white;
 }
 
 
-
-alert(
-"Evento concluído e certificados liberados!"
-);
-
-
-
-}
-
-catch(error){
-
-
-console.error(error);
-
-
-alert(
-"Erro ao concluir evento."
-);
-
-
+.botoes {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 15px;
 }
 
 
-};
+/* ==========================================================
+   CHECKBOX E RADIO
+========================================================== */
+
+.checkbox-group,
+.radio-group {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
 
 
+input[type="checkbox"],
+input[type="radio"] {
+    width: auto;
+}
 
 
+/* ==========================================================
+   CAMPO DE PESQUISA
+========================================================== */
+
+.busca {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
 
 
+.busca input {
+    flex: 1;
+}
 
 
-// =====================================
-// EXCLUIR EVENTO
-// =====================================
+/* ==========================================================
+   DIVISORES
+========================================================== */
+
+hr {
+    border: none;
+    height: 1px;
+    background: #eee;
+    margin: 25px 0;
+}
+/* ==========================================================
+   TABELAS
+========================================================== */
+
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: white;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
 
 
-window.excluirEvento = async function(id){
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 700px;
+}
 
 
-
-const confirmar = confirm(
-
-"Deseja excluir este evento?"
-
-);
+thead {
+    background: #2e7d32;
+    color: white;
+}
 
 
+th {
+    padding: 14px;
+    text-align: left;
+    font-size: 14px;
+}
 
-if(!confirmar){
 
-return;
+td {
+    padding: 13px 14px;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+    color: #444;
+}
+
+
+tbody tr:hover {
+    background: #f7f7f7;
+}
+
+
+/* ==========================================================
+   STATUS
+========================================================== */
+
+.status {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.status.aguardando {
+    background: #fff3cd;
+    color: #856404;
+}
+
+
+.status.atendimento {
+    background: #cfe8ff;
+    color: #0d47a1;
+}
+
+
+.status.finalizado {
+    background: #d4edda;
+    color: #155724;
+}
+
+
+.status.cancelado {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+
+/* ==========================================================
+   CARDS DE INFORMAÇÃO
+========================================================== */
+
+.info-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+
+.info-card h3 {
+    margin-bottom: 8px;
+    color: #2e7d32;
+}
+
+
+.info-card p {
+    color: #666;
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   DASHBOARD
+========================================================== */
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+}
+
+
+.dashboard-card {
+    background: white;
+    padding: 22px;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.dashboard-icon {
+    width: 55px;
+    height: 55px;
+    border-radius: 14px;
+    background: #2e7d32;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+}
+
+
+.dashboard-info h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+
+.dashboard-info span {
+    color: #777;
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   ALERTAS
+========================================================== */
+
+.alert {
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    font-size: 14px;
+}
+
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+}
+
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+}
+/* ==========================================================
+   FILA DE ATENDIMENTO
+========================================================== */
+
+.fila-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+
+.fila-card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+
+.fila-info {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+
+.fila-info strong {
+    font-size: 16px;
+    color: #333;
+}
+
+
+.fila-info span {
+    font-size: 13px;
+    color: #777;
+}
+
+
+.fila-acoes {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+
+/* ==========================================================
+   MACAS / ATENDIMENTO
+========================================================== */
+
+.macas-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+}
+
+
+.maca-card {
+    background: white;
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+
+.maca-card h3 {
+    margin-bottom: 10px;
+}
+
+
+.maca-livre {
+    border-top: 5px solid #2e7d32;
+}
+
+
+.maca-ocupada {
+    border-top: 5px solid #d32f2f;
+}
+
+
+.maca-status {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   QR CODE
+========================================================== */
+
+.qrcode-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+
+.qrcode-container img,
+.qrcode-container canvas {
+    max-width: 220px;
+    border-radius: 10px;
+}
+
+
+/* ==========================================================
+   MODAIS
+========================================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+
+.modal.active {
+    display: flex;
+}
+
+
+.modal-content {
+    background: white;
+    width: 90%;
+    max-width: 500px;
+    border-radius: 16px;
+    padding: 25px;
+    animation: aparecer 0.2s ease;
+}
+
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+
+.modal-close {
+    cursor: pointer;
+    font-size: 22px;
+    color: #666;
+}
+
+
+@keyframes aparecer {
+
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
 
 }
 
 
+/* ==========================================================
+   LOADING
+========================================================== */
 
-try{
-
-
-
-await deleteDoc(
-
-doc(
-
-db,
-
-"agenda",
-
-id
-
-)
-
-);
-
-
-
-alert(
-
-"Evento excluído."
-
-);
-
-
-
-}
-
-catch(error){
-
-
-console.error(error);
-
-
-
-alert(
-
-"Erro ao excluir evento."
-
-);
-
-
-
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    color: #777;
 }
 
 
-
-};
-// =====================================
-// CANCELAR EDIÇÃO
-// =====================================
-
-
-window.cancelarEdicao = function(){
-
-
-editando = null;
-
-
-limparFormulario();
-
-
-};
-
-
-
-
-
-
-
-
-// =====================================
-// ALTERAR STATUS MANUALMENTE
-// =====================================
-
-
-window.alterarStatus = async function(id,status){
-
-
-try{
-
-
-await updateDoc(
-
-doc(
-
-db,
-
-"agenda",
-
-id
-
-),
-
-{
-
-status:status
-
-}
-
-);
-
-
-
-}
-
-catch(error){
-
-
-console.error(
-
-"Erro ao alterar status:",
-
-error
-
-);
-
-
-
+.spinner {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    border: 4px solid #ddd;
+    border-top-color: #2e7d32;
+    animation: girar 0.8s linear infinite;
 }
 
 
+@keyframes girar {
 
-};
+    from {
+        transform: rotate(0deg);
+    }
 
+    to {
+        transform: rotate(360deg);
+    }
 
+}/* ==========================================================
+   PÁGINAS INTERNAS
+========================================================== */
 
-
-
-
-
-
-// =====================================
-// FILTRAR EVENTOS
-// =====================================
-
-
-window.filtrarEventos = function(statusSelecionado){
-
-
-
-const eventos = document.querySelectorAll(
-
-".evento"
-
-);
-
-
-
-
-
-eventos.forEach((evento)=>{
-
-
-
-const status =
-
-evento.querySelector(".status")?.innerText;
-
-
-
-
-
-if(
-
-statusSelecionado === "Todos"
-
-){
-
-
-evento.style.display="block";
-
-
-}
-
-else if(
-
-status === statusSelecionado
-
-){
-
-
-evento.style.display="block";
-
-
-}
-
-else{
-
-
-evento.style.display="none";
-
-
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    gap: 15px;
+    flex-wrap: wrap;
 }
 
 
-
-});
-
-
-
-};
-
-
-
-
-
-
-
-
-// =====================================
-// BUSCAR EVENTO
-// =====================================
-
-
-window.buscarEvento = function(texto){
-
-
-
-const eventos = document.querySelectorAll(
-
-".evento"
-
-);
-
-
-
-
-eventos.forEach((evento)=>{
-
-
-
-const conteudo =
-
-evento.innerText.toLowerCase();
-
-
-
-
-
-if(
-
-conteudo.includes(
-
-texto.toLowerCase()
-
-)
-
-){
-
-
-evento.style.display="block";
-
-
-}
-
-else{
-
-
-evento.style.display="none";
-
-
+.page-header h1 {
+    margin: 0;
+    font-size: 26px;
+    color: #333;
 }
 
 
-
-});
-
-
-
-};
-
-
-
-
-
-
-
-
-// =====================================
-// VERIFICAR EVENTOS DE HOJE
-// =====================================
-
-
-function verificarEventosHoje(){
-
-
-
-const hoje = new Date();
-
-
-
-const ano = hoje.getFullYear();
-
-
-
-const mes = String(
-
-hoje.getMonth()+1
-
-).padStart(2,"0");
-
-
-
-const dia = String(
-
-hoje.getDate()
-
-).padStart(2,"0");
-
-
-
-const dataAtual =
-
-`${ano}-${mes}-${dia}`;
-
-
-
-
-
-
-document
-
-.querySelectorAll(".evento")
-
-.forEach((evento)=>{
-
-
-
-if(
-
-evento.innerText.includes(
-
-dataAtual
-
-)
-
-){
-
-
-
-evento.classList.add(
-
-"evento-hoje"
-
-);
-
-
-
+.page-header p {
+    margin: 5px 0 0;
+    color: #777;
+    font-size: 14px;
 }
 
 
+/* ==========================================================
+   SEÇÕES
+========================================================== */
 
-});
-
-
-
+.section {
+    background: white;
+    border-radius: 16px;
+    padding: 25px;
+    margin-bottom: 25px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
 
 
-
-
-
-
-
-
-
-// =====================================
-// ESC PARA CANCELAR EDIÇÃO
-// =====================================
-
-
-document.addEventListener(
-
-"keydown",
-
-(event)=>{
-
-
-if(event.key === "Escape"){
-
-
-
-editando=null;
-
-
-
-limparFormulario();
-
-
-
+.section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
 }
 
 
-
-}
-
-);
-
-
-
-
-
-
-
-
-// =====================================
-// INICIALIZAÇÃO
-// =====================================
-
-
-setTimeout(()=>{
-
-
-verificarEventosHoje();
-
-
-},1000);
-
-
-
-function calcularHoras(evento){
-
-
-if(!evento.inicio || !evento.fim){
-
-return 0;
-
+.section-title h2 {
+    margin: 0;
+    color: #333;
+    font-size: 20px;
 }
 
 
+/* ==========================================================
+   RELATÓRIOS
+========================================================== */
 
-const inicio = evento.inicio.split(":");
-
-const fim = evento.fim.split(":");
-
-
-
-const minutosInicio =
-Number(inicio[0]) * 60 +
-Number(inicio[1]);
-
-
-
-const minutosFim =
-Number(fim[0]) * 60 +
-Number(fim[1]);
-
-
-
-return Number(
-(
-(minutosFim - minutosInicio) / 60
-).toFixed(1)
-);
-
-
+.report-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
 }
 
 
-
-console.log(
-
-"LADRF Connect Agenda carregada com sucesso."
-
-);
-
-
-// =====================================
-// GERAR QR CODE DO EVENTO
-// =====================================
-
-window.gerarQRCode = function(id){
-
-
-const link =
-
-window.location.origin +
-
-"/ladrf-connect/checkin.html?evento=" +
-
-id;
-
-
-
-const janela = window.open(
-"",
-"_blank"
-);
-
-
-
-janela.document.write(`
-
-<!DOCTYPE html>
-
-<html lang="pt-BR">
-
-
-<head>
-
-
-<meta charset="UTF-8">
-
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-
-<title>QR Code | LADRF Connect</title>
-
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
-
-
-
-<style>
-
-
-*{
-
-box-sizing:border-box;
-
+.report-card {
+    background: white;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
 
 
-
-body{
-
-
-margin:0;
-
-min-height:100vh;
-
-background:#f4f7f5;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-font-family:Poppins,Arial;
-
-
+.report-card .numero {
+    font-size: 32px;
+    font-weight: 700;
+    color: #2e7d32;
 }
 
 
-
-.card{
-
-
-background:white;
-
-width:90%;
-
-max-width:430px;
-
-padding:35px;
-
-border-radius:25px;
-
-text-align:center;
-
-box-shadow:0 15px 35px rgba(0,0,0,.12);
-
-
+.report-card .titulo {
+    margin-top: 5px;
+    color: #777;
 }
 
 
+/* ==========================================================
+   AGENDA
+========================================================== */
 
-.logo{
-
-
-width:75px;
-
-height:75px;
-
-margin:auto;
-
-background:#0B7A3D;
-
-color:white;
-
-border-radius:50%;
-
-display:flex;
-
-align-items:center;
-
-justify-content:center;
-
-font-size:38px;
-
-
+.agenda-container {
+    display: grid;
+    gap: 15px;
 }
 
 
-
-h1{
-
-
-font-size:26px;
-
-color:#0B7A3D;
-
-margin:20px 0 5px;
-
-
+.agenda-item {
+    background: white;
+    padding: 18px;
+    border-radius: 14px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.07);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
 
-
-.subtitulo{
-
-
-color:#666;
-
-margin-bottom:25px;
-
-
+.agenda-data {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
 }
 
 
-
-#qrcode{
-
-
-background:white;
-
-padding:20px;
-
-border-radius:20px;
-
-display:flex;
-
-justify-content:center;
-
-margin:20px auto;
-
-
+.agenda-data strong {
+    color: #2e7d32;
 }
 
 
+.agenda-acoes {
+    display: flex;
+    gap: 8px;
+}
 
-.instrucao{
+
+/* ==========================================================
+   MATERIAIS / ESTOQUE
+========================================================== */
+
+.estoque-card {
+    background: white;
+    border-radius: 14px;
+    padding: 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
 
 
-background:#eaf5ef;
+.estoque-quantidade {
+    font-size: 30px;
+    font-weight: bold;
+}
 
-color:#0B7A3D;
 
-padding:15px;
+.estoque-baixo {
+    color: #d32f2f;
+    font-weight: 700;
+}
 
-border-radius:15px;
 
-font-weight:600;
+.estoque-ok {
+    color: #2e7d32;
+    font-weight: 700;
+}
 
+
+/* ==========================================================
+   RESPONSIVIDADE
+========================================================== */
+
+@media (max-width: 768px) {
+
+    .main-content {
+        padding: 15px;
+    }
+
+
+    .page-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+
+    .fila-card,
+    .agenda-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+
+    .botoes,
+    .fila-acoes,
+    .agenda-acoes {
+        width: 100%;
+    }
+
+
+    button {
+        width: 100%;
+    }
+
+
+    .dashboard-grid,
+    .report-cards {
+        grid-template-columns: 1fr;
+    }
+
+}
+/* ==========================================================
+   FREQUÊNCIA / PRESENÇA
+========================================================== */
+
+.presenca-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+
+.presenca-item {
+    background: white;
+    padding: 15px 18px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+
+.presenca-membro {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.avatar {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: #2e7d32;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+}
+
+
+.presenca-check {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+/* ==========================================================
+   MEMBROS
+========================================================== */
+
+.membros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px,1fr));
+    gap: 18px;
+}
+
+
+.membro-card {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+
+.membro-topo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+
+.membro-nome {
+    font-weight: 700;
+    color: #333;
+}
+
+
+.membro-cargo {
+    font-size: 13px;
+    color: #777;
+}
+
+
+.membro-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   EVENTOS
+========================================================== */
+
+.eventos-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px,1fr));
+    gap: 20px;
+}
+
+
+.evento-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+
+
+.evento-header {
+    background: #2e7d32;
+    color: white;
+    padding: 18px;
+}
+
+
+.evento-header h3 {
+    margin: 0;
+}
+
+
+.evento-body {
+    padding: 18px;
+}
+
+
+.evento-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #666;
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   EXPORTAÇÃO
+========================================================== */
+
+.export-box {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+
+.export-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 10px;
+    background: #2e7d32;
+    color: white;
+}
+
+
+/* ==========================================================
+   EMPTY STATE
+========================================================== */
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #777;
+}
+
+
+.empty-state .icone {
+    font-size: 45px;
+    margin-bottom: 15px;
+}
+
+
+.empty-state h3 {
+    margin-bottom: 8px;
+    color: #555;
+}
+
+
+.empty-state p {
+    font-size: 14px;
+}
+
+
+/* ==========================================================
+   UTILITÁRIOS
+========================================================== */
+
+.text-center {
+    text-align: center;
+}
+
+
+.text-right {
+    text-align: right;
+}
+
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+
+.mt-20 {
+    margin-top: 20px;
+}
+
+
+.mb-10 {
+    margin-bottom: 10px;
+}
+
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+
+.hidden {
+    display: none !important;
+}
+
+
+.flex {
+    display: flex;
+}
+
+
+.align-center {
+    align-items: center;
+}
+
+
+.justify-between {
+    justify-content: space-between;
+}
+
+
+.gap-10 {
+    gap: 10px;
+}/* ==========================================================
+   LOGIN / AUTENTICAÇÃO
+========================================================== */
+
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f4f6f4;
+    padding: 20px;
+}
+
+
+.login-box {
+    width: 100%;
+    max-width: 420px;
+    background: white;
+    padding: 35px;
+    border-radius: 18px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+}
+
+
+.login-logo {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+
+.login-logo img {
+    max-width: 120px;
+}
+
+
+.login-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+}
+
+
+.login-footer {
+    text-align: center;
+    margin-top: 20px;
+    font-size: 13px;
+    color: #777;
+}
+
+
+/* ==========================================================
+   PERFIL DO USUÁRIO
+========================================================== */
+
+.user-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    background: #2e7d32;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+}
+
+
+.user-data {
+    display: flex;
+    flex-direction: column;
+}
+
+
+.user-name {
+    font-size: 14px;
+    font-weight: 700;
+}
+
+
+.user-role {
+    font-size: 12px;
+    color: #777;
+}
+
+
+/* ==========================================================
+   NOTIFICAÇÕES
+========================================================== */
+
+.notification {
+    position: relative;
+}
+
+
+.notification-badge {
+    position: absolute;
+    top: -6px;
+    right: -6px;
+    background: #d32f2f;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    font-size: 11px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.notification-box {
+    background: white;
+    border-radius: 14px;
+    padding: 15px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+
+.notification-item {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+
+.notification-item:last-child {
+    border-bottom: none;
+}
+
+
+/* ==========================================================
+   TOASTS
+========================================================== */
+
+.toast {
+    position: fixed;
+    right: 25px;
+    bottom: 25px;
+    padding: 15px 20px;
+    border-radius: 12px;
+    background: #333;
+    color: white;
+    z-index: 2000;
+    animation: toastEntrada .3s ease;
+}
+
+
+.toast.success {
+    background: #2e7d32;
+}
+
+
+.toast.error {
+    background: #d32f2f;
+}
+
+
+.toast.warning {
+    background: #f9a825;
+}
+
+
+@keyframes toastEntrada {
+
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 
 }
 
 
+/* ==========================================================
+   IMPRESSÃO
+========================================================== */
 
-.rodape{
+@media print {
+
+    .sidebar,
+    .topbar,
+    button,
+    .no-print {
+        display: none !important;
+    }
 
 
-margin-top:20px;
+    .main-content {
+        margin: 0;
+        padding: 0;
+    }
 
-font-size:13px;
 
-color:#888;
+    .section,
+    .info-card,
+    .table-container {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
 
+}/* ==========================================================
+   COMPONENTES GERAIS
+========================================================== */
 
+.card {
+    background: white;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
 }
 
 
-
-</style>
-
-
-</head>
-
-
-
-<body>
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
 
 
-
-<div class="card">
-
-
-<div class="logo">
-
-<i>❤</i>
-
-</div>
+.card-header h2,
+.card-header h3 {
+    margin: 0;
+    color: #333;
+}
 
 
-
-<h1>
-
-LADRF Connect
-
-</h1>
+.card-body {
+    color: #555;
+}
 
 
+/* ==========================================================
+   MENU DE NAVEGAÇÃO
+========================================================== */
 
-<div class="subtitulo">
-
-Check-in do evento
-
-</div>
-
-
-
-<div id="qrcode"></div>
-
+.menu-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 18px;
+}
 
 
-<div class="instrucao">
-
-📱 Aponte a câmera para participar
-
-</div>
-
-
-
-<div class="rodape">
-
-Sua presença será registrada automaticamente.
-
-</div>
+.menu-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: .2s;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
 
 
-
-</div>
-
-
-
+.menu-card:hover {
+    transform: translateY(-4px);
+}
 
 
-
-<script>
-
-
-new QRCode(
-
-document.getElementById("qrcode"),
-
-"${link}"
-
-);
-
-
-</script>
+.menu-icon {
+    width: 55px;
+    height: 55px;
+    margin: 0 auto 12px;
+    border-radius: 14px;
+    background: #2e7d32;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 25px;
+}
 
 
-
-</body>
-
-
-</html>
-
-
-`);
+.menu-card h3 {
+    margin: 0;
+    font-size: 15px;
+    color: #333;
+}
 
 
-};
+.menu-card span {
+    display: block;
+    margin-top: 5px;
+    font-size: 12px;
+    color: #777;
+}
+
+
+/* ==========================================================
+   PAGINAÇÃO
+========================================================== */
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 25px;
+}
+
+
+.pagination button {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    background: white;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+
+.pagination button.active {
+    background: #2e7d32;
+    color: white;
+    border-color: #2e7d32;
+}
+
+
+/* ==========================================================
+   FILTROS
+========================================================== */
+
+.filters {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+}
+
+
+.filters .filter-item {
+    flex: 1;
+    min-width: 180px;
+}
+
+
+/* ==========================================================
+   BADGES
+========================================================== */
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+
+.badge-green {
+    background: #d4edda;
+    color: #155724;
+}
+
+
+.badge-red {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+
+.badge-yellow {
+    background: #fff3cd;
+    color: #856404;
+}
+
+
+.badge-blue {
+    background: #cfe8ff;
+    color: #0d47a1;
+}
+
+
+/* ==========================================================
+   RESPONSIVO EXTRA
+========================================================== */
+
+@media(max-width:600px){
+
+    .section {
+        padding: 18px;
+    }
+
+
+    .card {
+        padding: 18px;
+    }
+
+
+    .menu-grid {
+        grid-template-columns: repeat(2,1fr);
+        gap: 12px;
+    }
+
+
+    .menu-card {
+        padding: 15px;
+    }
+
+
+    .menu-icon {
+        width: 45px;
+        height: 45px;
+        font-size: 20px;
+    }
+
+
+    .filters {
+        flex-direction: column;
+    }
+
+}
+/* ==========================================================
+   AJUSTES FINAIS DO SISTEMA LADRF CONNECT
+========================================================== */
+
+
+/* Evita seleção acidental em botões e cards */
+
+button,
+.menu-card,
+.dashboard-card,
+.fila-card {
+    user-select: none;
+}
+
+
+/* Links */
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+
+/* Ícones */
+
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* Texto secundário */
+
+.text-muted {
+    color: #777;
+    font-size: 13px;
+}
+
+
+/* Texto destaque */
+
+.text-primary {
+    color: #2e7d32;
+    font-weight: 700;
+}
+
+
+/* ==========================================================
+   BOTÃO VOLTAR
+========================================================== */
+
+.btn-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: white;
+    color: #2e7d32;
+    border: 1px solid #2e7d32;
+}
+
+
+.btn-voltar:hover {
+    background: #2e7d32;
+    color: white;
+}
+
+
+/* ==========================================================
+   AVISOS DE SISTEMA
+========================================================== */
+
+.system-message {
+    padding: 20px;
+    border-radius: 14px;
+    text-align: center;
+    background: white;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+
+.system-message h3 {
+    margin-bottom: 8px;
+    color: #333;
+}
+
+
+.system-message p {
+    color: #777;
+}
+
+
+/* ==========================================================
+   LOADING DE PÁGINA
+========================================================== */
+
+.page-loading {
+    position: fixed;
+    inset: 0;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 3000;
+}
+
+
+.page-loading.hidden {
+    display: none;
+}
+
+
+/* ==========================================================
+   ACESSIBILIDADE
+========================================================== */
+
+:focus-visible {
+    outline: 3px solid rgba(46,125,50,0.4);
+    outline-offset: 2px;
+}
+
+
+/* ==========================================================
+   FINAL
+========================================================== */
+
+body {
+    overflow-x: hidden;
+}
+
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+
+::selection {
+    background: #2e7d32;
+    color: white;
+}
