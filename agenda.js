@@ -1961,3 +1961,187 @@ document.createElement("tr");
 
 
 gerarCalendario();
+
+// =====================================
+// CALENDÁRIO ACADÊMICO
+// CARREGAR EVENTOS DO FIRESTORE
+// =====================================
+
+
+async function carregarEventosCalendario(){
+
+
+try{
+
+
+const snapshot = await getDocs(
+
+collection(
+db,
+"agenda"
+)
+
+);
+
+
+
+
+
+snapshot.forEach((documento)=>{
+
+
+const evento =
+documento.data();
+
+
+
+// data do evento
+
+if(!evento.data){
+
+return;
+
+}
+
+
+
+
+const partes =
+
+evento.data.split("-");
+
+
+
+if(partes.length !== 3){
+
+return;
+
+}
+
+
+
+const anoEvento =
+Number(partes[0]);
+
+
+const mesEvento =
+Number(partes[1]) - 1;
+
+
+const diaEvento =
+Number(partes[2]);
+
+
+
+
+
+const anoAtual =
+dataCalendario.getFullYear();
+
+
+const mesAtual =
+dataCalendario.getMonth();
+
+
+
+
+
+// mostrar somente eventos do mês aberto
+
+if(
+
+anoEvento !== anoAtual ||
+
+mesEvento !== mesAtual
+
+){
+
+return;
+
+}
+
+
+
+
+
+const campoDia =
+
+document.getElementById(
+
+`dia-${diaEvento}`
+
+);
+
+
+
+
+if(!campoDia){
+
+return;
+
+}
+
+
+
+
+
+campoDia.innerHTML += `
+
+
+<div class="evento-calendario">
+
+
+<strong>
+
+${evento.titulo}
+
+</strong>
+
+
+<br>
+
+
+<span>
+
+${evento.inicio || ""}
+
+</span>
+
+
+</div>
+
+
+`;
+
+
+
+
+});
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+
+"Erro ao carregar eventos no calendário:",
+
+error
+
+);
+
+
+}
+
+
+}
+
+
+
+
+// carregar junto com o calendário
+
+carregarEventosCalendario();
