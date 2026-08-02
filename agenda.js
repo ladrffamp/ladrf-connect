@@ -2145,3 +2145,110 @@ error
 // carregar junto com o calendário
 
 carregarEventosCalendario();
+
+// =====================================
+// CALENDÁRIO ACADÊMICO
+// NAVEGAÇÃO ENTRE MESES
+// =====================================
+
+
+
+const botaoAnterior =
+
+document.getElementById(
+"mesAnterior"
+);
+
+
+
+const botaoProximo =
+
+document.getElementById(
+"proximoMes"
+);
+
+
+
+
+
+// =====================================
+// MÊS ANTERIOR
+// =====================================
+
+
+if(botaoAnterior){
+
+
+botaoAnterior.addEventListener(
+
+"click",
+
+()=>{
+
+
+dataCalendario.setMonth(
+
+dataCalendario.getMonth() - 1
+
+);
+
+
+
+gerarCalendario();
+
+
+
+carregarEventosCalendario();
+
+
+
+}
+
+
+);
+
+
+}
+
+
+
+
+
+// =====================================
+// PRÓXIMO MÊS
+// =====================================
+
+
+if(botaoProximo){
+
+
+botaoProximo.addEventListener(
+
+"click",
+
+()=>{
+
+
+dataCalendario.setMonth(
+
+dataCalendario.getMonth() + 1
+
+);
+
+
+
+gerarCalendario();
+
+
+
+carregarEventosCalendario();
+
+
+
+}
+
+
+);
+
+
+}
