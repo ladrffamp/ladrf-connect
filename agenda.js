@@ -51,8 +51,6 @@ document.getElementById("fim");
 const local =
 document.getElementById("local");
 
-const responsavel =
-document.getElementById("responsavel");
 
 const observacoes =
 document.getElementById("observacoes");
@@ -100,9 +98,6 @@ fim.value,
 local:
 local.value.trim(),
 
-
-responsavel:
-responsavel.value.trim(),
 
 
 observacoes:
@@ -235,7 +230,6 @@ fim.value="";
 
 local.value="";
 
-responsavel.value="";
 
 observacoes.value="";
 
@@ -483,21 +477,6 @@ ${evento.fim || "-"}
 ${escaparTexto(evento.local)}
 
 </p>
-
-
-
-
-
-<p>
-
-<b>Responsável:</b>
-
-${escaparTexto(evento.responsavel)}
-
-</p>
-
-
-
 
 
 <p>
@@ -925,11 +904,6 @@ evento.fim || "";
 
 local.value =
 evento.local || "";
-
-
-
-responsavel.value =
-evento.responsavel || "";
 
 
 
@@ -1675,6 +1649,42 @@ return Number(
 
 }
 
+
+// =====================================
+// EVENTOS DOS FILTROS
+// =====================================
+
+const filtroCategoria =
+document.getElementById("filtroCategoria");
+
+if (filtroCategoria) {
+
+    filtroCategoria.addEventListener("change", () => {
+
+        filtrarEventos(
+            filtroCategoria.value
+        );
+
+    });
+
+}
+
+
+
+const pesquisaEvento =
+document.getElementById("pesquisaEvento");
+
+if (pesquisaEvento) {
+
+    pesquisaEvento.addEventListener("input", () => {
+
+        buscarEvento(
+            pesquisaEvento.value
+        );
+
+    });
+
+}
 
 
 console.log(
