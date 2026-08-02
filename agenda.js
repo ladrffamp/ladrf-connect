@@ -1327,43 +1327,34 @@ error
 // =====================================
 
 
-window.filtrarEventos = function(statusSelecionado){
+window.filtrarEventos = function(tipoSelecionado){
 
+    const eventos =
+    document.querySelectorAll(".evento");
 
+    eventos.forEach((evento)=>{
 
-const eventos = document.querySelectorAll(
+        const tipoTexto =
+        evento.querySelector("p")?.innerText
+        .replace("Tipo:","")
+        .trim();
 
-".evento"
+        if(
+            tipoSelecionado === "Todos" ||
+            tipoTexto === tipoSelecionado
+        ){
 
-);
+            evento.style.display = "block";
 
+        }else{
 
+            evento.style.display = "none";
 
+        }
 
+    });
 
-eventos.forEach((evento)=>{
-
-
-
-const status =
-
-evento.querySelector(".status")?.innerText;
-
-
-
-
-
-if(
-
-statusSelecionado === "Todos"
-
-){
-
-
-evento.style.display="block";
-
-
-}
+};
 
 else if(
 
@@ -1654,16 +1645,15 @@ return Number(
 // EVENTOS DOS FILTROS
 // =====================================
 
-const filtroCategoria =
-document.getElementById("filtroCategoria");
 
-if (filtroCategoria) {
+const filtroTipo =
+document.getElementById("filtroTipo");
 
-    filtroCategoria.addEventListener("change", () => {
+if (filtroTipo) {
 
-        filtrarEventos(
-            filtroCategoria.value
-        );
+    filtroTipo.addEventListener("change", () => {
+
+        filtrarEventos(filtroTipo.value);
 
     });
 
