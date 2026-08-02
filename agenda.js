@@ -1356,40 +1356,6 @@ window.filtrarEventos = function(tipoSelecionado){
 
 };
 
-else if(
-
-status === statusSelecionado
-
-){
-
-
-evento.style.display="block";
-
-
-}
-
-else{
-
-
-evento.style.display="none";
-
-
-}
-
-
-
-});
-
-
-
-};
-
-
-
-
-
-
-
 
 // =====================================
 // BUSCAR EVENTO
