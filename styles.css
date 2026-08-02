@@ -1960,3 +1960,21 @@ margin:0;
 font-size:22px;
 
 }
+
+.evento-calendario{
+
+cursor:pointer;
+
+transition:.2s;
+
+}
+
+
+
+.evento-calendario:hover{
+
+transform:scale(1.03);
+
+opacity:.85;
+
+}

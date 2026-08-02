@@ -1918,7 +1918,53 @@ id="dia-${dia}">
 
 `;
 
+// =====================================
+// CLICAR NO DIA PARA CADASTRAR EVENTO
+// =====================================
 
+celula.onclick = function(){
+
+
+const mesSelecionado =
+
+String(
+dataCalendario.getMonth() + 1
+).padStart(2,"0");
+
+
+
+const diaSelecionado =
+
+String(dia)
+.padStart(2,"0");
+
+
+
+const dataSelecionada =
+
+`${dataCalendario.getFullYear()}-${mesSelecionado}-${diaSelecionado}`;
+
+
+
+data.value = dataSelecionada;
+
+
+
+window.scrollTo({
+
+top:0,
+
+behavior:"smooth"
+
+});
+
+
+
+titulo.focus();
+
+
+
+};
 
 linha.appendChild(celula);
 
@@ -1972,6 +2018,15 @@ async function carregarEventosCalendario(){
 
 
 try{
+
+
+document
+.querySelectorAll(".eventos-dia")
+.forEach((campo)=>{
+
+campo.innerHTML="";
+
+});
 
 
 const snapshot = await getDocs(
@@ -2088,12 +2143,15 @@ return;
 campoDia.innerHTML += `
 
 
-<div class="evento-calendario">
+<div 
+class="evento-calendario"
+onclick="abrirEventoCalendario('${documento.id}')"
+>
 
 
 <strong>
 
-${evento.titulo}
+${escaparTexto(evento.titulo)}
 
 </strong>
 
@@ -2252,3 +2310,116 @@ carregarEventosCalendario();
 
 
 }
+
+// =====================================
+// ABRIR EVENTO PELO CALENDÁRIO
+// =====================================
+
+
+window.abrirEventoCalendario = async function(id){
+
+
+try{
+
+
+const referencia = doc(
+
+db,
+
+"agenda",
+
+id
+
+);
+
+
+
+const resultado = await getDoc(
+
+referencia
+
+);
+
+
+
+if(!resultado.exists()){
+
+
+alert(
+"Evento não encontrado."
+);
+
+
+return;
+
+}
+
+
+
+const evento = resultado.data();
+
+
+
+const abrir = confirm(`
+
+📅 ${evento.titulo}
+
+
+Tipo:
+${evento.tipo || "-"}
+
+
+Data:
+${formatarData(evento.data)}
+
+
+Horário:
+${evento.inicio || "-"} às ${evento.fim || "-"}
+
+
+Local:
+${evento.local || "-"}
+
+
+Deseja editar este evento?
+
+`);
+
+
+
+if(abrir){
+
+
+editarEvento(id);
+
+
+}
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+
+"Erro ao abrir evento:",
+
+error
+
+);
+
+
+
+alert(
+
+"Erro ao carregar evento."
+
+);
+
+
+}
+
+
+};
