@@ -1733,3 +1733,231 @@ document.getElementById("qrcode"),
 
 
 }
+
+// =====================================
+// CALENDÁRIO ACADÊMICO
+// GERAÇÃO DO CALENDÁRIO MENSAL
+// =====================================
+
+
+const tituloCalendario =
+document.getElementById("tituloCalendario");
+
+
+const diasCalendario =
+document.getElementById("diasCalendario");
+
+
+
+let dataCalendario = new Date(
+    2026,
+    7,
+    1
+);
+
+
+
+const nomesMeses = [
+
+"Janeiro",
+"Fevereiro",
+"Março",
+"Abril",
+"Maio",
+"Junho",
+"Julho",
+"Agosto",
+"Setembro",
+"Outubro",
+"Novembro",
+"Dezembro"
+
+];
+
+
+
+// =====================================
+// GERAR CALENDÁRIO
+// =====================================
+
+
+function gerarCalendario(){
+
+
+if(
+!diasCalendario ||
+!tituloCalendario
+){
+
+return;
+
+}
+
+
+
+diasCalendario.innerHTML="";
+
+
+
+const ano =
+dataCalendario.getFullYear();
+
+
+
+const mes =
+dataCalendario.getMonth();
+
+
+
+tituloCalendario.textContent =
+
+`${nomesMeses[mes]} de ${ano}`;
+
+
+
+const primeiroDia =
+
+new Date(
+
+ano,
+
+mes,
+
+1
+
+).getDay();
+
+
+
+
+const quantidadeDias =
+
+new Date(
+
+ano,
+
+mes + 1,
+
+0
+
+).getDate();
+
+
+
+
+let linha =
+
+document.createElement("tr");
+
+
+
+
+
+// espaços antes do primeiro dia
+
+for(
+let i = 0;
+i < primeiroDia;
+i++
+){
+
+
+const vazio =
+
+document.createElement("td");
+
+
+linha.appendChild(vazio);
+
+
+}
+
+
+
+
+
+
+// criar dias
+
+for(
+let dia = 1;
+dia <= quantidadeDias;
+dia++
+){
+
+
+
+const celula =
+
+document.createElement("td");
+
+
+
+celula.classList.add(
+"dia-calendario"
+);
+
+
+
+celula.innerHTML = `
+
+
+<div class="numero-dia">
+
+${dia}
+
+</div>
+
+
+<div 
+class="eventos-dia"
+id="dia-${dia}">
+
+</div>
+
+
+`;
+
+
+
+linha.appendChild(celula);
+
+
+
+
+
+if(
+
+(primeiroDia + dia) % 7 === 0
+
+||
+
+dia === quantidadeDias
+
+){
+
+
+
+diasCalendario.appendChild(linha);
+
+
+
+linha =
+
+document.createElement("tr");
+
+
+}
+
+
+
+}
+
+
+
+}
+
+
+
+
+gerarCalendario();
