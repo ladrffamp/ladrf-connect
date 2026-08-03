@@ -2250,3 +2250,78 @@ color:#0b7a43;
     opacity:.9;
 
 }
+
+.dashboard-agenda{
+
+    display:flex;
+    gap:20px;
+    width:100%;
+    margin:20px 0;
+
+}
+
+
+
+.indicador-agenda{
+
+    flex:1;
+
+    background:#ffffff;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    box-shadow:0 4px 15px rgba(0,0,0,0.08);
+
+}
+
+
+
+.icone-indicador{
+
+    font-size:36px;
+
+}
+
+
+
+.indicador-agenda h2{
+
+    margin:0;
+
+    font-size:28px;
+
+    color:#1b5e20;
+
+}
+
+
+
+.indicador-agenda p{
+
+    margin:5px 0 0;
+
+    color:#555;
+
+    font-size:14px;
+
+}
+
+
+
+@media(max-width:900px){
+
+.dashboard-agenda{
+
+    flex-direction:column;
+
+}
+
+}
