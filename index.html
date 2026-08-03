@@ -999,6 +999,23 @@ ${aviso.localEvento || "Não informado"}
 
 
 
+<p>
+
+<strong>Status:</strong>
+
+<span class="${
+    aviso.status === "Concluído"
+        ? "status concluido"
+        : "status programado"
+}">
+
+${aviso.status || "Ativo"}
+
+</span>
+
+</p>
+
+
 <small>
 
 Publicado em:
@@ -1008,9 +1025,7 @@ ${dataPublicacao}
 </small>
 
 
-
 <br><br>
-
 
 
 <a 
