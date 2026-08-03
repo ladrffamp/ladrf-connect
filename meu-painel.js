@@ -11,7 +11,11 @@ onAuthStateChanged
 
 import {
 collection,
-getDocs
+getDocs,
+query,
+where,
+doc,
+getDoc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -37,7 +41,8 @@ document.getElementById("totalHoras");
 const totalPresencas =
 document.getElementById("totalPresencas");
 
-
+const listaCertificadosUsuario =
+document.getElementById("listaCertificadosUsuario");
 
 
 
@@ -466,6 +471,124 @@ presencas
 );
 
 
+// ================================
+// MEUS CERTIFICADOS
+// ================================
+
+if(listaCertificadosUsuario){
+
+
+const certificados = await getDocs(
+
+query(
+
+collection(db,"certificados"),
+
+where(
+"membroId",
+"==",
+uid
+)
+
+)
+
+);
+
+
+
+listaCertificadosUsuario.innerHTML="";
+
+
+
+if(certificados.empty){
+
+
+listaCertificadosUsuario.innerHTML = `
+
+<p>
+Nenhum certificado disponível.
+</p>
+
+`;
+
+
+}else{
+
+
+certificados.forEach((item)=>{
+
+
+const certificado =
+item.data();
+
+
+
+listaCertificadosUsuario.innerHTML += `
+
+
+<div class="card">
+
+
+<h3>
+
+🏆 ${certificado.evento}
+
+</h3>
+
+
+
+<p>
+
+Carga horária:
+
+<strong>
+
+${certificado.cargaHoraria}
+
+</strong>
+
+</p>
+
+
+
+<p>
+
+Data:
+
+<strong>
+
+${certificado.dataEmissao}
+
+</strong>
+
+</p>
+
+
+
+<button
+class="btn-success"
+onclick="baixarCertificado('${item.id}')">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+Baixar Certificado
+
+</button>
+
+
+</div>
+
+
+`;
+
+
+});
+
+
+}
+
+
+}
 
 
 }catch(error){
