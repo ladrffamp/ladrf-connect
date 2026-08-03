@@ -85,23 +85,24 @@ window.salvarAviso = async function(){
 
             await addDoc(
 
-                avisosRef,
+    avisosRef,
 
-                {
+    {
 
-                    titulo,
-                    categoria,
-                    prioridade,
-                    dataEvento,
-                    horaEvento,
-                    localEvento,
-                    mensagem,
-                    fixado,
-                    dataPublicacao: Timestamp.now()
+        titulo,
+        categoria,
+        prioridade,
+        dataEvento,
+        horaEvento,
+        localEvento,
+        mensagem,
+        fixado,
+        status:"Ativo",
+        dataPublicacao: Timestamp.now()
 
-                }
+    }
 
-            );
+);
 
             alert("Aviso publicado com sucesso!");
 
@@ -302,31 +303,62 @@ onSnapshot(avisosRef,(snapshot)=>{
 
             <small>
 
-                Publicado em:
+    Publicado em:
 
-                ${dataPublicacao}
+    ${dataPublicacao}
 
-            </small>
+</small>
 
-            <br><br>
+<p>
 
-            <button
+<strong>Status:</strong>
 
-            class="btn-primary"
+<span class="${
+    aviso.status === "Concluído"
+        ? "status concluido"
+        : "status programado"
+}">
 
-            onclick="editarAviso('${aviso.id}')">
+${aviso.status || "Ativo"}
 
-            <i class="fa-solid fa-pen"></i>
+</span>
 
-            Editar
+</p>
 
-            </button>
+<br><br>
 
-            <button
+<button
+class="btn-primary"
+onclick="editarAviso('${aviso.id}')">
 
-            class="btn-danger"
+<i class="fa-solid fa-pen"></i>
 
-            onclick="excluirAviso('${aviso.id}')">
+Editar
+
+</button>
+
+${
+aviso.status !== "Concluído"
+?
+`
+<button
+class="btn-success"
+onclick="concluirAviso('${aviso.id}')">
+
+<i class="fa-solid fa-check"></i>
+
+Concluir
+
+</button>
+`
+:
+""
+}
+
+<button
+class="btn-danger"
+onclick="excluirAviso('${aviso.id}')">
+
 
             <i class="fa-solid fa-trash"></i>
 
@@ -486,6 +518,41 @@ window.excluirAviso = async function(id){
         console.error(erro);
 
         alert("Erro ao excluir aviso.");
+
+    }
+
+};
+
+// ======================================
+// CONCLUIR AVISO
+// ======================================
+
+window.concluirAviso = async function(id){
+
+    const confirmar = confirm(
+        "Marcar este aviso como concluído?"
+    );
+
+    if(!confirmar){
+        return;
+    }
+
+    try{
+
+        await updateDoc(
+            doc(db,"avisos",id),
+            {
+                status:"Concluído"
+            }
+        );
+
+        alert("Aviso concluído com sucesso!");
+
+    }catch(erro){
+
+        console.error(erro);
+
+        alert("Erro ao concluir aviso.");
 
     }
 
