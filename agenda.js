@@ -435,18 +435,31 @@ async function atualizarIndicadoresAgenda(){
             // PARTICIPANTES ESCALADOS
 
             const participantesSnapshot =
-            await getDocs(
-                collection(
-                    db,
-                    "agenda",
-                    documento.id,
-                    "participantes"
-                )
-            );
+await getDocs(
+    collection(
+        db,
+        "agenda",
+        documento.id,
+        "participantes"
+    )
+);
 
 
-            participantes +=
-            participantesSnapshot.size;
+participantesSnapshot.forEach((participante)=>{
+
+    const dados = participante.data();
+
+
+    if(
+        dados.presenca === "Confirmado" ||
+        dados.presenca === "Confirmada"
+    ){
+
+        participantes++;
+
+    }
+
+});
 
 
         }
