@@ -27,6 +27,8 @@ const eventosRef = collection(
 
 let editando = null;
 
+const eventosPorDia = {};
+
 
 
 // =====================================
@@ -2047,6 +2049,20 @@ const evento =
 documento.data();
 
 
+if(!eventosPorDia[evento.data]){
+
+    eventosPorDia[evento.data] = [];
+
+}
+
+eventosPorDia[evento.data].push({
+
+    id: documento.id,
+
+    ...evento
+
+});
+
 
 // data do evento
 
@@ -2174,6 +2190,32 @@ switch(evento.tipo){
         break;
 
 }
+
+
+const totalEventos = campoDia.children.length;
+
+if(totalEventos >= 3){
+
+    const contador = document.getElementById(`contador-${diaEvento}`);
+
+    if(contador){
+
+       contador.innerHTML = `
+<span
+style="cursor:pointer;color:#1565C0;font-weight:bold"
+onclick="verEventosDia('${evento.data}')">
+
++${totalEventos - 2} eventos
+
+</span>
+`;
+
+    }
+
+    return;
+
+}
+
 
 campoDia.innerHTML += `
 
@@ -2497,5 +2539,21 @@ async function carregarProximosEventos() {
         area.innerHTML = "<p>Erro ao carregar próximos eventos.</p>";
 
     }
+
+}
+
+window.verEventosDia = function(data){
+
+    const lista = eventosPorDia[data] || [];
+
+    let texto = `Eventos de ${formatarData(data)}\n\n`;
+
+    lista.forEach((evento)=>{
+
+        texto += `• ${evento.inicio || "--:--"} - ${evento.titulo}\n`;
+
+    });
+
+    alert(texto);
 
 }
