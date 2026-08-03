@@ -12,190 +12,155 @@ import {
 async function login(){
 
 
-    const email = document
-        .getElementById("email")
-        .value
-        .trim();
+const email =
+document.getElementById("email")
+.value
+.trim();
 
 
-    const senha = document
-        .getElementById("senha")
-        .value;
+const senha =
+document.getElementById("senha")
+.value;
 
 
-    const mensagem = document
-        .getElementById("erro");
+const mensagem =
+document.getElementById("erro");
 
 
 
-    try {
+try{
 
 
-        mensagem.innerHTML = "";
+mensagem.innerHTML = "";
 
 
-        await signInWithEmailAndPassword(
-            auth,
-            email,
-            senha
-        );
 
+await signInWithEmailAndPassword(
+    auth,
+    email,
+    senha
+);
 
-        mensagem.style.color = "green";
 
-        mensagem.innerHTML =
-        "Login realizado!";
 
+// pega informações do QR Code
 
-        setTimeout(() => {
+const parametros =
+new URLSearchParams(
+    window.location.search
+);
 
 
-    const parametros =
-    new URLSearchParams(
-        window.location.search
-    );
+const evento =
+parametros.get("evento");
 
 
-    const redirect =
-    parametros.get("redirect");
 
+mensagem.style.color = "green";
 
-    const evento =
-    parametros.get("evento");
+mensagem.innerHTML =
+"Login realizado!";
 
 
 
-    if(
-        redirect === "checkin" &&
-        evento
-    ){
 
+// volta para confirmação do evento
 
-        window.location.href =
-        "checkin.html?evento=" + evento;
+setTimeout(()=>{
 
 
-    }else{
+if(evento){
 
 
-        window.location.href =
-        "index.html";
+window.location.href =
+"checkin.html?evento=" + evento;
 
 
-    }
+}else{
 
 
-}, 1000);
+window.location.href =
+"index.html";
 
 
+}
 
-    } catch(error) {
 
+},1000);
 
-        console.log(
-            "Código do erro:",
-            error.code
-        );
 
 
-        console.log(
-            "Mensagem:",
-            error.message
-        );
+}
+catch(error){
 
 
-        mensagem.style.color = "red";
+console.log(error.code);
 
 
+mensagem.style.color = "red";
 
-        if(error.code === "auth/user-not-found"){
 
+if(error.code === "auth/invalid-credential"){
 
-            mensagem.innerHTML =
-            "Usuário não encontrado.";
 
+mensagem.innerHTML =
+"E-mail ou senha inválidos.";
 
-        }
 
+}
 
-        else if(error.code === "auth/wrong-password"){
+else if(error.code === "auth/user-not-found"){
 
 
-            mensagem.innerHTML =
-            "Senha incorreta.";
+mensagem.innerHTML =
+"Usuário não encontrado.";
 
 
-        }
+}
 
+else{
 
-        else if(error.code === "auth/invalid-credential"){
 
+mensagem.innerHTML =
+error.code;
 
-            mensagem.innerHTML =
-            "E-mail ou senha inválidos.";
 
+}
 
-        }
 
+}
 
-        else if(error.code === "auth/operation-not-allowed"){
-
-
-            mensagem.innerHTML =
-            "Login por e-mail não está ativado no Firebase.";
-
-
-        }
-
-
-        else {
-
-
-            mensagem.innerHTML =
-            error.code;
-
-
-        }
-
-
-    }
 
 }
 
 
 
+
 // =====================================
-// BOTÃO ENTRAR
+// BOTÃO LOGIN
 // =====================================
+
 
 document.addEventListener(
-    "DOMContentLoaded",
-    () => {
+"DOMContentLoaded",
+()=>{
 
 
-        const botao =
-        document.getElementById("btnEntrar");
+const botao =
+document.getElementById("btnEntrar");
 
 
-        if(!botao){
+if(botao){
 
 
-            console.error(
-                "Botão btnEntrar não encontrado"
-            );
+botao.addEventListener(
+"click",
+login
+);
 
 
-            return;
-
-        }
+}
 
 
-
-        botao.addEventListener(
-            "click",
-            login
-        );
-
-
-    }
+}
 );

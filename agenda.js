@@ -1845,7 +1845,7 @@ const link =
 
 window.location.origin +
 
-"/ladrf-connect/checkin.html?evento=" +
+"/ladrf-connect/login.html?redirect=checkin&evento=" +
 
 id;
 
