@@ -699,3 +699,226 @@ return resultado;
 
 
 }
+
+
+// =====================================
+// BAIXAR CERTIFICADO PDF
+// =====================================
+
+window.baixarCertificado = async function(id){
+
+
+try{
+
+
+const certificadoRef = doc(
+    db,
+    "certificados",
+    id
+);
+
+
+
+const certificadoSnap = await getDoc(
+    certificadoRef
+);
+
+
+
+if(!certificadoSnap.exists()){
+
+alert(
+"Certificado não encontrado."
+);
+
+return;
+
+}
+
+
+
+const c = certificadoSnap.data();
+
+
+
+// GERAR PDF
+
+const { jsPDF } = window.jspdf;
+
+
+const pdf = new jsPDF({
+
+orientation:"landscape",
+
+unit:"mm",
+
+format:"a4"
+
+});
+
+
+
+const largura = 297;
+
+
+
+pdf.setLineWidth(1);
+
+
+pdf.rect(
+10,
+10,
+277,
+190
+);
+
+
+
+// TÍTULO
+
+pdf.setFont(
+"helvetica",
+"bold"
+);
+
+
+pdf.setFontSize(28);
+
+
+pdf.text(
+"LADRF",
+largura/2,
+45,
+{
+align:"center"
+}
+);
+
+
+
+pdf.setFontSize(24);
+
+
+pdf.text(
+"CERTIFICADO",
+largura/2,
+65,
+{
+align:"center"
+}
+);
+
+
+
+// TEXTO
+
+pdf.setFont(
+"helvetica",
+"normal"
+);
+
+
+pdf.setFontSize(16);
+
+
+pdf.text(
+"Certificamos que",
+largura/2,
+95,
+{
+align:"center"
+}
+);
+
+
+
+pdf.setFont(
+"helvetica",
+"bold"
+);
+
+
+pdf.setFontSize(22);
+
+
+pdf.text(
+c.membro || "Participante",
+largura/2,
+115,
+{
+align:"center"
+}
+);
+
+
+
+pdf.setFont(
+"helvetica",
+"normal"
+);
+
+
+pdf.setFontSize(16);
+
+
+pdf.text(
+`participou da atividade: ${c.evento}`,
+largura/2,
+140,
+{
+align:"center"
+}
+);
+
+
+
+pdf.text(
+`Carga horária: ${c.cargaHoraria}`,
+largura/2,
+160,
+{
+align:"center"
+}
+);
+
+
+
+pdf.text(
+`Emitido em: ${c.dataEmissao}`,
+largura/2,
+180,
+{
+align:"center"
+}
+);
+
+
+
+// DOWNLOAD
+
+pdf.save(
+`Certificado_${c.membro}.pdf`
+);
+
+
+
+}
+
+catch(error){
+
+
+console.error(
+"Erro ao gerar certificado:",
+error
+);
+
+
+alert(
+"Erro ao gerar certificado."
+);
+
+
+}
+
+
+};
