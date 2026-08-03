@@ -743,7 +743,18 @@ const c = certificadoSnap.data();
 
 // GERAR PDF
 
-const { jsPDF } = window.jspdf;
+const { jsPDF } = window.jspdf || {};
+
+
+if(!jsPDF){
+
+alert(
+"Biblioteca de PDF não carregada."
+);
+
+return;
+
+}
 
 
 const pdf = new jsPDF({
