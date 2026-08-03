@@ -174,20 +174,47 @@ async function gerarNumeroCertificado(){
 
 
   const certificados =
-    await getDocs(
-      collection(db,"certificados")
-    );
+  await getDocs(
+    collection(db,"certificados")
+  );
 
 
-  const quantidade =
-    certificados.size + 1;
+  let maior = 0;
 
 
-  const numero =
-    String(quantidade).padStart(4,"0");
+  certificados.forEach((doc)=>{
+
+    const dados = doc.data();
 
 
-  return `LADRF-${ano}-${numero}`;
+    if(dados.numeroCertificado){
+
+      const partes =
+      dados.numeroCertificado.split("-");
+
+
+      const numero =
+      Number(partes[2]);
+
+
+      if(numero > maior){
+
+        maior = numero;
+
+      }
+
+    }
+
+  });
+
+
+
+  const proximo =
+  maior + 1;
+
+
+
+  return `LADRF-${ano}-${String(proximo).padStart(4,"0")}`;
 
 }
 
@@ -760,8 +787,16 @@ return;
 snapshot.forEach(
 (doc)=>{
 
-const c =
-doc.data();
+const c = doc.data();
+
+
+// ignora certificados antigos sem membro
+
+if(!c.membro){
+
+return;
+
+}
 
 
 listaCertificados.innerHTML += `

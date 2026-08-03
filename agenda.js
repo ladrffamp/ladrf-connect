@@ -1273,12 +1273,15 @@ const dados = participante.data();
 
 
 if(
-
 dados.presenca === "Confirmado" ||
-
 dados.presenca === "Confirmada"
-
 ){
+
+
+const numeroCertificado =
+`LADRF-${new Date().getFullYear()}-${String(
+Date.now()
+).slice(-4)}`;
 
 
 
@@ -1289,43 +1292,39 @@ collection(db,"certificados"),
 {
 
 
-membroId:
+numeroCertificado,
 
+
+membroId:
 participante.id,
 
 
-nome:
-
-evento.titulo,
+membro:
+dados.nome,
 
 
 eventoId:
-
 id,
 
 
 evento:
-
 evento.titulo,
 
 
-horas:
+cargaHoraria:
+calcularHoras(evento) + " horas",
 
-calcularHoras(evento),
 
-
-data:
-
-evento.data,
+dataEmissao:
+new Date()
+.toLocaleDateString("pt-BR"),
 
 
 criadoEm:
-
 Timestamp.now(),
 
 
 status:
-
 "Disponível"
 
 
