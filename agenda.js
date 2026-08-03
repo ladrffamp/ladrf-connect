@@ -1896,20 +1896,23 @@ celula.classList.add(
 
 celula.innerHTML = `
 
-
 <div class="numero-dia">
 
 ${dia}
 
 </div>
 
-
-<div 
+<div
 class="eventos-dia"
 id="dia-${dia}">
 
 </div>
 
+<div
+class="contador-eventos"
+id="contador-${dia}">
+
+</div>
 
 `;
 
@@ -2135,34 +2138,54 @@ return;
 
 
 
+const contador = document.getElementById(`contador-${diaEvento}`);
+
+if(contador){
+
+    const quantidade = contador.dataset.total
+        ? Number(contador.dataset.total)
+        : 0;
+
+    contador.dataset.total = quantidade + 1;
+
+    contador.textContent =
+        `${quantidade + 1} evento${quantidade ? "s" : ""}`;
+
+}
+
+let cor = "#2E7D32";
+
+switch(evento.tipo){
+
+    case "Curso":
+        cor = "#1565C0";
+        break;
+
+    case "Congresso":
+        cor = "#6A1B9A";
+        break;
+
+    case "Reunião":
+        cor = "#EF6C00";
+        break;
+
+    case "Prova":
+        cor = "#C62828";
+        break;
+
+}
+
 campoDia.innerHTML += `
 
-
-<div 
+<div
 class="evento-calendario"
-onclick="abrirEventoCalendario('${documento.id}')"
+style="background:${cor}"
+onclick="event.stopPropagation();abrirEventoCalendario('${documento.id}')"
 >
-
-
-<strong>
 
 ${escaparTexto(evento.titulo)}
 
-</strong>
-
-
-<br>
-
-
-<span>
-
-${evento.inicio || ""}
-
-</span>
-
-
 </div>
-
 
 `;
 

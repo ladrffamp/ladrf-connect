@@ -2144,4 +2144,49 @@ color:#0b7a43;
 
     }
 
+} 
+
+
+.contador-eventos{
+
+    margin-top:6px;
+
+    font-size:11px;
+
+    color:#666;
+
+    font-weight:600;
+
+}
+
+.evento-calendario{
+
+    color:#fff;
+
+    padding:4px 6px;
+
+    margin-top:4px;
+
+    border-radius:6px;
+
+    font-size:11px;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+    overflow:hidden;
+
+    white-space:nowrap;
+
+    text-overflow:ellipsis;
+
+}
+
+.evento-calendario:hover{
+
+    transform:scale(1.03);
+
+    opacity:.9;
+
 }
