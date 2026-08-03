@@ -621,16 +621,29 @@ div.innerHTML =
 
 <i class="fa-solid fa-certificate"></i>
 
-${cert.nome || "Certificado"}
+${cert.evento || "Certificado"}
 
 </h4>
 
 
 <p>
 
-${cert.horas || 0} horas
+Carga horária:
+
+${cert.cargaHoraria || "0 horas"}
 
 </p>
+
+
+<button
+class="btn-success"
+onclick="baixarCertificado('${item.id}')">
+
+<i class="fa-solid fa-file-pdf"></i>
+
+Baixar PDF
+
+</button>
 
 `;
 
@@ -1258,9 +1271,21 @@ document
 ()=>{
 
 
-alert(
-"Área de certificados será integrada ao módulo de exportação."
-);
+const area =
+document.getElementById("listaCertificados");
+
+
+if(area){
+
+
+area.scrollIntoView({
+
+behavior:"smooth"
+
+});
+
+
+}
 
 
 }
