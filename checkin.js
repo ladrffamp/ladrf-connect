@@ -78,12 +78,10 @@ onAuthStateChanged(auth, async(u)=>{
 
 if(!u){
 
-
-window.location.href="login.html";
-
+window.location.href =
+"login.html?redirect=checkin&evento=" + eventoId;
 
 return;
-
 
 }
 

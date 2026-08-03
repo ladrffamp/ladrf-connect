@@ -49,10 +49,43 @@ async function login(){
 
         setTimeout(() => {
 
-            window.location.href =
-            "index.html";
 
-        }, 1000);
+    const parametros =
+    new URLSearchParams(
+        window.location.search
+    );
+
+
+    const redirect =
+    parametros.get("redirect");
+
+
+    const evento =
+    parametros.get("evento");
+
+
+
+    if(
+        redirect === "checkin" &&
+        evento
+    ){
+
+
+        window.location.href =
+        "checkin.html?evento=" + evento;
+
+
+    }else{
+
+
+        window.location.href =
+        "index.html";
+
+
+    }
+
+
+}, 1000);
 
 
 
