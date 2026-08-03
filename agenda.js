@@ -292,20 +292,15 @@ return;
 
 for(const item of snapshot.docs){
 
-
-listaEventos.innerHTML +=
-
-await renderizarEvento(item);
-
-
+    listaEventos.innerHTML +=
+    await renderizarEvento(item);
 
 }
 
-
+// Atualiza a lista de próximos eventos
+carregarProximosEventos();
 
 }
-
-
 
 );
 
@@ -2423,3 +2418,4 @@ alert(
 
 
 };
+
