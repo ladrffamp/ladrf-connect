@@ -1,14 +1,14 @@
 import { db } from "./firebase.js";
 
+
 import {
-collection,
-onSnapshot,
-addDoc,
-Timestamp,
-getDocs,
-deleteDoc,
-doc
-}
+  collection,
+  onSnapshot,
+  addDoc,
+  Timestamp,
+  getDocs,
+  deleteDoc,
+  doc
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
