@@ -2310,112 +2310,105 @@ carregarEventosCalendario();
 // ABRIR EVENTO PELO CALENDÁRIO
 // =====================================
 
-
 window.abrirEventoCalendario = async function(id){
 
+    try{
 
-try{
+        const referencia = doc(
+            db,
+            "agenda",
+            id
+        );
 
+        const resultado = await getDoc(referencia);
 
-const referencia = doc(
+        if(!resultado.exists()){
 
-db,
+            alert("Evento não encontrado.");
+            return;
 
-"agenda",
+        }
 
-id
+        const evento = resultado.data();
 
-);
+        const detalhes = document.createElement("div");
 
+        detalhes.className = "modal-overlay";
 
+        detalhes.innerHTML = `
 
-const resultado = await getDoc(
+        <div class="modal-evento">
 
-referencia
+            <h2>📅 ${escaparTexto(evento.titulo)}</h2>
 
-);
+            <p><strong>Tipo:</strong> ${escaparTexto(evento.tipo)}</p>
 
+            <p><strong>Data:</strong> ${formatarData(evento.data)}</p>
 
+            <p><strong>Horário:</strong> ${evento.inicio || "-"} às ${evento.fim || "-"}</p>
 
-if(!resultado.exists()){
+            <p><strong>Local:</strong> ${escaparTexto(evento.local)}</p>
 
+            <p><strong>Status:</strong> ${escaparTexto(evento.status)}</p>
 
-alert(
-"Evento não encontrado."
-);
+            <p><strong>Observações:</strong><br>${escaparTexto(evento.observacoes)}</p>
 
+            <div class="botoes">
 
-return;
+                <button class="editar" onclick="editarEvento('${id}'); fecharModalEvento();">
+                    ✏️ Editar
+                </button>
 
-}
+                <button class="salvar" onclick="abrirEscala('${id}'); fecharModalEvento();">
+                    👥 Equipe
+                </button>
 
+                <button class="salvar" onclick="gerarQRCode('${id}'); fecharModalEvento();">
+                    <i class="fa-solid fa-qrcode"></i> QR Code
+                </button>
 
+                <button class="excluir" onclick="excluirEvento('${id}'); fecharModalEvento();">
+                    🗑️ Excluir
+                </button>
 
-const evento = resultado.data();
+                <button class="btn-secundario" onclick="fecharModalEvento()">
+                    Fechar
+                </button>
 
+            </div>
 
+        </div>
 
-const abrir = confirm(`
+        `;
 
-📅 ${evento.titulo}
+        document.body.appendChild(detalhes);
 
+    }
 
-Tipo:
-${evento.tipo || "-"}
+    catch(error){
 
+        console.error("Erro ao abrir evento:", error);
 
-Data:
-${formatarData(evento.data)}
+        alert("Erro ao carregar evento.");
 
+    }
 
-Horário:
-${evento.inicio || "-"} às ${evento.fim || "-"}
-
-
-Local:
-${evento.local || "-"}
-
-
-Deseja editar este evento?
-
-`);
-
-
-
-if(abrir){
-
-
-editarEvento(id);
-
-
-}
-
-
-
-}
-
-catch(error){
-
-
-console.error(
-
-"Erro ao abrir evento:",
-
-error
-
-);
+};
 
 
+// =====================================
+// FECHAR MODAL
+// =====================================
 
-alert(
+window.fecharModalEvento = function(){
 
-"Erro ao carregar evento."
+    const modal = document.querySelector(".modal-overlay");
 
-);
+    if(modal){
 
+        modal.remove();
 
-}
-
+    }
 
 };
 
