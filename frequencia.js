@@ -194,52 +194,74 @@ function carregarPresencas() {
 
     }
 
-    const q = query(
-        collection(db, "presencas"),
-        where("eventoId", "==", eventoId)
-    );
-
-   buscarConfirmacoesPainel(eventoId);
+    const participantesRef = collection(
+    db,
+    "agenda",
+    eventoId,
+    "participantes"
+);
 
 
 unsubscribePresencas = onSnapshot(
 
-        q,
+    participantesRef,
 
-        (snapshot) => {
+    (snapshot)=>{
 
-            presencas = {};
+        presencas = {};
 
-            snapshot.forEach((item) => {
+        snapshot.forEach((item)=>{
 
-                const dados = item.data();
+            const dados = item.data();
 
-                presencas[dados.membroId] = {
 
-                    status: dados.status,
+            presencas[item.id] = {
 
-                    hora: dados.horaCheckin || ""
+                status:
+                dados.presenca === "Confirmado"
+                ||
+                dados.presenca === "Presente"
 
-                };
+                ?
+                "Presente"
 
-            });
+                :
+                "Pendente",
 
-            atualizarTabela();
 
-        },
+                hora:
 
-        (erro) => {
+                dados.checkin?.seconds
 
-            console.error(
-                "Erro ao carregar presenças:",
-                erro
-            );
+                ?
 
-        }
+                new Date(
+                    dados.checkin.seconds * 1000
+                )
+                .toLocaleTimeString(
+                    "pt-BR",
+                    {
+                        hour:"2-digit",
+                        minute:"2-digit"
+                    }
+                )
 
-    );
+                :
 
-}
+                ""
+
+            };
+
+
+        });
+
+
+        atualizarTabela();
+
+
+    }
+
+);
 
 
 // ======================================================
@@ -258,41 +280,49 @@ async function salvarPresenca(membro, status) {
 
     }
 
+
     const evento = eventos.find(
         e => e.id === eventoId
     );
 
-    const hora = status === "Presente"
-        ? new Date().toLocaleTimeString("pt-BR", {
-            hour: "2-digit",
-            minute: "2-digit"
-        })
-        : "";
 
     await setDoc(
 
         doc(
             db,
-            "presencas",
-            `${eventoId}_${membro.id}`
+            "agenda",
+            eventoId,
+            "participantes",
+            membro.id
         ),
 
         {
 
-            eventoId,
+            nome: membro.nome,
 
-            evento: evento?.titulo || "",
+            email: membro.email || "",
 
-            membroId: membro.id,
+            presenca:
+            status === "Presente"
+            ?
+            "Confirmado"
+            :
+            "Ausente",
 
-            membro: membro.nome,
+            checkin:
+            status === "Presente"
+            ?
+            Timestamp.now()
+            :
+            null,
 
-            status,
+            evento:
+            evento?.titulo || ""
 
-            horaCheckin: hora,
+        },
 
-            criadoEm: Timestamp.now()
-
+        {
+            merge:true
         }
 
     );
@@ -575,62 +605,5 @@ atualizarContadores(
 // LOG
 // ======================================================
 
-async function buscarConfirmacoesPainel(eventoId){
 
-    const acoes = await getDocs(
-        collection(db,"acoes")
-    );
-
-
-    for(const acao of acoes.docs){
-
-
-        const participantes = await getDocs(
-
-            collection(
-
-                db,
-
-                "acoes",
-
-                acao.id,
-
-                "participantes"
-
-            )
-
-        );
-
-
-        participantes.forEach((item)=>{
-
-
-            const dados = item.data();
-
-
-            if(dados.presenca === "Confirmada"){
-
-
-                presencas[item.id] = {
-
-                    status:"Presente",
-
-                    hora:
-                    "Confirmado pelo painel"
-
-                };
-
-
-            }
-
-
-        });
-
-
-    }
-
-
-    atualizarTabela();
-
-}
 console.log("LADRF Connect - Frequência carregada com sucesso.");
