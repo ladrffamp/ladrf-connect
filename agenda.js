@@ -2419,3 +2419,67 @@ alert(
 
 };
 
+// =====================================
+// PRÓXIMOS EVENTOS
+// =====================================
+
+async function carregarProximosEventos() {
+
+    const area = document.getElementById("proximosEventos");
+
+    if (!area) return;
+
+    try {
+
+        const snapshot = await getDocs(
+            query(
+                collection(db, "agenda"),
+                orderBy("data")
+            )
+        );
+
+        area.innerHTML = "";
+
+        const hoje = new Date();
+        hoje.setHours(0,0,0,0);
+
+        let total = 0;
+
+        snapshot.forEach((docItem) => {
+
+            const evento = docItem.data();
+
+            if (!evento.data) return;
+
+            const dataEvento = new Date(evento.data + "T00:00:00");
+
+            if (dataEvento >= hoje && total < 5) {
+
+                area.innerHTML += `
+                    <div class="evento">
+                        <h3>${escaparTexto(evento.titulo)}</h3>
+                        <p>📅 ${formatarData(evento.data)}</p>
+                        <p>⏰ ${evento.inicio || "-"} ${evento.fim ? "às " + evento.fim : ""}</p>
+                        <p>📍 ${escaparTexto(evento.local || "-")}</p>
+                    </div>
+                `;
+
+                total++;
+
+            }
+
+        });
+
+        if (total === 0) {
+            area.innerHTML = "<p>Nenhum próximo evento encontrado.</p>";
+        }
+
+    } catch (erro) {
+
+        console.error(erro);
+
+        area.innerHTML = "<p>Erro ao carregar próximos eventos.</p>";
+
+    }
+
+}
