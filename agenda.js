@@ -2546,14 +2546,67 @@ window.verEventosDia = function(data){
 
     const lista = eventosPorDia[data] || [];
 
-    let texto = `Eventos de ${formatarData(data)}\n\n`;
+    if(lista.length === 0){
+        return;
+    }
 
-    lista.forEach((evento)=>{
+    const modal = document.createElement("div");
 
-        texto += `• ${evento.inicio || "--:--"} - ${evento.titulo}\n`;
+    modal.className = "modal-overlay";
+
+    let html = `
+        <div class="modal-evento">
+            <h2>📅 Eventos de ${formatarData(data)}</h2>
+    `;
+
+    lista.sort((a,b)=>(a.inicio || "").localeCompare(b.inicio || ""));
+
+    lista.forEach(evento=>{
+
+        html += `
+
+        <div class="evento-dia-card">
+
+            <strong>${escaparTexto(evento.titulo)}</strong>
+
+            <p>🕒 ${evento.inicio || "--:--"} ${evento.fim ? "às " + evento.fim : ""}</p>
+
+            <p>📍 ${escaparTexto(evento.local || "-")}</p>
+
+            <button
+                class="editar"
+                onclick="abrirEventoCalendario('${evento.id}');fecharModalEvento();">
+
+                Abrir
+
+            </button>
+
+        </div>
+
+        `;
 
     });
 
-    alert(texto);
+    html += `
+
+        <div class="botoes">
+
+            <button
+                class="btn-secundario"
+                onclick="fecharModalEvento()">
+
+                Fechar
+
+            </button>
+
+        </div>
+
+        </div>
+
+    `;
+
+    modal.innerHTML = html;
+
+    document.body.appendChild(modal);
 
 }
