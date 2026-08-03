@@ -299,6 +299,115 @@ for(const item of snapshot.docs){
 
 }
 
+
+// =====================================
+// INDICADORES DA AGENDA
+// =====================================
+
+async function atualizarIndicadoresAgenda(){
+
+    try{
+
+        const totalEventosMes =
+        document.getElementById("totalEventosMes");
+
+        const eventosHoje =
+        document.getElementById("eventosHoje");
+
+        const proximosSeteDias =
+        document.getElementById("proximosSeteDias");
+
+        const totalParticipantesAgenda =
+        document.getElementById("totalParticipantesAgenda");
+
+        const snapshot = await getDocs(
+            collection(db,"agenda")
+        );
+
+        const hoje = new Date();
+        hoje.setHours(0,0,0,0);
+
+        const mesAtual = hoje.getMonth();
+        const anoAtual = hoje.getFullYear();
+
+        let eventosMes = 0;
+        let hojeTotal = 0;
+        let seteDias = 0;
+        let participantes = 0;
+
+        for(const documento of snapshot.docs){
+
+            const evento = documento.data();
+
+            if(!evento.data) continue;
+
+            const dataEvento = new Date(evento.data+"T00:00:00");
+
+            if(
+                dataEvento.getMonth() === mesAtual &&
+                dataEvento.getFullYear() === anoAtual
+            ){
+                eventosMes++;
+            }
+
+            if(
+                dataEvento.getTime() === hoje.getTime()
+            ){
+                hojeTotal++;
+            }
+
+            const diferenca =
+            Math.ceil(
+                (dataEvento-hoje)/(1000*60*60*24)
+            );
+
+            if(
+                diferenca >= 0 &&
+                diferenca <= 7
+            ){
+                seteDias++;
+            }
+
+            const participantesSnapshot =
+            await getDocs(
+                collection(
+                    db,
+                    "agenda",
+                    documento.id,
+                    "participantes"
+                )
+            );
+
+            participantes += participantesSnapshot.size;
+
+        }
+
+        if(totalEventosMes)
+            totalEventosMes.textContent = eventosMes;
+
+        if(eventosHoje)
+            eventosHoje.textContent = hojeTotal;
+
+        if(proximosSeteDias)
+            proximosSeteDias.textContent = seteDias;
+
+        if(totalParticipantesAgenda)
+            totalParticipantesAgenda.textContent = participantes;
+
+    }
+
+    catch(error){
+
+        console.error(
+            "Erro ao atualizar indicadores:",
+            error
+        );
+
+    }
+
+}
+
+
 // Atualiza a lista de próximos eventos
 carregarProximosEventos();
 
