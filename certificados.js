@@ -1,11 +1,14 @@
 import { db } from "./firebase.js";
 
 import {
-  collection,
-  onSnapshot,
-  addDoc,
-  Timestamp,
-  getDocs
+collection,
+onSnapshot,
+addDoc,
+Timestamp,
+getDocs,
+deleteDoc,
+doc
+}
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 
@@ -823,6 +826,18 @@ ${c.cargaHoraria || c.horas || "-"}
 ${c.dataEmissao || c.data || "-"}
 </td>
 
+<td>
+
+<button
+class="excluir"
+onclick="excluirCertificado('${doc.id}')">
+
+🗑️ Excluir
+
+</button>
+
+</td>
+
 </tr>
 
 `;
@@ -836,3 +851,58 @@ ${c.dataEmissao || c.data || "-"}
 console.log(
 "LADRF Certificados carregado com sucesso!"
 );
+
+
+// =====================================
+// EXCLUIR CERTIFICADO
+// =====================================
+
+import {
+deleteDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+
+window.excluirCertificado = async function(id){
+
+
+const confirmar = confirm(
+"Deseja excluir este certificado?"
+);
+
+
+if(!confirmar){
+return;
+}
+
+
+try{
+
+
+await deleteDoc(
+doc(
+db,
+"certificados",
+id
+)
+);
+
+
+alert(
+"Certificado excluído com sucesso!"
+);
+
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"Erro ao excluir certificado."
+);
+
+}
+
+
+};
