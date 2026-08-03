@@ -2102,6 +2102,11 @@ document.getElementById("qrcode"),
 
 `);
 
+janela.document.close();
+
+};
+
+
 // =====================================
 // CALENDÁRIO ACADÊMICO
 // GERAÇÃO DO CALENDÁRIO MENSAL
