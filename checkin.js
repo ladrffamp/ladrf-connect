@@ -210,7 +210,7 @@ nome:nome,
 
 email:usuario.email,
 
-presenca:"Presente",
+presenca:"Confirmado",
 
 metodo:"QR Code",
 
