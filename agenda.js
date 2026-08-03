@@ -300,6 +300,16 @@ for(const item of snapshot.docs){
 }
 
 
+await atualizarIndicadoresAgenda();
+
+
+carregarProximosEventos();
+
+
+}
+
+);
+
 // =====================================
 // INDICADORES DA AGENDA
 // =====================================
@@ -320,53 +330,109 @@ async function atualizarIndicadoresAgenda(){
         const totalParticipantesAgenda =
         document.getElementById("totalParticipantesAgenda");
 
+
         const snapshot = await getDocs(
             collection(db,"agenda")
         );
 
-        const hoje = new Date();
-        hoje.setHours(0,0,0,0);
 
-        const mesAtual = hoje.getMonth();
-        const anoAtual = hoje.getFullYear();
+        const hoje = new Date();
+
+        hoje.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+
+        const mesAtual =
+        hoje.getMonth();
+
+
+        const anoAtual =
+        hoje.getFullYear();
+
 
         let eventosMes = 0;
+
         let hojeTotal = 0;
+
         let seteDias = 0;
+
         let participantes = 0;
+
+
 
         for(const documento of snapshot.docs){
 
-            const evento = documento.data();
 
-            if(!evento.data) continue;
+            const evento =
+            documento.data();
 
-            const dataEvento = new Date(evento.data+"T00:00:00");
+
+            if(!evento.data){
+
+                continue;
+
+            }
+
+
+            const dataEvento =
+            new Date(
+                evento.data + "T00:00:00"
+            );
+
+
+
+            // EVENTOS DO MÊS ATUAL
 
             if(
                 dataEvento.getMonth() === mesAtual &&
                 dataEvento.getFullYear() === anoAtual
             ){
+
                 eventosMes++;
+
             }
+
+
+
+            // EVENTOS DE HOJE
 
             if(
                 dataEvento.getTime() === hoje.getTime()
             ){
+
                 hojeTotal++;
+
             }
 
-            const diferenca =
-            Math.ceil(
-                (dataEvento-hoje)/(1000*60*60*24)
+
+
+            // PRÓXIMOS 7 DIAS
+
+            const diferenca = Math.ceil(
+                (
+                    dataEvento - hoje
+                )
+                /
+                (1000 * 60 * 60 * 24)
             );
+
 
             if(
                 diferenca >= 0 &&
                 diferenca <= 7
             ){
+
                 seteDias++;
+
             }
+
+
+
+            // PARTICIPANTES ESCALADOS
 
             const participantesSnapshot =
             await getDocs(
@@ -378,46 +444,58 @@ async function atualizarIndicadoresAgenda(){
                 )
             );
 
-            participantes += participantesSnapshot.size;
+
+            participantes +=
+            participantesSnapshot.size;
+
 
         }
 
-        if(totalEventosMes)
-            totalEventosMes.textContent = eventosMes;
 
-        if(eventosHoje)
-            eventosHoje.textContent = hojeTotal;
 
-        if(proximosSeteDias)
-            proximosSeteDias.textContent = seteDias;
+        if(totalEventosMes){
 
-        if(totalParticipantesAgenda)
-            totalParticipantesAgenda.textContent = participantes;
+            totalEventosMes.textContent =
+            eventosMes;
+
+        }
+
+
+        if(eventosHoje){
+
+            eventosHoje.textContent =
+            hojeTotal;
+
+        }
+
+
+        if(proximosSeteDias){
+
+            proximosSeteDias.textContent =
+            seteDias;
+
+        }
+
+
+        if(totalParticipantesAgenda){
+
+            totalParticipantesAgenda.textContent =
+            participantes;
+
+        }
+
 
     }
-
     catch(error){
 
         console.error(
-            "Erro ao atualizar indicadores:",
+            "Erro ao atualizar indicadores da agenda:",
             error
         );
 
     }
 
 }
-
-
-// Atualiza a lista de próximos eventos
-carregarProximosEventos();
-
-}
-
-);
-
-
-
-
 
 
 // =====================================
@@ -1855,11 +1933,9 @@ document.getElementById("diasCalendario");
 
 
 
-let dataCalendario = new Date(
-    2026,
-    7,
-    1
-);
+let dataCalendario = new Date();
+
+dataCalendario.setDate(1);
 
 
 
