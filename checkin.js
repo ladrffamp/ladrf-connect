@@ -199,39 +199,24 @@ usuario.email;
 await setDoc(
 
 doc(
-
 db,
-
 "agenda",
-
 eventoId,
-
 "participantes",
-
 usuario.uid
-
 ),
 
 {
 
-
 nome:nome,
 
+email:usuario.email,
 
-email:
+presenca:"Presente",
 
-usuario.email,
+metodo:"QR Code",
 
-
-presenca:
-
-"Confirmado",
-
-
-checkin:
-
-Timestamp.now()
-
+checkin:Timestamp.now()
 
 }
 
