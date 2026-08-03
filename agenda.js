@@ -1862,35 +1862,220 @@ janela.document.write(`
 
 <!DOCTYPE html>
 
-<html>
+<html lang="pt-BR">
 
 <head>
 
-<title>QR Code Evento</title>
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Check-in LADRF Connect</title>
+
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+
+<style>
+
+
+*{
+
+box-sizing:border-box;
+
+font-family:'Poppins',sans-serif;
+
+}
+
+
+
+body{
+
+margin:0;
+
+min-height:100vh;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+background:#f4f7f5;
+
+}
+
+
+
+.container{
+
+background:white;
+
+width:90%;
+
+max-width:450px;
+
+padding:35px;
+
+border-radius:20px;
+
+box-shadow:0 10px 30px rgba(0,0,0,.12);
+
+text-align:center;
+
+}
+
+
+
+.logo{
+
+font-size:45px;
+
+color:#0B7A3D;
+
+margin-bottom:10px;
+
+}
+
+
+
+h1{
+
+color:#0B7A3D;
+
+font-size:28px;
+
+margin:10px 0;
+
+}
+
+
+
+.subtitulo{
+
+color:#666;
+
+margin-bottom:25px;
+
+}
+
+
+
+.qrcode{
+
+display:flex;
+
+justify-content:center;
+
+padding:20px;
+
+background:#fafafa;
+
+border-radius:15px;
+
+}
+
+
+
+.info{
+
+margin-top:25px;
+
+background:#E8F5EC;
+
+padding:15px;
+
+border-radius:12px;
+
+color:#0B7A3D;
+
+font-weight:500;
+
+}
+
+
+
+.footer{
+
+margin-top:25px;
+
+font-size:13px;
+
+color:#888;
+
+}
+
+
+
+</style>
+
 
 </head>
 
 
-<body style="text-align:center;font-family:Arial">
+<body>
 
 
-<h2>
+<div class="container">
 
-Check-in LADRF Connect
 
-</h2>
+<div class="logo">
 
+<i>🩺</i>
+
+</div>
+
+
+<h1>
+
+LADRF Connect
+
+</h1>
+
+
+<p class="subtitulo">
+
+Check-in de participação em evento
+
+</p>
+
+
+
+<div class="qrcode">
 
 <div id="qrcode"></div>
 
+</div>
 
-<p>
 
-Aponte a câmera para participar
 
-</p>
+<div class="info">
+
+📱 Aponte a câmera para confirmar sua presença
+
+</div>
+
+
+
+<div class="footer">
+
+Liga Acadêmica de Desporto e Reabilitação na Fisioterapia
+
+<br>
+
+LADRF • 2026
+
+</div>
+
+
+</div>
 
 
 
@@ -1909,14 +2094,13 @@ document.getElementById("qrcode"),
 </script>
 
 
+
 </body>
+
 
 </html>
 
 `);
-
-
-}
 
 // =====================================
 // CALENDÁRIO ACADÊMICO
