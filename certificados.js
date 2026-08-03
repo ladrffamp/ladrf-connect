@@ -5,10 +5,9 @@ import {
   onSnapshot,
   addDoc,
   Timestamp,
-  getDocs,
-  query,
-  where
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 
 // ELEMENTOS
 
@@ -282,35 +281,35 @@ await addDoc(
 collection(db,"certificados"),
 {
 
-
 numeroCertificado,
 
+membroId:
+membro.id,
 
 membro:
 membro.nome,
 
+eventoId:
+evento.id,
 
 evento:
 evento.titulo,
 
-
 cargaHoraria:
 carga,
-
 
 dataEmissao:
 data,
 
-
 criadoEm:
-Timestamp.now()
+Timestamp.now(),
 
+status:
+"Disponível"
 
 }
 
 );
-
-
 
 
 // ===============================
@@ -720,7 +719,7 @@ listaCertificados.innerHTML=`
 
 <tr>
 
-<td colspan="4">
+<td colspan="5">
 
 Nenhum certificado emitido.
 
@@ -751,7 +750,7 @@ ${c.numeroCertificado || "-"}
 </td>
 
 <td>
-${c.membro || "-"}
+${c.membro || c.nome || "-"}
 </td>
 
 <td>
@@ -759,7 +758,11 @@ ${c.evento || "-"}
 </td>
 
 <td>
-${c.dataEmissao || "-"}
+${c.cargaHoraria || c.horas || "-"}
+</td>
+
+<td>
+${c.dataEmissao || c.data || "-"}
 </td>
 
 </tr>
