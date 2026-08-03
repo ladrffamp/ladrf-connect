@@ -777,34 +777,46 @@ Total:
 
 
 
+${
+evento.status === "Concluído"
+
+?
+
+`
+
 <button
-
 class="salvar"
+disabled
+style="opacity:.5;cursor:not-allowed"
+>
+🔒 Evento concluído
+</button>
 
+`
+
+:
+
+`
+
+<button
+class="salvar"
 onclick="abrirEscala('${item.id}')"
-
 >
-
 👥 Escalar equipe
-
 </button>
-
-
 
 
 <button
-
 class="salvar"
-
 onclick="gerarQRCode('${item.id}')"
-
 >
-
 <i class="fa-solid fa-qrcode"></i>
-
 Gerar QR Code
-
 </button>
+
+`
+
+}
 
 
 
@@ -2811,13 +2823,43 @@ window.abrirEventoCalendario = async function(id){
                     ✏️ Editar
                 </button>
 
-                <button class="salvar" onclick="abrirEscala('${id}'); fecharModalEvento();">
-                    👥 Equipe
-                </button>
+                ${
+evento.status === "Concluído"
 
-                <button class="salvar" onclick="gerarQRCode('${id}'); fecharModalEvento();">
-                    <i class="fa-solid fa-qrcode"></i> QR Code
-                </button>
+?
+
+`
+
+<button
+class="salvar"
+disabled
+style="opacity:.5;cursor:not-allowed"
+>
+🔒 Evento concluído
+</button>
+
+`
+
+:
+
+`
+
+<button 
+class="salvar" 
+onclick="abrirEscala('${id}'); fecharModalEvento();">
+👥 Equipe
+</button>
+
+
+<button 
+class="salvar" 
+onclick="gerarQRCode('${id}'); fecharModalEvento();">
+<i class="fa-solid fa-qrcode"></i> QR Code
+</button>
+
+`
+
+}
 
                 <button class="excluir" onclick="excluirEvento('${id}'); fecharModalEvento();">
                     🗑️ Excluir
