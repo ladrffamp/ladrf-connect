@@ -275,10 +275,14 @@ await gerarNumeroCertificado();
 
 
 
+// ===============================
 // SALVAR FIRESTORE
+// ===============================
 
 await addDoc(
+
 collection(db,"certificados"),
+
 {
 
 numeroCertificado,
@@ -653,31 +657,50 @@ await addDoc(
 collection(db,"certificados"),
 {
 
-
 numeroCertificado:
+
 numero,
 
 
+membroId:
+
+membro.id,
+
+
 membro:
+
 membro.nome,
 
 
+eventoId:
+
+evento.id,
+
+
 evento:
+
 evento.titulo,
 
 
 cargaHoraria:
+
 carga,
 
 
 dataEmissao:
+
 new Date()
 .toLocaleDateString("pt-BR"),
 
 
 criadoEm:
-Timestamp.now()
 
+Timestamp.now(),
+
+
+status:
+
+"Disponível"
 
 }
 
