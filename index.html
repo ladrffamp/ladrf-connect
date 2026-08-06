@@ -1194,68 +1194,59 @@ snapshot.size;
 // =====================================
 
 const eventos = query(
-
-collection(db,"agenda"),
-
-orderBy("data","asc"),
-
-limit(1)
-
+    collection(db, "agenda"),
+    orderBy("data", "asc")
 );
 
+onSnapshot(eventos, (snapshot) => {
 
+    const campo = document.getElementById("proximoEvento");
 
-onSnapshot(
+    if (snapshot.empty) {
+        campo.innerHTML = "Nenhum evento cadastrado";
+        return;
+    }
 
-eventos,
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
 
-(snapshot)=>{
+    let proximoEvento = null;
 
+    snapshot.forEach((doc) => {
 
-const campo =
-document.getElementById("proximoEvento");
+        const evento = doc.data();
 
+        if (!evento.data) return;
 
+        // Ignora eventos concluídos
+        if (evento.status === "Concluído") return;
 
-if(snapshot.empty){
+        // Ignora eventos que já passaram
+        const dataEvento = new Date(evento.data + "T00:00:00");
+        if (dataEvento < hoje) return;
 
+        if (!proximoEvento) {
+            proximoEvento = evento;
+        }
 
-campo.innerHTML =
-"Nenhum evento cadastrado";
+    });
 
+    if (!proximoEvento) {
+        campo.innerHTML = `
+            <strong>Nenhum próximo evento</strong><br>
+            Todos os eventos cadastrados já foram concluídos.
+        `;
+        return;
+    }
 
-return;
+    campo.innerHTML = `
+        <strong>${proximoEvento.titulo || "-"}</strong><br>
+        📅 ${proximoEvento.data || "-"}<br>
+        🕒 ${proximoEvento.inicio || "-"} às ${proximoEvento.fim || "-"}<br>
+        📍 ${proximoEvento.local || "-"}
+    `;
 
-
-}
-
-
-
-const evento = snapshot.docs[0].data();
-
-campo.innerHTML = `
-
-<strong>${evento.titulo || "-"}</strong>
-
-<br>
-
-📅 ${evento.data || "-"}
-
-<br>
-
-🕒 ${evento.inicio || "-"} às ${evento.fim || "-"}
-
-<br>
-
-📍 ${evento.local || "-"}
-
-`;
-
-
-
-}
-
-);
+});
 
 
 </script>
